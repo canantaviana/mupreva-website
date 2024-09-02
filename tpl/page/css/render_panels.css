@@ -1,0 +1,17 @@
+/**
+* RENDER PANELS 
+*/
+.button_icon {
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 1.25em;
+  height: 1.25em;
+  cursor: pointer;
+  background-size: 71%;
+  background-color: #c8c8c87d;
+  border-radius: 2px;
+}
+.button_icon:active {
+  opacity: 0.5;
+}
+/*# sourceMappingURL=render_panels.css.map */

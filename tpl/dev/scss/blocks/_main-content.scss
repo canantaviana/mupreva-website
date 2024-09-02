@@ -1,0 +1,19 @@
+.main-content {
+    @include mobile {
+        margin-top: 0 !important;
+    }
+    .home & {
+        > div:first-child {
+            @include mobile {
+                padding: var(--space-3xl) 0 var(--space-2xl) 0;
+            }
+            @include tablet {
+                background-color: #000;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+        }
+    }
+}

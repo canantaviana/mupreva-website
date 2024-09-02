@@ -1,0 +1,15 @@
+.dest-list {
+    font-weight: normal;
+    font-size: var(--step--1);
+    margin-left: 0 !important;
+    a {
+        color: $primary;
+        display: block;
+        background-color: $primary-light;
+        border-radius: $radius;
+        padding: var(--space-xs) var(--space-s);
+    }
+    li + li {
+        margin-top: var(--space-2xs) !important;
+    }
+}

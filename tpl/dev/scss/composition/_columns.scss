@@ -1,0 +1,45 @@
+// Modificacions per poder utilitzar classes .is-widescreen i .is-fullhd al .columns
+// https://github.com/jgthms/bulma/pull/501#issuecomment-626680601
+.columns {
+    @include tablet {
+        &:not(.is-desktop) {
+            display: block;
+        }
+    }
+    @include tablet {
+        &:not(.is-desktop):not(.is-fullhd):not(.is-widescreen) {
+            display: flex;
+        }
+    }
+    @include desktop {
+        &.is-desktop:not(.is-fullhd):not(.is-widescreen) {
+            display: flex;
+        }
+    }
+    @include widescreen {
+        &.is-widescreen:not(.is-fullhd) {
+            display: flex;
+        }
+    }
+    @include fullhd {
+        &.is-fullhd {
+            display: flex;
+        }
+    }
+}
+
+// Arregla amplada columnes per grid de banners
+.columns.is-gapless.gap-1 {
+    @include tablet {
+        --gap: var(--space-3xs);
+        --columns: 3;
+        .column {
+            width: calc((100% / var(--columns)) - var(--gap) + (var(--gap) / var(--columns)));
+        }
+    }
+    @include desktop {
+        .agenda & {
+            --columns: 4;
+        }
+    }
+}

@@ -1,0 +1,42 @@
+// Variables
+	@assets_path: "../../assets";
+	@path_page: "../../page";
+	@path_tpl: "../..";
+
+// Usage library
+	@import "@{path_page}/css/library.less";
+
+
+
+// override
+	section, article {
+		margin: 0;
+		padding-top: 0;
+	}
+	footer#footer {
+
+	}
+	#header {
+
+	}
+	#footer {
+		margin: 0;
+	}
+
+
+
+// wrapper
+	body > #page-wrapper > .wrapper {
+		padding: 0;
+	}
+
+
+
+// buttons
+	input[type="button"].button_detail {
+		background-color: @qdp_blue;
+		&:hover {
+			color: #ffffff;
+			background-color: darken(@qdp_blue, 10%);
+		}
+	}

@@ -1,0 +1,12 @@
+// node_modules/bulma-checkradio/src/sass/index.sass
+
+// $checkbox-radius: $radius !default;
+$checkbox-radius: 0;
+// $checkbox-border: 0.1rem solid $grey-lighter !default;
+$checkbox-border: 2px solid $black;
+// $checkbox-block-background: $white-ter !default;
+// $checkbox-checked-width: 0.1rem !default;
+$checkbox-checked-width: 2px;
+// $checkradio-focus: 1px dotted $grey-light !default;
+$checkradio-focus: inherit;
+// $checkradio-top-offset: 0rem !default;

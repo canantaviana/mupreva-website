@@ -1,0 +1,34 @@
+// Variables
+	@assets_path: "../../assets";
+	@fonts_path: "@{assets_path}/fonts";
+	@path_page: "../../page"; ;
+
+// Usage library
+	@import "@{path_page}/css/library.less";
+
+
+
+	#error_content {
+		text-align: center;
+		margin-top: 3em;
+
+		.title {
+			font-size: 2.85em;
+			color: black;
+		}
+
+
+		.logo_museu {
+
+			height: 5em;
+			margin: 5em;
+
+			&.flip {
+				transform: scaleX(-1);
+			}
+		}
+
+		>a.button {
+			color: #ffffff;
+		}
+	}

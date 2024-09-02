@@ -1,0 +1,34 @@
+<?php
+# REQUIRED FILES
+$base_path    = dirname(dirname(__FILE__));
+$cwd        = basename($base_path); # Current dir name
+
+# Current controller add
+require($base_path . '/' . $cwd . '.php');
+?>
+<!-- Page Wrapper -->
+<div id="page-wrapper">
+
+    <!-- Main wrapper -->
+    <div class="wrapper">
+        <div class="container wide">
+            <!-- Result -->
+            <section class="result">
+                <div id="rows_list"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/footer.phtml'; ?>
+
+</div>
+
+<?php echo $this->get_header_links('js', ['js_async' => 'defer']) ?>
+<script>
+    dom_ready(function() {
+        museum_publications.set_up({
+            container: document.getElementById('rows_list')
+        })
+    })
+</script>

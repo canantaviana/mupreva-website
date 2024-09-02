@@ -1,0 +1,43 @@
+// Modificacions dels valors de les variables genèriques (node_modules/bulma-scss/base/_generic.scss)
+
+@import "../../node_modules/bulma-scss/utilities/_derived-variables.scss";
+
+// $body-background-color: $scheme-main !default;
+$body-background-color: $white;
+// $body-size: 16px !default;
+$body-size: var(--step-0);
+// $body-min-width: 300px !default;
+// $body-rendering: optimizeLegibility !default;
+// $body-family: $family-primary !default;
+// $body-overflow-x: hidden !default;
+// $body-overflow-y: scroll !default;
+
+// $body-color: $text !default;
+// $body-font-size: 1em !default;
+$body-font-size: $body-size;
+// $body-weight: $weight-normal !default;
+// $body-line-height: 1.5 !default;
+$body-line-height: 1.6;
+
+// $code-family: $family-code !default;
+// $code-padding: 0.25em 0.5em 0.25em !default;
+// $code-weight: normal !default;
+// $code-size: 0.875em !default;
+
+// $small-font-size: 0.875em !default;
+$small-font-size: var(--step--2);
+
+// $hr-background-color: $background !default;
+$hr-background-color: $grey;
+// $hr-height: 2px !default;
+$hr-height: 1px;
+// $hr-margin: 1.5rem 0 !default;
+$hr-margin: 0;
+
+// $strong-color: $text-strong !default;
+$strong-color: inherit;
+// $strong-weight: $weight-bold !default;
+
+// $pre-font-size: 0.875em !default;
+// $pre-padding: 1.25rem 1.5rem !default;
+// $pre-code-font-size: 1em !default;

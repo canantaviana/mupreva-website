@@ -1,0 +1,16 @@
+.button-like {
+    user-select: none;
+    cursor: pointer;
+    &:hover {
+        color: $primary;
+        text-decoration: underline;
+        img {
+            opacity: 0.85;
+        }
+    }
+    &:focus {
+        img {
+            opacity: 0.85;
+        }
+    }
+}

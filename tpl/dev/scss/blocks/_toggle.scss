@@ -1,0 +1,44 @@
+.toggle {
+    .js & {
+        position: relative;
+    }
+    .button {
+        &:hover {
+            text-decoration: none;
+        }
+        &[aria-expanded="true"] svg:last-child {
+            transform: rotate(.5turn);
+        }
+        @media screen and (min-width: $fullhd) and (max-width: 1600px) {
+            span {
+                display: none;
+            }
+            svg:last-child {
+                margin-left: 0 !important;
+            }
+        }
+    }
+    > div {
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        .js & {
+            position: absolute;
+            left: 0;
+            right: 0;
+            z-index: 1;
+            @media screen and (min-width: $fullhd) and (max-width: 1600px) {
+                right: auto;
+                white-space: nowrap;
+            }
+        }
+        li + li a {
+            border-top: 1px solid $grey-lighter;
+        }
+        p {
+            display: none;
+            @media screen and (min-width: $fullhd) and (max-width: 1600px) {
+                display: block;
+            }
+        }
+    }
+    
+}

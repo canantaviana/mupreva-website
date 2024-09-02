@@ -1,0 +1,25 @@
+.form-contact {
+    input,
+    textarea {
+        border-color: #fff;
+        background-color: transparent;
+        &:focus {
+            border-color: #000;
+        }
+    }
+    .help {
+        filter: brightness(0) invert(1);
+    }
+    button {
+        color: #000 !important;
+        background-color: $white !important;
+        float: right;
+        &:hover,
+        &:focus {
+            box-shadow: -7px 7px 0px 0px $black;
+        }
+    }
+    p {
+        margin-bottom: 15px;
+    }
+}

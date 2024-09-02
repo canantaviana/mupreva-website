@@ -1,0 +1,49 @@
+<?php
+# REQUIRED FILES
+$base_path    = dirname(dirname(__FILE__));
+$cwd        = basename($base_path); # Current dir name
+
+# Current controller add
+require($base_path . '/' . $cwd . '.php');
+?>
+
+
+    <!-- Main -->
+    <div id="page-wrapper">
+
+
+        <!-- Banner -->
+        <?php /**/ ?>
+        <section id="banner" class="banner">
+            <div>
+                <h2><strong><?php echo $title ?></strong></h2>
+                <?php echo $abstract ?>
+                <?php /*<div class="body_text"><?php echo $body ?></div>*/ ?>
+            </div>
+        </section>
+
+
+        <!-- Carousel -->
+        <div id="carousel_container" class="carousel_container"></div>
+        <?php /*
+				<section id="carousel" class="carousel">
+					<h1><?php echo tstring('catalogo') ?></h1>
+					<div id="carousel_reel" class="reel"></div>
+					<input class="button_show_more" type="button" value="<?php echo tstring('view_more') ?>" onclick="window.location.href='<?php echo BASE_LINKS . 'catalog' ?>'">
+				</section>
+				*/ ?>
+
+        <div id="outstanding_container" class="outstanding_container"></div>
+    </div>
+
+
+<?php echo $this->get_header_links('js', ['js_async' => 'defer']) ?>
+<script>
+    dom_ready(function() {
+        main_home.set_up({
+            row: <?php echo json_encode($this->row) ?>,
+            header_node: document.getElementById('header'),
+            carousel_container: document.getElementById('carousel_container')
+        })
+    })
+</script>

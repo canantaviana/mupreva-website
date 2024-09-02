@@ -1,0 +1,21 @@
+[class^="sidebar"] {
+    --sidebar-width: 20rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    & > :first-child {
+        flex-basis: 0;
+        flex-grow: 999;
+        min-width: 50%;
+        > * + * {
+            margin-top: var(--space-s);
+        }
+    }
+    & > :last-child {
+        flex-grow: 1;
+        flex-basis: var(--sidebar-width);
+    }
+}
+.sidebar-left {
+    //flex-direction: row-reverse;
+}

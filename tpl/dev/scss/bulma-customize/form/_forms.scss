@@ -1,0 +1,94 @@
+// -----
+// Forms
+// -----
+
+// Shared (node_modules/bulma-scss/form/_shared.scss)
+// --------------------------------------------------
+
+// $form-colors: $colors !default;
+
+// $input-color: $text-strong !default;
+$input-color: #000;
+// $input-background-color: $scheme-main !default;
+$input-background-color: transparent;
+// $input-border-color: $border !default;
+$input-border-color: $grey;
+// $input-height: $control-height !default;
+// $input-shadow: inset 0 0.0625em 0.125em rgba($scheme-invert, 0.05) !default;
+$input-shadow: none;
+// $input-placeholder-color: bulmaRgba($input-color, 0.3) !default;
+
+// $input-hover-color: $text-strong !default;
+$input-hover-color: $input-color;
+// $input-hover-border-color: $border-hover !default;
+$input-hover-border-color: inherit;
+
+// $input-focus-color: $text-strong !default;
+// $input-focus-border-color: $link !default;
+// $input-focus-box-shadow-size: 0 0 0 0.125em !default;
+$input-focus-box-shadow-size: 0 0 0 0;
+// $input-focus-box-shadow-color: bulmaRgba($link, 0.25) !default;
+
+// $input-disabled-color: $text-light !default;
+// $input-disabled-background-color: $background !default;
+// $input-disabled-border-color: $background !default;
+// $input-disabled-placeholder-color: bulmaRgba($input-disabled-color, 0.3) !default;
+
+// $input-arrow: $link !default;
+$input-arrow: $black;
+
+// $input-icon-color: $border !default;
+// $input-icon-active-color: $text !default;
+
+// $input-radius: $radius !default;
+$input-radius: 0;
+
+// Tools (node_modules/bulma-scss/form/_tools.scss)
+// ------------------------------------------------
+
+// $label-color: $text-strong !default;
+$label-color: inherit;
+// $label-weight: $weight-bold !default;
+$label-weight: $weight-light;
+
+// $help-size: $size-small !default;
+$help-size: var(--step--3);
+
+// $label-colors: $form-colors !default;
+
+// File input (node_modules/bulma-scss/form/_file.scss)
+// ----------------------------------------------------
+
+// $file-border-color: $border !default;
+$file-border-color: $black;
+// $file-radius: $radius !default;
+$file-radius: 0;
+
+// $file-cta-background-color: $scheme-main-ter !default;
+$file-cta-background-color: $primary;
+// $file-cta-color: $text !default;
+$file-cta-color: $black;
+// $file-cta-hover-color: $text-strong !default;
+// $file-cta-active-color: $text-strong !default;
+
+// $file-name-border-color: $border !default;
+$file-name-border-color: $primary;
+// $file-name-border-style: solid !default;
+// $file-name-border-width: 1px 1px 1px 0 !default;
+$file-name-border-width: 2px 2px 2px 0 !default;
+// $file-name-max-width: 16em !default;
+
+// $file-colors: $form-colors !default;
+
+// Input-textarea (node_modules/bulma-scss/form/_input-textarea.scss)
+// ------------------------------------------------------------------
+
+// $textarea-padding: $control-padding-horizontal !default;
+// $textarea-max-height: 40em !default;
+// $textarea-min-height: 8em !default;
+
+// $textarea-colors: $form-colors !default;
+
+// Select (node_modules/bulma-scss/form/_select.scss)
+// --------------------------------------------------
+// $select-colors: $form-colors !default;

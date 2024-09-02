@@ -1,0 +1,16 @@
+// node_modules/bulma-scss/helpers/_spacing.scss
+
+// crear només els valors necessaris perquè no es generin classes que després no s'utilitzaran. Utilitza les variables de dev_web/scss/base/_utopia-space.scss
+$spacing-values: (
+    "0": 0,
+    "auto": auto,
+    "1": var(--space-3xs),
+    "2": var(--space-2xs),
+    "3": var(--space-xs),
+    "4": var(--space-s),
+    "5": var(--space-m),
+    "6": var(--space-l),
+    "7": var(--space-xl),
+    "8": var(--space-2xl),
+    "9": var(--space-3xl)
+) !default;

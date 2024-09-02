@@ -1,0 +1,52 @@
+<?php
+# REQUIRED FILES
+$base_path    = dirname(dirname(__FILE__));
+$cwd        = basename($base_path); # Current dir name
+
+# Current controller add
+require($base_path . '/' . $cwd . '.php');
+?>
+<!-- Page Wrapper -->
+<div id="page-wrapper">
+
+    <!-- Main wrapper -->
+    <div class="wrapper">
+        <div class="container">
+            <article id="main" class="main">
+                <div id="row_container" class="<?php echo $web_path ?>"></div>
+                <div id="children_container" class="children_container <?php echo $web_path ?>"></div>
+            </article>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/footer.phtml'; ?>
+
+</div>
+
+<?php echo $this->get_header_links('js', ['js_async' => 'defer']) ?>
+<script type="module">
+    import define from "<?php echo __WEB_TEMPLATE_WEB__ ?>/project/js/index.js";
+    import {
+        Runtime,
+        Library,
+        Inspector
+    } from "<?php echo __WEB_TEMPLATE_WEB__ ?>/project/js/runtime.js";
+
+    window.draw_graph = function(container) {
+
+        const runtime = new Runtime();
+        const main = runtime.module(define, Inspector.into(container));
+        return main
+    }
+</script>
+<script>
+    dom_ready(function() {
+        project.set_up({
+            row: <?php echo json_encode($this->row) ?>,
+            row_container: document.getElementById('row_container'),
+            children_container: document.getElementById('children_container')
+        })
+    })
+</script>

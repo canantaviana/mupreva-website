@@ -1,0 +1,76 @@
+// mòbil
+.hamburger {
+    cursor: default;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    // @include tablet {
+    //     top: var(--space-2xs);
+    // }
+    @include widescreen {
+        display: none;
+    }
+}
+.navigation {
+    @include widescreen {
+        display: flex;
+        order: -1;
+    }
+}
+#menu {
+    @include until-widescreen {
+        background: #000;
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        // outline: 1px solid red;
+        // top: var(--fluid-59-86);
+        top: 100%;
+        // max-width: 80.875rem;
+        // margin-left: auto;
+        // margin-right: auto;
+        // padding-left: var(--space-l);
+        // padding-right: var(--space-l);
+        // padding-bottom: var(--space-l);
+        // z-index: 10;
+    }
+    @include widescreen {
+        display: block;
+        // margin-top: var(--space-l);
+    }
+    > ul > li {
+        position: relative;
+    }
+
+    > ul > li > ul {
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 100%;
+        padding: 0;
+        margin: 0;
+        background-color: #fff;
+    }
+
+    > ul > li.open > ul {
+        display: block;
+    }
+}
+
+// arregla visualització menu al carregar la pàgina
+@include touch {
+    .js #menu {
+        display: none;
+    }
+}
+@include desktop-only {
+    .js #menu {
+        display: none;
+    }
+}
+.hamburger[aria-expanded="true"] + #menu {
+    display: initial;
+}

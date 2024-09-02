@@ -1,0 +1,89 @@
+<footer class="pt-8 pb-5 mt-9 has-background-primary has-text-white link-dn">
+        <div class="wrapper">
+            <div class="columns is-multiline">
+                <div class="column is-full-tablet is-one-fifth-widescreen has-text-centered-tablet has-text-centered-desktop">
+                    <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-mupreva-footer.png" srcset="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-mupreva-footer@2x.png 2x" alt="<?php echo WEB_ENTITY_LABEL ?>" width="321" height="110">
+                </div>
+                <div class="column is-one-third-tablet is-one-fifth-widescreen">
+                    <address>
+                        <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-ubicacio.svg" alt="" width="30" height="30" class="is-block">
+                        *TODO*Museu de Prehistòria de València <br>
+                        Centro Cultural La Beneficència <br>
+                        C/ de la Corona, 36 <br>
+                        46003 Valencia, Espanya
+                    </address>
+                </div>
+                <div class="column is-one-third-tablet is-one-fifth-widescreen">
+                    <div class="is-flex gap-2 mb-3">
+                        <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-telefon.svg" alt="" width="30" height="30">
+                        <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-correu.svg" alt="" width="30" height="30">
+                    </div>
+                    <div class="flow--m">
+                        <div>
+                            <p class="has-text-weight-bold is-size-5">*TODO*Visites i activitats didàctiques</p>
+                            <p>
+                                <a href="tel:963883579" class="has-text-weight-semibold">963 883 579</a> · Fax 963 883 576 <br>
+                                <a href="mailto:servici.visites@dival.es">servici.visites@dival.es</a>
+                            </p>
+                        </div>
+                        <div>
+                            <p class="has-text-weight-bold is-size-5">*TODO*Informació general del Museu</p>
+                            <a href="tel:963883565" class="has-text-weight-semibold">963 883 565</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-third-tablet is-one-fifth-widescreen">
+                    <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-horari.svg" alt="" width="30" height="30">
+                    <div class="flow--m">
+                        <p>*TODO*De dimarts a diumenge, de 10:00 a 20:00h. Dilluns tancat.</p>
+                        <div>
+                            <p class="has-text-weight-bold is-size-5">*TODO*Visites concertades al museu:</p>
+                            <p>Dimarts a divendres 10:00 a 14:00 h <br>
+                                Dimarts 16:00 a 18:00 h</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-full-tablet is-one-fifth-widescreen has-text-centered-tablet has-text-centered-desktop">
+                    <p><?php echo tstring('Troba\'ns a') ?>:</p>
+                    <ul class="is-flex is-flex-wrap-wrap gap-3 is-justify-content-center">
+                        <li>
+                            <a href="https://twitter.com/muprevalencia" target="_blank">
+                                <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-twitter.svg" alt="X" width="40" height="40">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.instagram.com/mupreva/" target="_blank">
+                                <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-instagram.svg" alt="Instagram" width="44" height="44">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.youtube.com/user/museuprehistoria" target="_blank">
+                                <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-youtube.svg" alt="YouTube" width="44" height="44">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.facebook.com/mupreva/" target="_blank">
+                                <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-facebook.svg" alt="Facebook" width="40" height="40">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="is-flex is-flex-wrap-wrap gap-4 is-align-items-flex-end is-justify-content-center">
+                <a href="https://www.dival.es/areadecultura/content/area-de-cultura"><img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-diva.jpg" srcset="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-diva@2x.jpg 2x" alt="<?php echo tstring('Diputació de València. Àrea de Cultura') ?>" width="129" height="65"></a>
+                <a href="http://www.rutadelsibersvalencia.org/va"><img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-ruta-ibers.png" srcset="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-ruta-ibers@2x.png 2x" alt="<?php echo tstring('Ruta dels ibers. València') ?>" width="148" height="65"></a>
+                <ul class="is-flex is-flex-wrap-wrap gap-2 is-justify-content-center">
+                    <?php foreach ($this->menu_footer as $entry) : ?>
+                    <li>
+                        <a href="<?php echo __WEB_ROOT_WEB__ . '/'.$entry->web_path ?>"><?php echo $entry->title ?></a>
+                    </li>
+                    <?php endforeach ?>
+                </ul>
+            </div>
+            <a href="#top" aria-label="Tornar a l'inici" class="scrolltop is-block ml-auto mb-4 pr-4">
+                <svg width="32" height="18" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m30.002 16.002-14-14-14.005 14" stroke="#000" stroke-width="3" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </a>
+        </div>
+    </footer>

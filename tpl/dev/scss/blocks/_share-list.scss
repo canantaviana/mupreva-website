@@ -1,0 +1,31 @@
+.share-list {
+    gap: var(--space-l);
+    li {
+        padding-left: 0 !important;
+        @include tablet {
+            border-right: 1px solid $primary;
+        }
+        &:last-child {
+            border-right: none;
+        }
+        &::before {
+            display: none !important;
+        }
+        + li {
+            margin-top: 0 !important;
+        }
+    }
+    a {
+        transition: opacity 0.125s ease-in;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-m);
+        @include tablet {
+            padding-right: var(--space-l);
+        }
+        &:hover {
+            opacity: 0.85;
+        }
+    }
+}

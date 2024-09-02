@@ -1,0 +1,18 @@
+.timeline {
+    .is-hidden {
+        display: initial !important;
+    }
+    &-container {
+        h2 {
+            // font-size: var(--step-1);
+            // color: #000;
+            // background-color: rgba($primary, 0.2);
+            // border: 3px solid #000;
+            // padding: var(--space-xs) var(--space-l);
+            // border-radius: 3rem;
+            margin-left: auto;
+            margin-right: auto;
+            width: fit-content;
+        }
+    }
+}

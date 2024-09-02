@@ -1,0 +1,32 @@
+// Customització del Bulma https://bulma.io/documentation/customize/concepts/
+
+// 01. initial variables: global variables with literal values
+// https://bulma.io/documentation/customize/variables/#initial-variables
+@import "01-initial-variables";
+
+// 02. derived variables: global variables with values that reference other variables, or are computed
+// https://bulma.io/documentation/customize/variables/#derived-variables
+@import "02-derived-variables";
+
+// 03. generic variables: for the HTML elements which carry no CSS class
+// https://bulma.io/documentation/customize/variables/#generic-variables
+@import "03-generic-variables";
+
+// 04. element/component variables: variables that are specific to a Bulma element/component
+// 04.01. utilities
+@import "utilities/controls";
+// 04.02. elements
+@import "elements/buttons";
+@import "elements/table";
+@import "elements/tag";
+// 04.03. form
+@import "form/forms";
+@import "form/checkradio";
+// 04.04. components
+// @import "components/level";
+@import "components/pagination";
+// 04.05. grid
+@import "grid/columns";
+// 04.06. helpers
+@import "helpers/spacing";
+@import "helpers/typography";

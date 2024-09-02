@@ -1,0 +1,57 @@
+// node_modules/bulma-scss/elements/_button.scss
+
+// Buttons
+// -------
+// $button-color: $text-strong;
+$button-color: #fff;
+// $button-background-color: $scheme-main;
+$button-background-color: $primary;
+// $button-family: false;
+
+// $button-border-color: $border;
+$button-border-color: $button-background-color;
+// $button-border-width: $control-border-width;
+
+// $button-padding-vertical: calc(0.5em - #{$button-border-width});
+// $button-padding-horizontal: 1em;
+$button-padding-vertical: 0.35rem;
+$button-padding-horizontal: 1.25rem;
+
+// $button-hover-color: $link-hover;
+$button-hover-color: $button-color;
+// $button-hover-border-color: $link-hover-border;
+$button-hover-border-color: #000;
+
+// $button-focus-color: $link-focus;
+$button-focus-color: $button-background-color;
+// $button-focus-border-color: $link-focus-border;
+$button-focus-border-color: $button-background-color;
+// $button-focus-box-shadow-size: 0 0 0 0.125em;
+$button-focus-box-shadow-size: 0 0 0 0;
+// $button-focus-box-shadow-color: bulmaRgba($link, 0.25);
+
+// $button-active-color: $link-active;
+// $button-active-border-color: $link-active-border;
+
+// $button-text-color: $text;
+// $button-text-decoration: underline;
+// $button-text-hover-background-color: $background;
+// $button-text-hover-color: $text-strong;
+
+// $button-ghost-background: none;
+// $button-ghost-border-color: transparent;
+// $button-ghost-color: $link;
+// $button-ghost-decoration: none;
+// $button-ghost-hover-color: $link;
+// $button-ghost-hover-decoration: underline;
+
+// $button-disabled-background-color: $scheme-main;
+// $button-disabled-border-color: $border;
+// $button-disabled-shadow: none;
+// $button-disabled-opacity: 0.5;
+
+// $button-static-color: $text-light;
+// $button-static-background-color: $scheme-main-ter;
+// $button-static-border-color: $border;
+
+// $button-colors: $colors;

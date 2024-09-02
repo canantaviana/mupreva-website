@@ -1,0 +1,194 @@
+// Arreglar focus (node_modules/bulma-scss/utilities/_controls.scss l. 34)
+
+// .button:active,
+// .button:focus {
+//     @include focus;
+// }
+// .file-cta:active,
+// .file-cta:focus,
+// .file-name:active,
+// .file-name:focus,
+// .input:active,
+// .input:focus,
+// .is-active.button,
+// .is-active.file-cta,
+// .is-active.file-name,
+// .is-active.input,
+// .is-active.textarea,
+// .is-focused.button,
+// .is-focused.file-cta,
+// .is-focused.file-name,
+// .is-focused.input,
+// .is-focused.textarea,
+// .select select.is-active,
+// .select select.is-focused,
+// .select select:active,
+// .select select:focus,
+// .textarea:active,
+// .textarea:focus {
+//     // @include focus;
+//     outline: 0;
+// }
+
+// Font-family
+input,
+textarea,
+select {
+    font-weight: 300;
+}
+input,
+textarea {
+    &:not(:placeholder-shown):not([type="button"]) {
+        border-color: #000;
+    }
+}
+.input,
+.textarea,
+.select {
+    &.is-small {
+        font-size: var(--step--2);
+    }
+}
+
+// Fa visible el focus a l'input[type="file"]
+.file-label {
+    border-radius: 0;
+    &:focus-within:not(:focus-visible) {
+        outline: 2px solid $black;
+        outline-offset: 0.25rem;
+    }
+}
+
+// Separació de checkboxes i radiobuttons
+ul.field {
+    > * + * {
+        margin-top: var(--space-3xs);
+    }
+}
+
+// Select
+.select {
+    width: 100%;
+    select {
+        width: 100%;
+        background: $input-background-color;
+        border-color: $grey;
+        cursor: default;
+        &.not-first-selected {
+            border-color: #000;
+        }
+    }
+
+    &::after {
+        transform: none !important;
+        border: 0 !important;
+        width: 13px !important;
+        height: 8px !important;
+        margin-right: 4px !important;
+        top: 1.4rem !important;
+        background-image: url("data:image/svg+xml,%3Csvg width='13' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.204 1 6.102 6.102 1 1' stroke='%23000' stroke-width='2' fill='none' fill-rule='evenodd' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+    select:focus {
+        outline: 2px solid $focus-color;
+        outline-offset: 0.25rem;
+        &:not(:focus-visible) {
+            outline: 0;
+        }
+        &:focus-visible {
+            outline: 2px solid $focus-color;
+            outline-offset: 0.25rem;
+        }
+    }
+    &--simple {
+        height: auto !important;
+        select {
+            border-width: 0 0 2px 0;
+            padding: 0 0.5rem 0 0.25rem !important;
+            height: auto;
+        }
+        &::after {
+            position: static !important;
+            width: 12px !important;
+            height: 7px !important;
+            margin: 0 0 0 -0.75rem !important;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='7' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 1 6 6 1 1' stroke='%23323232' stroke-width='1.5' fill='none' fill-rule='evenodd' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        }
+    }
+}
+
+// input file retocs
+// .file-label {
+//     &:hover {
+//         .file-cta {
+//             background-color: $file-cta-background-color;
+//             color: $file-cta-color;
+//         }
+//     }
+// }
+// .file-cta {
+//     font-size: var(--step--1);
+//     border: 0;
+//     padding-left: $control-height;
+//     &::before {
+//         content: "";
+//         display: inline-flex;
+//         flex-direction: column;
+//         justify-content: center;
+//         align-items: center;
+//         font-size: var(--step--1);
+//         background: $primary
+//             url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjcuNzE0IiBoZWlnaHQ9IjMyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMC42NDMgMy4xNDNoNC40N2MuNTY4IDAgMS4xMTMuMjI2IDEuNTE0LjYyN2w5LjQ2IDkuNDZjLjQwMi40MDEuNjI3Ljk0Ni42MjcgMS41MTR2MTMuMDQyQTMuMjE0IDMuMjE0IDAgMCAxIDIzLjUgMzFIOS41NzFhMy4yMTQgMy4yMTQgMCAwIDEtMy4yMTQtMy4yMTR2LTguNTcyIi8+PHBhdGggZD0iTTE2IDMuNjc5djguMDM1YzAgMS4xODQuOTYgMi4xNDMgMi4xNDMgMi4xNDNoOC4wMzYiLz48cGF0aCBkPSJNNy40MjkgNC4yMTR2MTAuMTc5QTEuNTg2IDEuNTg2IDAgMCAxIDUuODIgMTZjLS44MDMgMC0xLjYwNy0uNjEtMS42MDctMS42MDdWNC43NUM0LjIxNCAyLjcwMiA1LjMyNCAxIDcuNDMgMWMyLjEwNCAwIDMuMjE0IDEuNjYgMy4yMTQgMy43MDhWMTRjMCAyLjg4LTEuODYzIDUuMjE0LTQuODIyIDUuMjE0QzIuODYzIDE5LjIxNCAxIDE2Ljg4IDEgMTRWOC41Ii8+PC9nPjwvc3ZnPg==")
+//             no-repeat 50% 50%;
+//         border-right: 3px solid #fff;
+//         height: $control-height;
+//         width: $control-height;
+//         margin-left: calc($control-height * -1);
+//         margin-right: 1em;
+//     }
+// }
+// .file-name {
+//     // background-color: transparent;
+//     font-size: var(--step--2);
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     max-width: none;
+// }
+
+// Select amb addons
+// .field.has-addons {
+//     // p.control:first-child {
+//     //     background-color: #e3e3e3;
+//     //     border-color: #e3e3e3;
+//     //     display: flex;
+//     //     flex-direction: column;
+//     //     justify-content: center;
+//     //     align-items: center;
+//     //     padding: var(--space-2xs);
+//     // }
+//     .select {
+//         select {
+//             padding-right: 3rem;
+//         }
+//         &::after {
+//             border-color: #000 !important;
+//             margin-left: 0.5rem;
+//         }
+//     }
+//     .control:last-of-type.is-expanded {
+//         input {
+//             border-left: 0;
+//         }
+//     }
+// }
+// select.prefix {
+//     background-color: $primary;
+//     border-color: $primary;
+// }
+// .protecciodades {
+//     font-size: 14px;
+//     .is-checkradio[type=checkbox]+label {
+//         margin-bottom: 15px;
+//         display: block;
+//     }
+// }

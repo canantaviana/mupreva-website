@@ -1,0 +1,15 @@
+.text-columns {
+    @include tablet {
+        column-count: 2;
+        column-gap: var(--space-xl);
+    }
+    @include desktop {
+        column-count: 3;
+    }
+    @include widescreen {
+        column-count: 4;
+    }
+    h3 {
+        break-before: column;
+    }
+}

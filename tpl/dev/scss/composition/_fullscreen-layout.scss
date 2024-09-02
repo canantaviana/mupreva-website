@@ -1,0 +1,57 @@
+@include tablet {
+    .fullscreen {
+        .main-header {
+            position: fixed;
+            width: 100%;
+            z-index: 10;
+        }
+        div:has(> .breadcrumb-nav),
+        div:has(> .simple-tooltip-container) {
+            display: none !important;
+        }
+        .fitxa-intro {
+            flex-direction: column-reverse;
+            .fullscreen__fullheight {
+                width: 100%;
+                height: 100vh;
+            }
+            .column:has(h1) {
+                @include desktop {
+                    width: 75%;
+                }
+                @include widescreen {
+                    width: 50%;
+                }
+            }
+            .fullscreen__content {
+                margin-top: 15vh;
+                &--1 {
+                    height: 60vh;
+                }
+                &--2 {
+                    text-align: center !important;
+                    height: 75vh;
+                    > img {
+                        height: 65vh;
+                        width: auto;
+                    }
+                }
+                &--3 {
+                    text-align: center !important;
+                    height: 75vh;
+                    > img {
+                        height: 65vh;
+                    }
+                }
+            }
+            .swiper-slide {
+                > img {
+                    height: 60vh;
+                    object-fit: none;
+                    width: auto;
+                    margin: 0 auto;
+                }
+            }
+        }
+    }
+}

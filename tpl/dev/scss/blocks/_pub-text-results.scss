@@ -1,0 +1,12 @@
+.pub-text-results {
+    @include tablet {
+        margin-left: var(--space-xl);
+        margin-right: var(--space-xl);
+    }
+    li {
+        border-bottom: 1px solid $grey-light;
+    }
+    img {
+        width: 102px;
+    }
+}

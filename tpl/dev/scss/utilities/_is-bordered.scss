@@ -1,0 +1,32 @@
+.is-bordered {
+    &:after {
+        content: "";
+        display: block;
+        height: 1px;
+        width: 6.25rem;
+        background-color: $primary;
+        margin-top: var(--space-s);
+    }
+}
+h2.is-bordered {
+    &:after {
+        height: 6px;
+        width: 5.375rem;
+        background-color: $primary;
+    }
+    &--red {
+        &::after {
+            background-color: $red;
+        }
+    }
+    &--yellow {
+        &::after {
+            background-color: $yellow;
+        }
+    }
+    &--blue {
+        &::after {
+            background-color: $blue;
+        }
+    }
+}

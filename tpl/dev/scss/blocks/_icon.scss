@@ -1,0 +1,74 @@
+// https://fvsch.com/svg-icons
+/**
+ * Default icon style
+ */
+.icon {
+    /* Use the current text color as the icon’s fill color. */
+    fill: currentColor;
+    /* Inherit the text’s size too. Also allows sizing the icon by changing its font-size. */
+    // width: 1em;
+    // height: 1em;
+    width: 32px;
+    height: 32px;
+    /* The default vertical-align is `baseline`, which leaves a few pixels of space below the icon. Using `center` prevents this. For icons shown alongside text, you may want to use a more precise value, e.g. `vertical-align: -4px` or `vertical-align: -0.15em`. */
+    vertical-align: middle;
+    /* Paths and strokes that overflow the viewBox can show in IE11. */
+    overflow: hidden;
+
+    // icones outline
+    /*
+    &--outline-thin,
+    &--outline-normal,
+    &--outline-thick {
+        fill: none;
+        stroke: currentColor;
+    }
+    &--outline-thin {
+        stroke-width: 16px;
+    }
+    &--outline-normal {
+        stroke-width: 32px;
+    }
+    &--outline-thick {
+        stroke-width: 24px;
+    }
+    */
+
+    // mides icones
+    &--small {
+        width: 15px !important;
+        height: 15px !important;
+    }
+    &--medium {
+        width: 22px !important;
+        height: 22px !important;
+    }
+    &--large {
+        width: 30px !important;
+        height: 30px !important;
+    }
+
+    // colors
+    // &--facebook {
+    //     fill: #0773E6;
+    // }
+    // &--twitter {
+    //     fill: #1B9BF0;
+    // }
+    // &--linkedin {
+    //     fill: #0966C2;
+    // }
+    // &--instagram {
+    //     fill: url(#ig-gradient);
+    // }
+    // &--telegram {
+    //     fill: #279ACC;
+    // }
+    // &--whatsapp {
+    //     fill: #00DC2D;
+    // }
+    // &--email,
+    // &--link {
+    //     fill: $grey-light;
+    // }
+}
