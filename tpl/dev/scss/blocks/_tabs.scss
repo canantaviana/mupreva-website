@@ -1,0 +1,23 @@
+.tabs {
+    @include desktop {
+        padding-left: var(--space-3xl);
+        padding-right: var(--space-3xl);
+    }
+}
+.tab-list {
+    display: flex;
+}
+.tab-item > [role="tab"] {
+    border: none;
+    font-size: var(--step-0);
+    padding: var(--space-s) var(--space-xs);
+    font-weight: 600;
+}
+.tab-group {
+    border-width: 1px 0 0 0;
+    border-color: #000;
+    margin-top: 0;
+}
+.tab-content {
+    padding: var(--space-m) 0 0 0;
+}

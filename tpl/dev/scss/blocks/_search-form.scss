@@ -1,0 +1,21 @@
+.search-form {
+    legend {
+        background-color: $grey-light;
+        width: 100%;
+    }
+    @include tablet {
+        &--col {
+            legend,
+            legend + div {
+                padding-left: var(--space-3xl) !important;
+                padding-right: var(--space-3xl) !important;
+            }
+        }
+        &--pub {
+            legend,
+            legend + div {
+                padding-left: var(--space-2xl) !important;
+            }
+        }
+    }
+}

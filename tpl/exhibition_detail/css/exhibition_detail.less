@@ -1,0 +1,88 @@
+// Variables
+	@assets_path: "../../assets";
+	@path_page: "../../page";
+	@path_tpl: "../..";
+
+// Usage library
+	@import "@{path_page}/css/library.less";
+
+
+
+// override
+	section, article {
+		margin: 0;
+	}
+	footer#footer {
+		// margin-top: 3em;
+	}
+	#header {
+		// margin: 0;
+	}
+	#footer {
+		margin: 0;
+	}
+
+
+
+// wrapper
+	body > #page-wrapper > .wrapper {
+		padding: 0;
+	}
+
+
+
+// exhibition_detail
+	.panel_wrapper.exhibition_detail {
+		display: block;
+		padding-top: 3em;
+
+		.id_number {
+			width: 100%;
+			text-align: right;
+			font-size: 1.5em;
+			font-weight: 200;
+			color: #707070;
+		}
+
+		>.image_wrap {
+			width: 100%;
+			flex: 1 1 100%;
+			min-height: 500px;
+			text-align: center;
+			margin-top: 1em;
+			margin-bottom: 1em;
+		}
+
+		.body {
+			font-size: 1.25em;
+			line-height: 1.4em;
+			font-weight: 200;
+		}
+
+		.items_list {
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr 1fr;
+			position: relative;
+			margin-top: 2em;
+			margin-bottom: 2em;
+
+			@media screen and (max-width: @screen_max_mobile) {
+				grid-template-columns: 1fr;
+			}
+
+			>* {
+				position: relative;
+				text-align: center;
+				vertical-align: middle;
+				border: none;
+				outline: 1px solid #e6e6e6;
+				height: 10em;
+			}
+
+			.image_wrap.document {
+				img {
+					height: 80%;
+				}
+			}
+		}
+	}

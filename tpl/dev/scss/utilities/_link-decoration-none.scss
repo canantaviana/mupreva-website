@@ -1,0 +1,8 @@
+.link-dn a,
+a.link-dn {
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline 0.085em;
+        text-underline-offset: 0.3em;
+    }
+}

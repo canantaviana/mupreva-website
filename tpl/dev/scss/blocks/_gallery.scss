@@ -1,0 +1,30 @@
+.gallery .gallery__item {
+    position: relative;
+    &::before {
+        content: "";
+        display: block;
+        background-color: transparent;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transition: background-color 0.1s ease-in;
+    }
+    &:hover {
+        &::before {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        &::after {
+            content: "";
+            width: 2.5rem;
+            height: 2.5rem;
+            background-image: url("../img/sprites-svg/magnifying-glass-plus.svg");
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            filter: invert(1);
+        }
+    }
+}

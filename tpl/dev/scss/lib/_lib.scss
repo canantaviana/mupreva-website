@@ -1,0 +1,126 @@
+// Hamburger
+// ---------
+@import "../../node_modules/hamburgers/_sass/hamburgers/hamburgers.scss";
+
+// Magnific Popup
+// --------------
+// @import "../../node_modules/magnific-popup/src/css/_settings.scss";
+// @import "../../node_modules/magnific-popup/src/css/main.scss";
+
+// Animate
+// -------
+// @import "../../node_modules/animate.css/animate.css";
+
+// Slider
+// ------
+// @import "../../node_modules/@accessible360/accessible-slick/slick/slick.scss";
+// @import "../../node_modules/@accessible360/accessible-slick/slick/accessible-slick-theme.scss";
+
+// Tabs (@10up/component-tabs)
+// ----
+@import "../../node_modules/@10up/component-tabs/dist/index.css";
+
+// Swiper
+// ------
+// @import "../../node_modules/swiper/swiper-bundle.css";
+@import "../../node_modules/swiper/swiper.scss";
+@import "../../node_modules/swiper/modules/a11y.scss";
+@import "../../node_modules/swiper/modules/navigation.scss";
+@import "../../node_modules/swiper/modules/pagination.scss";
+@import "../../node_modules/swiper/modules/thumbs.scss";
+
+// Autocomplete
+// ------------
+// @import "../../node_modules/accessible-autocomplete/src/autocomplete.css";
+
+// Timelify (copiat de: https://github.com/Liinkiing/jquery-timelify)
+// --------
+@import "timelify/timelify";
+
+// BULMA Checkradio extension
+// --------------------------
+// Documentació: https://wikiki.github.io/form/checkradio/
+// Canvi de valors de variables: dev_web/scss/bulma-config/form/_checkradio.scss
+@import "../../node_modules/bulma-checkradio/src/sass/index.sass";
+
+// BULMA
+// -----
+// Import only what you need from Bulma
+// @import "../../node_modules/bulma-scss/bulma.scss";
+
+/* Bulma Utilities */
+@import "../../node_modules/bulma-scss/utilities/_all";
+// @import "../../node_modules/bulma-scss/utilities/initial-variables";
+// @import "../../node_modules/bulma-scss/utilities/functions";
+// @import "../../node_modules/bulma-scss/utilities/derived-variables";
+// @import "../../node_modules/bulma-scss/utilities/mixins";
+// @import "../../node_modules/bulma-scss/utilities/controls";
+// @import "../../node_modules/bulma-scss/utilities/extends";
+
+/* Bulma Base */
+@import "../../node_modules/bulma-scss/base/_all";
+// @import "../../node_modules/bulma-scss/base/minireset";
+// @import "../../node_modules/bulma-scss/base/generic";
+// @import "../../node_modules/bulma-scss/base/animations";
+
+/* Bulma Elements */
+// @import "../../node_modules/bulma-scss/elements/_all";
+// @import "../../node_modules/bulma-scss/elements/box";
+@import "../../node_modules/bulma-scss/elements/button";
+// @import "../../node_modules/bulma-scss/elements/container";
+// @import "../../node_modules/bulma-scss/elements/content";
+// @import "../../node_modules/bulma-scss/elements/icon";
+// @import "../../node_modules/bulma-scss/elements/image";
+// @import "../../node_modules/bulma-scss/elements/notification";
+// @import "../../node_modules/bulma-scss/elements/progress";
+@import "../../node_modules/bulma-scss/elements/table";
+@import "../../node_modules/bulma-scss/elements/tag";
+// @import "../../node_modules/bulma-scss/elements/title";
+// @import "../../node_modules/bulma-scss/elements/other";
+
+/* Bulma Form */
+@import "../../node_modules/bulma-scss/form/_all";
+// @import "../../node_modules/bulma-scss/form/shared";
+// @import "../../node_modules/bulma-scss/form/input-textarea";
+// @import "../../node_modules/bulma-scss/form/checkbox-radio";
+// @import "../../node_modules/bulma-scss/form/select";
+// @import "../../node_modules/bulma-scss/form/file";
+// @import "../../node_modules/bulma-scss/form/tools";
+
+/* Bulma Components */
+// @import "../../node_modules/bulma-scss/components/_all";
+// @import "../../node_modules/bulma-scss/components/breadcrumb";
+// @import "../../node_modules/bulma-scss/components/card";
+// @import "../../node_modules/bulma-scss/components/dropdown";
+// @import "../../node_modules/bulma-scss/components/level";
+// @import "../../node_modules/bulma-scss/components/media";
+// @import "../../node_modules/bulma-scss/components/menu";
+// @import "../../node_modules/bulma-scss/components/message";
+// @import "../../node_modules/bulma-scss/components/modal";
+// @import "../../node_modules/bulma-scss/components/navbar";
+@import "../../node_modules/bulma-scss/components/pagination";
+// @import "../../node_modules/bulma-scss/components/panel";
+// @import "../../node_modules/bulma-scss/components/tabs";
+
+/* Bulma Grid */
+// @import "../../node_modules/bulma-scss/grid/_all";
+@import "../../node_modules/bulma-scss/grid/columns"; /*https://bulma.io/documentation/columns/*/
+@import "../../node_modules/bulma-scss/grid/tiles";
+
+/* Bulma Helpers */
+// @import "../../node_modules/bulma-scss/helpers/_all";
+@import "../../node_modules/bulma-scss/helpers/color"; /*https://bulma.io/documentation/helpers/color-helpers/*/
+@import "../../node_modules/bulma-scss/helpers/flexbox";
+// @import "../../node_modules/bulma-scss/helpers/float";
+// @import "../../node_modules/bulma-scss/helpers/other";
+// @import "../../node_modules/bulma-scss/helpers/overflow";
+// @import "../../node_modules/bulma-scss/helpers/position";
+@import "../../node_modules/bulma-scss/helpers/spacing"; /*https://bulma.io/documentation/helpers/spacing-helpers/*/
+// @import "../../node_modules/bulma-scss/helpers/typography";
+@import "../../node_modules/bulma-scss/helpers/visibility"; /*https://bulma.io/documentation/helpers/visibility-helpers/*/
+
+/* Bulma Layout */
+// @import "../../node_modules/bulma-scss/layout/_all";
+// @import "../../node_modules/bulma-scss/layout/hero";
+// @import "../../node_modules/bulma-scss/layout/section";
+// @import "../../node_modules/bulma-scss/layout/footer";

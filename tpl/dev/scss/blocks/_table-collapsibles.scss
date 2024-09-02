@@ -1,0 +1,79 @@
+.table-collapsibles {
+    width: 100%;
+    tr {
+        position: relative;
+        &:has(td > button:only-child):hover {
+            background-color: $primary-light;
+        }
+        &:has(button[aria-expanded="true"]) {
+            background-color: $primary;
+            &:hover {
+                background-color: $primary !important;
+            }
+            th,
+            td {
+                color: #fff;
+            }
+        }
+    }
+    th,
+    td {
+        border-bottom: none;
+        vertical-align: baseline;
+    }
+    th {
+        font-size: var(--step--1);
+        font-weight: 500;
+        white-space: nowrap;
+        @include tablet {
+            padding-right: var(--space-3xl);
+        }
+    }
+    td {
+        font-weight: 600;
+        > button:only-child {
+            width: max-content;
+            margin-top: 0.3em;
+            position: static;
+            // tot el row clicable
+            &::after {
+                content: "";
+                display: block;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                left: 0;
+                top: 0;
+                background: none;
+            }
+            &[aria-expanded="true"] img {
+                transform: rotate(0.125turn);
+                filter: grayscale(1) brightness(100);
+            }
+        }
+        &:last-child {
+            width: 100%;
+        }
+        table {
+            th,
+            td {
+                padding-top: 0.25em;
+                padding-bottom: 0.25em;
+            }
+            th {
+                padding-left: 0;
+                padding-right: var(--space-xl);
+                font-size: var(--step-0);
+                font-weight: 600;
+            }
+            td {
+                font-weight: normal;
+            }
+        }
+
+        // Desplegable
+        &[colspan] {
+            font-weight: normal;
+        }
+    }
+}

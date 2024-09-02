@@ -1,0 +1,60 @@
+.simple-tooltip {
+    &-container {
+        position: relative;
+    }
+    &-tooltip {
+        z-index: 10;
+        position: absolute;
+        text-align: left;
+        border: 0;
+        background: #000;
+        color: #fff;
+        .search-form & {
+            padding: var(--space-2xl) var(--space-xl) var(--space-xl);
+            margin-top: 0.5rem;
+            img {
+                background: white;
+                border: 3rem solid white;
+                box-sizing: content-box;
+            }
+        }
+        @include tablet {
+            right: 0;
+            left: auto;
+            width: 50rem;
+        }
+        @include desktop {
+            width: 60rem;
+        }
+        .js-tooltip-close {
+            position: absolute;
+            top: var(--space-s-m);
+            right: var(--space-s-m);
+            background: transparent url("img/ico-tancar.svg") no-repeat;
+            border: 0;
+            padding: 0;
+            height: 44px;
+            width: 44px;
+        }
+        .modal-close__text {
+            @include visually-hidden;
+        }
+    }
+    &-tooltip__title {
+        color: #fff;
+        font-size: var(--step-5);
+        font-weight: 600;
+    }
+    .js-tooltip-content {
+        text-align: left;
+    }
+    .js-tooltip-close {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+}
+
+.button--compartir + .simple-tooltip-tooltip {
+    padding: var(--space-xl-2xl);
+}

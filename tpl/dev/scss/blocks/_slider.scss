@@ -1,0 +1,140 @@
+.slider-container {
+    .js & {
+        margin-bottom: 5.5rem;
+        height: var(--fluid-400-500);
+    }
+}
+.slider {
+    .js & {
+        height: var(--fluid-400-500);
+    }
+    .slick-list,
+    .slick-track {
+        height: 100%;
+    }
+    .slick-list:has(.slick-slide:only-child) {
+        overflow: visible;
+    }
+    .slick-slide {
+        background-repeat: no-repeat;
+        background-size: cover;
+        > div {
+            height: 100%;
+            > div {
+                height: 100%;
+            }
+        }
+    }
+    .slick-arrow {
+        width: 16px;
+        height: 28px;
+        z-index: 1;
+        &:focus {
+            top: 50%;
+            span {
+                margin-left: 0;
+            }
+        }
+        span {
+            opacity: 1;
+            &::before {
+                content: "";
+                width: 16px;
+                height: 28px;
+                display: block;
+                // margin: 0 auto;
+            }
+        }
+    }
+    .slick-prev {
+        left: var(--space-m);
+    }
+    .slick-next {
+        right: var(--space-m);
+    }
+    .slick-prev-icon::before {
+        background-image: url("data:image/svg+xml,%3Csvg width='16' height='28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14 2 2 14l12 12.004' stroke='%23FFF' stroke-width='3' fill='none' fill-rule='evenodd' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+    .slick-next-icon::before {
+        background-image: url("data:image/svg+xml,%3Csvg width='16' height='28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m2 2 12 12L2 26.004' stroke='%23FFF' stroke-width='3' fill='none' fill-rule='evenodd' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+    .slick-dots {
+        position: static;
+        margin-top: var(--space-m);
+        li {
+            margin: 0 0.75rem;
+            button {
+                margin: 0;
+            }
+            .slick-dot-icon {
+                opacity: 1;
+                &::before {
+                    width: 14px;
+                    height: 14px;
+                    border: 2px solid $primary;
+                    border-radius: 50%;
+                    color: transparent;
+                }
+            }
+            &.slick-active button .slick-dot-icon:before {
+                margin-top: 0;
+                margin-left: 0;
+                font-size: inherit;
+                background-color: $primary;
+            }
+        }
+    }
+    &__text {
+        position: absolute;
+        bottom: var(--space-m);
+        h1,
+        h2 {
+            transition: background-color 0.125s ease-in;
+            @include mobile {
+                max-width: 15ch;
+            }
+            @include tablet {
+                max-width: 18ch;
+            }
+            &:has(a:hover) {
+                background: rgba(255, 255, 255, 0.8) !important;
+            }
+        }
+        p {
+            margin-top: 2px;
+            width: fit-content;
+        }
+        a {
+            text-decoration: none;
+        }
+        &.has-background-white {
+            @include mobile {
+                position: static;
+            }
+            @include tablet {
+                max-width: 40ch;
+                bottom: auto;
+                top: -4rem;
+            }
+            @include desktop {
+                max-width: 45ch;
+            }
+            p {
+                margin-top: var(--space-s);
+            }
+            + p {
+                margin-top: 2px;
+                width: fit-content;
+            }
+        }
+        &-container {
+            @include tablet {
+                max-width: 91rem;
+                margin-left: auto;
+                margin-right: auto;
+                padding-left: var(--space-l);
+                padding-right: var(--space-l);
+            }
+        }
+    }
+}

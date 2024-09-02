@@ -1,0 +1,84 @@
+    <!-- main-header -->
+    <header id="header" class="main-header is-relative has-background-primary p-4 mb-5">
+        <!-- skip link -->
+        <a href="#main-nav" class="skip-link"><?php echo tstring('Saltar al menú principal') ?></a>
+        <a href="#main" class="skip-link"><?php echo tstring('Saltar al contingut principal') ?></a>
+        <!-- /skip link -->
+
+        <div class="wrapper is-flex is-justify-content-space-between">
+            <!-- Idiomes mòbil -->
+            <div class="lang is-hidden-tablet">
+                <button type="button" aria-label="<?php echo tstring('Canvi d\'idioma') ?>" data-a11y-toggle="lang">
+                    <abbr title="Valencià">Val</abbr>
+                </button>
+                <ul id="lang">
+                <?php foreach (json_decode(WEB_AR_LANGS) as $lang => $lang_info) { ?>
+                    <li>
+                        <a hreflang="<?php echo $lang_info->code ?>" xml:lang="<?php echo $lang_info->code ?>" href="?lang=<?php echo $lang ?>" lang="<?php echo $lang_info->code ?>">
+                            <abbr title="<?php echo $lang_info->name ?>"><?php echo ucfirst($lang_info->code) ?></abbr>
+                        </a>
+                    </li>
+                <?php } ?>
+                </ul>
+            </div>
+            <!-- /Idiomes mòbil -->
+            <!-- Logo -->
+            <p class="site-logo is-size-7">
+
+                <a href="<?php echo __WEB_HOME_URL__ ?>" class="has-text-white link-dn is-inline-block">
+                    <span class="is-flex gap-3 is-align-items-baseline">
+                        <img loading="lazy" src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-logo-mupreva.png" srcset="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-logo-mupreva@2x.png 2x" alt="" width="26" height="40">
+                        <span class="has-text-white has-text-weight-semibold is-size-4 is-hidden-mobile"><?php echo WEB_ENTITY_LABEL ?></span>
+                    </span>
+                </a>
+            </p>
+            <!-- /Logo -->
+            <div class="is-flex">
+                <!-- Search -->
+                <!-- div class="search">
+                    <div class="js-expandmore"><img loading="lazy" src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-lupa.svg" alt="<?php echo tstring('Cercador') ?>" width="26" height="40"></div>
+                    <div class="js-to_expand">
+                        <form action="#">
+                            <fieldset class="is-flex gap-2 is-align-items-center">
+                                <legend class="is-sr-only"><?php echo tstring('Cercador') ?></legend>
+                                <div class="field mb-0">
+                                    <label class="is-sr-only" for="search2"><?php echo tstring('Cercar') ?></label>
+                                    <div class="control">
+                                        <input type="search" id="search2" name="keywords" class="input">
+                                    </div>
+                                </div>
+                                <button type="submit" aria-label="<?php echo tstring('Cercar') ?>">
+                                    <svg class="icon" aria-hidden="true" focusable="false">
+                                        <use xlink:href="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/svg-symbols.svg#magnifying-glass"></use>
+                                    </svg>
+                                </button>
+                            </fieldset>
+                        </form>
+                    </div>
+                </!-->
+                <!-- /Search -->
+                <!-- Idiomes desktop -->
+                <div class="lang is-hidden-mobile">
+                    <ul class="is-flex gap-2">
+                        <?php foreach (json_decode(WEB_AR_LANGS) as $lang => $lang_info) { ?>
+                        <li>
+                            <a hreflang="<?php echo $lang_info->code ?>" xml:lang="<?php echo $lang_info->code ?>" href="?lang=<?php echo $lang ?>" lang="<?php echo $lang_info->code ?>">
+                                <abbr title="<?php echo $lang_info->name ?>"><?php echo ucfirst($lang_info->code) ?></abbr>
+                            </a>
+                        </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+                <!-- /Idiomes desktop -->
+            </div>
+            <!-- main-nav -->
+            <nav class="navigation" aria-label="Menú principal">
+                <div id="menu">
+                    <?php echo $this->menu_tree_html ?>
+                </div>
+            </nav>
+            <!-- /main-nav -->
+        </div>
+
+    </header>
+    <!-- /main-header -->

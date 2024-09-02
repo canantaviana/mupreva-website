@@ -1,0 +1,232 @@
+// Mixins
+
+// Triangle
+// --------
+// We use this to create isosceles triangles
+// - $triangle-size       - Used to set border-size. No default, set a px or em size.
+// - $triangle-color      - Used to set border-color which makes up triangle. No default
+// - $triangle-direction  - Used to determine which direction triangle points.
+//                          Options: top, bottom, left, right
+@mixin triangle($triangle-size, $triangle-color, $triangle-direction) {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    border: inset $triangle-size;
+    @if $triangle-direction == top {
+        border-color: $triangle-color transparent transparent transparent;
+        border-top-style: solid;
+    }
+    @if $triangle-direction == bottom {
+        border-color: transparent transparent $triangle-color transparent;
+        border-bottom-style: solid;
+    }
+    @if $triangle-direction == left {
+        border-color: transparent transparent transparent $triangle-color;
+        border-left-style: solid;
+    }
+    @if $triangle-direction == right {
+        border-color: transparent $triangle-color transparent transparent;
+        border-right-style: solid;
+    }
+}
+
+// visually hidden
+@mixin visually-hidden {
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+    padding: 0 !important;
+    border: 0 !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden;
+}
+
+// treure klanders de llista
+@mixin undolist {
+    li {
+        padding-left: 0;
+        &:before {
+            display: none;
+        }
+    }
+}
+
+/*
+A simple little SCSS mixin for creating scrim gradients
+Inspired by Andreas Larson - https://github.com/larsenwork
+https://css-tricks.com/easing-linear-gradients/
+*/
+@mixin scrimGradient($direction: "to bottom", $startColor: "#000000") {
+    $scrimCoordinates: (
+        0: 1,
+        19: 0.738,
+        34: 0.541,
+        47: 0.382,
+        56.5: 0.278,
+        65: 0.194,
+        73: 0.126,
+        80.2: 0.075,
+        86.1: 0.042,
+        91: 0.021,
+        95.2: 0.008,
+        98.2: 0.002,
+        100: 0
+    );
+
+    $hue: hue($startColor);
+    $saturation: saturation($startColor);
+    $lightness: lightness($startColor);
+    $stops: ();
+
+    @each $colorStop, $alphaValue in $scrimCoordinates {
+        $stop: hsla($hue, $saturation, $lightness, $alphaValue) percentage($colorStop/100);
+        $stops: append($stops, $stop, comma);
+    }
+
+    background-image: linear-gradient(unquote($direction), $stops);
+}
+
+// box-shadow https://brumm.af/shadows
+@mixin shadow {
+    box-shadow:
+        0 2.8px 2.2px rgba(0, 0, 0, 0.02),
+        0 6.7px 5.3px rgba(0, 0, 0, 0.028),
+        0 12.5px 10px rgba(0, 0, 0, 0.035),
+        0 22.3px 17.9px rgba(0, 0, 0, 0.042),
+        0 41.8px 33.4px rgba(0, 0, 0, 0.05),
+        0 100px 80px rgba(0, 0, 0, 0.07);
+}
+
+// Focus (https://matthiasott.com/notes/focus-visible-is-here)
+@mixin focus {
+    outline: 2px solid $focus-color;
+    outline-offset: 0.25rem;
+    &:not(:focus-visible) {
+        outline: 0;
+    }
+    &:focus-visible {
+        outline: 2px solid $focus-color;
+        outline-offset: 0.25rem;
+    }
+}
+
+// Responsive spacing (https://github.com/jgthms/bulma/issues/451#issuecomment-703709105)
+// @each $property, $shortcut in $spacing-shortcuts {
+//     @each $name, $value in $spacing-values {
+//         // Cardinal directions
+//         @each $direction, $suffix in $spacing-directions {
+//             @include mobile {
+//                 .#{$shortcut}#{$suffix}-#{$name}-mobile {
+//                     #{$property}-#{$direction}: $value !important;
+//                 }
+//             }
+//             @include tablet {
+//                 .#{$shortcut}#{$suffix}-#{$name}-tablet {
+//                     #{$property}-#{$direction}: $value !important;
+//                 }
+//             }
+//             @include touch {
+//                 .#{$shortcut}#{$suffix}-#{$name}-touch {
+//                     #{$property}-#{$direction}: $value !important;
+//                 }
+//             }
+//             @include desktop {
+//                 .#{$shortcut}#{$suffix}-#{$name}-desktop {
+//                     #{$property}-#{$direction}: $value !important;
+//                 }
+//             }
+//             @include widescreen {
+//                 .#{$shortcut}#{$suffix}-#{$name}-widescreen {
+//                     #{$property}-#{$direction}: $value !important;
+//                 }
+//             }
+//             @include fullhd {
+//                 .#{$shortcut}#{$suffix}-#{$name}-fullhd {
+//                     #{$property}-#{$direction}: $value !important;
+//                 }
+//             }
+//         }
+
+//         // Horizontal axis
+//         @if $spacing-horizontal != null {
+//             @include mobile {
+//                 .#{$shortcut}#{$spacing-horizontal}-#{$name}-mobile {
+//                     #{$property}-left: $value !important;
+//                     #{$property}-right: $value !important;
+//                 }
+//             }
+//             @include tablet {
+//                 .#{$shortcut}#{$spacing-horizontal}-#{$name}-tablet {
+//                     #{$property}-left: $value !important;
+//                     #{$property}-right: $value !important;
+//                 }
+//             }
+//             @include touch {
+//                 .#{$shortcut}#{$spacing-horizontal}-#{$name}-touch {
+//                     #{$property}-left: $value !important;
+//                     #{$property}-right: $value !important;
+//                 }
+//             }
+//             @include desktop {
+//                 .#{$shortcut}#{$spacing-horizontal}-#{$name}-desktop {
+//                     #{$property}-left: $value !important;
+//                     #{$property}-right: $value !important;
+//                 }
+//             }
+//             @include widescreen {
+//                 .#{$shortcut}#{$spacing-horizontal}-#{$name}-widescreen {
+//                     #{$property}-left: $value !important;
+//                     #{$property}-right: $value !important;
+//                 }
+//             }
+//             @include fullhd {
+//                 .#{$shortcut}#{$spacing-horizontal}-#{$name}-fullhd {
+//                     #{$property}-left: $value !important;
+//                     #{$property}-right: $value !important;
+//                 }
+//             }
+//         }
+
+//         // Vertical axis
+//         @if $spacing-vertical != null {
+//             @include mobile {
+//                 .#{$shortcut}#{$spacing-vertical}-#{$name}-mobile {
+//                     #{$property}-top: $value !important;
+//                     #{$property}-bottom: $value !important;
+//                 }
+//             }
+//             @include tablet {
+//                 .#{$shortcut}#{$spacing-vertical}-#{$name}-tablet {
+//                     #{$property}-top: $value !important;
+//                     #{$property}-bottom: $value !important;
+//                 }
+//             }
+//             @include touch {
+//                 .#{$shortcut}#{$spacing-vertical}-#{$name}-touch {
+//                     #{$property}-top: $value !important;
+//                     #{$property}-bottom: $value !important;
+//                 }
+//             }
+//             @include desktop {
+//                 .#{$shortcut}#{$spacing-vertical}-#{$name}-desktop {
+//                     #{$property}-top: $value !important;
+//                     #{$property}-bottom: $value !important;
+//                 }
+//             }
+//             @include widescreen {
+//                 .#{$shortcut}#{$spacing-vertical}-#{$name}-widescreen {
+//                     #{$property}-top: $value !important;
+//                     #{$property}-bottom: $value !important;
+//                 }
+//             }
+//             @include fullhd {
+//                 .#{$shortcut}#{$spacing-vertical}-#{$name}-fullhd {
+//                     #{$property}-top: $value !important;
+//                     #{$property}-bottom: $value !important;
+//                 }
+//             }
+//         }
+//     }
+// }

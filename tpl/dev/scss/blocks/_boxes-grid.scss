@@ -1,0 +1,35 @@
+.boxes-grid {
+    @include mobile {
+        > div:nth-child(even) .box {
+            border-color: $primary;
+            &:hover {
+                &:hover,
+                &:focus {
+                    box-shadow: -7px 7px 0px 0px $primary;
+                }
+            }
+            > span {
+                color: #000;
+                background-color: $primary;
+            }
+        }
+    }
+    @include tablet {
+        > div {
+            &:nth-child(4n + 2),
+            &:nth-child(4n + 3) {
+                .box {
+                    border-color: $primary;
+                    &:hover,
+                    &:focus {
+                        box-shadow: -7px 7px 0px 0px $primary;
+                    }
+                    > span {
+                        color: #000;
+                        background-color: $primary;
+                    }
+                }
+            }
+        }
+    }
+}

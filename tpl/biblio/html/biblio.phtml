@@ -1,0 +1,35 @@
+<?php
+# REQUIRED FILES
+$base_path = dirname(dirname(__FILE__));
+$cwd        = basename($base_path); # Current dir name
+
+# Current controller add
+require($base_path . '/' . $cwd . '.php');
+?>
+<!-- Page Wrapper -->
+<main class="main-content" id="main">
+    <!-- Main wrapper -->
+    <div class="wrapper">
+        <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/breadcrumb.phtml'; ?>
+
+        <div class="wrapper mt-8 flow--xl">
+            <h1 class="is-sr-only"><?php echo $title ?></h1>
+            <div id="items_container"></div>
+        </div>
+
+        <!-- Result -->
+        <div class="wrapper mt-8 flow--xl" id="rows_list"></div>
+
+
+    </div>
+</main>
+<?php include dirname(dirname(dirname(__FILE__))) . '/page/html/footer.phtml'; ?>
+
+<?php echo $this->get_header_links('js', ['js_async' => 'defer']) ?>
+<script>
+    dom_ready(function() {
+        biblio.set_up({
+            rows_list_container: document.getElementById('rows_list')
+        })
+    })
+</script>

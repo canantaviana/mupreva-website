@@ -1,0 +1,35 @@
+// node_modules/bulma-scss/grid/_columns.scss
+
+// $column-gap: var(--space-s);
+
+.columns {
+    // @include ltr-property("margin", -$column-gap, false);
+    // @include ltr-property("margin", -$column-gap);
+
+    // margin-top: -$column-gap;
+
+    // &:last-child {
+    //     margin-bottom: -$column-gap;
+    // }
+
+    // &:not(:last-child) {
+    //     margin-bottom: calc(1.5rem - #{$column-gap});
+    // }
+
+    // --------------------
+    // Modificació: substitució de les variables de scss perquè funcioni amb custom properties.
+    // Cal actualitzar-ho si canvia el valor de $column-gap
+    // --------------------
+    // @include ltr-property("margin", calc(var(--space-s) * -1), false);
+    // @include ltr-property("margin", calc(var(--space-s) * -1));
+
+    // margin-top: calc(var(--space-s) * -1);
+
+    // &:last-child {
+    //     margin-bottom: calc(var(--space-s) * -1);
+    // }
+
+    // &:not(:last-child) {
+    //     margin-bottom: calc(1.5rem - calc(var(--space-s) * -1));
+    // }
+}

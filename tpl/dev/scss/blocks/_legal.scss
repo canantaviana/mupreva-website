@@ -1,0 +1,11 @@
+.legal {
+    li {
+        &::before {
+            display: none !important;
+        }
+        &:not(:last-child)::after {
+            content: "·";
+            margin-left: var(--space-xs);
+        }
+    }
+}

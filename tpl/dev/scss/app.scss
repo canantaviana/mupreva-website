@@ -1,0 +1,167 @@
+// ------
+// GLOBAL
+// ------
+@import "base/_googleFonts_Archivo-swap.scss";
+@import "base/utopia";
+
+// Bulma cusotmize
+// ---------------
+@import "bulma-customize/all";
+
+// Variables
+// ---------
+@import "variables/hamburger";
+// @import "variables/mfp";
+// @import "variables/slick-slider";
+@import "variables/swiper";
+@import "variables/vars";
+
+// Libraries
+// ---------
+@import "lib/lib";
+// Mixins
+// -------
+@import "helpers/mixins";
+
+// Base styles
+// -----------
+@import "base/base";
+
+// --------------
+// Inici CUBE CSS (https://cube.fyi/)
+// --------------
+
+// Composition (https://cube.fyi/composition.html#composition)
+// -----------
+@import "composition/columns";
+@import "composition/sidebar";
+@import "composition/grid";
+@import "composition/fullscreen-layout";
+
+// Utility (https://cube.fyi/utility.html#utility)
+// -------
+@import "utilities/flex-order";
+@import "utilities/flow";
+@import "utilities/full-link";
+@import "utilities/gap";
+@import "utilities/h-100";
+@import "utilities/is-bordered";
+@import "utilities/is-relative";
+// @import "utilities/letter-spacing";
+@import "utilities/line-height";
+@import "utilities/link-decoration-none";
+@import "utilities/radius";
+@import "utilities/rounded";
+@import "utilities/simple-list";
+@import "utilities/static";
+@import "utilities/table-responsive";
+@import "utilities/text-columns";
+@import "utilities/text-weight-black";
+@import "utilities/tt-none";
+@import "utilities/visible";
+@import "utilities/w-100";
+@import "utilities/wrapper";
+
+// Block (https://cube.fyi/block.html#block)
+// -----
+@import "blocks/accordion";
+// @import "blocks/borders-list";
+@import "blocks/boxes-grid";
+@import "blocks/boxes-list";
+@import "blocks/breadcrumb";
+@import "blocks/button";
+@import "blocks/checkradio";
+// @import "blocks/collapsible";
+@import "blocks/cols-list";
+// @import "blocks/dest";
+// @import "blocks/dest-list";
+@import "blocks/download-doc";
+@import "blocks/dropdown-menu";
+@import "blocks/footer";
+@import "blocks/form";
+// @import "blocks/form-contact";
+@import "blocks/form-help";
+@import "blocks/form-label";
+// @import "blocks/form-login";
+// @import "blocks/full-bleed";
+@import "blocks/form-autocomplete";
+@import "blocks/gallery";
+@import "blocks/highlighted-link";
+@import "blocks/highlighted-p-1";
+// @import "blocks/highlighted-p-2";
+// @import "blocks/highlighted-p-3";
+@import "blocks/icon";
+// @import "blocks/icon-large";
+@import "blocks/ihavecookies";
+@import "blocks/lang";
+// @import "blocks/legal";
+@import "blocks/loader";
+// @import "blocks/main-content";
+@import "blocks/main-header";
+@import "blocks/main-nav";
+@import "blocks/mfp";
+@import "blocks/navigation";
+@import "blocks/news-form";
+@import "blocks/pagination";
+@import "blocks/related-docs";
+@import "blocks/scrolltop";
+@import "blocks/search-form";
+@import "blocks/share-list";
+@import "blocks/site-logo";
+@import "blocks/skip";
+@import "blocks/slider";
+// @import "blocks/social-list";
+@import "blocks/tabs";
+// @import "blocks/toggle";
+// @import "blocks/video-container";
+@import "blocks/map";
+
+// Blocks específics del projecte
+// ------------------------------
+@import "blocks/a11y-dialog";
+@import "blocks/button-like";
+@import "blocks/dl-list";
+@import "blocks/dl-minimal";
+@import "blocks/galeria";
+@import "blocks/header-search";
+@import "blocks/pubs-list";
+@import "blocks/pub-text-results";
+@import "blocks/swiper-fitxa";
+@import "blocks/swiper-home";
+@import "blocks/table-collapsibles";
+@import "blocks/timeline";
+@import "blocks/tooltip";
+
+// només utilitzar pels exemples:
+.box {
+    color: #fff;
+    height: 100%;
+    background-color: #666;
+    // padding: 1rem;
+}
+.test::before {
+    content: "";
+    display: inline-block;
+    width: 1em; /*Modificar segons la necessitat. Ha de ser igual que el height.*/
+    height: 1em; /*Modificar segons la necessitat. Ha de ser igual que el width.*/
+    background-image: url("../img/sprites-svg/skull.svg");
+    margin-right: var(--step-1);
+}
+.test--base64::before {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48IS0tIEZvbnQgQXdlc29tZSBGcmVlIDUuMTUuNCBieSBAZm9udGF3ZXNvbWUgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbSBMaWNlbnNlIC0gaHR0cHM6Ly9mb250YXdlc29tZS5jb20vbGljZW5zZS9mcmVlIChJY29uczogQ0MgQlkgNC4wLCBGb250czogU0lMIE9GTCAxLjEsIENvZGU6IE1JVCBMaWNlbnNlKSAtLT48cGF0aCBkPSJNMjU2IDBDMTE0LjYgMCAwIDEwMC4zIDAgMjI0YzAgNzAuMSAzNi45IDEzMi42IDk0LjUgMTczLjcgOS42IDYuOSAxNS4yIDE4LjEgMTMuNSAyOS45bC05LjQgNjYuMmMtMS40IDkuNiA2IDE4LjIgMTUuNyAxOC4ySDE5MnYtNTZjMC00LjQgMy42LTggOC04aDE2YzQuNCAwIDggMy42IDggOHY1Nmg2NHYtNTZjMC00LjQgMy42LTggOC04aDE2YzQuNCAwIDggMy42IDggOHY1Nmg3Ny43YzkuNyAwIDE3LjEtOC42IDE1LjctMTguMmwtOS40LTY2LjJjLTEuNy0xMS43IDMuOC0yMyAxMy41LTI5LjlDNDc1LjEgMzU2LjYgNTEyIDI5NC4xIDUxMiAyMjQgNTEyIDEwMC4zIDM5Ny40IDAgMjU2IDB6bS05NiAzMjBjLTM1LjMgMC02NC0yOC43LTY0LTY0czI4LjctNjQgNjQtNjQgNjQgMjguNyA2NCA2NC0yOC43IDY0LTY0IDY0em0xOTIgMGMtMzUuMyAwLTY0LTI4LjctNjQtNjRzMjguNy02NCA2NC02NCA2NCAyOC43IDY0IDY0LTI4LjcgNjQtNjQgNjR6Ii8+PC9zdmc+");
+}
+.test--color::before {
+    background-image: url("../img/sprites-svg/skull-fuchsia.svg");
+}
+
+// .example {
+//     color: red;
+
+//     a {
+//         font-weight: bold;
+//     }
+
+//     & {
+//         font-weight: normal;
+//     }
+// }

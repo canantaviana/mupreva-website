@@ -1,0 +1,91 @@
+@import "animate";
+// @import "components/timelify/variables";
+
+// * {
+//     box-sizing: border-box;
+// }
+
+.timeline {
+    position: relative;
+    overflow: auto;
+    width: 100%;
+    margin-top: var(--space-2xl);
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        margin: 0 auto;
+        height: 100%;
+        width: 2px;
+        background-color: $grey-dark;
+    }
+    .timeline-items {
+        list-style-type: none;
+        overflow: hidden;
+        padding-top: var(--space-l);
+        padding-left: 0;
+        .timeline-item {
+            background-color: #fff;
+            margin-bottom: var(--space-xl);
+            border-top: 2px solid $grey-dark;
+            padding-top: var(--space-xs);
+            position: relative;
+            @include tablet {
+                position: relative;
+                padding-right: var(--space-3xl);
+                width: 50%;
+                background-color: transparent;
+            }
+            @include widescreen {
+                padding-right: 15rem;
+            }
+            &.is-hidden {
+                visibility: hidden;
+            }
+            &::before {
+                content: "";
+                width: 0;
+                height: 0;
+                position: absolute;
+                right: -1em;
+                top: 0;
+            }
+            > p {
+                top: -2rem;
+                position: absolute;
+            }
+            &.inverted {
+                @include tablet {
+                    left: 50%;
+                    padding-left: var(--space-3xl);
+                    padding-right: 0;
+                }
+                @include widescreen {
+                    padding-left: 15rem;
+                }
+                &::before {
+                    content: "";
+                    width: 0;
+                    height: 0;
+                    position: absolute;
+                    left: -1em;
+                    top: 0;
+                }
+                > p {
+                    @include tablet {
+                        right: 0;
+                    }
+                }
+            }
+        }
+    }
+    .galeria {
+        li {
+            animation: none;
+        }
+        figcaption {
+            line-height: 1.3;
+        }
+    }
+}

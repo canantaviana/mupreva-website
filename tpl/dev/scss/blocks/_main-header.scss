@@ -1,0 +1,13 @@
+.main-header {
+    .wrapper {
+        @include tablet {
+            align-items: baseline;
+        }
+    }
+    // provisional
+    .js & {
+        .js-to_expand:not(.expandmore__to_expand) {
+            display: none;
+        }
+    }
+}

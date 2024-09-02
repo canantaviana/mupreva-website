@@ -1,0 +1,67 @@
+<?php
+# REQUIRED FILES
+$base_path    = dirname(dirname(__FILE__));
+$cwd        = basename($base_path); # Current dir name
+
+# Current controller add
+require($base_path . '/' . $cwd . '.php');
+?>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<?php if (isset($page_description) && $page_description != ''): ?>
+    <meta name="description" content="<?php echo $page_description ?>">
+<?php endif ?>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title><?php echo $page_title ?></title>
+
+    <script>
+        document.documentElement.className = document
+            .documentElement
+            .className
+            .replace(/(?:^|\s)no-js(?!\S)/g, "");
+        document.documentElement.className += " js";
+    </script>
+    <!-- favicons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/favicon-194x194.png" sizes="194x194">
+    <link rel="icon" type="image/png" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/manifest.json">
+    <link rel="mask-icon" href="<?php echo __WEB_ROOT_WEB__ ?>/favicons/safari-pinned-tab.svg" color="#0f7591">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="<?php echo __WEB_ROOT_WEB__ ?>/favicon/mstile-144x144.png">
+    <meta name="theme-color" content="#870d01">
+    <!-- /favicons -->
+
+    <?php echo $css_links ?>
+    <script src="<?php
+                    echo __WEB_TEMPLATE_WEB__ . '/page/js/environment.js.php';
+                    ?>"></script>
+    <script>
+        WEB_AREA = '<?php echo $this->area_name ?>';
+        IS_PRODUCTION = <?php echo json_encode(IS_PRODUCTION) ?>
+    </script>
+    <?php include $base_path . '/html/google_analytics.inc' ?>
+</head>
+
+<body class="<?php if ($this->area_name === 'main_home') echo 'homepage ' ?>is-preload">
+    <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/header.phtml'; ?>
+
+    <?php echo $content_html ?>
+</body>
+
+</html>

@@ -1,0 +1,267 @@
+/**
+* VIDEO_PLAYER
+* Common video player css
+* Note that not only html5 video is controlled here but transcription, summary,
+* indexation thumbs, etc. are part of player
+*/
+
+// Variables
+	@assets_path: "../../assets";
+	@path_page: "../../page";
+	@path_tpl: "../..";
+
+// Usage library
+	@import "@{path_page}/css/library.less";
+
+
+
+// wrapper_video_player
+	.wrapper_video_player {
+
+		.active {
+			display: inline-block !important;
+		}
+
+		>* {
+			display: inline-block;
+			height: 100%;
+		}
+
+		>.top_info {
+
+		}
+
+		>.video_player {
+
+		}
+
+		>.body_info {
+			height: 404px;
+			height: 50vh;
+			overflow: auto;
+
+			>* {
+				padding: 1em;
+				min-height: 100%;
+				width: 100%;
+			}
+
+			>.transcription_text {
+				background-color: #eaeaea;
+			}
+
+			>.abstract_text {
+				background-color: #f9bd7d;
+			}
+		}
+
+		>.footer_info {
+			display: flex;
+			flex-flow: row wrap;
+    		justify-content: space-around;
+    		width: 70%;
+    		margin: 0 auto;
+
+    		@media (max-width: 980px) {
+				width: 100% !important;
+			}
+
+			input {
+
+				@media (max-width: 980px) {
+				width: 40% !important;
+			}
+			}
+
+			>.button_full_interview{
+
+			}
+
+			.term_text {
+				flex: 100%;
+				text-align: center;
+				padding-bottom: 1em;
+			}
+		}//end >.footer_info
+
+		>.filmstrip {
+
+		}
+	}//end .wrapper_video_player
+
+
+
+// player_wrapper (overlay)
+	.player_wrapper {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 99999999;
+		text-align: center;
+		padding: 10%;
+		width: 100%;
+		height: 100%;
+
+		.cinta {
+			padding: 1em;
+			padding-top: 0.2em;
+			background-color: @qdp_green;
+			color: white;
+			border-radius: 5px;
+		}
+
+		.overlay {
+			z-index: 9;
+			width: 100%;
+			height: 100%;
+			position: fixed;
+			top: 0;
+			left: 0;
+			background-color: #000000;
+			opacity: 0.8;
+			position: absolute;
+		}
+
+		img, .wrapper_video_player {
+			// base
+			background-color: #ffffff;
+			padding: 1em;
+			border-radius: 0.25em;
+			z-index: 10;
+		}
+
+		img {
+			position: relative;
+			// width: 100%;
+			height: 100%;
+			object-fit: contain;
+			object-position: center;
+			max-width: 100%;
+		}
+
+		.wrapper_video_player {
+			width: auto;
+			min-width: 26vw;
+
+			height: auto;
+			max-height: 84vh;
+			position: relative;
+			top: 50%;
+			transform: translateY(-50%);
+			display: inline-block;
+			max-width: 720px;
+
+			@media screen and (min-width: @screen_max_wide) {
+				max-height: 100vh;
+			}
+
+			.video_player {
+				object-fit: contain;
+				width: 100%;
+				height: 100%;
+				max-height: calc(100vh - 4em)
+			}
+		}
+	}
+
+
+
+// filmstrip
+	.filmstrip {
+
+
+		>.content {
+			border-radius: 10px;
+			border: 2px #68b3c6 solid;
+			display: flex;
+			flex-wrap: wrap;
+			margin-top: 1em;
+			padding:1em;
+			max-height: 170px;
+			overflow: auto;
+
+			>a {
+				display: block;
+				position: relative;
+				margin-right: 2px;
+				margin-bottom: 2px;
+				width: 6em;
+				height: 3.376em;
+				cursor: pointer;
+
+				&.selected {
+					outline: 4px solid @line_color;
+					outline-offset: -4px;
+				}
+
+				>img {
+					width: 100%;
+					height: 100%;
+					object-fit: contain;
+					object-position: center;
+					transition: opacity 0.25s ease-in-out;
+				}
+			}
+		}
+	}
+
+
+
+// relations_container/indexation_container. Used from tree_factory and video_player
+	.relations_container, .indexation_container {
+		display: flex;
+		flex-wrap: wrap;
+		margin-left: 1.65em;
+		margin-top: 8px;
+		position: relative;
+
+		&.loading {
+			min-height: 108px;
+		}
+
+		>.relation_item, >.indexation_item {
+			position: relative;
+			margin-right: 8px;
+			width: 6em;
+			height: 5em;
+			cursor: pointer;
+			margin-bottom: 8px;
+			// background-color: #f9f9f9;
+			box-shadow: 3px 2px 7px 0px #d7d7d7;
+
+			&.indexation_item {
+				height: 3.376em;
+			}
+
+			&:hover {
+				outline: solid 2px @line_color;
+			}
+			&:active {
+				opacity: 0.5;
+			}
+
+			>img {
+				width: 100%;
+				height: 100%;
+				object-fit: contain;
+				object-position: center;
+				// background-color: #f9f9f9;
+				opacity: 0;
+				transition: opacity .25s ease-in-out;
+
+				&.loaded {
+					opacity: 1;
+				}
+			}
+		}
+
+		>a.view_in_context {
+			outline: 1px solid #e4e4e4;
+			box-shadow: none;
+			padding: 0.5em;
+			background-image: url('../../assets/images/hierarchy.svg');
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: 40%;
+		}
+	}

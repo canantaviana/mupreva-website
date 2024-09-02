@@ -1,0 +1,387 @@
+
+
+
+
+// all cases
+	.list,
+	.list_images {
+		width: 100%;
+		margin-top: 1em;
+
+		>.pagination {
+			flex: 0 0 100%;
+			opacity: 0.75;
+			padding: 0;
+			margin: 0;
+		}
+
+		>.rows_container {
+			position: relative;
+			margin-top: 1em;
+			margin-bottom: 2em;
+			min-height: 76vh;
+
+			&:after {
+			  content: '';
+			  display: block;
+			  clear: both;
+			}
+		}
+
+		&.gallery {
+			>.rows_container {
+				min-height: unset;
+			}
+		}
+		
+	}
+
+
+
+// list case
+	.list {
+		display: flex;
+		flex-wrap: wrap;
+		
+		
+		>.rows_container {			
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+			grid-gap: 1em;			
+
+			@media screen and (max-width: @screen_max_narrower) {
+				grid-template-columns: 1fr;
+			}
+
+			>.row_node {
+				display: block;
+
+				// item_wrapper
+				>.item_wrapper {
+					@line_h : 1.2em;
+					// min-height: 100vh;
+					line-height: @line_h;
+					// display: flex;
+					// flex-wrap: wrap;
+					// background-color: #e7e7e7;
+					
+					display: grid;
+					grid-template-rows: 15.1em auto;
+					// grid-gap: 1em;
+
+					// both
+					>.image_wrapper, >.info_wrapper {
+						// background-color: #f5f5f5;
+					}
+					
+					>.image_wrapper {
+						// background-color: #ffffff;
+						height: auto;
+						position: relative;
+						display: block;
+						padding: 0;
+						cursor: pointer;
+
+						&:active {
+							opacity: 0.5;
+						}
+
+						.loaded {
+							opacity: 1 !important;
+						}
+
+						.hide_opacity {
+							opacity: 0 !important;
+						}
+
+						// .item_image
+						>img {
+							transition: opacity .25s ease-in-out;
+							opacity: 0;
+							display: block;
+							width: 100%;
+							height: 100%;
+							max-height: 100vh;
+							object-fit: contain;
+
+							outline: 1px solid @color_grey_outline;
+
+							// .horizontal& {
+							// 	object-position: center center;
+							// 	// max-height: 60vh;
+							// }
+							// .vertical& {
+							// 	object-position: center top;
+							// 	// max-height: 100vh;
+							// }				
+						}
+					}
+
+					>.info_wrapper {
+						// background-color: #f1fe7a;
+
+						>* {
+							// display: none !important;
+						}
+
+						padding: 1em;
+						display: block;
+						// overflow: hidden;
+
+						.horizontal& {
+							flex: 0 0 50%;
+						}
+						.vertical& {
+							flex: 0 0 40%;
+						}
+						
+						>* {
+							// hide double <br> in text
+							br + br { display: none; }
+							// background-color: #c5fffe;
+							margin-bottom: 0.25em;
+						}
+
+						>span {
+							margin-right: 0.5em;
+						}
+
+						.label {
+							margin-right: 0.5em;
+							font-weight: bold;
+							text-transform: capitalize;
+						}
+						
+						.title_container {
+							line-height: 2em;
+							// h1.title {
+							// 	// padding-bottom: 0.5em;
+							// 	font-size: 1.6em;
+							// 	display: inline-block;
+							// 	cursor: pointer;
+							// }
+							h1.title {
+								// padding-bottom: 0.5em;
+								font-size: 1.5em;
+								display: inline-block;
+								// cursor: pointer;
+
+								&.name {
+									cursor: default;
+									font-size: 1.25em;
+								}
+
+								&.picture, &.immovable {
+									// padding-bottom: 0.5em;
+									font-size: 1.1em;
+									display: inline-block;
+									cursor: pointer;									
+								}
+								&.picture {
+									display: none;
+								}
+							}
+						}
+
+						.typology_container {
+							font-size: 1.1em;
+							line-height: 2em;
+							font-weight: 500;
+						}				
+
+						.dating {
+
+						}
+
+						.collection {
+							// background-color: #e7e7e7
+						}
+
+						.description {
+							word-break: break-word;
+							* {
+								word-break: break-word;
+							}
+						}
+
+						.interpretation {				
+							// background-color: #e8d893;
+							overflow: hidden;
+							opacity: 0.85;
+						}
+
+						.documents {
+
+							img.pdf {
+								width: 2em;
+								height: 2em;
+
+								background-image: url('../../assets/images/pdf.svg');
+							}
+						}
+
+						.audiovisuals {
+							// audiovisual_link
+
+							img.audiovisual {
+								width: 2em;
+								height: 2em;
+
+								background-image: url('../../assets/images/audiovisual.svg');
+							}
+						}
+
+						.technique, .material, .indexation {
+							>span { // label like 'Materia'
+								margin-right: 0.5em;
+								font-weight: bold;
+								text-transform: capitalize;
+								&:after {
+									content: " : "
+								}
+							}
+							>a {
+								margin-right: 0.5em;
+								display: inline-block;
+							}
+						}
+
+						>.map {
+							height: 35vh;
+							min-height: 500px;
+							border: 1px solid #eeeeee;
+							background-color: #eeeeee;
+						}
+					}
+
+					// truncate long text
+					.fade {
+						line-height: @line_h;
+						position: relative;
+						height: 5.85em; /* exactly five lines */
+						overflow: hidden;
+
+						&:after {
+							content: " + ";
+							text-align: right;
+							position: absolute;
+							bottom: 0;
+							right: 0;
+							height: @line_h;
+							
+							border-radius: 3px;
+							display: block;
+							padding: 0.5em;
+							padding-top: 0;
+							padding-bottom: 0;
+							z-index: 1;
+							cursor: pointer;
+							// background-color: #e8d420;
+							width: 40%;
+							background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 75%);
+
+						}
+					}
+
+				}//end .item_wrapper
+			}//end >.row_node
+		}//end >.rows_container
+	}//end .list
+
+
+
+// list_images case
+	.list_images {		
+		display: block;
+		position: relative;
+
+		@_margin : 20px;
+		
+		>.rows_container { // grid			
+			display: block;	
+			width: calc(100% + @_margin);
+			
+			// background-color: #f7f7f7;
+
+			@media screen and (max-width: @screen_max_narrower) {
+				width: 100%;
+			}			
+
+			>.grid-sizer,
+			>.grid-item {
+				// width: 31.833%;
+				// margin: 0.5%;
+
+				// per percentages
+				// width: 31.833%;
+				// margin: 0.75%;
+
+				// width: 33.333%;
+				// margin-bottom: 14px;
+
+				// calculated with fixed pixels margin (vertical and horizontal)				
+				@n_columns : 3;
+				margin-right: @_margin;
+				margin-bottom: @_margin;
+				width: calc((100% / @n_columns) - (@_margin * 1));
+
+				@media screen and (max-width: @screen_max_narrower) {
+					width: 48.000%;
+					margin: 1%;
+				}
+			}
+			
+			>.grid-item {
+				display: block;
+				position: relative;	
+				padding: 0;
+				// margin: 7px;
+				float: left;
+				// outline: 10px solid #e9e9e9;
+				cursor: pointer;
+
+				&:active {
+					opacity: 0.5;
+				}
+					
+				>img {
+					display: block;
+					padding: 0;
+					margin: 0;
+					outline: 1px solid @color_grey_outline;
+					opacity: 0;
+					transition: opacity .25s ease-in-out;
+
+
+					// width: 200px;
+					// height: 200px;
+					// transition: opacity .25s ease-in-out;
+					// opacity: 0;
+					// display: block;
+					// width: 100%;
+					// height: 100%;
+					// max-height: 100vh;
+					object-fit: contain;
+					// background-color: #e64ee5;
+
+					// width : 446px;
+
+					// &.vertical {
+					// 	height: 528px + 14px;
+					// }
+
+					// &.horizontal {
+					// 	height: 264px;
+					// }
+
+					width: 100%;
+
+					&.loaded {
+						opacity: 1;
+					}	
+				}
+
+			}//end >.row_node
+		}//end >.rows_container
+	}//end .list
+	

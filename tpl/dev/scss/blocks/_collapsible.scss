@@ -1,0 +1,103 @@
+.collapsible {
+    .js & {
+        border-top: 1px solid $grey;
+        .collapsible__title {
+            font-size: var(--step-1);
+            font-weight: bold;
+            letter-spacing: -0.25px;
+            button {
+                all: inherit;
+                border: 0;
+                width: 100%;
+                color: $primary;
+                border-bottom: 1px solid $grey;
+                margin-top: 0;
+                padding: var(--space-s) 0;
+                &:hover,
+                &:active {
+                    background-color: inherit;
+                }
+                &[aria-expanded="true"] {
+                    border-bottom: 0;
+                }
+                &:focus {
+                    @include focus;
+                }
+            }
+            + div {
+                // margin-top: 0 !important;
+                padding-bottom: var(--space-m);
+                &:not(hidden) {
+                    border-bottom: 1px solid $grey;
+                }
+                > * {
+                    font-size: var(--step--1);
+                    + * {
+                        margin-top: var(--space-s);
+                    }
+                }
+            }
+        }
+    }
+    // button svg {
+    //     display: initial;
+    //     width: 45px;
+    //     height: 45px;
+    // }
+    [aria-expanded="true"] svg {
+        transform: rotate(0.5turn);
+        // margin-right: 0;
+        // margin-left: var(--step-6);
+    }
+    // &--large {
+    //     .js & {
+    //         border-top: 1px solid $primary;
+    //         .collapsible__title {
+    //             font-size: var(--step-6);
+    //             button {
+    //                 padding: var(--space-m) 0;
+    //             }
+    //         }
+    //     }
+    // }
+    // &--tipus-2 {
+    //     .js & {
+    //         .collapsible__title {
+    //             font-size: var(--step-3);
+    //             button {
+    //                 color: inherit;
+    //                 border-bottom-color: $grey;
+    //                 padding: 0 0 var(--space-m) 0;
+    //                 margin-bottom: var(--space-m);
+    //                 position: relative;
+    //                 &[aria-expanded="true"] {
+    //                     border-bottom: 1px solid $grey;
+    //                     &::after {
+    //                         transform: translate(-50%, 50%) rotate(180deg);
+    //                     }
+    //                 }
+    //                 svg {
+    //                     display: none;
+    //                 }
+    //                 &::after {
+    //                     content: "";
+    //                     display: block;
+    //                     position: absolute;
+    //                     left: 50%;
+    //                     bottom: 0;
+    //                     transform: translate(-50%, 50%);
+    //                     width: 32px;
+    //                     height: 32px;
+    //                     background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='31.5' y='31.5' width='31' height='31' rx='15.5' transform='rotate(-180 31.5 31.5)' fill='%23fff'/%3E%3Crect x='31.5' y='31.5' width='31' height='31' rx='15.5' transform='rotate(-180 31.5 31.5)' stroke='%23E8E8E8'/%3E%3Cpath d='m10 13.658 6 5.684 6-5.684' stroke='%23767676' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+    //                 }
+    //             }
+    //             + div {
+    //                 padding-bottom: 0;
+    //                 &:not(hidden) {
+    //                     border-bottom: none;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+}

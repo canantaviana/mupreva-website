@@ -1,0 +1,52 @@
+#
+# IGNORE FILES AND FOLDRES
+
+# various
+acc
+_acc
+des
+test
+.DS_Store
+*/.DS_Store
+.eslintrc
+*~
+.htaccess~
+.htaccess~~
+.htaccess~~~
+*.graffle
+*.data
+.smbdelete*
+* copy.*
+
+# Ignore some special files
+config.codekit3
+.jsbeautifyrc
+
+# various minified
+# js min
+*-min.js
+
+# js map
+*-min.js.map
+
+# css min
+*-min.css
+
+# css map
+# *.css.map
+
+*.sublime-workspace
+.DS_Store
+/tpl/img/1.5MB
+/tpl/img/thumb
+/.phpintel/
+
+
+
+/tpl/assets
+/tpl/assets_orig
+/tpl/node_modules
+/tpl/favicons
+/tpl/fonts
+
+/tpl/*/css_

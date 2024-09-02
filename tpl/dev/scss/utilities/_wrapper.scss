@@ -1,0 +1,13 @@
+.wrapper {
+    max-width: 106rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-l);
+    padding-right: var(--space-l);
+    &--narrow {
+        max-width: 76.5rem;
+    }
+    &--narrower {
+        max-width: 69rem;
+    }
+}

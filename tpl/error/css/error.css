@@ -1,0 +1,50 @@
+.button_icon {
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 1.25em;
+  height: 1.25em;
+  cursor: pointer;
+  background-size: 71%;
+  background-color: #c8c8c87d;
+  border-radius: 2px;
+}
+.button_icon:active {
+  opacity: 0.5;
+}
+.button_icon:hover {
+  opacity: 1;
+}
+.button_icon_simple {
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 1em;
+  height: 1em;
+  cursor: pointer;
+  background-size: contain;
+  opacity: 0.7;
+}
+.button_icon_simple:active {
+  opacity: 0.5;
+}
+.button_icon_simple:hover {
+  opacity: 1;
+}
+#error_content {
+  text-align: center;
+  margin-top: 3em;
+}
+#error_content .title {
+  font-size: 2.85em;
+  color: black;
+}
+#error_content .logo_museu {
+  height: 5em;
+  margin: 5em;
+}
+#error_content .logo_museu.flip {
+  transform: scaleX(-1);
+}
+#error_content > a.button {
+  color: #ffffff;
+}
+/*# sourceMappingURL=error.css.map */

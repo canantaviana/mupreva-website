@@ -1,0 +1,52 @@
+[class*="boxes-list-"] {
+    // Declaració de variables:
+    // Espai entre columnes:
+    --gap: var(--space-xs);
+    // Número de columnes:
+    --columns: 1;
+
+    gap: var(--gap);
+    display: flex;
+    flex-wrap: wrap;
+    font-weight: inherit !important;
+    font-family: inherit !important;
+    li {
+        flex: none;
+        width: 100%;
+        padding: var(--space-xs) !important;
+        margin-top: 0 !important;
+        width: calc((100% / var(--columns)) - var(--gap) + (var(--gap) / var(--columns)));
+        // border: 1px solid $primary;
+        background: $grey-lightest;
+        &::before {
+            display: none !important;
+        }
+    }
+}
+.boxes-list-cols-1 {
+    li {
+        --columns: 1;
+    }
+}
+.boxes-list-cols-2 {
+    li {
+        @include tablet {
+            --columns: 2;
+        }
+    }
+}
+.boxes-list-cols-3 {
+    li {
+        @include tablet {
+            --columns: 3;
+        }
+    }
+}
+.boxes-list-cols-4 li {
+    @include tablet {
+        --columns: 3;
+    }
+    @include desktop {
+        --columns: 4;
+    }
+}

@@ -1,0 +1,10 @@
+.icon-large {
+    border: 2px solid $grey-light;
+    width: 6.875rem;
+    height: 6.875rem;
+    &:hover,
+    &:focus {
+        background-color: $primary;
+        border-color: $primary;
+    }
+}

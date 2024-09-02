@@ -1,0 +1,22 @@
+.form-login {
+    max-width: 37.5rem;
+    .field-label {
+        label {
+            font-size: var(--step--1);
+        }
+    }
+    .field-body {
+        flex-grow: 2.5;
+    }
+    button.mfp-close:active {
+        top: var(--space-s);
+    }
+    // arregla problema quan el botó de tancar el popup conté una imatge (https://github.com/dimsemenov/Magnific-Popup/issues/278#issuecomment-28991862)
+    img.mfp-close {
+        all: unset;
+    }
+    button,
+    input {
+        height: auto;
+    }
+}

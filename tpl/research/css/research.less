@@ -1,0 +1,97 @@
+// Variables
+	@assets_path: "../../assets";
+	@fonts_path: "@{assets_path}/fonts";
+	@path_page: "../../page"; ;
+
+// Usage library
+	@import "@{path_page}/css/library.less";
+
+
+
+.abstract {
+	margin-top: 2em;
+}
+
+
+
+input[type=button].btn.entrada_dedalo {
+	margin-top: 3em;
+	margin-bottom: 2em;
+	margin-left: 1em;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+
+	background-color: #f78a1c;
+	&:hover {
+		background-color: darken(#f78a1c, 8%);
+	}
+
+    position: relative;
+    height: 3em;
+    background-image: url(../../assets/images/logo_dedalo_white.svg);
+    background-repeat: no-repeat;
+    background-size: 1.6em;
+    background-position: .5em center;
+    padding-left: 2.5em;
+    padding-right: 1em;
+}
+
+
+.box_with_left_line {
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	word-break: break-all;
+
+	background: #f4f4f4;
+	border: 1px solid #ddd;
+	border-left: 3px solid @qdp_green;
+	color: #666;
+	page-break-inside: avoid;
+	font-family: monospace;
+	font-size: 15px;
+	line-height: 1.6;
+	margin-bottom: 1.6em;
+	max-width: 100%;
+	overflow: auto;
+	padding: 1em 1.5em;
+	display: block;
+	word-wrap: break-word;
+}
+
+
+.content {
+
+	pre {
+		.box_with_left_line;
+	}
+
+	.hljs {
+		background: #f4f4f4;
+	}
+}
+
+
+#swagger-ui {
+	.box_with_left_line;
+	margin-top: 4em;
+	
+
+	.wrapper {
+		background-color: inherit;
+	}
+
+	.swagger-ui .scheme-container {
+		background-color: unset;
+		box-shadow: unset;
+	}
+
+	h2.title {
+		font-size: 3.2em;
+	}
+
+	.parameters-col_description input[type=text] {
+		font-size: 1em;
+	}
+   
+}

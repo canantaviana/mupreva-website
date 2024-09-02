@@ -1,0 +1,44 @@
+[class*="cols-list-"] {
+    // Declaració de variables:
+    // Espai entre columnes:
+    --gap: var(--space-xs);
+    // Número de columnes:
+    --columns: 1;
+
+    gap: var(--gap);
+    display: flex;
+    flex-wrap: wrap;
+    font-weight: inherit !important;
+    font-family: inherit !important;
+    li {
+        flex: none;
+        width: 100%;
+        padding-left: 0 !important;
+        margin-top: 0 !important;
+        width: calc((100% / var(--columns)) - var(--gap) + (var(--gap) / var(--columns)));
+        &::before {
+            display: none !important;
+        }
+    }
+}
+// 2 columnes
+.cols-list-2 li {
+    @include tablet {
+        --columns: 2;
+    }
+}
+// 3 columnes
+.cols-list-3 li {
+    @include tablet {
+        --columns: 3;
+    }
+}
+// 4 columnes
+.cols-list-4 li {
+    @include tablet {
+        --columns: 3;
+    }
+    @include desktop {
+        --columns: 4;
+    }
+}

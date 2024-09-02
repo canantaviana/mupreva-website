@@ -1,0 +1,15 @@
+.borders-list {
+    font-size: var(--step--1) !important;
+    border-top: 2px solid $primary;
+    line-height: 1.2;
+    li {
+        margin-top: 0 !important;
+        padding-left: 0 !important;
+        padding-top: var(--space-s);
+        padding-bottom: var(--space-s);
+        border-bottom: 2px solid $primary;
+        &::before {
+            display: none !important;
+        }
+    }
+}

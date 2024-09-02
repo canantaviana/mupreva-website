@@ -1,0 +1,14 @@
+.pubs-list {
+    --colWidth: 238px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--colWidth), 1fr));
+    column-gap: var(--space-m);
+    row-gap: var(--space-l);
+    &__pict {
+        height: 21rem;
+        // background: aqua;
+        img {
+            max-height: 100%;
+        }
+    }
+}

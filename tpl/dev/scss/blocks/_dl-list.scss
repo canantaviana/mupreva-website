@@ -1,0 +1,16 @@
+ol.dl-list {
+    list-style-type: "";
+    @include tablet {
+        column-count: 2;
+        column-gap: var(--space-2xl);
+    }
+    li {
+        break-inside: avoid;
+        margin-bottom: var(--space-m);
+    }
+    a {
+        display: block;
+        background: url("img/ico-descarregar.svg") no-repeat;
+        padding-left: 3rem;
+    }
+}

@@ -1,0 +1,60 @@
+.flow > * + * {
+    margin-top: 1rem;
+    margin-top: var(--flow);
+}
+
+.flow--3xs > * + * {
+    margin-top: var(--space-3xs);
+}
+
+.flow--2xs > * + * {
+    margin-top: var(--space-2xs);
+}
+
+.flow--xs > * + * {
+    margin-top: var(--space-xs);
+}
+
+.flow--s > * + * {
+    margin-top: var(--space-s);
+}
+
+.flow--m > * + * {
+    margin-top: var(--space-m);
+}
+
+.flow--l > * + * {
+    margin-top: var(--space-l);
+}
+
+.flow--xl > * + * {
+    margin-top: var(--space-xl);
+}
+
+.flow--2xl > * + * {
+    margin-top: var(--space-2xl);
+}
+
+.flow--3xl > * + * {
+    margin-top: var(--space-3xl);
+}
+
+// .flow--s-l > * + * {
+//     margin-top: var(--space-s-l);
+// }
+
+// .flow--l-xl > * + * {
+//     margin-top: var(--space-l-xl);
+// }
+
+// .flow--2xs-xs > * + * {
+//     margin-top: var(--space-2xs-xs);
+// }
+
+// .flow--section > * + * {
+//     margin-top: var(--space-xl-3xl);
+// }
+
+// .flow--gutter > * + * {
+//     margin-top: var(--gutter);
+// }

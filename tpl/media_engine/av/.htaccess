@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+
+	# transparent redirection of videos (based on domain)
+
+	RewriteEngine On
+
+	# local development files are redirected to '/dedalo/media_test/media_quart'
+		RewriteCond %{HTTP_HOST} ^quart:8080$
+		RewriteRule ^(?!av/)(.*)$ /dedalo/media_test/media_quart/av/404/$1 [L]
+
+	# production files are redirected to '/dedalo/media'
+		RewriteCond %{HTTP_HOST} ^museuquartdepoblet.org$
+		RewriteRule ^(?!av/)(.*)$ /dedalo/media/av/404/$1 [L]
+
+</IfModule>

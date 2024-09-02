@@ -1,0 +1,32 @@
+<?php
+# REQUIRED FILES
+$base_path = dirname(dirname(__FILE__));
+$cwd        = basename($base_path); # Current dir name
+
+# Current controller add
+require($base_path . '/' . $cwd . '.php');
+?>
+
+<!-- Wrapper -->
+<main class="main-content" id="main">
+    <div class="wrapper">
+    <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/breadcrumb.phtml'; ?>
+
+        <!-- item -->
+        <div id="item" class="item"></div>
+
+    </div>
+</main>
+<?php include dirname(dirname(dirname(__FILE__))) . '/page/html/footer.phtml'; ?>
+
+
+<?php echo $this->get_header_links('js', ['js_async' => 'defer']) ?>
+<script>
+    dom_ready(function() {
+        item.init({
+            table: '<?php echo $table ?>',
+            section_id: <?php echo (int)$section_id ?>,
+            target: document.getElementById("item")
+        })
+    })
+</script>

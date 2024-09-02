@@ -1,0 +1,15 @@
+:root {
+    --flow: var(--space-s);
+    --fluid-12-24: clamp(0.75rem, 0.4891rem + 1.3043vi, 1.5rem);
+    --fluid-24-34: clamp(1.5rem, 1.2826rem + 1.087vi, 2.125rem);
+    --fluid-400-500: clamp(25rem, 22.8261rem + 10.8696vi, 31.25rem);
+
+    // slider fitxa
+    --fluid-250-595: clamp(15.625rem, 8.125rem + 37.5vi, 37.1875rem);
+    --fluid-50-115: clamp(3.125rem, 1.712rem + 7.0652vi, 7.1875rem);
+}
+
+// color focus
+$focus-color: #e67300;
+// $focus-color: currentColor;
+$small-breakpoint: 450px;

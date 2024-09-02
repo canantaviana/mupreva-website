@@ -1,0 +1,374 @@
+html {
+    scroll-behavior: smooth;
+    &:has(body.fullscreen) {
+        scroll-behavior: auto;
+    }
+}
+body {
+    overflow-x: hidden;
+    // background-color: var(--bkg-color);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    text-wrap: balance;
+}
+h1,
+h2,
+h3 {
+    line-height: 1.2;
+}
+h1 {
+    font-size: var(--step-7);
+    font-weight: 600;
+    color: $dark;
+}
+h2 {
+    font-size: var(--step-5);
+    font-weight: 600;
+    .text-base & {
+        font-weight: bold;
+    }
+}
+h3 {
+    font-size: var(--step-0);
+    font-weight: bold;
+}
+h4 {
+    font-size: var(--step-0);
+    font-weight: 600;
+}
+// h5 {
+//     font-size: var(--step--1);
+// }
+// h6 {
+//     font-size: var(--step--1);
+//     font-weight: 600;
+// }
+h1,
+h2,
+// h3,
+// h4,
+button,
+input,
+label {
+    line-height: 1.1;
+}
+
+.text-base {
+    // font-weight: 300;
+    // p {
+    //     font-size: var(--step--1);
+    //     line-height: 1.6;
+    // }
+    ul,
+    ol {
+        list-style-type: ""; /*https://www.matuzo.at/blog/2023/removing-list-styles-without-affecting-semantics*/
+        font-size: var(--step--1);
+        font-weight: 500;
+        > li {
+            position: relative;
+        }
+        ul,
+        ol {
+            font-weight: 300;
+            margin-top: var(--space-s);
+            // margin-left: var(--space-s);
+        }
+        ul {
+            > li {
+                padding-left: 0.5rem;
+                &::before {
+                    content: "";
+                    width: 3px;
+                    height: 3px;
+                    border-radius: $radius-rounded;
+                    background-color: $primary;
+                    display: block;
+                    margin-right: var(--space-2xs);
+                    position: absolute;
+                    left: 0;
+                    top: 0.6em;
+                }
+            }
+        }
+        ol {
+            > li {
+                padding-left: 2.25rem;
+                &::before {
+                    color: $grey-darker;
+                    font-weight: 600;
+                    border-right-width: 1px;
+                    border-right-color: $grey;
+                }
+            }
+        }
+    }
+    ul {
+        > li {
+            padding-left: 2.5rem;
+            &::before {
+                content: "";
+                width: 30px;
+                height: 30px;
+                display: block;
+                margin-right: var(--space-2xs);
+                position: absolute;
+                background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 0v30h30V0z'/%3E%3Cpath stroke='%23a50e00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M6.25 15h17.5M18.75 20l5-5M18.75 10l5 5'/%3E%3C/g%3E%3C/svg%3E");
+                left: 0;
+                top: -0.25em;
+            }
+            + li {
+                margin-top: var(--space-xs);
+            }
+        }
+    }
+    ol {
+        > li {
+            padding-left: 1.75rem;
+            &::before {
+                content: counters(list-item, ".");
+                display: block;
+                color: $primary;
+                font-size: 0.75rem;
+                margin-right: var(--space-2xs);
+                padding-right: var(--space-2xs);
+                border-right: 2px solid $primary;
+                font-weight: 600;
+                position: absolute;
+                left: 0;
+                top: 0.25em;
+            }
+            + li {
+                margin-top: var(--space-xs);
+            }
+        }
+    }
+}
+
+a {
+    text-decoration: underline 0.085em;
+    text-underline-offset: 0.3em;
+    word-break: break-word;
+    &:hover {
+        text-decoration: none;
+        color: $primary;
+    }
+    // &:not(:has(img))[href^="http"] {
+    //     display: inline-flex;
+    //     align-items: baseline;
+    //     gap: 0.5em;
+    //     &::after {
+    //         content: "";
+    //         background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.969 6.768h-.813a.406.406 0 0 0-.406.407V9.75H1.625V1.625h2.656a.406.406 0 0 0 .407-.406V.406A.406.406 0 0 0 4.28 0H1.22A1.219 1.219 0 0 0 0 1.219v8.937a1.219 1.219 0 0 0 1.219 1.219h8.937a1.218 1.218 0 0 0 1.219-1.219V7.175a.406.406 0 0 0-.406-.407zM10.766.12h-3.25a.61.61 0 0 0-.432 1.041l.907.907L3.428 6.51a.61.61 0 0 0 0 .864l.575.574a.61.61 0 0 0 .864 0l4.56-4.442.907.906a.61.61 0 0 0 1.041-.432V.73a.61.61 0 0 0-.61-.609z' fill='%23636363'/%3E%3C/svg%3E");
+    //         width: 12px;
+    //         height: 12px;
+    //         display: inline-block;
+    //         flex-shrink: 0;
+    //     }
+    // }
+}
+
+// strong {
+//     font-weight: bold;
+// }
+// strong em,
+// em strong {
+//     font-weight: bold;
+//     font-style: italic;
+// }
+
+address {
+    font-style: normal;
+}
+
+abbr {
+    text-decoration: none;
+}
+
+canvas {
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -o-crisp-edges;
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor;
+    max-width: 100%;
+    // outline: 1px solid red;
+}
+
+blockquote {
+    font-weight: 300;
+    line-height: 1.2;
+    &::before,
+    &::after {
+        display: inline;
+    }
+    &::before {
+        content: "“";
+    }
+    &::after {
+        content: "”";
+    }
+}
+:focus {
+    @include focus;
+    .has-background-black:not(.error) & {
+        outline-color: #fff;
+    }
+}
+
+table {
+    @extend .table;
+}
+
+figure {
+    text-align: center;
+    img {
+        display: inline-block;
+    }
+}
+figcaption {
+    font-size: var(--step--2);
+    margin-top: var(--space-3xs);
+}
+
+details {
+    summary {
+        list-style: none;
+        font-weight: 300;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid;
+        padding: var(--space-3xs) 0;
+        cursor: default;
+        &::after {
+            content: "";
+            display: block;
+            width: 13px;
+            height: 8px;
+            margin-right: 4px;
+            background-image: url("data:image/svg+xml,%3Csvg width='13' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.204 1 6.102 6.102 1 1' stroke='%23000' stroke-width='2' fill='none' fill-rule='evenodd' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        }
+    }
+    > div {
+        box-sizing: border-box;
+    }
+    &[open] {
+        summary {
+            margin-bottom: var(--space-l);
+            &::after {
+                transform: rotate(-180deg);
+                // margin-top: 4px;
+            }
+        }
+    }
+}
+
+// img {
+//     height: auto;
+// }
+
+legend {
+    font-size: var(--step-2);
+    padding: 0;
+    width: 100%;
+    font-weight: 600;
+}
+::placeholder {
+    color: #000 !important;
+}
+
+// input,
+// button,
+// textarea,
+// select {
+//     font: inherit;
+// }
+input[type="date"] {
+    position: relative;
+    &::-webkit-calendar-picker-indicator {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+}
+// https://medium.com/@yo7chen/adjustable-styles-for-the-native-input-type-date-926a13af41bb
+// ::-webkit-datetime-edit-day-field,
+// ::-webkit-datetime-edit-month-field,
+// ::-webkit-datetime-edit-year-field {
+//     &:focus {
+//         color: white;
+//         background-color: $primary;
+//     }
+// }
+// iframe {
+//     border: 0;
+// }
+
+dl {
+    @include from($small-breakpoint) {
+        display: grid;
+        grid-template-columns: max-content auto;
+        column-gap: var(--space-2xl);
+        row-gap: var(--space-m);
+    }
+}
+dt {
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: var(--step--1);
+    @include until($small-breakpoint) {
+        &:not(:first-child) {
+            margin-top: var(--space-xs);
+        }
+    }
+    @include from($small-breakpoint) {
+        grid-column: 1;
+        line-height: 1.9; /*per alinear text amb el dd*/
+    }
+}
+dd {
+    font-weight: 600;
+    @include from($small-breakpoint) {
+        grid-column: 2;
+    }
+}
+
+:target {
+    scroll-margin-block: 5ex;
+}
+
+// // A11y toggle (http://edenspiekermann.github.io/a11y-toggle/)
+// [aria-hidden="true"],
+// [data-a11y-toggle]:not([aria-controls]) {
+//     display: none;
+// }
+
+// Excepcions (https://github.com/edenspiekermann/a11y-toggle/commit/74d9d7ff3fe98dd78f8ae96f08595691ea52c329)
+/**
+ * 1. Globally hiding elements with [aria-hidden="true"] can have rendering
+ *    issues with third party integrations. Only known to date is with Google
+ *    Maps, in which it prevents the map tiles to render. Therefore it needs to
+ *    be resetted inside a Google Maps container.
+ *    See: https://github.com/edenspiekermann/a11y-toggle/issues/30
+ * 2. Fallback value in case the `initial` value is not supported.
+ *    See: http://caniuse.com/#feat=css-initial-value
+ */
+// svg[aria-hidden="true"],
+// .scrolltop [aria-hidden="true"],
+// .icon[aria-hidden="true"]
+// // .slick-dot-icon[aria-hidden="true"],
+// // .mfp-close [aria-hidden="true"]
+// {
+//     /* 1 */
+//     display: block; /* 2 */
+//     // display: initial;
+// }
