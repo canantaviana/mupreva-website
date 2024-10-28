@@ -51,6 +51,7 @@ module.exports = function () {
     ],
 
     fontFiles: [
+      'node_modules/@accessible360/accessible-slick/slick/fonts/**/*',
       'dev/fonts/**/*',
       'dev/fonts/*'
     ],
@@ -62,6 +63,7 @@ module.exports = function () {
         '400',
         '400italic',
         '500',
+        '500italic',
         '600',
         '700',
         '800',

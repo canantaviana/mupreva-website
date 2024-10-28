@@ -369,6 +369,15 @@ class page
         return $html;
     } //end get_header_links
 
+    static private function getFileTimeStamp($filePath)
+    {
+        if (file_exists(__WEB_BASE_PATH__ . $filePath)) {
+            $fileInfo = pathinfo($filePath);
+            $filePath = $fileInfo['dirname'] . '/' . $fileInfo['filename'] . '_' . filemtime(__WEB_BASE_PATH__ . $filePath) . '.' . $fileInfo['extension'];
+        }
+        return $filePath;
+    }
+
 
 
     /**
@@ -377,15 +386,8 @@ class page
      */
     static function build_css_tag($url, $media = null)
     {
-
-        if (defined('USE_CDN') && USE_CDN !== false) {
-            $url = USE_CDN . $url;
-        }
-
-        # Add version
-        $url = $url . '?' . WEB_VERSION;
-
-
+        # Add timestamp
+        $url = self::getFileTimeStamp($url);
         $media_attr = '';
         if (!is_null($media)) {
             $media_attr = ' media="' . $media . '"';  // Like screen
@@ -404,13 +406,8 @@ class page
      */
     static function build_js_tag($url, $media = null, $async = null)
     {
-
-        if (defined('USE_CDN') && USE_CDN !== false) {
-            $url = USE_CDN . $url;
-        }
-
-        // Add version to avoid cache
-        $url = $url . '?' . WEB_VERSION;
+        # Add timestamp
+        $url = self::getFileTimeStamp($url);
 
         // javascript files builded in php use lang cache param
         if (strpos($url, '.php') !== false) {
@@ -596,7 +593,7 @@ class page
     public static function render_menu_tree_plain($term_id, $menu_tree, $li_drawer, $ul_drawer, $children_column_name = 'childrens')
     {
         // TODO: treure menú fake
-        return '
+        /*return '
 <ul class="main-nav link-dn" id="main-nav">
     <li>
         <a href="/catalog/" class="has-text-white">Col·lecció</a>
@@ -604,7 +601,7 @@ class page
     <li>
         <a href="/biblio/" class="has-text-white">Publicacions</a>
     </li>
-</ul>';
+</ul>';*/
 
 
         $html = '';

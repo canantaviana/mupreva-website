@@ -29,6 +29,7 @@
     RewriteCond $1 !^sw.js
     #RewriteCond $1 !^dedalo/
     #RewriteCond $1 !^web/
+    RewriteCond $1 !^html/
 
 # Redirect all but exceptions
     RewriteRule ^(.*)$ web_app/web/$1 [NS,L]

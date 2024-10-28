@@ -43,10 +43,12 @@ config.codekit3
 
 
 
-/tpl/assets
+#/tpl/assets
 /tpl/assets_orig
 /tpl/node_modules
-/tpl/favicons
-/tpl/fonts
+#/tpl/favicons
+#/tpl/fonts
 
 /tpl/*/css_
+
+/html

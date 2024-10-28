@@ -1,0 +1,17 @@
+.navigation-sub {
+    ul {
+        row-gap: var(--space-2xs);
+        column-gap: var(--space-2xl);
+    }
+    .current {
+        display: flex;
+        align-items: center;
+        &::after {
+            content: "";
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30'%3E%3Cpath fill='none' stroke='%23870D01' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M15 6.25v17.5M10 18.75l5 5M20 18.75l-5 5'/%3E%3C/svg%3E");
+        }
+    }
+}

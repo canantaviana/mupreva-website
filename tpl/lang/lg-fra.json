@@ -90,7 +90,24 @@
     "share_other_desc": "Ou directement sur les réseaux sociaux en cliquant sur les icônes suivantes :",
     "share_copy_ok": "URL copiée dans le presse-papiers !",
 
-
+    "footer_address": "Musée de la Préhistoire de Valence<br>Centre Culturel La Beneficència<br>C/ de la Corona, 36<br>46003 Valence, Espagne",
+    "footer_visits": "Visites et activités éducatives",
+    "footer_visits_telephone": "963 883 579",
+    "footer_visits_fax": "963 883 576",
+    "footer_visits_email": "service.visites@dival.es",
+    "footer_general": "Informations générales sur le Musée",
+    "footer_general_telephone": "963 883 565",
+    "footer_visits_hours": "Du mardi au dimanche, de 10h00 à 20h00. Lundi fermé.",
+    "footer_visits_arranged": "Visites guidées au musée",
+    "footer_visits_arranged_hours": "Mardi à vendredi de 10h00 à 14h00 <br> Mardi de 16h00 à 18h00",
+    "footer_found_in": "Nous trouver sur",
+    "footer_to_top": "Retour en haut",
+    "header_jump_menu": "Aller au menu principal",
+    "header_jump_content": "Aller au contenu principal",
+    "header_select_lang": "Langue sélectionnée",
+    "header_change_lang": "Changer de langue",
+    "header_search": "Recherche",
+    "header_search_button": "Rechercher",
 
 
 

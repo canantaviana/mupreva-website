@@ -6,7 +6,6 @@ html {
 }
 body {
     overflow-x: hidden;
-    // background-color: var(--bkg-color);
 }
 
 h1,
@@ -23,12 +22,13 @@ h3 {
     line-height: 1.2;
 }
 h1 {
-    font-size: var(--step-7);
+    font-size: var(--step-6);
     font-weight: 600;
     color: $dark;
 }
 h2 {
-    font-size: var(--step-5);
+    // font-size: var(--step-5);
+    font-size: var(--step-4);
     font-weight: 600;
     .text-base & {
         font-weight: bold;
@@ -59,6 +59,11 @@ label {
     line-height: 1.1;
 }
 
+ul,
+ol {
+    list-style: initial;
+    list-style-type: ""; /*https://www.matuzo.at/blog/2023/removing-list-styles-without-affecting-semantics*/
+}
 .text-base {
     // font-weight: 300;
     // p {
@@ -67,7 +72,6 @@ label {
     // }
     ul,
     ol {
-        list-style-type: ""; /*https://www.matuzo.at/blog/2023/removing-list-styles-without-affecting-semantics*/
         font-size: var(--step--1);
         font-weight: 500;
         > li {
@@ -201,20 +205,20 @@ canvas {
     // outline: 1px solid red;
 }
 
-blockquote {
-    font-weight: 300;
-    line-height: 1.2;
-    &::before,
-    &::after {
-        display: inline;
-    }
-    &::before {
-        content: "“";
-    }
-    &::after {
-        content: "”";
-    }
-}
+// blockquote {
+//     font-weight: 300;
+//     line-height: 1.2;
+//     &::before,
+//     &::after {
+//         display: inline;
+//     }
+//     &::before {
+//         content: "“";
+//     }
+//     &::after {
+//         content: "”";
+//     }
+// }
 :focus {
     @include focus;
     .has-background-black:not(.error) & {
@@ -318,7 +322,7 @@ dl {
         display: grid;
         grid-template-columns: max-content auto;
         column-gap: var(--space-2xl);
-        row-gap: var(--space-m);
+        row-gap: var(--space-xs);
     }
 }
 dt {

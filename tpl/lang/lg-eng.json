@@ -90,7 +90,24 @@
     "share_other_desc": "Or directly on social networks by clicking on the following icons:",
     "share_copy_ok": "URL copied to clipboard!",
 
-
+    "footer_address": "Prehistory Museum of Valencia<br>La Beneficencia Cultural Center<br>C/ de la Corona, 36<br>46003 Valencia, Spain",
+    "footer_visits": "Visits and educational activities",
+    "footer_visits_telephone": "963 883 579",
+    "footer_visits_fax": "963 883 576",
+    "footer_visits_email": "service.visits@dival.es",
+    "footer_general": "General information about the Museum",
+    "footer_general_telephone": "963 883 565",
+    "footer_visits_hours": "From Tuesday to Sunday, from 10:00 to 20:00. Closed on Monday.",
+    "footer_visits_arranged": "Scheduled museum visits",
+    "footer_visits_arranged_hours": "Tuesday to Friday 10:00 to 14:00 <br> Tuesday 16:00 to 18:00",
+    "footer_found_in": "Find us on",
+    "footer_to_top": "Back to top",
+    "header_jump_menu": "Skip to main menu",
+    "header_jump_content": "Skip to main content",
+    "header_select_lang": "Selected language",
+    "header_change_lang": "Change language",
+    "header_search": "Search",
+    "header_search_button": "Search",
 
 
 

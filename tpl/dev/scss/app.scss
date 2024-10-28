@@ -83,9 +83,10 @@
 @import "blocks/form-help";
 @import "blocks/form-label";
 // @import "blocks/form-login";
-// @import "blocks/full-bleed";
+@import "blocks/full-bleed";
 @import "blocks/form-autocomplete";
 @import "blocks/gallery";
+@import "blocks/hamburger";
 @import "blocks/highlighted-link";
 @import "blocks/highlighted-p-1";
 // @import "blocks/highlighted-p-2";
@@ -120,10 +121,12 @@
 // ------------------------------
 @import "blocks/a11y-dialog";
 @import "blocks/button-like";
+@import "blocks/desplegables";
 @import "blocks/dl-list";
 @import "blocks/dl-minimal";
 @import "blocks/galeria";
 @import "blocks/header-search";
+@import "blocks/navigation-sub";
 @import "blocks/pubs-list";
 @import "blocks/pub-text-results";
 @import "blocks/swiper-fitxa";
@@ -131,6 +134,14 @@
 @import "blocks/table-collapsibles";
 @import "blocks/timeline";
 @import "blocks/tooltip";
+
+// Blocks per pàgines de Dédalo
+// ----------------------------
+// @import "blocks/block-text-img-dreta";
+
+// Estils per editor Dédalo
+// -------------------------
+@import "blocks/block-dedalo";
 
 // només utilitzar pels exemples:
 .box {

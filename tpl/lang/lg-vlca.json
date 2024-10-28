@@ -91,8 +91,26 @@
     "share_copy_ok": "URL copiada al portapapers!",
 
 
+    "footer_address": "Museu de Prehistòria de València<br>Centro Cultural La Beneficència<br>C/ de la Corona, 36<br>46003 Valencia, Espanya",
+    "footer_visits": "Visites i activitats didàctiques",
+    "footer_visits_telephone": "963 883 579",
+    "footer_visits_fax": "963 883 576",
+    "footer_visits_email": "servici.visites@dival.es",
+    "footer_general": "Informació general del Museu",
+    "footer_general_telephone": "963 883 565",
 
+    "footer_visits_hours": "De dimarts a diumenge, de 10:00 a 20:00h. Dilluns tancat.",
+    "footer_visits_arranged": "Visites concertades al museu",
+    "footer_visits_arranged_hours": "Dimarts a divendres 10:00 a 14:00 h <br> Dimarts 16:00 a 18:00 h",
+    "footer_found_in": "Troba'ns a",
+    "footer_to_top": "Tornar a l'inici",
 
+    "header_jump_menu": "Saltar al menú principal",
+    "header_jump_content": "Saltar al contingut principal",
+    "header_select_lang": "Idioma seleccionat",
+    "header_change_lang": "Canviar idioma",
+    "header_search": "Cercador",
+    "header_search_button": "Cercar",
 
 
 

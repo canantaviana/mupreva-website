@@ -1,42 +1,151 @@
 .main-nav {
-    // padding-left: 0;
-    // font-size: 1.125rem;
-    // @include mobile {
-    //     border: solid $grey;
-    //     border-width: 1px 0;
-    //     margin: var(--space-m) 0;
-    //     padding: var(--space-m) 0;
-    // }
-    // @include touch {
-    //     padding: var(--space-m) 0;
-    //     margin-bottom: var(--space-m);
-    //     border-bottom: 1px solid $grey;
-    //     > li + li {
-    //         margin-top: var(--space-xs);
-    //     }
-    //     > li > a {
-    //         display: block;
-    //         min-height: 40px;
-    //         width: calc(100% - 40px);
-    //         display: flex;
-    //         flex-direction: column;
-    //         justify-content: center;
-    //         padding-right: 0.5rem;
-    //     }
-    // }
-    @include widescreen {
-        display: flex;
-        gap: var(--space-l);
+    > ul {
+        // list-style-type: "";
+        > li {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            > ul {
+                // list-style-type: "";
+                display: none;
+            }
+        }
     }
-    // @include widescreen {
-    //     gap: var(--space-2xl);
-    //     li:last-child {
-    //         margin-right: 15%;
-    //     }
-    // }
-    // @include fullhd {
-    //     li:last-child {
-    //         margin-right: 20%;
-    //     }
-    // }
+    a {
+        text-decoration: none;
+    }
+
+    // Menú mobile
+    @include until-widescreen {
+        background: #000;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 100%;
+        padding: 0 var(--space-l) var(--space-l) var(--space-l);
+        z-index: 10;
+        > ul {
+            > li {
+                border-bottom: 1px solid #fff;
+                padding: var(--space-xs) 0;
+                > a {
+                    flex-grow: 1;
+                }
+                &.open > ul {
+                    display: block;
+                }
+                // Submenú
+                > ul {
+                    flex-basis: 100%;
+                    margin-top: var(--space-xs);
+                    font-size: var(--step--2);
+                    li + li {
+                        margin-top: var(--space-xs);
+                    }
+                }
+            }
+        }
+    }
+
+    // Menú desktop
+    @include widescreen {
+        display: block;
+        > ul {
+            display: flex;
+            gap: var(--space-xl);
+            > li {
+                padding-bottom: var(--space-m);
+                > a {
+                    &::after {
+                        content: "";
+                        display: block;
+                        position: absolute;
+                        width: 100%;
+                        height: 4px;
+                        margin-top: 20px;
+                        transition: background-color 0.05s ease-in;
+                    }
+                }
+                &.open > ul {
+                    display: flex;
+                }
+                &.open > a,
+                &:hover > a,
+                &:has([aria-current="page"]) > a {
+                    &::after {
+                        background-color: #fff;
+                    }
+                }
+                &.has-submenu a::after {
+                    width: 100%;
+                }
+            }
+            // Submenú
+            ul {
+                position: absolute;
+                background-color: $primary;
+                padding: var(--space-xl) 0;
+                display: flex;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                gap: var(--space-xl);
+                z-index: 1;
+                &::before,
+                &::after {
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    background: inherit;
+                    width: 800%;
+                }
+                &::before {
+                    left: calc(-800% + 1px);
+                }
+                &::after {
+                    right: calc(-800% + 1px);
+                }
+                a {
+                    display: block;
+                    padding-right: 2rem;
+                    width: 25ch;
+                    background: url("img/fletxa-dreta-submenu.svg") calc(100% - 3px) 50% no-repeat;
+                    &:hover {
+                        text-decoration: underline;
+                        background-position: 100% 50%;
+                    }
+                }
+            }
+        }
+    }
+    .has-submenu button {
+        background-color: transparent;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='m.823.823 4 4 4-4'/%3E%3C/svg%3E");
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        border: none;
+        width: 30px;
+        height: 25px;
+    }
+}
+
+// arregla visualització del menú al carregar la pàgina
+@include until-widescreen {
+    .js .main-nav {
+        display: none;
+    }
+}
+.hamburger[aria-expanded="true"] + .main-nav {
+    display: initial;
+}
+@include widescreen {
+    .js .main-nav {
+        opacity: 0;
+        &:has(button[type="button"]) {
+            opacity: 1;
+        }
+    }
 }

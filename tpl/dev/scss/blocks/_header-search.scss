@@ -1,7 +1,32 @@
-// .header-search {
-
-// }
-.js-to_expand[aria-hidden="true"],
-.js-to_expand[data-hidden="true"] {
-    display: none;
+.header-search {
+    button {
+        all: inherit;
+    }
+    .js-expandmore {
+        button {
+            width: 25px;
+            height: 25px;
+            background: url("img/ico-lupa.svg") no-repeat;
+            &[aria-expanded="true"] {
+                background-image: url("img/ico-tancar.svg");
+                background-size: contain;
+            }
+        }
+    }
+    .js-to_expand {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 100%;
+        z-index: 1;
+        input {
+            filter: invert(1);
+            height: 3rem;
+            width: 15rem;
+            @include tablet {
+                width: 25rem;
+            }
+        }
+    }
 }
