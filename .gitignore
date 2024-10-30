@@ -44,7 +44,7 @@ config.codekit3
 
 
 #/tpl/assets
-/tpl/assets_orig
+/tpl_old
 /tpl/node_modules
 #/tpl/favicons
 #/tpl/fonts

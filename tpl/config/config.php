@@ -64,8 +64,6 @@ define('__WEB_TEMPLATE_PATH__',    __WEB_BASE_PATH__ . '/tpl');
 define('__WEB_TEMPLATE_WEB__',    __WEB_ROOT_WEB__  . '/tpl');
 define('__WEB_HOME_URL__',    __WEB_ROOT_WEB__);
 
-//define('WEB_FAKE_FILE', __WEB_TEMPLATE_PATH__.'/webfake.json');
-
 // safe_image url
 // define('__WEB_SAFE_IMAGE_URL__', ($source_data_api==='remote')
 // 	? __WEB_MEDIA_BASE_URL__ .'/web_1.0/tpl/img/'
@@ -179,7 +177,7 @@ define('WEB_TEMPLATE_MAP', __WEB_BASE_PATH__ . '/config/template_maps/' . WEB_EN
 define('WEB_TEMPLATE_MAP_DEFAULT_SOURCE', 'db');
 
 # web_path_map . run name map for url's path like redirect 'mon' to 'catalogo'
-define('WEB_PATH_MAP',    []);
+define('WEB_PATH_MAP', []);
 
 
 
