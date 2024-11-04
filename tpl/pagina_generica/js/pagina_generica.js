@@ -43,12 +43,13 @@ var generic = {
 
             // get children info
             page.get_records({
-                table: 'ts_web',
-                sql_filter: 'parents LIKE \'%"' + row.term_id + '"%\' && template_name=\'item\'',
+                table: 'ts_web_mupreva',
+                //sql_filter: 'parents LIKE \'%"' + row.term_id + '"%\' && template_name=\'item\'',
+                sql_filter: 'parents LIKE \'%"' + row.term_id + '"%\' && web_path is null',
                 parser: page.parse_ts_web
             })
                 .then(function (rows) {
-
+console.log(rows)
                     self.render_children_items(rows) // rows are already parsed
                         .then(function (node) {
 

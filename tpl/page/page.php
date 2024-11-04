@@ -39,6 +39,19 @@ page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/data_export.js';
 page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/video_player.js';
 // fi app-min
 
+// breadcrumb
+$this->breadcrumb = $this->get_breadcrumb();
+/*$this->breadcrumb = empty($this->breadcrumb)
+    ? (!empty($this->row)
+        ? [
+            (object)[
+                'label'    => $this->row->term,
+                'path'    => '/' . $this->row->web_path
+            ]
+        ]
+        : null)
+    : $this->breadcrumb;*/
+
 // menu tree
 $menu_tree = $this->get_menu_tree_plain(WEB_MENU_PARENT, []);
 
@@ -85,6 +98,44 @@ $this->menu_footer = array_filter($menu_tree, function($item){
     return in_array($item->web_path, WEB_MENU_FOOTER);
 });
 
+//menu apartat
+// ul drawer
+$ul_title_drawer = function ($term_id, $html) {
+    $html = PHP_EOL . '<ul class="is-flex is-flex-wrap-wrap is-align-items-baseline link-dn has-text-weight-medium' . $html . '</ul>' . PHP_EOL;
+    return $html;
+};
+
+// li drawer
+$li_title_drawer = function ($menu_element, $embed_html = '') {
+
+    $web_path = $menu_element->web_path === 'main_home' ? '' : $menu_element->web_path;
+
+    $html  = '';
+    $html .= PHP_EOL . ' <li role="' . $menu_element->web_path . '">';
+
+    $url = __WEB_ROOT_WEB__ . '/' . $web_path;
+    $active = (isset($menu_element->active) && $menu_element->active !== 'no')
+        ? true
+        : false;
+
+    if ($active === true) {
+        $html .= '<a href="' . $url . '">' . $menu_element->term . '</a>';
+    } else {
+        $html .= '<a href="#">' . $menu_element->term . '</a>';
+    }
+    $html .= '</li>';
+
+    return $html;
+};
+// menu_tree_html
+if (count($this->breadcrumb) > 2) {
+    $this->menu_title_html = page::render_menu_tree_plain($this->breadcrumb[1]->term_id, $menu_tree, $li_title_drawer, $ul_title_drawer);
+}
+
+
+
+
+
 // custom_strings
 /*$this->custom_strings = [];
 $this->custom_strings['nota_legal'] = array_find($menu_tree, function ($item) {
@@ -102,18 +153,6 @@ $this->custom_strings['sitemap'] = array_find($menu_tree, function ($item) {
 
 // footer_html
 $this->footer_html = '';
-
-// breadcrumb
-$this->breadcrumb = empty($this->breadcrumb)
-    ? (!empty($this->row)
-        ? [
-            (object)[
-                'label'    => $this->row->term,
-                'path'    => '/' . $this->row->web_path
-            ]
-        ]
-        : null)
-    : $this->breadcrumb;
 
 // content_html
 $content_options = new stdClass();

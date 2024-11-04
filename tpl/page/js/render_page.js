@@ -307,7 +307,7 @@ page.render_download_license = function (callback) {
 
         const request_body = {
             dedalo_get: 'records',
-            table: 'ts_web',
+            table: 'ts_web_mupreva',
             ar_fields: ['*'],
             sql_filter: "web_path='download_license'",
             limit: 1,
@@ -424,7 +424,7 @@ page.render_share_url_dialog = function () {
 
         const request_body = {
             dedalo_get: 'records',
-            table: 'ts_web',
+            table: 'ts_web_mupreva',
             ar_fields: ['*'],
             sql_filter: "web_path='share_url'",
             limit: 1,

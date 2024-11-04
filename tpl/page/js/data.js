@@ -1506,7 +1506,7 @@ page.get_records = function (options) {
     const self = this
 
     // options
-    const table = options.table || 'ts_web'
+    const table = options.table || 'ts_web_mupreva'
     const sql_filter = options.sql_filter || null
     const limit = options.limit || 0
     const count = options.count || false
@@ -1523,7 +1523,7 @@ page.get_records = function (options) {
                 dedalo_get: 'records',
                 db_name: page_globals.WEB_DB,
                 lang: page_globals.WEB_CURRENT_LANG_CODE,
-                table: 'ts_web',
+                table: 'ts_web_mupreva',
                 ar_fields: ar_fields,
                 sql_filter: sql_filter,
                 limit: limit,

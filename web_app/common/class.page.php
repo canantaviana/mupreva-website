@@ -74,6 +74,8 @@ class page
     // menu_tree_html
     public $menu_tree_html;
 
+    public $menu_title_html;
+
     // custom_strings
     public $custom_strings;
 

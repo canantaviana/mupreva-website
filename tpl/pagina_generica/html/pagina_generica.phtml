@@ -8,13 +8,10 @@ require($base_path . '/' . $cwd . '.php');
 ?>
 <!-- Page Wrapper -->
 <main class="main-content" id="main">
-    <!-- Main wrapper -->
+    <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/breadcrumb.phtml'; ?>
+    <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/text-content.phtml'; ?>
+
     <div class="wrapper">
-        <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/breadcrumb.phtml'; ?>
-
-
-
-
         <div class="container">
             <article id="main" class="main">
 
@@ -22,12 +19,9 @@ require($base_path . '/' . $cwd . '.php');
                 <div id="row_container" class="<?php echo $web_path ?>"></div>
                 <div id="children_container" class="children_container <?php echo $web_path ?>"></div>
             </article>
-
         </div>
-
-
-
     </div>
+
 </main>
 <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/footer.phtml'; ?>
 

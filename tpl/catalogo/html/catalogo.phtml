@@ -8,23 +8,17 @@ require($base_path . '/' . $cwd . '.php');
 ?>
 <!-- Page Wrapper -->
 <main class="main-content" id="main">
-    <div class="wrapper">
-        <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/breadcrumb.phtml'; ?>
+<?php include dirname(dirname(dirname(__FILE__))) . '/page/html/breadcrumb.phtml'; ?>
+<?php include dirname(dirname(dirname(__FILE__))) . '/page/html/text-content.phtml'; ?>
 
 
-
-
-
-
-        <div class="wrapper mt-8 flow--xl">
-            <h1 class="is-sr-only"><?php echo $title ?></h1>
-            <div id="items_container"></div>
-        </div>
-
-        <!-- Result -->
-        <div class="wrapper mt-8 flow--xl" id="rows_list"></div>
-
+    <div class="wrapper mt-8 flow--xl">
+        <div id="items_container"></div>
     </div>
+
+    <!-- Result -->
+    <div class="wrapper mt-8 flow--xl" id="rows_list"></div>
+
     <!-- div id="export_data" class="export_data_container"></!-->
 </main>
 <!-- Footer -->
