@@ -64,92 +64,92 @@ const onListener = function(element, type, selector, handler) {
       // -------------------------------
 
       function hasClass(el, className) {
-      return el.classList ? el.classList.contains(className) : new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
-      }
+        return el.classList ? el.classList.contains(className) : new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
+    }
 
-      var menuItems1 = document.querySelectorAll('li.has-submenu');
-      var timer1, timer2;
+    var menuItems1 = document.querySelectorAll('li.has-submenu');
+    var timer1, timer2;
 
-      var parseHTML = function(str) {
-          var tmp = document.implementation.createHTMLDocument();
-          tmp.body.innerHTML = str;
-          return tmp.body.children;
-      };
+    var parseHTML = function(str) {
+        var tmp = document.implementation.createHTMLDocument();
+        tmp.body.innerHTML = str;
+        return tmp.body.children;
+    };
 
-      Array.prototype.forEach.call(menuItems1, function(el, i){
-          var activatingA = el.querySelector('a');
-          var btn = '<button type="button"><span class="is-sr-only">Mostra el submenú de “' + activatingA.text + '”</span></button>';
-          activatingA.insertAdjacentHTML('afterend', btn);
+    Array.prototype.forEach.call(menuItems1, function(el, i) {
+        var activatingA = el.querySelector('a');
+        var btn = '<button type="button"><span class="is-sr-only">Mostra el submenú de “' + activatingA.text + '”</span></button>';
+        activatingA.insertAdjacentHTML('afterend', btn);
 
-          // Handle hover event for non-touch devices
-          el.addEventListener("mouseover", function(event){
-              this.classList.add("open");
-              this.querySelector('a').setAttribute('aria-expanded', "true");
-              this.querySelector('button').setAttribute('aria-expanded', "true");
-              clearTimeout(timer1);
-          });
+        // Handle hover event for non-touch devices
+        el.addEventListener("mouseover", function(event) {
+            this.classList.add("open");
+            this.querySelector('a').setAttribute('aria-expanded', "true");
+            this.querySelector('button').setAttribute('aria-expanded', "true");
+            clearTimeout(timer1);
+        });
 
-          el.addEventListener("mouseout", function(event){
-              timer1 = setTimeout(function(){
-                  var openMenu = document.querySelector('.has-submenu.open');
-                  if (openMenu) {
-                      openMenu.querySelector('a').setAttribute('aria-expanded', "false");
-                      openMenu.querySelector('button').setAttribute('aria-expanded', "false");
-                      openMenu.classList.remove("open");
-                  }
-              }, 5);
-          });
+        el.addEventListener("mouseout", function(event) {
+            timer1 = setTimeout(function() {
+                var openMenu = document.querySelector('.has-submenu.open');
+                if (openMenu) {
+                    openMenu.querySelector('a').setAttribute('aria-expanded', "false");
+                    openMenu.querySelector('button').setAttribute('aria-expanded', "false");
+                    openMenu.classList.remove("open");
+                }
+            }, 5);
+        });
 
-          // Handle click and touchstart events for touch devices
-          el.querySelector('button').addEventListener("click", function(event){
-              event.preventDefault();
-              toggleSubmenu(el);
-          });
+        // Handle click and touchstart events for touch devices
+        el.querySelector('button').addEventListener("click", function(event) {
+            event.preventDefault();
+            toggleSubmenu(el);
+        });
 
-          el.querySelector('button').addEventListener("touchstart", function(event){
-              event.preventDefault();
-              toggleSubmenu(el);
-          });
+        el.querySelector('button').addEventListener("touchstart", function(event) {
+            event.preventDefault();
+            toggleSubmenu(el);
+        });
 
-          var links = el.querySelectorAll('a');
-          Array.prototype.forEach.call(links, function(link, i){
-              link.addEventListener("focus", function() {
-                  if (timer2) {
-                      clearTimeout(timer2);
-                      timer2 = null;
-                  }
-              });
-              link.addEventListener("blur", function(event) {
-                  timer2 = setTimeout(function () {
-                      var openNav = document.querySelector(".has-submenu.open")
-                      if (openNav) {
-                          openNav.className = "has-submenu";
-                          openNav.querySelector('a').setAttribute('aria-expanded', "false");
-                          openNav.querySelector('button').setAttribute('aria-expanded', "false");
-                      }
-                  }, 10);
-              });
-          });
-      });
+        var links = el.querySelectorAll('a');
+        Array.prototype.forEach.call(links, function(link, i) {
+            link.addEventListener("focus", function() {
+                if (timer2) {
+                    clearTimeout(timer2);
+                    timer2 = null;
+                }
+            });
+            link.addEventListener("blur", function(event) {
+                timer2 = setTimeout(function() {
+                    var openNav = document.querySelector(".has-submenu.open")
+                    if (openNav) {
+                        openNav.className = "has-submenu";
+                        openNav.querySelector('a').setAttribute('aria-expanded', "false");
+                        openNav.querySelector('button').setAttribute('aria-expanded', "false");
+                    }
+                }, 10);
+            });
+        });
+    });
 
-      function toggleSubmenu(el) {
-          var isOpen = hasClass(el, "open");
+    function toggleSubmenu(el) {
+        var isOpen = hasClass(el, "open");
 
-          // Close any other open submenus
-          var allMenus = document.querySelectorAll('li.has-submenu');
-          Array.prototype.forEach.call(allMenus, function(item){
-              item.classList.remove("open");
-              item.querySelector('a').setAttribute('aria-expanded', "false");
-              item.querySelector('button').setAttribute('aria-expanded', "false");
-          });
+        // Close any other open submenus
+        var allMenus = document.querySelectorAll('li.has-submenu');
+        Array.prototype.forEach.call(allMenus, function(item) {
+            item.classList.remove("open");
+            item.querySelector('a').setAttribute('aria-expanded', "false");
+            item.querySelector('button').setAttribute('aria-expanded', "false");
+        });
 
-          // Open the clicked/touched submenu if it was not already open
-          if (!isOpen) {
-              el.classList.add("open");
-              el.querySelector('a').setAttribute('aria-expanded', "true");
-              el.querySelector('button').setAttribute('aria-expanded', "true");
-          }
-          }
+        // Open the clicked/touched submenu if it was not already open
+        if (!isOpen) {
+            el.classList.add("open");
+            el.querySelector('a').setAttribute('aria-expanded', "true");
+            el.querySelector('button').setAttribute('aria-expanded', "true");
+        }
+    }
 
       // -------------------------------
       // Menú principal amb desplegables (https://www.w3.org/WAI/tutorials/menus/flyout/#use-parent-as-toggle)
@@ -197,7 +197,19 @@ const onListener = function(element, type, selector, handler) {
               offset: 150
           });
       });
-
+    // -----------------------------
+    // Estils per input[type="date"]
+    // -----------------------------
+    const dateInput = document.querySelector('.search-form input[type="date"]');
+    if (dateInput) {
+        dateInput.addEventListener('input', function() {
+        if (this.value) {
+            this.classList.add('filled');
+        } else {
+            this.classList.remove('filled');
+        }
+        });
+    }
 
 
       onListener(document, 'click', '[data-copy-url]', function(event){
@@ -271,6 +283,31 @@ const onListener = function(element, type, selector, handler) {
         swiper: swiper,
         },
     });
+
+  // ---------------------------------
+  // Swiper (Exposicions i activitats)
+  // ---------------------------------
+    var swiperExpos = new Swiper(".swiper--expos", {
+        // spaceBetween: 10,
+        slideActiveClass: 'active',
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+        slidesPerView: 1,
+        spaceBetween: 33,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            700: {
+                slidesPerView: 2,
+            },
+            1000: {
+                slidesPerView: 3,
+            },
+        },
+    });
+
 
     // ---------
     // Accordion (https://github.com/10up/component-library/tree/develop/packages/accordion)

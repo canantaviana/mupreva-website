@@ -1,0 +1,55 @@
+.card {
+    img {
+        object-fit: cover;
+        width: 100%;
+    }
+    a {
+        text-decoration: none;
+    }
+    > div:first-child {
+        order: 2;
+        &:has(a:hover, a:focus) {
+            color: #fff;
+            background-color: #000 !important;
+            a {
+                color: #fff;
+            }
+            .more-link::after,
+            li::before {
+                filter: invert(1);
+            }
+        }
+    }
+    p {
+        a {
+            z-index: 1;
+        }
+    }
+    ul {
+        @media screen and (min-width: 30em) and (max-width: 48em) {
+            column-count: 2;
+        }
+        @include tablet-only {
+            column-count: 2;
+        }
+        @include fullhd {
+            column-count: 2;
+        }
+    }
+    li {
+        display: flex;
+        align-items: baseline;
+        break-inside: avoid;
+        &::before {
+            content: "";
+            display: block;
+            flex-shrink: 0;
+            width: 15px;
+            height: 15px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' d='M3.125 7.5h8.75M9.375 10l2.5-2.5M9.375 5l2.5 2.5'/%3E%3C/svg%3E");
+            margin-right: 5px;
+            position: relative;
+            top: 2px;
+        }
+    }
+}

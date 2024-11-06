@@ -12,24 +12,12 @@ require($base_path . '/' . $cwd . '.php');
 
     <!-- Main wrapper -->
     <div class="wrapper">
-        <div class="container">
-            <article id="main">
-                <div id="error_content" class="top_container">
-                    <h2 class="title">Sorry. Page not found: <?php echo $this->area_name ?></h2>
-                    <img class="logo_museu flip" src="<?php echo __WEB_TEMPLATE_WEB__ ?>/assets/images/logo_museo_qdp_bn.svg">
-                    <img class="logo_museu normal" src="<?php echo __WEB_TEMPLATE_WEB__ ?>/assets/images/logo_museo_qdp_bn.svg">
-                    <a class="button" href="<?php echo __WEB_HOME_URL__ ?>"><?php echo tstring('inicio') ?></a>
-                </div>
-            </article>
-        </div>
+        <h2 class="title">Sorry. Page not found</h2>
+        <a class="button" href="<?php echo __WEB_HOME_URL__ ?>"><?php echo tstring('inicio') ?></a>
     </div>
-
-
-
 
     <!-- Footer -->
     <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/footer.phtml'; ?>
-
 </div>
 
 <?php echo $this->get_header_links('js', ['js_async' => 'defer']) ?>

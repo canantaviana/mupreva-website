@@ -3,12 +3,6 @@
 <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
     <nav class="breadcrumb-nav link-dn is-size-6 has-text-weight-light">
         <ol itemscope="" itemtype="https://schema.org/BreadcrumbList">
-            <li itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem">
-                <a itemprop="item" href="<?php echo __WEB_HOME_URL__ ?>/">
-                    <span itemprop="name"><?php echo tstring('inicio'); ?></span>
-                </a>
-                <meta itemprop="position" content="1">
-            </li>
             <?php
             $breadCount = 0;
             foreach ($this->breadcrumb as $entry) :

@@ -45,7 +45,7 @@ var generic = {
             page.get_records({
                 table: 'ts_web_mupreva',
                 //sql_filter: 'parents LIKE \'%"' + row.term_id + '"%\' && template_name=\'item\'',
-                sql_filter: 'parents LIKE \'%"' + row.term_id + '"%\' && web_path is null',
+                sql_filter: 'parents LIKE \'%"' + row.term_id + '"%\'',
                 parser: page.parse_ts_web,
                 resolve_portals_custom: '{"image": "image"}'
             })

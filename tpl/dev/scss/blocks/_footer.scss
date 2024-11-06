@@ -6,4 +6,7 @@ footer {
             color: #fff;
         }
     }
+    body:has(main > .has-background-grey-light:last-child) & {
+        margin-top: 0 !important;
+    }
 }

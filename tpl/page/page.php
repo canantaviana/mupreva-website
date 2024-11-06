@@ -103,7 +103,7 @@ $this->menu_footer = array_filter($menu_tree, function($item){
 //menu apartat
 // ul drawer
 $ul_title_drawer = function ($term_id, $html) {
-    $html = PHP_EOL . '<ul class="is-flex is-flex-wrap-wrap is-align-items-baseline link-dn has-text-weight-medium' . $html . '</ul>' . PHP_EOL;
+    $html = PHP_EOL . '<ul class="is-flex is-flex-wrap-wrap is-align-items-baseline link-dn has-text-weight-medium">' . $html . '</ul>' . PHP_EOL;
     return $html;
 };
 
@@ -130,8 +130,8 @@ $li_title_drawer = function ($menu_element, $embed_html = '') {
     return $html;
 };
 // menu_tree_html
-if (count($this->breadcrumb) > 2) {
-    $this->menu_title_html = page::render_menu_tree_plain($this->breadcrumb[1]->term_id, $menu_tree, $li_title_drawer, $ul_title_drawer);
+if ($this->breadcrumb && count($this->breadcrumb) > 2) {
+    $this->menu_title_html = page::render_menu_tree_plain($this->breadcrumb[2]->term_id, $menu_tree, $li_title_drawer, $ul_title_drawer);
 }
 
 

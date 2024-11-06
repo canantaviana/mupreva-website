@@ -1,6 +1,7 @@
 // Estils per contingut entrat des de Dédalo
 
 .block-dedalo {
+    @extend .text-base;
     font-weight: 500;
 
     h2 {
@@ -9,20 +10,20 @@
 
     // Separació vertical de columnes
     & > .column {
-        @include mobile {
-            margin-bottom: var(--space-xl);
-        }
+        // @include mobile {
+        margin-bottom: var(--space-l);
+        // }
     }
-    &.is-desktop > .column {
-        @include touch {
-            margin-bottom: var(--space-xl);
-        }
-    }
-    &.is-widescreen > .column {
-        @include until-widescreen {
-            margin-bottom: var(--space-xl);
-        }
-    }
+    // &.is-desktop > .column {
+    //     @include touch {
+    //         margin-bottom: var(--space-xl);
+    //     }
+    // }
+    // &.is-widescreen > .column {
+    //     @include until-widescreen {
+    //         margin-bottom: var(--space-xl);
+    //     }
+    // }
 
     // Reescriu tots els estils que es puguin posar amb l'editor
     * {
@@ -42,9 +43,9 @@
             text-align: initial !important;
         }
     }
-    br {
-        display: none;
-    }
+    // br {
+    //     display: none;
+    // }
     u,
     s {
         text-decoration: none;
@@ -59,6 +60,22 @@
         page-break-after: initial !important;
     }
 
+    // Blocks
+    .block-titol-text {
+        a {
+            color: $primary;
+            font-weight: 600;
+        }
+    }
+    .block-titol-vermell-text {
+        h3 {
+            color: $primary;
+        }
+        a {
+            font-weight: 600;
+        }
+    }
+
     // Text destacat
     blockquote {
         background-color: $primary-light;
@@ -68,20 +85,31 @@
     }
 
     // Taula
-    .table table {
-        font-size: var(--step--1);
-        th {
-            padding-left: 0;
-            font-weight: 500;
-        }
-        td {
-            font-weight: 600;
-            font-size: var(--step-0);
-        }
-        th,
-        td {
-            border: 0;
-            vertical-align: baseline;
+    .table {
+        background-color: transparent;
+        table {
+            font-size: var(--step--1);
+            th {
+                padding-left: 0;
+                padding-right: var(--space-l);
+                font-weight: 500;
+            }
+            td {
+                font-weight: 600;
+                font-size: var(--step-0);
+                padding-right: 0;
+                padding-left: var(--space-2xs);
+            }
+            th,
+            td {
+                border: 0;
+                vertical-align: baseline;
+                padding-top: var(--space-3xs);
+                padding-bottom: var(--space-3xs);
+            }
+            a {
+                color: $primary;
+            }
         }
     }
 
@@ -127,7 +155,10 @@
     // Ajustos al contingut dins un accordion
     .accordion-content & {
         h3 {
-            color: $primary;
+            --flow: var(--space-l);
+            + .table {
+                margin-top: var(--space-xs);
+            }
         }
         a {
             font-weight: 600;
@@ -182,7 +213,7 @@
         }
     }
 }
-// Evitem que posin text amb imatge esquerra
+// Evitem que posin text amb imatge esquerra dins els accordions
 .accordion-content {
     .block-text-img-esquerra,
     .block-text-img-esquerra-fons-gris .columns {

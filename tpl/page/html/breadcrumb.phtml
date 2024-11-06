@@ -3,12 +3,6 @@
     <div class="wrapper py-6">
         <nav class="breadcrumb-nav link-dn is-size-6 has-text-weight-light" aria-label="Molla de pa">
             <ol itemscope="" itemtype="https://schema.org/BreadcrumbList">
-                <li itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem">
-                    <a itemprop="item" href="<?php echo __WEB_HOME_URL__ ?>/">
-                        <span itemprop="name"><?php echo tstring('inicio'); ?></span>
-                    </a>
-                    <meta itemprop="position" content="1">
-                </li>
                 <?php
                 $breadCount = 0;
                 foreach ($this->breadcrumb as $entry) :
@@ -35,7 +29,7 @@
             <?php if (!empty($this->menu_title_html)) : ?>
                 <nav class="navigation-sub mx-auto" aria-label="Menú secundari">
                 <?php echo $this->menu_title_html ?>
-            </nav>
+                </nav>
             <?php endif ?>
         </div>
     </div>

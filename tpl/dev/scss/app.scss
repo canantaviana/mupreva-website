@@ -52,6 +52,7 @@
 @import "utilities/link-decoration-none";
 @import "utilities/radius";
 @import "utilities/rounded";
+@import "utilities/shadow";
 @import "utilities/simple-list";
 @import "utilities/static";
 @import "utilities/table-responsive";
@@ -114,21 +115,25 @@
 // @import "blocks/social-list";
 @import "blocks/tabs";
 // @import "blocks/toggle";
-// @import "blocks/video-container";
+@import "blocks/video-container";
 @import "blocks/map";
 
 // Blocks específics del projecte
 // ------------------------------
+@import "blocks/activitats-list";
 @import "blocks/a11y-dialog";
 @import "blocks/button-like";
+@import "blocks/card";
 @import "blocks/desplegables";
 @import "blocks/dl-list";
 @import "blocks/dl-minimal";
 @import "blocks/galeria";
 @import "blocks/header-search";
+@import "blocks/more-link";
 @import "blocks/navigation-sub";
 @import "blocks/pubs-list";
 @import "blocks/pub-text-results";
+@import "blocks/swiper-expos";
 @import "blocks/swiper-fitxa";
 @import "blocks/swiper-home";
 @import "blocks/table-collapsibles";

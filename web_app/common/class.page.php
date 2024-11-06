@@ -769,6 +769,12 @@ class page
         $data = json_web_data::get_data($options);
 
         $breadcrumb = array_reverse($data->result);
+        foreach ($breadcrumb as $key => $value) {
+            if ($value->web_path == 'main_home') {
+                $value->web_path = '';
+                $breadcrumb[$key] = $value;
+            }
+        }
 
         $object = new stdClass();
         foreach ($options->ar_fields as $key => $name) {
