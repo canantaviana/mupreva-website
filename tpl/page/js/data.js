@@ -1392,7 +1392,6 @@ page.combine_marks = function (row) {
 * @return array rows
 */
 page.parse_ts_web = function (rows) {
-
     rows = !common.is_array(rows)
         ? [rows]
         : rows
@@ -1419,11 +1418,11 @@ page.parse_ts_web = function (rows) {
 
         // fix link paths to absolute paths
         row.body = row.body
-            ? row.body.replaceAll('../../../media', page_globals.__WEB_MEDIA_BASE_URL__ + '/dedalo/media')
+            ? common.convertText(row.body)
             : null
 
         row.abstract = row.abstract
-            ? row.abstract.replaceAll('../../../media', page_globals.__WEB_MEDIA_BASE_URL__ + '/dedalo/media')
+            ? common.convertText(row.abstract)
             : null
 
         // row.identify_image_big = row.identify_image
@@ -1438,9 +1437,21 @@ page.parse_ts_web = function (rows) {
             })
             : null;
 
-        row.image = row.image
+        /*row.image = row.image
             ? JSON.parse(row.image)
-            : null
+            : null*/
+        row.image_icon = row.image.filter(function(elem){
+            return elem.title === 'icon';
+        }).map(function(elem){
+            elem.image = common.get_media_engine_url(elem.image, 'image')
+            return elem;
+        });
+        row.image = row.image.filter(function(elem){
+            return elem.title !== 'icon';
+        }).map(function(elem){
+            elem.image = common.get_media_engine_url(elem.image, 'image')
+            return elem;
+        });
 
         row.other_images_resolved = row.other_images_resolved
             ? JSON.parse(row.other_images_resolved)
@@ -1514,6 +1525,7 @@ page.get_records = function (options) {
     const order = options.order || 'norder ASC'
     const ar_fields = options.ar_fields || '*'
     const parse = options.parse || page.parse_ts_web
+    const resolve_portals_custom = options.resolve_portals_custom || ''
 
 
     return new Promise(function (resolve) {
@@ -1529,7 +1541,8 @@ page.get_records = function (options) {
                 limit: limit,
                 count: count,
                 offset: offset,
-                order: order
+                order: order,
+                resolve_portals_custom: resolve_portals_custom
             }
         })
             .then(function (response) {

@@ -625,7 +625,7 @@ class page
     /**
      * RENDER_MENU_TREE_PLAIN
      */
-    public static function render_menu_tree_plain($term_id, $menu_tree, $li_drawer, $ul_drawer, $children_column_name = 'childrens')
+    public static function render_menu_tree_plain($term_id, $menu_tree, $li_drawer, $ul_drawer, $children_column_name = 'childrens', $level = null, $current_level = 1)
     {
         $html = '';
 
@@ -656,9 +656,10 @@ class page
                 !empty($menu_element->{$children_column_name})
                 && $current_term_id !== WEB_MENU_PARENT
                 && (true === page::have_menu_children($menu_element->{$children_column_name}, $menu_tree))
+                && ($level == null || $current_level < $level)
             ) {
                 // recursion
-                $embed_html = self::render_menu_tree_plain($current_term_id, $menu_tree, $li_drawer, $ul_drawer, $children_column_name);
+                $embed_html = self::render_menu_tree_plain($current_term_id, $menu_tree, $li_drawer, $ul_drawer, $children_column_name, $level, $current_level + 1);
             } else {
                 $embed_html = '';
             }

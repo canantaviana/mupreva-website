@@ -46,17 +46,13 @@ var generic = {
                 table: 'ts_web_mupreva',
                 //sql_filter: 'parents LIKE \'%"' + row.term_id + '"%\' && template_name=\'item\'',
                 sql_filter: 'parents LIKE \'%"' + row.term_id + '"%\' && web_path is null',
-                parser: page.parse_ts_web
+                parser: page.parse_ts_web,
+                resolve_portals_custom: '{"image": "image"}'
             })
                 .then(function (rows) {
-console.log(rows)
-                    self.render_children_items(rows) // rows are already parsed
-                        .then(function (node) {
-
-                            if (node) {
-                                children_container.appendChild(node)
-                            }
-                        })
+                    templateModules.render_items(rows, row.term_id).forEach(node => {
+                        appendTemplate(children_container, node);
+                    });
                 })
         }
 

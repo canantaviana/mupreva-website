@@ -37,6 +37,8 @@ page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/render_page.js';
 page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/data.js';
 page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/data_export.js';
 page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/video_player.js';
+
+page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/modules.js';
 // fi app-min
 
 // breadcrumb
@@ -92,7 +94,7 @@ $li_drawer = function ($menu_element, $embed_html = '') {
 };
 
 // menu_tree_html
-$this->menu_tree_html = page::render_menu_tree_plain(WEB_MENU_PARENT, $menu_tree, $li_drawer, $ul_drawer, 'children');
+$this->menu_tree_html = page::render_menu_tree_plain(WEB_MENU_PARENT, $menu_tree, $li_drawer, $ul_drawer, 'children', 2);
 
 $this->menu_footer = array_filter($menu_tree, function($item){
     return in_array($item->web_path, WEB_MENU_FOOTER);

@@ -11,15 +11,7 @@ require($base_path . '/' . $cwd . '.php');
     <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/breadcrumb.phtml'; ?>
     <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/text-content.phtml'; ?>
 
-    <div class="wrapper">
-        <div class="container">
-            <article id="main" class="main">
-
-                <!-- body -->
-                <div id="row_container" class="<?php echo $web_path ?>"></div>
-                <div id="children_container" class="children_container <?php echo $web_path ?>"></div>
-            </article>
-        </div>
+    <div id="children_container" class="wrapper flow--2xl">
     </div>
 
 </main>
@@ -30,7 +22,6 @@ require($base_path . '/' . $cwd . '.php');
     dom_ready(function() {
         generic.set_up({
             row: <?php echo json_encode($this->row) ?>,
-            row_container: document.getElementById('row_container'),
             children_container: document.getElementById('children_container')
         })
     })

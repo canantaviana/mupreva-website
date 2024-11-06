@@ -472,7 +472,8 @@ var common = {
         if (!file_name) {
             return null
         }
-
+        return __WEB_MEDIA_ENGINE_URL__+file_name;
+        /*
         // id. from 'rsc29_rsc170_1.jpg' to '1'
         const regex = /^.{3,}_.{3,}_(\d{1,})\.[\S]{3,4}$/;
         const id = (full_name)
@@ -495,6 +496,7 @@ var common = {
         const media_engine_url = __WEB_MEDIA_ENGINE_URL__ + '/' + type + '/' + id + (quality ? ('/' + quality) : '')
 
         return media_engine_url
+        */
     },//end get_media_engine_url
 
 
@@ -1079,6 +1081,27 @@ var common = {
         target.appendChild(spinner);
         return spinner;
     },
+
+    convertText: function(input) {
+        var output = input.replaceAll('&nbsp;', '');
+        output = output.replace(/<br>\s*&nbsp;\s*<br>/g, '<br>');
+        output = output.replace(/<br>\s*<br>/g, '<br>');
+        output = output.replace(/<br>\s*/g, '<br>');
+        output = output.replace(/<br>/g, '</p><p>');
+        output = `<p>${output}</p>`;
+        //treure br a l'inici del blockquote
+        output = output.replace(/<blockquote>\s*<br>/g, '<blockquote>');
+
+        output = output.replaceAll('../../../media', page_globals.__WEB_MEDIA_BASE_URL__ + '/dedalo/media')
+
+        output = output.replaceAll('background-color:hsl(0, 75%, 60%);', 'background-color:hsl(0,75%,60%);')
+
+        output = output.replace(
+            /<a href="(.*?)"><span style="(.*?)">(.*?)<\/span><\/a>/g,
+            '<span style="$2"><a href="$1">$3</a></span>'
+        );
+        return output;
+    }
 }//end common
 
 
