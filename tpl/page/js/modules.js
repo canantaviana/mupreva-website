@@ -277,6 +277,20 @@ var templateModules = {
             </div>
         `);
     },
+
+    bloque_de_titulo_y_texto: function(info){
+        return htmlTemplate(`
+            <div class="block-titol-text flow">
+                ${(info.title)?
+                `<h3>
+                    ${info.title}
+                </h3>`
+                :''}
+                ${(info.body)?info.body:''}
+            </div>
+        `);
+    },
+
     bloque_de_texto: function(info){
         return htmlTemplate(`
             <div class="block-titol-text flow">
