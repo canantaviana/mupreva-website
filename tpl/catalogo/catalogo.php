@@ -20,7 +20,7 @@ page::$js_ar_url[]  = __WEB_TEMPLATE_WEB__ . '/assets/lib/masonry/imagesloaded.p
 page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/assets/lib/jquery-ui/jquery-ui.min.js';
 page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/assets/lib/leaflet/leaflet.js';
 page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/assets/lib/leaflet/markercluster/leaflet.markercluster.js';
-page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/catalog/js/item_list_row' . JS_SUFFIX . '.js';
+page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/catalogo/js/item_list_row' . JS_SUFFIX . '.js';
 
 
 

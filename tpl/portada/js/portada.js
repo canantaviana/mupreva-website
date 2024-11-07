@@ -193,7 +193,7 @@ var main_home = {
                     return false
                 }
 
-                window.location.href = BASE_LINKS + 'catalog/' + encodeURI(global_search_input.value)
+                window.location.href = BASE_LINKS + 'catalogo/' + encodeURI(global_search_input.value)
 
                 return false
             }, false)

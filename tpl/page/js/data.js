@@ -1440,18 +1440,24 @@ page.parse_ts_web = function (rows) {
         /*row.image = row.image
             ? JSON.parse(row.image)
             : null*/
-        row.image_icon = row.image.filter(function(elem){
-            return elem.title === 'icon';
-        }).map(function(elem){
-            elem.image = common.get_media_engine_url(elem.image, 'image')
-            return elem;
-        });
-        row.image = row.image.filter(function(elem){
-            return elem.title !== 'icon';
-        }).map(function(elem){
-            elem.image = common.get_media_engine_url(elem.image, 'image')
-            return elem;
-        });
+        if (row.image) {
+            row.image_icon = row.image.filter(function(elem){
+                return elem.title === 'icon';
+            }).map(function(elem){
+                elem.image = common.get_media_engine_url(elem.image, 'image')
+                return elem;
+            });
+
+            row.image = row.image.filter(function(elem){
+                return elem.title !== 'icon';
+            }).map(function(elem){
+                elem.image = common.get_media_engine_url(elem.image, 'image')
+                return elem;
+            });
+        } else {
+            row.image_icon = [];
+            row.image = [];
+        }
 
         row.other_images_resolved = row.other_images_resolved
             ? JSON.parse(row.other_images_resolved)

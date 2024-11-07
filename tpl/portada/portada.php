@@ -4,7 +4,7 @@
 
 
 // js
-page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/catalog/js/item_list_row' . JS_SUFFIX . '.js';
+//page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/catalogo/js/item_list_row' . JS_SUFFIX . '.js';
 
 
 // page basic vars
