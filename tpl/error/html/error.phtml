@@ -6,15 +6,15 @@ $cwd        = basename($base_path); # Current dir name
 # Current controller add
 require($base_path . '/' . $cwd . '.php');
 ?>
-<!-- Wrapper. <?php echo trim($template_name) ?> -->
-<div id="page-wrapper" class="<?php echo $template_name ?>_content">
-
-
-    <!-- Main wrapper -->
-    <div class="wrapper">
-        <h2 class="title">Sorry. Page not found</h2>
-        <a class="button" href="<?php echo __WEB_HOME_URL__ ?>"><?php echo tstring('inicio') ?></a>
+<main class="main-content" id="main">
+    <div class="has-background-black has-text-white has-text-centered py-8">
+        <div class="wrapper wrapper--narrower my-8 flow--xl">
+            <h1 class="is-size-1 has-text-white"><?php echo tstring('404_title') ?></h1>
+            <p><?php echo tstring('404_description') ?></p>
+            <a class="button" href="<?php echo __WEB_HOME_URL__ ?>"><?php echo tstring('404_button') ?></a>
+        </div>
     </div>
+</main>
 
     <!-- Footer -->
     <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/footer.phtml'; ?>

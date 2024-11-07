@@ -5,6 +5,9 @@
     &:not(:has(+ main > .has-background-grey-light:first-child)) {
         margin-bottom: var(--space-m);
     }
+    &:has(+ main > .has-background-black:first-child) {
+        margin-bottom: 0;
+    }
     > div {
         @include mobile {
             .lang {

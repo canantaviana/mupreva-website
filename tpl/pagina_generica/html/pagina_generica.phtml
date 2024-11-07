@@ -6,14 +6,11 @@ $cwd        = basename($base_path); # Current dir name
 # Current controller add
 require($base_path . '/' . $cwd . '.php');
 ?>
-<!-- Page Wrapper -->
 <main class="main-content" id="main">
     <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/breadcrumb.phtml'; ?>
     <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/text-content.phtml'; ?>
-
     <div id="children_container" class="wrapper flow--2xl">
     </div>
-
 </main>
 <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/footer.phtml'; ?>
 

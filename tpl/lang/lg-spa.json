@@ -109,6 +109,9 @@
     "header_search": "Buscador",
     "header_search_button": "Buscar",
 
+    "404_title": "No se ha encontrado la página",
+    "404_description": "Por alguna razón la página que busca no se encuentra en nuestro servidor.<br>Si ha escrito la dirección directamente compruebe que sea correcta.<br>Si proviene de algún motor de búsqueda, puede que el enlace sea demasiado antiguo y ya no existe.",
+    "404_button": "Ir a la portada",
 
 
 

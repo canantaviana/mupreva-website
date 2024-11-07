@@ -112,6 +112,11 @@
     "header_search": "Cercador",
     "header_search_button": "Cercar",
 
+    "404_title": "No s'ha trobat la pàgina",
+    "404_description": "Per alguna raó la pàgina que busca no es troba en el nostre servidor.<br>Si ha escrit l'adreça directament, comprovi que sigui correcta.<br>Si prové d'algun motor de cerca, pot ser que l'enllaç sigui massa antic i ja no existeixi.",
+    "404_button": "Anar a la portada",
+
+
 
 
 

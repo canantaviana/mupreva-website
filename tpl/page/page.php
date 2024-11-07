@@ -43,16 +43,6 @@ page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/modules.js';
 
 // breadcrumb
 $this->breadcrumb = $this->get_breadcrumb();
-/*$this->breadcrumb = empty($this->breadcrumb)
-    ? (!empty($this->row)
-        ? [
-            (object)[
-                'label'    => $this->row->term,
-                'path'    => '/' . $this->row->web_path
-            ]
-        ]
-        : null)
-    : $this->breadcrumb;*/
 
 // menu tree
 $menu_tree = $this->get_menu_tree_plain(WEB_MENU_PARENT, []);

@@ -109,7 +109,9 @@
     "header_search": "Search",
     "header_search_button": "Search",
 
-
+    "404_title": "Page Not Found",
+    "404_description": "For some reason, the page you are looking for cannot be found on our server.<br>If you typed the address directly, please check that it is correct.<br>If you came from a search engine, the link may be outdated and no longer exists.",
+    "404_button": "Go to the homepage"
 
 
 
