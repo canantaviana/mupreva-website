@@ -141,8 +141,6 @@ var templateModules = {
         return content;
     },
 
-
-
     bloque_de_tres_columnas_desiguales: function(info, rows){
         var modules = templateModules.render_items(rows, info.term_id);
         var content = htmlTemplate(`
@@ -330,4 +328,19 @@ var templateModules = {
             </div>
         `);
     },
+
+    piso_gris: function(info, rows){
+        var content = htmlTemplate(`
+            <div class="full-bleed has-background-grey-light">
+                <div class="wrapper">
+                </div>
+            </div>
+        `);
+        var children_container = content[0].querySelector('div.wrapper')
+        templateModules.render_items(rows, info.term_id).forEach(node => {
+            appendTemplate(children_container, node);
+        });
+        return content;
+    },
+
 }

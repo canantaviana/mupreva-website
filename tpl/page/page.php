@@ -50,7 +50,7 @@ $menu_tree = $this->get_menu_tree_plain(WEB_MENU_PARENT, []);
 // ul drawer
 $ul_drawer = function ($term_id, $html) {
     if ($term_id === WEB_MENU_PARENT) {
-        $html = PHP_EOL . '<ul class="has-text-weight-medium" id="main-nav">' . $html . '</ul>' . PHP_EOL;
+        $html = PHP_EOL . '<ul class="has-text-weight-medium">' . $html . '</ul>' . PHP_EOL;
     } else {
         $html = PHP_EOL . '<ul class="">' . $html . '</ul>' . PHP_EOL;
     }
@@ -64,7 +64,7 @@ $li_drawer = function ($menu_element, $embed_html = '') {
     $web_path = $menu_element->web_path === 'main_home' ? '' : $menu_element->web_path;
 
     $html  = '';
-    $html .= PHP_EOL . ' <li class="'.((!empty($embed_html))?'has-submenu':'').'" role="' . $menu_element->web_path . '">';
+    $html .= PHP_EOL . ' <li class="is-relative '.((!empty($embed_html))?'has-submenu':'').'" role="' . $menu_element->web_path . '">';
 
     $url = __WEB_ROOT_WEB__ . '/' . $web_path;
     $active = (isset($menu_element->active) && $menu_element->active !== 'no')

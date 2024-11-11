@@ -6,15 +6,23 @@
 
 
         <div class="wrapper is-flex is-justify-content-space-between">
-            <!-- Logo -->
+            <?php if ($this->area_name === 'main_home') : ?>
             <h1 class="site-logo is-size-7">
                 <span class="is-flex gap-3 is-align-items-flex-end">
                     <img loading="lazy" src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-logo-mupreva.png" srcset="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-logo-mupreva@2x.png 2x" alt="" width="26" height="40" class="is-block">
                     <span class="has-text-white has-text-weight-semibold is-size-4 is-hidden-mobile is-hidden-widescreen-only"><?php echo WEB_ENTITY_LABEL ?></span>
                 </span>
-
             </h1>
-            <!-- /Logo -->
+            <?php else : ?>
+            <p class="site-logo is-size-7">
+                <a href="<?php echo __WEB_ROOT_WEB__ ?>/" class="has-text-white link-dn is-block">
+                    <span class="is-flex gap-3 is-align-items-flex-end">
+                        <img loading="lazy" src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-logo-mupreva.png" srcset="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-logo-mupreva@2x.png 2x" alt="" width="26" height="40" class="is-block">
+                        <span class="has-text-white has-text-weight-semibold is-size-4 is-hidden-mobile is-hidden-widescreen-only"><?php echo WEB_ENTITY_LABEL ?></span>
+                    </span>
+                </a>
+            </p>
+            <?php endif ?>
             <!-- Idiomes -->
             <?php $web_langs = json_decode(WEB_AR_LANGS); ?>
             <div class="lang">
