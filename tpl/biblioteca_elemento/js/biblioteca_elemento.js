@@ -109,11 +109,12 @@ var item = {
                 lang: lang,
                 sql_filter: sql_filter,
                 limit: 1,
-                count: false
-                // resolve_portals_custom : {
-                // 	audiovisual :"audiovisual"
-                // }
+                count: false,
+                resolve_portals_custom : {
+                    children :"publications"
+                }
             }
+            console.log(request_body);
             //if (table === 'sets') {
                 /*request_body.resolve_portals_custom = {
                     imagenes_identificativas: 'image',
@@ -127,6 +128,7 @@ var item = {
                 body: request_body
             })
                 .then((response) => {
+                    console.log(response)
                     event_manager.publish('data_request_done', {
                         request_body: request_body,
                         result: response.result
@@ -200,7 +202,7 @@ var item = {
             `:''}
             ${(row.serie)?`
             <dt>${tstring.item_serie}</dt>
-            <dd><a href="/biblio/">${row.serie}</a>
+            <dd><a href="/publicaciones/?serie=${row.serie_id}">${row.serie}</a>
             ${(row.num_serie)?`
             ${tstring.item_num} ${row.num_serie}
             `:''}
@@ -208,7 +210,7 @@ var item = {
             `:''}
             ${(row.num_paginas)?`
             <dt>${tstring.item_pages}</dt>
-            <dd>${row.num_paginas}</dd>
+            <dd>${row.num_paginas} ${tstring.item_pag}</dd>
             `:''}
         </dl>
         ${(row.descripcion)?`
@@ -227,19 +229,40 @@ var item = {
             <img loading="lazy" class="active" src="${__WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa}" data-original="${__WEB_MEDIA_ENGINE_URL__+imgOriginal(row.imagen_identificativa)}" alt="${row.titulo}">
             <!-- Eines -->
             <div class="is-flex gap-5 mt-2">
-                <button type="button" class="button button--icon image-action-download">
+                ${(row.pdf)?`
+                <a href="${__WEB_MEDIA_ENGINE_URL__+row.pdf}" download type="button" class="button button--icon">
                     <img src="/assets/img/ico-descarregar.svg" alt="" width="30" height="30"> ${tstring.item_download}
-                </button>
-                <button type="button" class="button button--icon image-action-zoom">
+                </a>
+                `:''}
+                <a href="${__WEB_MEDIA_ENGINE_URL__+row.pdf}" target="_blank" type="button" class="button button--icon">
                     <img src="/assets/img/ico-lupa-2.svg" alt="" width="30" height="30"> ${tstring.item_show_online}
-                </button>
+                </a>
             </div>
             <!-- /Eines -->
         </figure>
     `:''}
     </div>
 </div>
-        `);
+
+${(row.children.length && row.children.length > 0)?`
+<div class="flow--xl mt-8">
+    <h2 class="is-size-3">${tstring.item_content}</h2>
+    <ol class="dl-list link-dn is-size-6">
+        ${row.children.map(function(value){
+            return `<li>
+                <a href="/publication/${value.section_id}" target="_blank">${value.autor}<br>
+                    <span class="has-text-weight-semibold">${value.titulo}</span><br>
+                    ${(value.num_paginas)?`
+                    ${tstring.item_pag} ${value.num_paginas}
+                    `:''}
+                </a>
+            </li>`
+        }).join("\n")}
+
+    </ol>
+</div>
+`:''}
+`);
     },
 
     templateContent: function (row) {
