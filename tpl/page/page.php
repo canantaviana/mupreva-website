@@ -59,22 +59,27 @@ $ul_drawer = function ($term_id, $html) {
 };
 
 // li drawer
-$li_drawer = function ($menu_element, $embed_html = '') {
+$li_drawer = function ($menu_element, $embed_html = '', $current = null) {
 
     $web_path = $menu_element->web_path === 'main_home' ? '' : $menu_element->web_path;
 
     $html  = '';
-    $html .= PHP_EOL . ' <li class="is-relative '.((!empty($embed_html))?'has-submenu':'').'" role="' . $menu_element->web_path . '">';
+    $html .= PHP_EOL . ' <li class="'.((!empty($embed_html))?'has-submenu':'').'" role="' . $menu_element->web_path . '">';
 
     $url = __WEB_ROOT_WEB__ . '/' . $web_path;
     $active = (isset($menu_element->active) && $menu_element->active !== 'no')
         ? true
         : false;
 
+    $currentClass = '';
+    if ('/'.$current == $url) {
+        $currentClass = '';
+    }
+
     if ($active === true) {
-        $html .= '<a href="' . $url . '" class="has-text-white">' . $menu_element->term . '</a>';
+        $html .= '<a href="' . $url . '" class="is-relative has-text-white '.$currentClass.'">' . $menu_element->term . '</a>';
     } else {
-        $html .= '<a href="#" class="has-text-white">' . $menu_element->term . '</a>';
+        $html .= '<a href="#" class="is-relative has-text-white '.$currentClass.'">' . $menu_element->term . '</a>';
     }
 
     $html .= $embed_html;
@@ -84,7 +89,7 @@ $li_drawer = function ($menu_element, $embed_html = '') {
 };
 
 // menu_tree_html
-$this->menu_tree_html = page::render_menu_tree_plain(WEB_MENU_PARENT, $menu_tree, $li_drawer, $ul_drawer, 'children', 2);
+$this->menu_tree_html = page::render_menu_tree_plain(WEB_MENU_PARENT, $menu_tree, $this->area_name, $li_drawer, $ul_drawer, 'children', 2);
 
 $this->menu_footer = array_filter($menu_tree, function($item){
     return in_array($item->web_path, WEB_MENU_FOOTER);
@@ -98,7 +103,7 @@ $ul_title_drawer = function ($term_id, $html) {
 };
 
 // li drawer
-$li_title_drawer = function ($menu_element, $embed_html = '') {
+$li_title_drawer = function ($menu_element, $embed_html = '', $current = null) {
 
     $web_path = $menu_element->web_path === 'main_home' ? '' : $menu_element->web_path;
 
@@ -110,10 +115,15 @@ $li_title_drawer = function ($menu_element, $embed_html = '') {
         ? true
         : false;
 
+    $currentClass = '';
+    if ('/'.$current == $url) {
+        $currentClass = 'current is-italic has-text-primary';
+    }
+
     if ($active === true) {
-        $html .= '<a href="' . $url . '">' . $menu_element->term . '</a>';
+        $html .= '<a href="' . $url . '" class="'.$currentClass.'">' . $menu_element->term . '</a>';
     } else {
-        $html .= '<a href="#">' . $menu_element->term . '</a>';
+        $html .= '<a href="#" class="'.$currentClass.'">' . $menu_element->term . '</a>';
     }
     $html .= '</li>';
 
@@ -121,7 +131,7 @@ $li_title_drawer = function ($menu_element, $embed_html = '') {
 };
 // menu_tree_html
 if ($this->breadcrumb && count($this->breadcrumb) > 2) {
-    $this->menu_title_html = page::render_menu_tree_plain($this->breadcrumb[2]->term_id, $menu_tree, $li_title_drawer, $ul_title_drawer);
+    $this->menu_title_html = page::render_menu_tree_plain($this->breadcrumb[2]->term_id, $menu_tree, $this->area_name, $li_title_drawer, $ul_title_drawer);
 }
 
 

@@ -315,9 +315,9 @@ var templateModules = {
                 <div class="column is-5-widescreen flow--l">
                     <div class="block-titol-text flow">
                         ${(info.title)?
-                        `<h3>
+                        `<h2 id="${this.fix_names(info.title)}">
                             ${info.title}
-                        </h3>`
+                        </h2>`
                         :''}
                         ${(info.body)?info.body:''}
                     </div>

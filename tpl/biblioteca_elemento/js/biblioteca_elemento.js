@@ -250,7 +250,7 @@ ${(row.children.length && row.children.length > 0)?`
     <ol class="dl-list link-dn is-size-6">
         ${row.children.map(function(value){
             return `<li>
-                <a href="/publication/${value.section_id}" target="_blank">${value.autor}<br>
+                <a href="${__WEB_MEDIA_ENGINE_URL__+value.pdf}" download target="_blank">${value.autor}<br>
                     <span class="has-text-weight-semibold">${value.titulo}</span><br>
                     ${(value.num_paginas)?`
                     ${tstring.item_pag} ${value.num_paginas}

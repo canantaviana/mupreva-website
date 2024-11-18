@@ -625,7 +625,7 @@ class page
     /**
      * RENDER_MENU_TREE_PLAIN
      */
-    public static function render_menu_tree_plain($term_id, $menu_tree, $li_drawer, $ul_drawer, $children_column_name = 'childrens', $level = null, $current_level = 1)
+    public static function render_menu_tree_plain($term_id, $menu_tree, $current, $li_drawer, $ul_drawer, $children_column_name = 'childrens', $level = null, $current_level = 1)
     {
         $html = '';
 
@@ -659,12 +659,11 @@ class page
                 && ($level == null || $current_level < $level)
             ) {
                 // recursion
-                $embed_html = self::render_menu_tree_plain($current_term_id, $menu_tree, $li_drawer, $ul_drawer, $children_column_name, $level, $current_level + 1);
+                $embed_html = self::render_menu_tree_plain($current_term_id, $menu_tree, $current, $li_drawer, $ul_drawer, $children_column_name, $level, $current_level + 1);
             } else {
                 $embed_html = '';
             }
-
-            $html .= $li_drawer($menu_element, $embed_html);
+            $html .= $li_drawer($menu_element, $embed_html, $current);
         }
 
         // wrap
