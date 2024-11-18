@@ -155,10 +155,11 @@ define('WEB_MENU_SECTION_TIPO', 'www1');
 define('WEB_MENU_PARENT',         'www1_106');
 
 define('WEB_MENU_FOOTER', [
+    'contact',
+    'accessibility',
     'legal',
     'cookies',
-    'help',
-    'sitemap'
+    'credits'
 ]);
 
 
