@@ -1,0 +1,21 @@
+<?php
+# REQUIRED FILES
+$base_path    = dirname(dirname(__FILE__));
+$cwd        = basename($base_path); # Current dir name
+
+# Current controller add
+require($base_path . '/' . $cwd . '.php');
+?>
+<main class="main-content" id="main">
+    <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/breadcrumb.phtml'; ?>
+    <?php if (!empty($body)) : ?>
+    <div class="wrapper">
+        <div class="columns">
+            <div class="text-base column is-10-tablet is-7-desktop is-offset-1-desktop flow--l">
+                <?php echo $body ?>
+            </div>
+        </div>
+    </div>
+    <?php endif ?>
+</main>
+<?php include dirname(dirname(dirname(__FILE__))) . '/page/html/footer.phtml'; ?>

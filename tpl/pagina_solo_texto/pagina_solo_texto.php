@@ -1,5 +1,13 @@
 <?php
 
+// generic
+
+// css
+
+
+// js
+
+
 // page basic vars
 $title        = $this->get_element_from_template_map('title', $template_map->{$mode});
 $abstract    = $this->get_element_from_template_map('abstract', $template_map->{$mode});
