@@ -20,6 +20,9 @@
         right: 0;
         top: 100%;
         z-index: 1;
+        .home & {
+            background-color: transparent !important;
+        }
         input {
             filter: invert(1);
             height: 3rem;

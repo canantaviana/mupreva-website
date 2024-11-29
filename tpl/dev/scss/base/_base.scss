@@ -125,6 +125,9 @@ ol {
                 background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 0v30h30V0z'/%3E%3Cpath stroke='%23a50e00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M6.25 15h17.5M18.75 20l5-5M18.75 10l5 5'/%3E%3C/g%3E%3C/svg%3E");
                 left: 0;
                 top: -0.25em;
+                .dialog-content & {
+                    filter: grayscale(1) brightness(100);
+                }
             }
             + li {
                 margin-top: var(--space-xs);

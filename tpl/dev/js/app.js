@@ -244,10 +244,41 @@ const onListener = function(element, type, selector, handler) {
           }
       });
 
+        // -----------
+    // Swiper home
+    // -----------
+    const swiperHome = new Swiper('.swiper--home', {
+    cssMode: true,
+        navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+        },
+        pagination: {
+        el: ".swiper-pagination",
+        },
+        mousewheel: true,
+        keyboard: true,
+    });
 
   });
 
   function viewInit() {
+
+    // -------
+    // Masonry
+    // -------
+    var grid = document.querySelector('.masonry-grid');
+
+    var msnry = new Masonry( grid, {
+        itemSelector: '.masonry-grid-item',
+        columnWidth: '.masonry-grid-sizer',
+        percentPosition: true,
+        gutter: 10
+    });
+
+    imagesLoaded( grid ).on( 'progress', function() {
+    msnry.layout();
+    });
     // -------------------------
     // Swiper (fitxa Col·lecció)
     // -------------------------

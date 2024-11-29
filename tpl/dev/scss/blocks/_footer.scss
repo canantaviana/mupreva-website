@@ -6,7 +6,8 @@ footer {
             color: #fff;
         }
     }
-    body:has(main > div[class^="has-background-"]:last-child) & {
+    body:has(main > div[class^="has-background-"]:last-child) &,
+    body:has(main > #children-container:last-child > div[class^="has-background-"]:last-child) & {
         margin-top: 0 !important;
     }
 }

@@ -8,11 +8,10 @@
 * column map : {"alt":16,"lat":42.72744993,"lon":-2.02195793,"zoom":14}
 */
 page.parse_map_data = function (rows) {
-
     const self = this
 
     const data = []
-
+console.log(rows);
     const rows_length = rows.length
     for (let i = 0; i < rows_length; i++) {
 
@@ -351,6 +350,9 @@ page.parse_list_data = function (rows) {
 
         // tpl
         row.tpl = page.section_tipo_to_template(row.section_tipo)
+        if (row.table == 'activities') {
+            row.tpl = 'activity';
+        }
 
         /*
         // unify media elements (to easy manage on filmstrip)
@@ -1431,6 +1433,10 @@ page.parse_ts_web = function (rows) {
         // 	  })
         // 	: null;
 
+        row.uri = row.uri
+            ? JSON.parse(row.uri)
+            : [];
+
         row.identify_image = row.identify_image
             ? JSON.parse(row.identify_image).map((el) => {
                 return common.get_media_engine_url(el, 'image')
@@ -1488,7 +1494,7 @@ page.parse_ts_web = function (rows) {
 
         row.pdf_resolved = row.pdf_resolved
             ? JSON.parse(row.pdf_resolved)
-            : null
+            : []
         // resolve full absolute url
         if (row.pdf_resolved) {
             for (let i = 0; i < row.pdf_resolved.length; i++) {
@@ -1541,7 +1547,7 @@ page.get_records = function (options) {
                 dedalo_get: 'records',
                 db_name: page_globals.WEB_DB,
                 lang: page_globals.WEB_CURRENT_LANG_CODE,
-                table: 'ts_web_mupreva',
+                table: table,
                 ar_fields: ar_fields,
                 sql_filter: sql_filter,
                 limit: limit,
@@ -1552,8 +1558,7 @@ page.get_records = function (options) {
             }
         })
             .then(function (response) {
-                console.log("page.get_records API response:", response);
-
+                //console.log("page.get_records API response:", response);
                 const data = (typeof parse === "function")
                     ? parse(response.result)
                     : response.result

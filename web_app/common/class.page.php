@@ -88,8 +88,6 @@ class page
     // menu_tree
     public $menu_tree;
 
-
-
     /**
      * __CONSTRUCT
      * @param object $reference_page
@@ -135,9 +133,9 @@ class page
         $this->get_page_data_combi();
         // set template_map file
         $this->template_map = (array)$this->get_template_map();
+
         return true;
     } //end init
-
 
 
     /**
@@ -171,6 +169,7 @@ class page
             $options->ar_fields        = array_values(get_object_vars(self::$web_fields_map));
             $options->lang            = WEB_CURRENT_LANG_CODE;
             $options->sql_filter         = "template_name is not null";
+            $options->resolve_portals_custom = '{"other_images": "image"}';
             $options->order            = 'norder ASC';
         }
 
@@ -1054,7 +1053,7 @@ class page
             $current_options->template_map        = $portal_template_map;
             $current_options->mode                = $temp_page_mode;
             $current_options->add_common_css    = false;
-            $current_options->add_template_css    = true;
+            $current_options->add_template_css    = false;
             $current_options->resolve_values    = true;
             $html .= $temp_page->get_template_html($current_options);
 
@@ -1161,7 +1160,7 @@ class page
         $options->template_map         = false;
         $options->mode                 = false;
         $options->add_common_css     = false;
-        $options->add_template_css     = true;
+        $options->add_template_css     = false;
         $options->resolve_values     = true;
         $options->content              = false;
         foreach ($request_options as $key => $value) {
@@ -1197,8 +1196,8 @@ class page
         if ($options->add_template_css === true) {
             # Add url to final header render
             page::$css_ar_url[] = __WEB_TEMPLATE_WEB__ . '/' . $template_name . '/css/' . $template_name . CSS_SUFFIX . '.css';
-            page::$js_ar_url[]  = __WEB_TEMPLATE_WEB__ . '/' . $template_name . '/js/'  . $template_name . JS_SUFFIX . '.js';
         }
+        page::$js_ar_url[]  = __WEB_TEMPLATE_WEB__ . '/' . $template_name . '/js/'  . $template_name . JS_SUFFIX . '.js';
 
         #
         # TEMPLATE_HTML

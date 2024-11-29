@@ -38,7 +38,9 @@ page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/data.js';
 page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/data_export.js';
 page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/video_player.js';
 
+page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/api.js';
 page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/modules.js';
+
 // fi app-min
 
 // breadcrumb
@@ -72,14 +74,16 @@ $li_drawer = function ($menu_element, $embed_html = '', $current = null) {
         : false;
 
     $currentClass = '';
+    $currentAria = '';
     if ('/'.$current == $url) {
         $currentClass = '';
+        $currentAria = 'aria-current="page"';
     }
 
     if ($active === true) {
-        $html .= '<a href="' . $url . '" class="is-relative has-text-white '.$currentClass.'">' . $menu_element->term . '</a>';
+        $html .= '<a href="' . $url . '" '.$currentAria.' class="is-relative has-text-white '.$currentClass.'">' . $menu_element->term . '</a>';
     } else {
-        $html .= '<a href="#" class="is-relative has-text-white '.$currentClass.'">' . $menu_element->term . '</a>';
+        $html .= '<a href="#" '.$currentAria.' class="is-relative has-text-white '.$currentClass.'">' . $menu_element->term . '</a>';
     }
 
     $html .= $embed_html;
@@ -116,14 +120,16 @@ $li_title_drawer = function ($menu_element, $embed_html = '', $current = null) {
         : false;
 
     $currentClass = '';
+    $currentAria = '';
     if ('/'.$current == $url) {
         $currentClass = 'current is-italic has-text-primary';
+        $currentAria = 'aria-current="page"';
     }
 
     if ($active === true) {
-        $html .= '<a href="' . $url . '" class="'.$currentClass.'">' . $menu_element->term . '</a>';
+        $html .= '<a href="' . $url . '" '.$currentAria.' class="'.$currentClass.'">' . $menu_element->term . '</a>';
     } else {
-        $html .= '<a href="#" class="'.$currentClass.'">' . $menu_element->term . '</a>';
+        $html .= '<a href="#" '.$currentAria.' class="'.$currentClass.'">' . $menu_element->term . '</a>';
     }
     $html .= '</li>';
 
@@ -161,7 +167,7 @@ $content_options = new stdClass();
 $content_options->template_map         = $template_map; // Defined in method page->render_page_html
 $content_options->mode                 = $mode; // Defined in method page->render_page_html
 $content_options->add_common_css     = false;
-$content_options->add_template_css     = true;
+$content_options->add_template_css     = false;
 $content_options->resolve_values     = true;
 
 $content_html = $this->get_template_html($content_options);

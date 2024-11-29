@@ -5,8 +5,9 @@
     &:not(:has(+ main > .has-background-grey-light:first-child)) {
         margin-bottom: var(--space-m);
     }
-    &:has(+ main > .has-background-black:first-child) {
-        margin-bottom: 0;
+    &:has(+ main > .has-background-black:first-child),
+    .home & {
+        margin-bottom: 0 !important;
     }
     > div {
         @include mobile {
@@ -48,6 +49,12 @@
     @include widescreen {
         background-color: $primary;
         padding-bottom: 0;
+        .home & {
+            background-color: transparent;
+            position: absolute;
+            z-index: 10;
+            width: 100%;
+        }
     }
     .wrapper {
         align-items: center;

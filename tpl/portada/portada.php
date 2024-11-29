@@ -7,6 +7,8 @@ $body              = $this->get_element_from_template_map('body', $template_map-
 $ar_image          = $this->get_element_from_template_map('image', $template_map->{$mode});
 
 
+$images = $this->row->other_images;
+
 // body images fix url paths
 $body = str_replace('../../../media', __WEB_BASE_URL__ . '/dedalo/media', $body);
 

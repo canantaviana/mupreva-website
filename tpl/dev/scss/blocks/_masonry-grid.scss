@@ -1,0 +1,44 @@
+.masonry-grid:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+.masonry-grid-sizer,
+.masonry-grid-item {
+    @include mobile {
+        width: calc(100% / 3 - 10px);
+    }
+    @include tablet {
+        width: calc(100% / 6 - 10px);
+    }
+    @include desktop {
+        width: calc(100% / 9 - 10px);
+    }
+}
+
+.masonry-grid-item--width-2 {
+    @include tablet {
+        width: calc(100% / 4 - 10px);
+    }
+    @include desktop {
+        width: calc(100% / 6 - 10px);
+    }
+}
+
+.masonry-grid-item {
+    float: left;
+    margin-bottom: 10px;
+    img {
+        display: block;
+        max-width: 100%;
+        transition: opacity 0.125s ease-in;
+    }
+    a {
+        &:hover,
+        &:focus {
+            img {
+                opacity: 0.8;
+            }
+        }
+    }
+}

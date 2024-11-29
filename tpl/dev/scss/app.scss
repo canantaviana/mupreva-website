@@ -120,6 +120,7 @@
 
 // Blocks específics del projecte
 // ------------------------------
+@import "blocks/actions-list";
 @import "blocks/activitats-list";
 @import "blocks/a11y-dialog";
 @import "blocks/button-like";
@@ -129,6 +130,8 @@
 @import "blocks/dl-minimal";
 @import "blocks/galeria";
 @import "blocks/header-search";
+@import "blocks/home-grid";
+@import "blocks/masonry-grid";
 @import "blocks/more-link";
 @import "blocks/navigation-sub";
 @import "blocks/pubs-list";

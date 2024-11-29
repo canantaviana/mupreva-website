@@ -1170,3 +1170,40 @@ function getPosterframe(video_url){
 
     return posterframe_url;
 }
+
+function shuffle(array) {
+    let currentIndex = array.length;
+
+    // While there remain elements to shuffle...
+    while (currentIndex != 0) {
+
+      // Pick a remaining element...
+        let randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+      // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+    }
+}
+
+function formatDateRange(dateRange, iso3) {
+    const iso3ToLocale = {
+        'lg-spa': 'es-ES',  // Espanyol
+        'lg-vlc': 'ca-ES',  // Valencià (utilitza català)
+        'lg-eng': 'en-US',  // Anglès
+        'lg-fra': 'fr-FR',  // Francès
+        'lg-cat': 'ca-ES',  // Català
+        'lg-deu': 'de-DE',  // Alemany
+        'lg-ita': 'it-IT',  // Italià
+        'lg-por': 'pt-PT',  // Portuguès
+        // Afegeix altres idiomes segons sigui necessari
+    };
+    const locale = iso3ToLocale[iso3.toLowerCase()] || 'en-US'; // Anglès per defecte
+    const [start, end] = dateRange.split(",").map(date => new Date(date.trim()));
+
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const formatter = new Intl.DateTimeFormat(locale, options);
+
+    return `${formatter.format(start)} - ${formatter.format(end)}`;
+}
