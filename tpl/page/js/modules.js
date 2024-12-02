@@ -408,6 +408,7 @@ var templateModules = {
                 </div>
             `);
             appendTemplate(children_container, content);
+            massonryEnable()
         });
         return content;
     },

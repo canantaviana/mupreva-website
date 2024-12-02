@@ -262,9 +262,8 @@ const onListener = function(element, type, selector, handler) {
 
   });
 
-  function viewInit() {
-
-    // -------
+  function massonryEnable() {
+        // -------
     // Masonry
     // -------
     var grid = document.querySelector('.masonry-grid');
@@ -279,6 +278,10 @@ const onListener = function(element, type, selector, handler) {
     imagesLoaded( grid ).on( 'progress', function() {
     msnry.layout();
     });
+  }
+
+  function viewInit() {
+
     // -------------------------
     // Swiper (fitxa Col·lecció)
     // -------------------------
