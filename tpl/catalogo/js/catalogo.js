@@ -389,14 +389,6 @@ var catalog = {
                     </div>
                     <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
                         <div class="field">
-                            <label class="label is-sr-only" for="culture">${tstring.collection_culture_label}</label>
-                            <div class="control">
-                                <input type="search" name="cercaCultura" id="culture" placeholder="${tstring.collection_culture_label}" value="" class="input is-small">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
-                        <div class="field">
                             <label class="label is-sr-only" for="material">${tstring.collection_material_label}</label>
                             <div class="control">
                                 <input type="search" name="cercaMaterial" id="material" placeholder="${tstring.collection_material_label}" value="" class="input is-small">
@@ -416,14 +408,6 @@ var catalog = {
                             <label class="label is-sr-only" for="typology">${tstring.collection_typology_label}</label>
                             <div class="control">
                                 <input type="search" name="cercaTipologia" id="typology" placeholder="${tstring.collection_typology_label}" value="" class="input is-small">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
-                        <div class="field">
-                            <label class="label is-sr-only" for="description">${tstring.collection_description_label}</label>
-                            <div class="control">
-                                <input type="search" name="cercaDescripcio" id="description" placeholder="${tstring.collection_description_label}" value="" class="input is-small">
                             </div>
                         </div>
                     </div>
@@ -626,27 +610,6 @@ var catalog = {
                 }
             })
 
-            // periodo
-            self.form.item_factory({
-                id: "culture",
-                name: "culture",
-                q_column: "culture",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
-                node_input: currentForm.querySelector('#culture'),
-                callback: function (form_item) {
-                    self.form.activate_autocomplete({
-                        form_item: form_item,
-                        table: self.get_tables,
-                        limit: 60,
-                        parse_result: function (ar_result, term) {
-                            return self.parse_autocomplete_result(ar_result, term, false)
-                        }
-                    })
-                }
-            })
-
             // materia
             self.form.item_factory({
                 id: "materia",
@@ -710,26 +673,6 @@ var catalog = {
                 }
             })
 
-            // descripcion_relevante
-            self.form.item_factory({
-                id: "descripcion_relevante",
-                name: "descripcion_relevante",
-                q_column: "descripcion_relevante",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
-                node_input: currentForm.querySelector('#description'),
-                /*callback: function (form_item) {
-                    self.form.activate_autocomplete({
-                        form_item: form_item,
-                        table: self.get_tables,
-                        limit: 60,
-                        parse_result: function (ar_result, term) {
-                            return self.parse_autocomplete_result(ar_result, term, false)
-                        }
-                    })
-                }*/
-            })
 
 
 
@@ -983,7 +926,7 @@ var catalog = {
             // options
             options = typeof options !== 'undefined' ? options : {}
 
-            const order = options.order || 'titulo ASC, section_id ASC'
+            const order = options.order || 'section_id ASC'
             const limit = options.limit || self.pagination.limit
             const offset = options.offset || self.pagination.offset
 

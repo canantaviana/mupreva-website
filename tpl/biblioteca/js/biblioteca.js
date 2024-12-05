@@ -256,9 +256,9 @@ var biblio = {
                             </div>
                             <div class="column is-half-tablet is-one-third-desktop">
                                 <div class="field">
-                                    <label class="label is-sr-only" for="type">${tstring.documents_type_label}</label>
+                                    <label class="label is-sr-only" for="tipologia_bibliografica">${tstring.documents_type_label}</label>
                                     <div class="control">
-                                        <input type="search" name="cercaTipus" id="type" placeholder="${tstring.documents_type_label}" value="" class="input">
+                                        <input type="search" name="tipologia_bibliografica" id="tipologia_bibliografica" placeholder="${tstring.documents_type_label}" value="" class="input">
                                     </div>
                                 </div>
                             </div>
@@ -293,11 +293,11 @@ var biblio = {
         <div class="checkbox-group">
             <ul class="is-flex is-flex-wrap-wrap gap-4" id="pertenencia_filter">
                 <li>
-                    <input class="is-checkradio" type="checkbox" checked id="checkbox_museum" required name="pertenencia" value="Propias">
+                    <input class="is-checkradio" type="checkbox" checked id="checkbox_museum" required name="pertenencia" value="1">
                     <label for="checkbox_museum">${tstring.documents_filter_museum}</label>
                 </li>
                 <li>
-                    <input class="is-checkradio" type="checkbox" checked id="checkbox_extern" required name="pertenencia" value="Externas">
+                    <input class="is-checkradio" type="checkbox" checked id="checkbox_extern" required name="pertenencia" value="2">
                     <label for="checkbox_extern">${tstring.documents_filter_extern}</label>
                 </li>
             </ul>
@@ -417,9 +417,9 @@ var biblio = {
             })
 
             self.form.item_factory({
-                id: "descripcion",
-                name: "descripcion",
-                q_column: "descripcion",
+                id: "transcripcion",
+                name: "transcripcion",
+                q_column: "transcripcion",
                 eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
@@ -437,13 +437,13 @@ var biblio = {
             })
 
             self.form.item_factory({
-                id: "type",
-                name: "type",
-                q_column: "type",
+                id: "tipologia_bibliografica",
+                name: "tipologia_bibliografica",
+                q_column: "tipologia_bibliografica",
                 eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
-                node_input: currentForm.querySelector('#type'),
+                node_input: currentForm.querySelector('#tipologia_bibliografica'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
@@ -479,7 +479,7 @@ var biblio = {
             self.form.item_factory({
                 id: "pertenencia",
                 name: "pertenencia",
-                q_column: "pertenencia",
+                q_column: "pertenencia_data",
                 //eq: "=",
                 eq_in: "",
                 eq_out: "",
@@ -494,7 +494,7 @@ var biblio = {
                             var sql_filter = [];
                             checked.forEach(function(checkbox){
                                 value.push(checkbox.value);
-                                sql_filter.push('pertenencia = \''+checkbox.value+'\'');
+                                sql_filter.push('pertenencia_data = \'[\"'+checkbox.value+'\"]\'');
                             })
                             form_item.sql_filter = '';
                             if (sql_filter.length > 0) {

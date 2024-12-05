@@ -207,7 +207,12 @@ var item = {
                     bibliografia: 'bibliographic_references',
                     //bibliografia_relacionada: 'bibliographic_references'
                     documentos: 'documents',
-                    audiovisuales:'audiovisual'
+                    intervenciones: 'intervention',
+                    'intervenciones.imagen_inicial': 'image',
+                    'intervenciones.imagen_final': 'image',
+                    audiovisuales:'audiovisual',
+                    children: 'objects',
+                    'children.imagenes_identificativas': 'image'
                 }
             //}
             data_manager.request({
@@ -291,6 +296,14 @@ var item = {
     },
 
     templateFieldsPicture:function(row) {
+        var lugarData = null;
+        if (row.lugar_data) {
+            try {
+                lugarData = JSON.parse(row.lugar_data)[0];
+            } catch (e) {
+            }
+        }
+
         return `
             ${(row.section_id)?`
             <dt><dt>${tstring.item_id}</dt></dt>
@@ -308,9 +321,9 @@ var item = {
             <dt>${tstring.item_data}</dt>
             <dd>${row.datacion_ini}</dd>
             `:''}
-            ${(row.lugar)?`
+            ${(row.lugar && lugarData)?`
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="">${row.lugar}</a></dd>
+            <dd><a href="/immovable/${lugarData}">${row.lugar}</a></dd>
             `:''}
         `;
     },
@@ -318,9 +331,9 @@ var item = {
     templateFieldsImmovable:function(row) {
         const datacion = this.datacion(row);
         return `
-            ${(row.localizacion)?`
+            ${(row.municipio)?`
             <dt>${tstring.item_ubication}</dt>
-            <dd>${row.localizacion.split(' - ').reverse().join('<br>')}</dd>
+            <dd>${row.municipio}</dd>
             `:''}
             ${(row.periodo)?`
             <dt>${tstring.item_periodo}</dt>
@@ -334,6 +347,13 @@ var item = {
     },
 
     templateFieldsDefault:function(row) {
+        var lugarData = null;
+        if (row.lugar_data) {
+            try {
+                lugarData = JSON.parse(row.lugar_data)[0];
+            } catch (e) {
+            }
+        }
         const datacion = this.datacion(row);
         return `
             ${(row.section_id)?`
@@ -348,13 +368,13 @@ var item = {
             <dt>${tstring.item_datacion}</dt>
             <dd>${datacion.join(' , ')}</dd>
             `:''}
-            ${(row.lugar)?`
+            ${(row.lugar && lugarData)?`
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="">${row.lugar}</a></dd>
+            <dd><a href="/immovable/${lugarData}">${row.lugar}</a></dd>
             `:''}
-            ${(row.ubicacion)?`
+            ${(row.sala)?`
             <dt>${tstring.item_ubication}</dt>
-            <dd>${row.ubicacion.split(' - ').reverse().join('<br>')}</dd>
+            <dd>${row.sala}</dd>
             `:''}
         `;
     },
@@ -638,11 +658,18 @@ var item = {
                     </td>
                 </tr>
                 `:''}
-                ${(0)?`
+                ${(row.adquisicion)?`
                 <tr>
                     <td></td>
                     <th>${tstring.item_adquisicion}</th>
-                    <td>TODO</td>
+                    <td>${row.adquisicion}</td>
+                </tr>
+                `:''}
+                ${(row.lugar_produccion)?`
+                <tr>
+                    <td></td>
+                    <th>${tstring.item_production}</th>
+                    <td>${row.lugar_produccion}</td>
                 </tr>
                 `:''}
                 ${(row.tipologia)?`
@@ -710,7 +737,7 @@ var item = {
                             <img src="/assets/img/ico-mes.svg" title="${tstring.item_show_more_info}" width="17" height="17">
                         </button>
                     </td>
-                    <th>${tstring.item_tecnic}</th>
+                    <th>${tstring.item_tecnica}</th>
                     <td>${row.tecnica}</td>
                 </tr>
                 <tr style="display:none;" id="TableCollapse05More">
@@ -741,18 +768,6 @@ var item = {
                 </div>
             </div>
         </div>
-        `);
-    },
-
-    templateRelated: function (row) {
-        //TODO
-        return '';
-        return htmlTemplate(`
-            <h2 class="accordion-header">
-                <button type="button">${tstring.item_rel_content}</button>
-            </h2>
-            <div class="accordion-content">
-            </div>
         `);
     },
 
@@ -828,22 +843,84 @@ var item = {
     },
 
     templateRestoration: function(row){
-        //TODO
-        return '';
+        if (!row.intervenciones || row.intervenciones.length < 1) {
+            return '';
+        }
         return htmlTemplate(`
             <h2 class="accordion-header">
                 <button type="button">${tstring.item_restoration}</button>
             </h2>
             <div class="accordion-content">
+            ${row.intervenciones.map(function(elem){
+                return `<div class="table-collapsibles">
+                    <table>
+                        <tbody>
+                        ${elem.titulo?
+                        `<tr>
+                            <th>${tstring.item_restoration_title}</th>
+                            <td>${elem.titulo}</td>
+                        </tr>`
+                        :''}
+                        ${(elem.fecha_inicio && elem.fecha_fin)?
+                        `<tr>
+                            <th>${tstring.item_restoration_date}</th>
+                            <td>
+                                ${(elem.fecha_inicio)?
+                                `<time datetime="${elem.fecha_inicio}">${formatDate(elem.fecha_inicio)}</time>`
+                                :''}
+                                ${(elem.fecha_fin)?
+                                ` - <time datetime="${elem.fecha_fin}">${formatDate(elem.fecha_fin)}</time>`
+                                :''}
+                            </td>
+                        </tr>`
+                        :''}
+                        ${elem.estado_conservacion?
+                        `<tr>
+                            <th>${tstring.item_restoration}</th>
+                            <td>${elem.estado_conservacion}</td>
+                        </tr>`
+                        :''}
+                    </tbody>
+                    </table>
+                    ${elem.imagen_inicial && elem.imagen_inicial.length > 0?
+                    `<ul class="galeria galeria--variable link-dn">
+                        ${elem.imagen_inicial.map(function(entry){
+                            var image_url = '/assets/img/placeholder.png';
+                            if (entry.image !== null) {
+                                image_url = __WEB_MEDIA_ENGINE_URL__+entry.image;
+                            }
+                            return `<li>
+                                <img loading="lazy" src="${image_url}" alt="${entry.description}">
+                        </li>`;
+                        }).join('')}
+                    </ul>`
+                    :''}
+                    ${elem.imagen_final && elem.imagen_final.length > 0?
+                    `<ul class="galeria galeria--variable link-dn">
+                        ${elem.imagen_final.map(function(entry){
+                            var image_url = '/assets/img/placeholder.png';
+                            if (entry.image !== null) {
+                                image_url = __WEB_MEDIA_ENGINE_URL__+entry.image;
+                            }
+                            return `<li>
+                                <img loading="lazy" src="${image_url}" alt="${entry.description}">
+                        </li>`;
+                        }).join('')}
+                    </ul>`
+                    :''}
+                </div>`
+            }).join('')}
             </div>
         `);
     },
 
     isGroup: function(row){
-        return typeof row.tipo_registro !== 'undefined' && row.tipo_registro === 'Conjunto'
+        return typeof row.tipo_registro !== 'undefined' && row.tipo_registro === 'Conjunto' && row.children.length > 0
     },
 
     templateGroup: function(row){
+        var self = this;
+        console.log(row);
         if (!this.isGroup(row)) {
             return '';
         }
@@ -852,8 +929,40 @@ var item = {
                 <button type="button">${tstring.item_group}</button>
             </h2>
             <div class="accordion-content">
+                <ul class="galeria galeria--242x242 link-dn">
+                ${row.children.map(function(object){
+                    return self.template_catalog_elem(object);
+                }).join('')}
+                </ul>
             </div>
         `);
+
+    },
+
+    hasRelated: function(row){
+        return typeof row.tipo_registro !== 'undefined' && row.tipo_registro !== 'Conjunto' && row.children.length > 0
+    },
+
+    templateRelated: function(row){
+        //TODO: passar a camp patrimonio_relacionado
+        var self = this;
+        console.log(row);
+        if (!this.hasRelated(row)) {
+            return '';
+        }
+        return htmlTemplate(`
+            <h2 class="accordion-header">
+                <button type="button">${tstring.item_rel_content}</button>
+            </h2>
+            <div class="accordion-content">
+                <ul class="galeria galeria--242x242 link-dn">
+                ${row.children.map(function(object){
+                    return self.template_catalog_elem(object);
+                }).join('')}
+                </ul>
+            </div>
+        `);
+
     },
 
 
@@ -879,7 +988,6 @@ var item = {
             </div>
         </div>
         `);
-        console.log(template);
         const ul = template[2].querySelector('ul');
         row.bibliografia_propia.forEach(function(entry){
             ul.appendChild(self.templateBibliografyEntry(entry));
@@ -890,6 +998,32 @@ var item = {
     templateExcavations: function(row){
 
     },
+
+    /**
+    * LIST_ROW_BUILDER
+    * Build DOM nodes to insert into list pop-up
+    */
+    template_catalog_elem: function (row) {
+        row.tpl = page.section_tipo_to_template(row.section_tipo);
+        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+        var image_url = '/assets/img/placeholder.png';
+        if (row.imagenes_identificativas.length > 0) {
+            image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
+        }
+        return `
+        <li class="${row.tpl}">
+            <a href="${url}" target="_blank">
+                <figure>
+                    <img loading="lazy" src="${image_url}" alt="">
+                    ${(row.titulo)?`
+                    <figcaption>${row.titulo}</figcaption>
+                    `:''}
+                </figure>
+            </a>
+        </li>
+        `;
+    },//end list_row_builder
+
 
 
     /**
@@ -918,9 +1052,11 @@ var item = {
             appendTemplate(acordion, this.templateTecnic(row));
         }
 
+        //patrimoni relacionat
+        appendTemplate(acordion, this.templateRelated(row));
+
+
         if (row.lugar) {
-            //jaciment
-            appendTemplate(acordion, this.templateRelated(row));
             //visita al jaciment
             appendTemplate(acordion, this.templateJacimentVisit(row));
         }

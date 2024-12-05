@@ -408,7 +408,7 @@ var templateModules = {
                 </div>
             `);
             appendTemplate(children_container, content);
-            massonryEnable()
+            massonryEnable();
         });
         return content;
     },
@@ -523,13 +523,6 @@ var templateModules = {
                 <ul class="galeria galeria--242x342 activitats-list link-dn">
                 ${results.map(function(row){
                     const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var info = [];
-                    if (row.autor) {
-                        info.push(row.autor);
-                    }
-                    if (row.fecha_publicacion) {
-                        info.push(row.fecha_publicacion);
-                    }
                     var image_url = '/assets/img/placeholder.png';
                     if (row.identifying_image !== null) {
                         image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image;
@@ -542,13 +535,17 @@ var templateModules = {
                             <h3 class="is-size-4">
                                 <a href="${url}">${row.title}</a>
                             </h3>
-                            <p class="has-text-weight-medium is-size-6">
+                            ${(row.type)?
+                            `<p class="has-text-weight-medium is-size-6">
                                 <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
-                            </p>
+                            </p>`
+                            :''}
                             <img loading="lazy" src="${image_url}" alt="">
-                            <div class="has-text-primary has-text-weight-semibold is-size-6">
+                            ${(date)?
+                            `<div class="has-text-primary has-text-weight-semibold is-size-6">
                                 ${date}
-                            </div>
+                            </div>`
+                            :''}
                         </div>
                     </li>
                     `;
@@ -597,13 +594,6 @@ var templateModules = {
                 <ul class="columns is-multiline mt-7">
                 ${results.map(function(row){
                     const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var info = [];
-                    if (row.autor) {
-                        info.push(row.autor);
-                    }
-                    if (row.fecha_publicacion) {
-                        info.push(row.fecha_publicacion);
-                    }
                     var image_url = '/assets/img/placeholder.png';
                     if (row.identifying_image !== null) {
                         image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image;
@@ -617,12 +607,16 @@ var templateModules = {
                                 <h3 class="is-size-3 has-text-weight-semibold">
                                     <a href="${url}">${row.title}</a>
                                 </h3>
-                                <p class="has-text-weight-medium is-uppercase">${date}</p>
-                                <p class="more-link">${tstring.activities_more}</p>
+                                ${(date)?
+                                `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                :''}
+                                <p class="more-link">${tstring.home_activities_more}</p>
                             </div>
-                            <p class="has-text-weight-medium mb-3">
+                            ${(row.type)?
+                            `<p class="has-text-weight-medium mb-3">
                                 <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
-                            </p>
+                            </p>`
+                            :''}
                             <img loading="lazy" src="${image_url}" alt="">
                         </div>
                     </li>

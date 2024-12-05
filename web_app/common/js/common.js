@@ -1188,22 +1188,39 @@ function shuffle(array) {
 }
 
 function formatDateRange(dateRange, iso3) {
-    const iso3ToLocale = {
-        'lg-spa': 'es-ES',  // Espanyol
-        'lg-vlc': 'ca-ES',  // Valencià (utilitza català)
-        'lg-eng': 'en-US',  // Anglès
-        'lg-fra': 'fr-FR',  // Francès
-        'lg-cat': 'ca-ES',  // Català
-        'lg-deu': 'de-DE',  // Alemany
-        'lg-ita': 'it-IT',  // Italià
-        'lg-por': 'pt-PT',  // Portuguès
-        // Afegeix altres idiomes segons sigui necessari
-    };
-    const locale = iso3ToLocale[iso3.toLowerCase()] || 'en-US'; // Anglès per defecte
-    const [start, end] = dateRange.split(",").map(date => new Date(date.trim()));
+    try {
+        const iso3ToLocale = {
+            'lg-spa': 'es-ES',  // Espanyol
+            'lg-vlc': 'ca-ES',  // Valencià (utilitza català)
+            'lg-eng': 'en-US',  // Anglès
+            'lg-fra': 'fr-FR',  // Francès
+            'lg-cat': 'ca-ES',  // Català
+            'lg-deu': 'de-DE',  // Alemany
+            'lg-ita': 'it-IT',  // Italià
+            'lg-por': 'pt-PT',  // Portuguès
+            // Afegeix altres idiomes segons sigui necessari
+        };
+        const locale = iso3ToLocale[iso3.toLowerCase()] || 'en-US'; // Anglès per defecte
+        const [start, end] = dateRange.split(",").map(date => new Date(date.trim()));
 
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
-    const formatter = new Intl.DateTimeFormat(locale, options);
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        const formatter = new Intl.DateTimeFormat(locale, options);
 
-    return `${formatter.format(start)} - ${formatter.format(end)}`;
+        return `${formatter.format(start)} - ${formatter.format(end)}`;
+    } catch (e) {
+        return null;
+    }
 }
+
+const formatDate = (dateString) => {
+    try {
+        const date = new Date(dateString); // Converteix la cadena de text a un objecte Date
+        const day = date.getDate(); // Obté el dia del mes
+        const month = date.getMonth() + 1; // Obté el mes (0-11, per això s'afegeix 1)
+        const year = date.getFullYear(); // Obté l'any
+
+        return `${day}/${month}/${year}`; // Crea el format desitjat
+    } catch (e) {
+        return null;
+    }
+};
