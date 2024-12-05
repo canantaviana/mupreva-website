@@ -45,6 +45,12 @@
     "activitis_date_label": "Data",
     "activitis_category_label": "Categoria",
 
+    "expositions_title_current": "Exposiciones actuales",
+    "expositions_results": "Resultados busqueda",
+    "expositions_seach_label": "Buscar exposiciones",
+    "expositions_site_label": "Ubicación",
+    "expositions_date_label": "Data",
+    "expositions_category_label": "Categoria",
 
     "close": "Cerrar",
 

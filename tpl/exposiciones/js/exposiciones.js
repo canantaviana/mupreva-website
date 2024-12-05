@@ -290,23 +290,23 @@ var actividades = {
 
                 <div class="column is-half-tablet is-one-fifth-widescreen is-4-fullhd">
                     <div class="field">
-                        <label class="label is-sr-only" for="cercaPub">${tstring.activitis_seach_label}</label>
+                        <label class="label is-sr-only" for="cercaPub">${tstring.expositions_seach_label}</label>
                         <div class="control">
-                            <input type="search" name="cercaPub" id="global_search" placeholder="${tstring.activitis_seach_label}" value="" class="input">
+                            <input type="search" name="cercaPub" id="global_search" placeholder="${tstring.expositions_seach_label}" value="" class="input">
                         </div>
                     </div>
                 </div>
                 <div class="column is-half-tablet is-one-quarter-desktop is-one-fifth-widescreen is-2-fullhd">
                     <div class="field">
-                        <label class="label is-sr-only" for="cercaType">${tstring.activitis_category_label}</label>
+                        <label class="label is-sr-only" for="cercaType">${tstring.expositions_category_label}</label>
                         <div class="control">
-                            <input type="search" name="cercaType" id="type" placeholder="${tstring.activitis_category_label}" value="" class="input is-small">
+                            <input type="search" name="cercaType" id="type" placeholder="${tstring.expositions_category_label}" value="" class="input is-small">
                         </div>
                     </div>
                 </div>
                 <div class="column is-half-tablet is-one-quarter-desktop is-one-fifth-widescreen is-2-fullhd">
                     <div class="field">
-                        <label class="label is-sr-only" for="cercaData">${tstring.activitis_date_label}</label>
+                        <label class="label is-sr-only" for="cercaData">${tstring.expositions_date_label}</label>
                         <div class="control">
                             <input type="date" name="cercaData" id="time_frame" value="" class="input">
                         </div>
@@ -314,9 +314,9 @@ var actividades = {
                 </div>
                 <div class="column is-half-tablet is-one-quarter-desktop is-one-fifth-widescreen is-2-fullhd">
                     <div class="field">
-                        <label class="label is-sr-only" for="cercaUbicacio">${tstring.activitis_site_label}</label>
+                        <label class="label is-sr-only" for="cercaUbicacio">${tstring.expositions_site_label}</label>
                         <div class="control">
-                            <input type="search" name="cercaLloc" id="place" placeholder="${tstring.activitis_site_label}" value="" class="input is-small">
+                            <input type="search" name="cercaLloc" id="place" placeholder="${tstring.expositions_site_label}" value="" class="input is-small">
                         </div>
                     </div>
                 </div>
@@ -786,7 +786,7 @@ var actividades = {
                         : self.pagination
                     const container_class = self.default_submit === true
                         ? 'galeria galeria--242x342 activitats-list link-dn'
-                        : 'galeria galeria--170x240 link-dn activitats-list';
+                        : 'galeria galeria--380x250 link-dn';
                     const list_data = page.parse_list_data(ar_rows) // prepares data to use in list
                     self.list = self.list || new list_factory() // creates / get existing instance of list
                     self.list.init({
@@ -799,11 +799,10 @@ var actividades = {
                     self.list.render_list()
                         .then(function (list_node) {
                             var subtitle = document.getElementById('subtitle');
-                            console.log(subtitle);
                             if (self.default_submit === true) {
-                                subtitle.innerHTML = tstring.activitis_title_current;
+                                subtitle.innerHTML = tstring.expositions_title_current;
                             } else {
-                                subtitle.innerHTML = tstring.activitis_results;
+                                subtitle.innerHTML = tstring.expositions_results;
                             }
 
                             // reset default_submit state
@@ -851,21 +850,23 @@ var actividades = {
         }
         return htmlTemplate(`
         <li class="${row.tpl}">
-            <div class="is-flex is-flex-direction-column gap-4 full-link">
-                <h3 class="is-size-6 has-text-weight-semibold">
-                    <a href="${url}">${row.title}</a>
-                </h3>
+            <div class="card is-flex is-flex-direction-column full-link">
+                <div class="p-4 flow--2xs">
+                    <h4 class="is-size-5 has-text-weight-semibold">
+                        <a href="${url}">${row.title}</a>
+                    </h4>
+                    ${(date)?
+                    `<p class="is-size-6 has-text-weight-medium">
+                    ${date}
+                    </p>`
+                    :''}
+                </div>
                 ${(row.type)?
                 `<p class="has-text-weight-medium is-size-6">
                     <a href="/activitats/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
                 </p>`
                 :''}
                 <img loading="lazy" src="${image_url}" alt="">
-                ${(date)?
-                `<p class="has-text-primary has-text-weight-semibold is-size-6">
-                    ${date}
-                </p>`
-                :''}
             </div>
         </li>
         `)[0];
