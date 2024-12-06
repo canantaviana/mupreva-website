@@ -68,6 +68,9 @@
     "item_object": "Objeto",
     "item_datacion": "Datación",
     "item_data": "Data",
+    "item_hour": "Hora",
+    "item_galery": "Galeria",
+    "item_to_public": "Dirigido a",
     "item_fotographer": "Fotógrafo",
     "item_immovable": "Yacimiento",
     "item_ubication": "Ubicación",
@@ -97,6 +100,10 @@
     "item_restoration_description": "Descripción de la intervención",
 
     "item_production": "Lugar de producción",
+
+
+    "item_general_info": "Información general",
+    "item_sala": "Sala",
 
 
 

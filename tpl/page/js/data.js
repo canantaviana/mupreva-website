@@ -351,7 +351,7 @@ page.parse_list_data = function (rows) {
         // tpl
         row.tpl = page.section_tipo_to_template(row.section_tipo)
         if (row.table == 'activities') {
-            row.tpl = 'activity';
+            row.tpl = 'actividad';
         }
 
         /*
