@@ -776,40 +776,49 @@ var actividades = {
                             order: 'time_frame desc',
                             limit: self.limit
                         })
+
                         resolve()
                         return
                     }
 
 
-                    const pagination = self.default_submit === true
-                        ? false
-                        : self.pagination
-                    const container_class = self.default_submit === true
-                        ? 'galeria galeria--242x342 activitats-list link-dn'
-                        : 'galeria galeria--380x250 link-dn';
-                    const list_data = page.parse_list_data(ar_rows) // prepares data to use in list
-                    self.list = self.list || new list_factory() // creates / get existing instance of list
-                    self.list.init({
-                        data: list_data,
-                        fn_row_builder: self.list_row_builder,
-                        container_class: container_class,
-                        pagination: pagination,
-                        caller: self
-                    })
-                    self.list.render_list()
-                        .then(function (list_node) {
-                            var subtitle = document.getElementById('subtitle');
-                            if (self.default_submit === true) {
-                                subtitle.innerHTML = tstring.expositions_title_current;
-                            } else {
-                                subtitle.innerHTML = tstring.expositions_results;
-                            }
+                    if (self.default_submit) {
+                        var content = templateModules.bloque_exposiciones_actuales()
+                        appendTemplate(self.rows_list_container, content);
+                        resolve()
+                        return
+                    } else {
 
-                            // reset default_submit state
-                            self.default_submit = false
-
-                            resolve(list_node)
+                        const pagination = self.default_submit === true
+                            ? false
+                            : self.pagination
+                        const container_class = self.default_submit === true
+                            ? 'galeria galeria--242x342 activitats-list link-dn'
+                            : 'galeria galeria--380x250 link-dn';
+                        const list_data = page.parse_list_data(ar_rows) // prepares data to use in list
+                        self.list = self.list || new list_factory() // creates / get existing instance of list
+                        self.list.init({
+                            data: list_data,
+                            fn_row_builder: self.list_row_builder,
+                            container_class: container_class,
+                            pagination: pagination,
+                            caller: self
                         })
+                        self.list.render_list()
+                            .then(function (list_node) {
+                                var subtitle = document.getElementById('subtitle');
+                                if (self.default_submit === true) {
+                                    subtitle.innerHTML = tstring.expositions_title_current;
+                                } else {
+                                    subtitle.innerHTML = tstring.expositions_results;
+                                }
+
+                                // reset default_submit state
+                                self.default_submit = false
+
+                                resolve(list_node)
+                            })
+                        }
                     break;
 
                 case 'timeline':

@@ -52,6 +52,33 @@ var api = {
             //resolve_portals_custom: '{"image": "image"}'
         };
         return page.get_records(options);
+    },
+
+
+    getActividadesActuales: function() {
+        var options = {
+            table: 'activities',
+            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and (type_data like '%\\\"4\\\"%' or type_data like '%\\\"16\\\"%' or type_data like '%\\\"18\\\"%' or type_data like '%\\\"21\\\"%')",
+            //limit: 6,
+            order: 'time_frame asc',
+            ar_fields: '*',
+            parse: page.parse_list_data,
+            //resolve_portals_custom: '{"image": "image"}'
+        };
+        return page.get_records(options);
+    },
+
+    getExposicionesActuales: function() {
+        var options = {
+            table: 'activities',
+            //sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and (type_data like '%\\\"3\\\"%' or type_data like '%\\\"11\\\"%' or type_data like '%\\\"12\\\"%')",
+            limit: 10,
+            order: 'time_frame asc',
+            ar_fields: '*',
+            parse: page.parse_list_data,
+            //resolve_portals_custom: '{"image": "image"}'
+        };
+        return page.get_records(options);
     }
 
 };

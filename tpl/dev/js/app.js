@@ -262,6 +262,35 @@ const onListener = function(element, type, selector, handler) {
 
   });
 
+  function swiperExpos() {
+
+    // ---------------------------------
+    // Swiper (Exposicions i activitats)
+    // ---------------------------------
+    var swiperExpos = new Swiper(".swiper--expos", {
+        // spaceBetween: 10,
+        slideActiveClass: 'active',
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+        slidesPerView: 1,
+        spaceBetween: 33,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            700: {
+                slidesPerView: 2,
+            },
+            1000: {
+                slidesPerView: 3,
+            },
+        },
+    });
+  }
+
+
+
   function massonryEnable() {
         // -------
     // Masonry
@@ -317,31 +346,6 @@ const onListener = function(element, type, selector, handler) {
         swiper: swiper,
         },
     });
-
-  // ---------------------------------
-  // Swiper (Exposicions i activitats)
-  // ---------------------------------
-    var swiperExpos = new Swiper(".swiper--expos", {
-        // spaceBetween: 10,
-        slideActiveClass: 'active',
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
-        slidesPerView: 1,
-        spaceBetween: 33,
-        freeMode: true,
-        watchSlidesProgress: true,
-        breakpoints: {
-            700: {
-                slidesPerView: 2,
-            },
-            1000: {
-                slidesPerView: 3,
-            },
-        },
-    });
-
 
     // ---------
     // Accordion (https://github.com/10up/component-library/tree/develop/packages/accordion)

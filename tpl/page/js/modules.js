@@ -629,4 +629,102 @@ var templateModules = {
         return content;
     },
 
+
+
+
+    bloque_actividades_actuales: function(){
+        var content = htmlTemplate(`
+        <ul class="galeria galeria--242x342 activitats-list link-dn">
+        </ul>
+        `);
+        var children_container = content[0].querySelector('ul');
+        api.getActividadesActuales().then(function(results){
+            var content = htmlTemplate(`
+                ${results.map(function(row){
+                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                    var image_url = '/assets/img/placeholder.png';
+                    if (row.identifying_image !== null) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image;
+                    }
+                    var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                    return `
+                    <li>
+                        <div class="is-flex is-flex-direction-column gap-4 full-link ${row.tpl}">
+                            <h3 class="is-size-4">
+                                <a href="${url}">${row.title}</a>
+                            </h3>
+                            ${(row.type)?
+                            `<p class="has-text-weight-medium is-size-6">
+                                <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                            </p>`
+                            :''}
+                            <img loading="lazy" src="${image_url}" alt="">
+                            ${(date)?
+                            `<div class="has-text-primary has-text-weight-semibold is-size-6">
+                                ${date}
+                            </div>`
+                            :''}
+                        </div>
+                    </li>
+                    `;
+                }).join('')}
+            `);
+            appendTemplate(children_container, content);
+        });
+        return content;
+    },
+    bloque_exposiciones_actuales: function(){
+        var content = htmlTemplate(`
+        <div class="swiper-container is-relative">
+            <div class="swiper swiper--expos children_container">
+            </div>
+            <div class="swiper--expos__btns">
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </div>
+        `);
+        var children_container = content[0].querySelector('div.children_container');
+        api.getExposicionesActuales().then(function(results){
+            var content = htmlTemplate(`
+                <div class="swiper-wrapper">
+                ${results.map(function(row){
+                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                    var image_url = '/assets/img/placeholder.png';
+                    if (row.identifying_image !== null) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image;
+                    }
+                    var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                    return `
+                    <div class="swiper-slide">
+                        <div class="card is-flex is-flex-direction-column full-link">
+                            <div class="pt-7 pb-5 px-6 flow--xl">
+                                <h2 class="is-size-3 has-text-weight-semibold">
+                                    <a href="${url}">${row.title}</a>
+                                </h2>
+                                ${(date)?
+                                `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                :''}
+                                <p class="more-link">${tstring.home_activities_more}</p>
+                            </div>
+                            ${(row.type)?
+                            `<p class="has-text-weight-medium mb-3">
+                                <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                            </p>`
+                            :''}
+                            <img loading="lazy" src="${image_url}" alt="">
+                        </div>
+                    </div>
+                    `;
+                }).join('')}
+                </div>
+            `);
+            appendTemplate(children_container, content);
+            swiperExpos();
+        });
+        return content;
+    },
+
 }
