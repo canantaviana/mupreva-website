@@ -697,7 +697,7 @@ var actividades = {
             count = false
         }
 
-        var customFilter =  "(type_data like '%\\\"4\\\"%' or type_data like '%\\\"16\\\"%' or type_data like '%\\\"18\\\"%' or type_data like '%\\\"21\\\"%')";
+        var customFilter = "(type_data like '%\\\"3\\\"%' or type_data like '%\\\"11\\\"%' or type_data like '%\\\"12\\\"%')";
         sql_filter = (sql_filter) ? sql_filter + ' AND '+customFilter : customFilter
 
 
