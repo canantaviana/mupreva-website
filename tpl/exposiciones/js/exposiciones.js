@@ -785,6 +785,7 @@ var actividades = {
                     if (self.default_submit) {
                         var content = templateModules.bloque_exposiciones_actuales()
                         appendTemplate(self.rows_list_container, content);
+                        self.default_submit = false
                         resolve()
                         return
                     } else {

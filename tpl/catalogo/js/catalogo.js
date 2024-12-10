@@ -110,7 +110,7 @@ var catalog = {
         // limit (read cookie 'catalog_config' for possible previous values)
         const limit = (self.catalog_config.pagination && self.catalog_config.pagination.limit)
             ? self.catalog_config.pagination.limit
-            : ((self.view_mode === 'timeline' || self.view_mode === 'map') ? 0 : 15)
+            : ((self.view_mode === 'timeline' || self.view_mode === 'map') ? 0 : 18)
 
         // q case
         if (q && q.length > 0) {
@@ -1163,37 +1163,45 @@ var catalog = {
                         return
                     }
 
-                    const pagination = self.default_submit === true
-                        ? false
-                        : self.pagination
-                    const list_data = page.parse_list_data(ar_rows) // prepares data to use in list
-                    self.list = self.list || new list_factory() // creates / get existing instance of list
-                    self.list.init({
-                        data: list_data,
-                        fn_row_builder: self.list_row_builder,
-                        container_class: 'galeria galeria--242x242 link-dn',
-                        pagination: pagination,
-                        caller: self
-                    })
-                    self.list.render_list()
-                        .then(function (list_node) {
+                    if (self.default_submit) {
+                        var content = templateModules.bloque_catalogo_default()
+                        appendTemplate(self.rows_list_container, content);
+                        self.default_submit = false
+                        resolve()
+                        return
+                    } else {
 
-                            if (self.default_submit === true) {
-                                const suggesting_text = common.create_dom_element({
-                                    element_type: "h2",
-                                    class_name: "suggesting_text",
-                                    inner_html: self.row.abstract
-                                })
-                                list_node.prepend(suggesting_text)
-                            }
-
-                            // reset default_submit state
-                            self.default_submit = false
-
-                            resolve(list_node)
+                        const pagination = self.default_submit === true
+                            ? false
+                            : self.pagination
+                        const list_data = page.parse_list_data(ar_rows) // prepares data to use in list
+                        self.list = self.list || new list_factory() // creates / get existing instance of list
+                        self.list.init({
+                            data: list_data,
+                            fn_row_builder: self.list_row_builder,
+                            container_class: 'galeria galeria--242x242 link-dn',
+                            pagination: pagination,
+                            caller: self
                         })
-                    break;
+                        self.list.render_list()
+                            .then(function (list_node) {
 
+                                if (self.default_submit === true) {
+                                    const suggesting_text = common.create_dom_element({
+                                        element_type: "h2",
+                                        class_name: "suggesting_text",
+                                        inner_html: self.row.abstract
+                                    })
+                                    list_node.prepend(suggesting_text)
+                                }
+
+                                // reset default_submit state
+                                self.default_submit = false
+
+                                resolve(list_node)
+                            })
+                    }
+                    break;
                 case 'map':
                     const map_data = page.parse_map_data(ar_rows) // prepares data to use in map
                     self.map = self.map || new map_factory() // creates / get existing instance of map

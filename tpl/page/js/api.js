@@ -79,6 +79,74 @@ var api = {
             //resolve_portals_custom: '{"image": "image"}'
         };
         return page.get_records(options);
-    }
+    },
+
+
+    getObjectsDefault: function() {
+        var options = {
+            //table: 'objects,pictures,immovables,documents_catalog',
+            table: 'objects',
+            sql_filter: 'imagenes_identificativas is not null and destacado is not null',
+            limit: 12,
+            order: 'RAND()',
+            //ar_fields: '*',
+            parse: page.parse_list_data,
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+        };
+        return page.get_records(options);
+    },
+    getPicturesDefault: function() {
+        var options = {
+            //table: 'objects,pictures,immovables,documents_catalog',
+            table: 'pictures',
+            sql_filter: 'imagenes_identificativas is not null and destacado is not null',
+            limit: 12,
+            order: 'RAND()',
+            //ar_fields: '*',
+            parse: page.parse_list_data,
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+        };
+        return page.get_records(options);
+    },
+    getInmovablesDefault: function() {
+        var options = {
+            //table: 'objects,pictures,immovables,documents_catalog',
+            table: 'immovables',
+            sql_filter: 'imagenes_identificativas is not null and destacado is not null',
+            limit: 12,
+            order: 'RAND()',
+            //ar_fields: '*',
+            parse: page.parse_list_data,
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+        };
+        return page.get_records(options);
+    },
+    getDocumentsDefault: function() {
+        var options = {
+            //table: 'objects,pictures,immovables,documents_catalog',
+            table: 'documents_catalog',
+            sql_filter: 'imagenes_identificativas is not null and destacado is not null',
+            limit: 12,
+            order: 'RAND()',
+            //ar_fields: '*',
+            parse: page.parse_list_data,
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+        };
+        return page.get_records(options);
+    },
+
+    getBiblioDefault: function() {
+        var options = {
+            //table: 'objects,pictures,immovables,documents_catalog',
+            table: 'documents_catalog',
+            sql_filter: 'imagenes_identificativas is not null and destacado is not null',
+            limit: 12,
+            order: 'RAND()',
+            //ar_fields: '*',
+            parse: page.parse_list_data,
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+        };
+        return page.get_records(options);
+    },
 
 };

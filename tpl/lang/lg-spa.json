@@ -23,6 +23,15 @@
     "collection_filter_documents": "Documentos",
     "collection_input_limit": "Máx. registros",
 
+    "collection_objects_default": "Objectos de la colección",
+    "collection_pictures_default": "Fotografías de la colección",
+    "collection_inmovables_default": "Yacimientos de la colección",
+    "collection_documents_default": "Documentos de la colección",
+    "collection_documents_default": "Documentos de la colección",
+    "collection_see_all": "Verlo todo",
+    "collection_see_more": "Ver mas",
+
+
     "documents_explore": "Explora las publicaciones",
     "documents_seach_placeholder": "Busca entre las publicaciones del MuPreVa",
     "documents_title_label": "Título",
