@@ -92,7 +92,7 @@ var biblio = {
 
         // pagination (only for list mode)
         self.pagination = {
-            limit: 30,
+            limit: 16,
             offset: 0,
             total: null
         }
@@ -106,7 +106,7 @@ var biblio = {
         self.render_form({
             container: document.getElementById("items_container")
         })
-
+        self.default_submit = true
         // first list
         self.initial_search()
 
@@ -624,7 +624,9 @@ var biblio = {
                             ar_rows: response.result
                         })
                             .then(function (list_node) {
-                                rows_list_container.appendChild(list_node)
+                                if (common.is_node(list_node)) {
+                                    rows_list_container.appendChild(list_node)
+                                }
                                 self.form_submit_state = 'done'
                                 event_manager.publish('rendered', {
                                     rows_list_container: rows_list_container
@@ -762,19 +764,29 @@ var biblio = {
 
             const pagination = self.pagination
 
-            const list_data = self.list_data(ar_rows) // prepares data to use in list
-            self.list = self.list || new list_factory() // creates / get existing instance of list
-            self.list.init({
-                data: list_data,
-                fn_row_builder: self.list_row_builder,
-                pagination: pagination,
-                container_class: 'pubs-list link-dn',
-                caller: self
-            })
-            self.list.render_list()
-                .then(function (list_node) {
-                    resolve(list_node)
+            if (self.default_submit) {
+                self.form_submit_state = 'done';
+                self.default_submit = false;
+                var content = templateModules.bloque_publicaciones_default()
+                appendTemplate(self.rows_list_container, content);
+                resolve()
+                return
+            } else {
+                const list_data = self.list_data(ar_rows) // prepares data to use in list
+                self.list = self.list || new list_factory() // creates / get existing instance of list
+                self.list.init({
+                    data: list_data,
+                    fn_row_builder: self.list_row_builder,
+                    pagination: pagination,
+                    container_class: 'pubs-list link-dn',
+                    caller: self
                 })
+                self.list.render_list()
+                    .then(function (list_node) {
+                        resolve(list_node)
+                    })
+                self.default_submit = false
+            }
         })
     },//end render_data
 

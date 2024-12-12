@@ -727,4 +727,293 @@ var templateModules = {
         return content;
     },
 
+
+
+
+
+
+
+    bloque_catalogo_default: function(){
+        var content = htmlTemplate(`
+        <div>
+            <div class="default_objects mt-8 flow--xl">
+            </div>
+            <div class="default_pictures mt-8 flow--xl">
+            </div>
+            <div class="default_inmovables mt-8 flow--xl">
+            </div>
+            <div class="default_documents mt-8 flow--xl">
+            </div>
+        </div>
+        `);
+
+        var children_container_objects = content[0].querySelector('div.default_objects');
+        api.getObjectsDefault().then(function(results){
+            if (!results || results.length == 0) {
+                return;
+            }
+            var content = htmlTemplate(`
+                <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
+                    <h2>${tstring.collection_objects_default}</h2>
+                    <a href="/catalogo/?catalog_tables=objects" class="button button--simple-2">${tstring.collection_see_all}</a>
+                </div>
+                <ul class="galeria galeria--242x242 link-dn">
+                ${results.map(function(row){
+                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                    var image_url = '/assets/img/placeholder.png';
+                    if (row.imagenes_identificativas.length > 0) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
+                    }
+                    return `
+                    <li class="${row.tpl}">
+                        <a href="${url}" target="_blank">
+                            <figure>
+                                <img loading="lazy" src="${image_url}" alt="">
+                                ${(row.titulo)?`
+                                <figcaption>${row.titulo}</figcaption>
+                                `:''}
+                            </figure>
+                        </a>
+                    </li>`;
+                }).join('')}
+                </ul>
+                <div class="has-text-centered mt-6">
+                    <a href="/catalogo/?catalog_tables=objects"class="button button--icon button--carrega">${tstring.collection_see_more}</a>
+                </div>
+            `);
+            appendTemplate(children_container_objects, content);
+        });
+
+        var children_container_pictures = content[0].querySelector('div.default_pictures');
+        api.getPicturesDefault().then(function(results){
+            if (!results || results.length == 0) {
+                return;
+            }
+            var content = htmlTemplate(`
+                <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
+                    <h2>${tstring.collection_pictures_default}</h2>
+                    <a href="/catalogo/?catalog_tables=pictures" class="button button--simple-2">${tstring.collection_see_all}</a>
+                </div>
+                <ul class="galeria galeria--242x242 link-dn">
+                ${results.map(function(row){
+                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                    var image_url = '/assets/img/placeholder.png';
+                    if (row.imagenes_identificativas.length > 0) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
+                    }
+                    return `
+                    <li class="${row.tpl}">
+                        <a href="${url}" target="_blank">
+                            <figure>
+                                <img loading="lazy" src="${image_url}" alt="">
+                                ${(row.titulo)?`
+                                <figcaption>${row.titulo}</figcaption>
+                                `:''}
+                            </figure>
+                        </a>
+                    </li>`;
+                }).join('')}
+                </ul>
+                <div class="has-text-centered mt-6">
+                    <a href="/catalogo/?catalog_tables=pictures"class="button button--icon button--carrega">${tstring.collection_see_more}</a>
+                </div>
+            `);
+            appendTemplate(children_container_pictures, content);
+        });
+
+        var children_container_inmovables = content[0].querySelector('div.default_inmovables');
+        api.getInmovablesDefault().then(function(results){
+            if (!results || results.length == 0) {
+                return;
+            }
+            var content = htmlTemplate(`
+                <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
+                    <h2>${tstring.collection_inmovables_default}</h2>
+                    <a href="/catalogo/?catalog_tables=inmovables" class="button button--simple-2">${tstring.collection_see_all}</a>
+                </div>
+                <ul class="galeria galeria--242x242 link-dn">
+                ${results.map(function(row){
+                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                    var image_url = '/assets/img/placeholder.png';
+                    if (row.imagenes_identificativas.length > 0) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
+                    }
+                    return `
+                    <li class="${row.tpl}">
+                        <a href="${url}" target="_blank">
+                            <figure>
+                                <img loading="lazy" src="${image_url}" alt="">
+                                ${(row.titulo)?`
+                                <figcaption>${row.titulo}</figcaption>
+                                `:''}
+                            </figure>
+                        </a>
+                    </li>`;
+                }).join('')}
+                </ul>
+                <div class="has-text-centered mt-6">
+                    <a href="/catalogo/?catalog_tables=inmovables"class="button button--icon button--carrega">${tstring.collection_see_more}</a>
+                </div>
+            `);
+            appendTemplate(children_container_inmovables, content);
+        });
+
+        var children_container_documents = content[0].querySelector('div.default_documents');
+        api.getDocumentsDefault().then(function(results){
+            if (!results || results.length == 0) {
+                return;
+            }
+            var content = htmlTemplate(`
+                <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
+                    <h2>${tstring.collection_documents_default}</h2>
+                    <a href="/catalogo/?catalog_tables=documents" class="button button--simple-2">${tstring.collection_see_all}</a>
+                </div>
+                <ul class="galeria galeria--242x242 link-dn">
+                ${results.map(function(row){
+                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                    var image_url = '/assets/img/placeholder.png';
+                    if (row.imagenes_identificativas.length > 0) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
+                    }
+                    return `
+                    <li class="${row.tpl}">
+                        <a href="${url}" target="_blank">
+                            <figure>
+                                <img loading="lazy" src="${image_url}" alt="">
+                                ${(row.titulo)?`
+                                <figcaption>${row.titulo}</figcaption>
+                                `:''}
+                            </figure>
+                        </a>
+                    </li>`;
+                }).join('')}
+                </ul>
+                <div class="has-text-centered mt-6">
+                    <a href="/catalogo/?catalog_tables=documents"class="button button--icon button--carrega">${tstring.collection_see_more}</a>
+                </div>
+            `);
+            appendTemplate(children_container_documents, content);
+        });
+
+        return content;
+    },
+
+
+
+/*
+    Últimes publicacions del Museu
+    Galeria de Serie de Trabajos Varios
+    Galeria de Revista APL
+    Galeria de Labor del SIP
+    Galeria de Catálogos
+    Galeria de Publicaciones Diverses
+    Galeria Didáctica
+    Galeria de Dodia
+*/
+
+    bloque_publicaciones_default: function(){
+        var content = htmlTemplate(`
+        <div>
+            <div class="default_last mt-8 flow--xl">
+            </div>
+        </div>
+        `);
+        var children_container = content[0].querySelector('div.default_last');
+        api.getPublicacionesDestacados().then(function(results){
+            var content = htmlTemplate(`
+                <h2>${tstring.documents_default_last}</h2>
+                <ul class="pubs-list link-dn mt-7">
+                ${results.map(function(row){
+                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                    var info = [];
+                    if (row.autor) {
+                        info.push(row.autor);
+                    }
+                    if (row.fecha_publicacion) {
+                        info.push(row.fecha_publicacion);
+                    }
+                    var image_url = '/assets/img/placeholder.png';
+                    if (row.imagen_identificativa !== null) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+                    }
+
+                    return `
+                    <li class="is-flex is-flex-direction-column full-link gap-2 ${row.tpl}">
+                        <h3 class="is-size-6">
+                            <a href="${url}" target="_blank">${row.titulo}</a>
+                        </h3>
+                        <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
+                            <img loading="lazy" src="${image_url}" alt="">
+                        </div>
+                        ${(info.length > 0)?`
+                        <p class="is-size-7">
+                            ${info.join('<br>')}
+                        </p>
+                        `:''}
+                    </li>
+                    `;
+                }).join('')}
+                </ul>
+            `);
+            appendTemplate(children_container, content);
+        });
+        /*var children_container_cats = content[0];
+        api.getPublicacionesSeries().then(function(results){
+            results.forEach(function(elem){
+                var content = htmlTemplate(`
+                <div class="default_last mt-8 flow--xl">
+                    <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
+                    <h2>${elem.name}</h2>
+                    <a href="/catalogo/?catalog_tables=objects" class="button button--simple-2">${tstring.collection_see_all}</a>
+                </div>
+
+                    <ul class="pubs-list link-dn mt-7">
+                    </ul>
+                </div>
+                `);
+                var children_container = content[0].querySelector('ul');
+                api.getPublicacionesDestacados(elem.section_id).then(function(results){
+                    var content = htmlTemplate(`
+                        ${results.map(function(row){
+                            const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                            var info = [];
+                            if (row.autor) {
+                                info.push(row.autor);
+                            }
+                            if (row.fecha_publicacion) {
+                                info.push(row.fecha_publicacion);
+                            }
+                            var image_url = '/assets/img/placeholder.png';
+                            if (row.imagen_identificativa !== null) {
+                                image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+                            }
+
+                            return `
+                            <li class="is-flex is-flex-direction-column full-link gap-2 ${row.tpl}">
+                                <h3 class="is-size-6">
+                                    <a href="${url}" target="_blank">${row.titulo}</a>
+                                </h3>
+                                <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
+                                    <img loading="lazy" src="${image_url}" alt="">
+                                </div>
+                                ${(info.length > 0)?`
+                                <p class="is-size-7">
+                                    ${info.join('<br>')}
+                                </p>
+                                `:''}
+                            </li>
+                            `;
+                        }).join('')}
+                    `);
+                    appendTemplate(children_container, content);
+                });
+            });
+
+            appendTemplate(children_container_cats, content);
+        });
+        */
+        return content;
+    },
+
+
 }

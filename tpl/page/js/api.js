@@ -15,7 +15,7 @@ var api = {
         return page.get_records(options);
     },
 
-    getPublicacionesDestacados: function() {
+    getPublicacionesDestacados: function(serie = null) {
         var options = {
             table: 'publications',
             sql_filter: 'imagen_identificativa is not null',
@@ -25,8 +25,25 @@ var api = {
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"imagen_identificativa": "image"}'
         };
+        if (serie !== null) {
+            options.sql_filter = options.sql_filter+' and serie_data = "'+serie+'"'
+        }
         return page.get_records(options);
     },
+
+    getPublicacionesSeries: function() {
+        var options = {
+            table: 'publications',
+            ar_fields: "serie,serie_data",
+            sql_filter: 'serie_data is not null and serie_data in ()',
+            limit: 6,
+            order: 'fecha_publicacion ASC',
+            //ar_fields: '*',
+            parse: page.parse_list_data,
+        };
+        return page.get_records(options);
+    },
+
 
     getActividadesDestacados: function() {
         var options = {

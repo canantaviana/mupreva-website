@@ -77,7 +77,11 @@ var catalog = {
         "section_id",
         "imagenes_identificativas",
         "titulo",
-        "section_tipo"
+        "section_tipo",
+        "datacion_ini",
+        "datacion_fin",
+        "periodo_data",
+        "periodo"
     ],
 
     /**
@@ -140,8 +144,8 @@ var catalog = {
         // order
         const order = (function () {
             switch (self.view_mode) {
-                case 'timeline': return 'dating_start, dating';
-                case 'map': return null;
+                case 'timeline': return 'datacion_ini asc, datacion_fin asc';
+                case 'map': return 'section_id ASC';
                 default: return 'RAND()';
             }
         })()
@@ -317,12 +321,14 @@ var catalog = {
                 break;
             case 'map':
                 self.pagination.limit = 0
-                return self.form_submit({})
+                return self.form_submit({
+                    order: 'section_id ASC'
+                })
                 break;
             case 'timeline':
                 self.pagination.limit = 0
                 return self.form_submit({
-                    order: 'dating_start, dating'
+                    order: 'datacion_ini asc, datacion_fin asc'
                 })
                 break;
         }
@@ -957,7 +963,8 @@ var catalog = {
                 filter: filter,
                 limit: (self.view_mode === 'map') ? null : limit,
                 offset: (self.view_mode === 'map') ? null : offset,
-                order: (self.view_mode === 'map') ? null : order
+                //order: (self.view_mode === 'map') ? null : order
+                order: order
             })
                 .then((response) => {
 
@@ -1050,7 +1057,7 @@ var catalog = {
 
         // timeline case
         if (self.view_mode === 'timeline') {
-            sql_filter = (sql_filter) ? sql_filter + ' AND dating_start is not null' : 'dating_start is not null'
+            sql_filter = (sql_filter) ? sql_filter + ' AND datacion_ini is not null' : 'datacion_ini is not null'
             limit = 0
             offset = 0
             count = false
@@ -1203,6 +1210,7 @@ var catalog = {
                     }
                     break;
                 case 'map':
+                    console.log(ar_rows);
                     const map_data = page.parse_map_data(ar_rows) // prepares data to use in map
                     self.map = self.map || new map_factory() // creates / get existing instance of map
                     self.map.init({
@@ -1222,7 +1230,9 @@ var catalog = {
                     break;
 
                 case 'timeline':
-                    const timeline_data = page.parse_timeline_data(ar_rows) // prepares data to use in timeline
+                    console.log(ar_rows);
+                    const timeline_data = page.parse_timeline_data_catalog(ar_rows) // prepares data to use in timeline
+                    console.log(timeline_data);
                     self.timeline = self.timeline || new timeline_factory() // creates / get existing instance of timeline
                     self.timeline.init({
                         target: target,
@@ -1404,7 +1414,6 @@ var catalog = {
             for (let i = from; i < to; i++) {
 
                 const title = item.data_group[i].title //|| "Undefined title"
-                const summary = item.data_group[i].description //|| "Undefined description"
                 const image_src = item.data_group[i].image_src
                 const date = item.data_group[i].date
 
@@ -1530,7 +1539,7 @@ var catalog = {
         return new Promise(function (resolve) {
 
             const ar_tables = self.get_tables()
-            const ar_fields = ['id', 'section_tipo', 'MIN(dating_start) AS min', 'MAX(dating_start) AS max']
+            const ar_fields = ['id', 'section_tipo', 'MIN(datacion_fin) AS min', 'MAX(datacion_fin) AS max']
 
             const request_body = {
                 dedalo_get: 'records',

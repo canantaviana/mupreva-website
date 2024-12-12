@@ -11,7 +11,6 @@ page.parse_map_data = function (rows) {
     const self = this
 
     const data = []
-console.log(rows);
     const rows_length = rows.length
     for (let i = 0; i < rows_length; i++) {
 
@@ -500,17 +499,19 @@ page.parse_timeline_data = function (rows) {
     for (let i = 0; i < rows_length; i++) {
 
         // not resolved portals case
-        if (typeof rows[i] !== 'object' || rows[i] === null) {
+        if ((
+            typeof rows[i] !== 'object' &&
+            typeof rows[i] !== 'pictures' &&
+            typeof rows[i] !== 'documents_catalog'
+        ) || rows[i] === null) {
             continue;
         }
-
         // clone row object to preserve it as immutable
         const row = Object.assign({}, rows[i]);
 
         const group_date = row.dating_start
             ? parseInt(row.dating_start)
             : null
-
         const complete_date = common.clean_date(row.dating, ',').join(' - ')
 
         if (group_date) {
@@ -552,6 +553,127 @@ page.parse_timeline_data = function (rows) {
             } else {
                 // already existing item
                 found.data_group.push(item_data)
+            }
+        }
+    }
+
+    // sort by property date asc
+    data.sort((a, b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0));
+
+
+    return data
+}//end parse_timeline_data
+
+
+/**
+* PARSE_TIMELINE_DATA
+* Parse rows data to use in timeline_factory grouping rows by date
+*/
+page.parse_timeline_data_catalog = function (rows) {
+
+    const self = this
+
+    const data = []
+    const rows_length = rows.length
+    for (let i = 0; i < rows_length; i++) {
+
+        // not resolved portals case
+        if (typeof rows[i] !== 'object' || rows[i] === null) {
+            continue;
+        }
+        // clone row object to preserve it as immutable
+        const row = Object.assign({}, rows[i]);
+
+        if (row.periodo) {
+            var periodos = row.periodo.split('|');
+            for (var group_date of periodos) {
+                if (group_date) {
+                    var image_url = '/assets/img/placeholder.png';
+                    if (row.imagenes_identificativas.length > 0) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
+                    }
+
+                    const item_data = {
+                        section_id: row.section_id,
+                        tpl: page.section_tipo_to_template(row.section_tipo),
+                        title: row.titulo,
+                        image_src: image_url // image_url
+                    }
+
+                    const found = data.find(el => el.date === group_date)
+                    if (!found) {
+                        // first item
+                        const item = {
+                            date: group_date,
+                            data_group: [item_data]
+                        }
+
+                        data.push(item)
+                    } else {
+                        // already existing item
+                        found.data_group.push(item_data)
+                    }
+                }
+            }
+        }
+    }
+
+    // sort by property date asc
+    data.sort((a, b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0));
+
+
+    return data
+}//end parse_timeline_data
+
+
+/**
+* PARSE_TIMELINE_DATA
+* Parse rows data to use in timeline_factory grouping rows by date
+*/
+page.parse_timeline_data_activity = function (rows) {
+
+    const self = this
+console.log(rows);
+    const data = []
+    const rows_length = rows.length
+    for (let i = 0; i < rows_length; i++) {
+
+        // not resolved portals case
+        if (typeof rows[i] !== 'object' || rows[i] === null) {
+            continue;
+        }
+        // clone row object to preserve it as immutable
+        const row = Object.assign({}, rows[i]);
+console.log(row);
+        if (row.date_start_year) {
+            var group_date = row.date_start_year;
+
+            if (group_date) {
+                var image_url = '/assets/img/placeholder.png';
+                if (row.identifying_image.length > 0) {
+                    image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image[0].image;
+                }
+
+                const item_data = {
+                    section_id: row.section_id,
+                    tpl: page.section_tipo_to_template(row.section_tipo),
+                    title: row.title,
+                    image_src: image_url // image_url
+                }
+
+                const found = data.find(el => el.date === group_date)
+                if (!found) {
+                    // first item
+                    const item = {
+                        date: group_date,
+                        data_group: [item_data]
+                    }
+
+                    data.push(item)
+                } else {
+                    // already existing item
+                    found.data_group.push(item_data)
+                }
             }
         }
     }

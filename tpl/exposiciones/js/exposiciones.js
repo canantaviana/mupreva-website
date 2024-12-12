@@ -75,7 +75,8 @@ var actividades = {
         "identifying_image",
         "title",
         "time_frame",
-        "type"
+        "type",
+        "date_start_year"
     ],
 
     activity_table: 'activities',
@@ -139,7 +140,7 @@ var actividades = {
         // order
         const order = (function () {
             switch (self.view_mode) {
-                case 'timeline': return 'dating_start, dating';
+                case 'timeline': return 'time_frame desc';
                 default: return 'time_frame desc';
             }
         })()
@@ -159,12 +160,19 @@ var actividades = {
 
         } else {
             // defaul random search
-            self.default_submit = true
-            self.form_submit({
-                filter: "(time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s'))",
-                order: 'time_frame asc',
-                limit: limit
-            })
+            if (self.view_mode === 'timeline') {
+                self.form_submit({
+                    order: order,
+                    limit: limit
+                })
+            } else {
+                self.default_submit = true
+                self.form_submit({
+                    filter: "(time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s'))",
+                    order: 'time_frame asc',
+                    limit: limit
+                });
+            }
         }
 
         // subscribe events
@@ -270,7 +278,7 @@ var actividades = {
             case 'timeline':
                 self.pagination.limit = 0
                 return self.form_submit({
-                    order: 'dating_start, dating'
+                    order: 'time_frame desc'
                 })
                 break;
         }
@@ -691,7 +699,7 @@ var actividades = {
 
         // timeline case
         if (self.view_mode === 'timeline') {
-            sql_filter = (sql_filter) ? sql_filter + ' AND dating_start is not null' : 'dating_start is not null'
+            sql_filter = (sql_filter) ? sql_filter + ' AND time_frame is not null' : 'time_frame is not null'
             limit = 0
             offset = 0
             count = false
@@ -823,7 +831,7 @@ var actividades = {
                     break;
 
                 case 'timeline':
-                    const timeline_data = page.parse_timeline_data(ar_rows) // prepares data to use in timeline
+                    const timeline_data = page.parse_timeline_data_activity(ar_rows) // prepares data to use in timeline
                     self.timeline = self.timeline || new timeline_factory() // creates / get existing instance of timeline
                     self.timeline.init({
                         target: target,
