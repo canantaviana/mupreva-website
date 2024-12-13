@@ -372,10 +372,6 @@ var actividades = {
             const currentForm = form[0];
             appendTemplate(options.container, form);
 
-
-
-            const fragment = new DocumentFragment()
-
             // form_factory instance
             self.form = self.form || new form_factory()
 

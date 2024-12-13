@@ -46,14 +46,12 @@ var api = {
     },
 
     categoryToSql: function(cats) {
-        console.log(cats);
         if (cats.length == 0) {
             return '';
         }
         var filter = cats.map(function(elem){
             return "type_data like '%\\\""+elem+"\\\"%'";
         });
-        console.log('('+filter.join(' or ')+')');
         return '('+filter.join(' or ')+')';
     },
 
