@@ -204,7 +204,7 @@ var actividades = {
         const self = this
 
         // cookie
-        const activity_config = localStorage.getItem('activity_config');
+        const activity_config = localStorage.getItem('expositions_config');
         if (activity_config) {
             // use existing one
             self.activity_config = JSON.parse(activity_config)
@@ -214,7 +214,7 @@ var actividades = {
                 view_mode: self.view_mode, // list, timeline
                 pagination: self.pagination
             }
-            localStorage.setItem('activity_config', JSON.stringify(activity_config));
+            localStorage.setItem('expositions_config', JSON.stringify(activity_config));
             self.activity_config = activity_config
         }
 
@@ -222,7 +222,7 @@ var actividades = {
             for (const key in options) {
                 self.activity_config[key] = options[key]
             }
-            localStorage.setItem('activity_config', JSON.stringify(self.activity_config));
+            localStorage.setItem('expositions_config', JSON.stringify(self.activity_config));
         }
 
 
@@ -705,7 +705,7 @@ var actividades = {
             count = false
         }
 
-        var customFilter = "(type_data like '%\\\"3\\\"%' or type_data like '%\\\"11\\\"%' or type_data like '%\\\"12\\\"%')";
+        var customFilter = api.categoryToSql(api.exposicionesCategorias());
         sql_filter = (sql_filter) ? sql_filter + ' AND '+customFilter : customFilter
 
 
@@ -1042,7 +1042,7 @@ var actividades = {
                 img.addEventListener("click", function () {
                     const data = item.data_group[i]
                     // open detail file in another window
-                    const url = page_globals.__WEB_ROOT_WEB__ + "/" + data.tpl + "/" + data.section_id
+                    const url = page_globals.__WEB_ROOT_WEB__ + "/actividad/" + data.section_id
                     const new_window = window.open(url)
                     new_window.focus()
                 })

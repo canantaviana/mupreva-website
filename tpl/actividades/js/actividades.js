@@ -706,7 +706,7 @@ var actividades = {
             count = false
         }
 
-        var customFilter =  "(type_data like '%\\\"4\\\"%' or type_data like '%\\\"16\\\"%' or type_data like '%\\\"18\\\"%' or type_data like '%\\\"21\\\"%')";
+        var customFilter = api.categoryToSql(api.activitadesCategorias());
         sql_filter = (sql_filter) ? sql_filter + ' AND '+customFilter : customFilter
 
 
@@ -876,6 +876,11 @@ var actividades = {
                     ${date}
                 </p>`
                 :''}
+                ${(row.time_start)?
+                `<p class="has-text-primary has-text-weight-semibold is-size-6">
+                    ${row.time_start}
+                </p>`
+                :''}
             </div>
         </li>
         `)[0];
@@ -1033,7 +1038,7 @@ var actividades = {
                 img.addEventListener("click", function () {
                     const data = item.data_group[i]
                     // open detail file in another window
-                    const url = page_globals.__WEB_ROOT_WEB__ + "/" + data.tpl + "/" + data.section_id
+                    const url = page_globals.__WEB_ROOT_WEB__ + "/actividad/" + data.section_id
                     const new_window = window.open(url)
                     new_window.focus()
                 })

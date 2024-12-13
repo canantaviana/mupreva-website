@@ -1,6 +1,64 @@
 "use strict";
 
 var api = {
+
+    activitadesCategorias: function() {
+        return [
+            4,//Actividad
+            28,//Acto conmemorativo
+            26,//Acto de homenaje
+            15,//Conferencia
+            10,//Comunicación
+            30,//Ciclo de conferencias
+            35,//Ciclo de cine
+            34,//Concurso
+            19,//Congreso
+            29,//Curso
+            32,//Feria
+            18,//Jornadas
+            17,//Jornadas en yacimentos
+            13,//Día de los Museos/Noche de los Museos
+            16,//Presentación
+            14,//Proyección
+            31,//Seminario/Reunión
+            33,//Mesa redonda
+            21,//Taller de formación/ Taller de trabajo
+            22,//Bookcrossing
+        ];
+    },
+
+    exposicionesCategorias: function() {
+        return [
+            11,//Exposición temporal
+            12,//Exposición itinerante
+        ];
+    },
+
+    aprendeMuseoCategorias: function() {
+        return [
+            5,//Didáctica
+            37,//Maleta didáctica
+            20,//Visita didáctica / Visita guiada
+            21,//Taller
+            //Taller fin de semana
+            //Taller en yacimiento
+        ];
+    },
+
+    categoryToSql: function(cats) {
+        console.log(cats);
+        if (cats.length == 0) {
+            return '';
+        }
+        var filter = cats.map(function(elem){
+            return "type_data like '%\\\""+elem+"\\\"%'";
+        });
+        console.log('('+filter.join(' or ')+')');
+        return '('+filter.join(' or ')+')';
+    },
+
+
+
     getCatalogDestacados: function() {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
@@ -48,7 +106,7 @@ var api = {
     getActividadesDestacados: function() {
         var options = {
             table: 'activities',
-            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and (type_data like '%\\\"4\\\"%' or type_data like '%\\\"16\\\"%' or type_data like '%\\\"18\\\"%' or type_data like '%\\\"21\\\"%')",
+            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.activitadesCategorias()),
             limit: 6,
             order: 'RAND()',
             ar_fields: '*',
@@ -61,7 +119,7 @@ var api = {
     getExposicionesDestacados: function() {
         var options = {
             table: 'activities',
-            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and (type_data like '%\\\"3\\\"%' or type_data like '%\\\"11\\\"%' or type_data like '%\\\"12\\\"%')",
+            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.exposicionesCategorias()),
             limit: 3,
             order: 'RAND()',
             ar_fields: '*',
@@ -75,7 +133,7 @@ var api = {
     getActividadesActuales: function() {
         var options = {
             table: 'activities',
-            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and (type_data like '%\\\"4\\\"%' or type_data like '%\\\"16\\\"%' or type_data like '%\\\"18\\\"%' or type_data like '%\\\"21\\\"%')",
+            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.activitadesCategorias()),
             //limit: 6,
             order: 'time_frame asc',
             ar_fields: '*',
@@ -88,7 +146,7 @@ var api = {
     getExposicionesActuales: function() {
         var options = {
             table: 'activities',
-            //sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and (type_data like '%\\\"3\\\"%' or type_data like '%\\\"11\\\"%' or type_data like '%\\\"12\\\"%')",
+            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.exposicionesCategorias()),
             limit: 10,
             order: 'time_frame asc',
             ar_fields: '*',

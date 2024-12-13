@@ -205,6 +205,10 @@ var item = {
                     images_data: 'image',
                     bibliografia: 'bibliographic_references',
                     documents_data: 'documents',
+                    children_data: 'activities',
+                    'children_data.identifying_image': 'image',
+                    people_data: 'people'
+
                     //people_data: '',
                     //related_data: 'activities',
                 }
@@ -236,7 +240,7 @@ var item = {
 
     templateShare: function (row) {
         const url = this.absUrl(row);
-        const title = row.titulo;
+        const title = row.title;
         return htmlTemplate(`
 <div class="has-text-right-tablet mb-3">
     <span class="simple-tooltip-container"><button type="button" class="js-tooltip button button--icon button--compartir" data-tooltip-prefix-class="simple-tooltip" data-tooltip-content-id="compartir" data-tooltip-title="Compartir URL" data-tooltip-close-text="${tstring.close}" id="label_tooltipnk434h0i7m">${tstring.share_title}</button></span>
@@ -290,7 +294,6 @@ var item = {
 
     templateFields:function(row) {
         var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
-
         return `
             ${(row.type)?`
             <dt><dt>${tstring.item_tipology}</dt></dt>
@@ -300,13 +303,13 @@ var item = {
             <dt>${tstring.item_sala}</dt>
             <dd>${row.place}</dd>
             `:''}
-            ${(row.date)?`
+            ${(date)?`
             <dt>${tstring.item_data}</dt>
-            <dd>${row.date}</dd>
+            <dd>${date}</dd>
             `:''}
-            ${(0)?`
+            ${(row.time_start)?`
             <dt>${tstring.item_hour}</dt>
-            <dd>TODO</dd>
+            <dd>${row.time_start}</dd>
             `:''}
             ${(0)?`
             <dt>${tstring.item_to_public}</dt>
@@ -547,6 +550,7 @@ var item = {
 
     templateRelated: function(row){
         //TODO: passar a camp patrimonio_relacionado
+        var self = this;
         return '';
         return htmlTemplate(`
             <h2 class="accordion-header">
@@ -564,15 +568,17 @@ var item = {
     },
 
     templateActivitiesRelated: function(row){
-        //TODO
-        return '';
+        if (!row.children_data || row.children_data.length == 0) {
+            return '';
+        }
+        var self = this;
         return htmlTemplate(`
             <h2 class="accordion-header">
-                <button type="button">${tstring.item_rel_content}</button>
+                <button type="button">${tstring.item_rel_activities}</button>
             </h2>
             <div class="accordion-content">
                 <ul class="galeria galeria--242x242 link-dn">
-                ${row.children.map(function(object){
+                ${row.children_data.map(function(object){
                     return self.template_catalog_elem(object);
                 }).join('')}
                 </ul>
@@ -582,18 +588,30 @@ var item = {
     },
 
     templateCredits: function(row){
-        //TODO
-        return '';
+        if (!row.people || !row.people_role) {
+            return '';
+        }
+        var people = JSON.parse(row.people);
+        var rols = JSON.parse(row.people_role);
+        console.log([people, rols])
         return htmlTemplate(`
             <h2 class="accordion-header">
-                <button type="button">${tstring.item_rel_content}</button>
+                <button type="button">${tstring.item_credits}</button>
             </h2>
-            <div class="accordion-content">
-                <ul class="galeria galeria--242x242 link-dn">
-                ${row.children.map(function(object){
-                    return self.template_catalog_elem(object);
-                }).join('')}
-                </ul>
+            <div class="accordion-content block-dedalo flow">
+                <div class="table">
+                    <table>
+                        <tbody>
+                        ${people.map(function(object, index){
+                        return `
+                            <tr>
+                                <th>${rols[index]}</th>
+                                <td>${object}</td>
+                            </tr>`;
+                        }).join('')}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         `);
 
@@ -626,30 +644,46 @@ var item = {
         appendTemplate(target, template);
     },
 
-    /**
-    * LIST_ROW_BUILDER
-    * Build DOM nodes to insert into list pop-up
-    */
     template_catalog_elem: function (row) {
-        row.tpl = page.section_tipo_to_template(row.section_tipo);
         const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
         var image_url = '/assets/img/placeholder.png';
-        if (row.imagenes_identificativas.length > 0) {
-            image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
+        if (row.identifying_image.length > 0) {
+            image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image[0].image;
+        }
+        var date = null;
+        if (row.time_frame) {
+            var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
         }
         return `
         <li class="${row.tpl}">
-            <a href="${url}" target="_blank">
-                <figure>
-                    <img loading="lazy" src="${image_url}" alt="">
-                    ${(row.titulo)?`
-                    <figcaption>${row.titulo}</figcaption>
-                    `:''}
-                </figure>
-            </a>
+            <div class="is-flex is-flex-direction-column gap-4 full-link">
+                ${(row.type)?
+                `<p class="has-text-weight-medium is-size-6">
+                    <a href="/activitats/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                </p>`
+                :''}
+                <img loading="lazy" src="${image_url}" alt="">
+                ${(date)?
+                `<p class="has-text-primary has-text-weight-semibold is-size-6">
+                    ${date}
+                </p>`
+                :''}
+                ${(row.time_start)?
+                `<p class="has-text-primary has-text-weight-semibold is-size-6">
+                    ${row.time_start}
+                </p>`
+                :''}
+                <h3 class="is-size-6 has-text-weight-semibold">
+                    <a href="${url}">${row.title}</a>
+                </h3>
+            </div>
         </li>
         `;
     },//end list_row_builder
+
+
+
+
 
 
 
