@@ -1210,7 +1210,6 @@ var catalog = {
                     }
                     break;
                 case 'map':
-                    console.log(ar_rows);
                     const map_data = page.parse_map_data(ar_rows) // prepares data to use in map
                     self.map = self.map || new map_factory() // creates / get existing instance of map
                     self.map.init({
@@ -1230,9 +1229,7 @@ var catalog = {
                     break;
 
                 case 'timeline':
-                    console.log(ar_rows);
                     const timeline_data = page.parse_timeline_data_catalog(ar_rows) // prepares data to use in timeline
-                    console.log(timeline_data);
                     self.timeline = self.timeline || new timeline_factory() // creates / get existing instance of timeline
                     self.timeline.init({
                         target: target,
@@ -1351,25 +1348,6 @@ var catalog = {
 
         const self = this
 
-        // sample html
-        // <div class="cd-timeline__block">
-
-        //   <div class="cd-timeline__img cd-timeline__img--picture">
-        // 	  <img src="assets/img/cd-icon-picture.svg" alt="Picture">
-        //   </div> <!-- cd-timeline__img -->
-
-        //   <div class="cd-timeline__content text-component">
-        // 	  <h2>Title of section 1</h2>
-        // 	  <p class="color-contrast-medium">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, optio, dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde? Iste voluptatibus minus veritatis qui ut.</p>
-
-        // 	  <div class="flex justify-between items-center">
-        // 	    <span class="cd-timeline__date">Jan 14</span>
-        // 	    <a href="#0" class="btn btn--subtle">Read more</a>
-        // 	  </div>
-        //   </div> <!-- cd-timeline__content -->
-
-        // </div> <!-- cd-timeline__block -->
-
         const timeline_icon_src = __WEB_TEMPLATE_WEB__ + "/assets/images/cd-icon-picture.svg"
         const group_date = item.date
 
@@ -1387,18 +1365,28 @@ var catalog = {
             class_name: "cd-timeline__img cd-timeline__img--picture",
             parent: block
         })
-        // const icon = common.create_dom_element({
-        // 	element_type	: "img",
-        // 	class_name		: "",
-        // 	src				: timeline_icon_src,
-        // 	parent			: image_icon
-        // })
+
 
         // content
         const block_content = common.create_dom_element({
             element_type: "div",
             class_name: "cd-timeline__content text-component",
             parent: block
+        })
+
+        // content
+        common.create_dom_element({
+            element_type: "p",
+            class_name: "has-text-weight-light is-size-6 has-text-grey-dark",
+            inner_html: item.data_group.length+' '+((item.data_group.length > 1)?tstring.timeline_elements:tstring.timeline_element),
+            parent: block_content
+        })
+
+        // content
+        const block_content_list = common.create_dom_element({
+            element_type: "ul",
+            class_name: "galeria galeria--92x92 link-dn mt-0",
+            parent: block_content
         })
 
         // render block items loop data_group
@@ -1409,61 +1397,29 @@ var catalog = {
         // iterate function
         function iterate(from, to) {
 
-            const fragment = new DocumentFragment()
+            const fragment2 = new DocumentFragment()
 
             for (let i = from; i < to; i++) {
-
+                const section_id = item.data_group[i].section_id //|| "Undefined title"
+                const tpl = item.data_group[i].tpl //|| "Undefined title"
                 const title = item.data_group[i].title //|| "Undefined title"
                 const image_src = item.data_group[i].image_src
                 const date = item.data_group[i].date
 
-                // item
-                const block_item = common.create_dom_element({
-                    element_type: "div",
-                    class_name: "block_item",
-                    parent: fragment
-                })
 
-                // img
-                const image_container = common.create_dom_element({
-                    element_type: "div",
-                    class_name: "image_container",
-                    parent: block_item
-                })
-                const img = common.create_dom_element({
-                    element_type: "img",
-                    class_name: "",
-                    src: image_src,
-                    parent: image_container
-                })
-                // add image wrapper background color
-                // page.build_image_with_background_color(image_src, image_container)
-                // image click event
-                img.addEventListener("click", function () {
-                    const data = item.data_group[i]
-                    // open detail file in another window
-                    const url = page_globals.__WEB_ROOT_WEB__ + "/" + data.tpl + "/" + data.section_id
-                    const new_window = window.open(url)
-                    new_window.focus()
-                })
+                const url = page_globals.__WEB_ROOT_WEB__ + "/" + tpl + "/" + section_id
+                var content = htmlTemplate(`
+                    <li>
+                        <a href="${url}" target="_blank">
+                            <figure>
+                                <img src="${image_src}" alt="">
+                                <figcaption>${title}</figcaption>
+                            </figure>
+                        </a>
+                    </li>
+                `);
 
-                // text
-                const text_container = common.create_dom_element({
-                    element_type: "div",
-                    class_name: "text_container",
-                    parent: block_item
-                })
-                const title_node = common.create_dom_element({
-                    element_type: "h2",
-                    text_content: title,
-                    parent: text_container//block_item
-                })
-                const complete_date = common.create_dom_element({
-                    element_type: "p",
-                    class_name: "color-contrast-high",
-                    text_content: date,
-                    parent: text_container // block_item//below_container
-                })
+                appendTemplate(block_content_list, content);
             }//end for (let i = from; i < to; i++)
 
             // load more button
@@ -1473,15 +1429,19 @@ var catalog = {
 
                 const block_item = common.create_dom_element({
                     element_type: "div",
-                    class_name: "block_item",
-                    parent: fragment
+                    class_name: "pb-4 has-text-centered-mobile",
+                    parent: fragment2
                 })
 
+                const label = (tstring['load_more'] || "Load more..") + " (" + vieved + " " + tstring.of + " " + data_group_length + ")"
                 const more_node = common.create_dom_element({
-                    element_type: "div",
-                    class_name: "more_node btn timeline_show_more",
+                    element_type: "button",
+                    class_name: "button button--icon button--carrega",
+                    type: "button",
+                    inner_html: label,
                     parent: block_item
                 })
+
                 more_node.offset = to
 
                 more_node.addEventListener("click", function () {
@@ -1491,17 +1451,10 @@ var catalog = {
 
                     this.remove()
                 })
-
-                const label = (tstring['load_more'] || "Load more..") + " <small>[" + vieved + " " + tstring.of + " " + data_group_length + "]</small>"
-                const more_label = common.create_dom_element({
-                    element_type: "span",
-                    inner_html: label,
-                    parent: more_node
-                })
             }
 
             // append to parent
-            block_content.appendChild(fragment)
+            block_content.appendChild(fragment2)
         }
 
         // first, iterate elements from zero to limit
