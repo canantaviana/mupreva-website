@@ -311,9 +311,9 @@ var item = {
             <dt>${tstring.item_hour}</dt>
             <dd>${row.time_start}</dd>
             `:''}
-            ${(0)?`
+            ${(row.thematic_indexation)?`
             <dt>${tstring.item_to_public}</dt>
-            <dd>TODO</dd>
+            <dd>${row.thematic_indexation.split(', ').join('<br>')}</dd>
             `:''}
         `;
     },

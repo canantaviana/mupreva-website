@@ -40,6 +40,7 @@ var biblio = {
         "identifying_image",
         "title",
         "type",
+        "thematic_indexation"
     ],
 
     // biblio_config
@@ -515,6 +516,13 @@ var biblio = {
                     <h4 class="is-size-5 has-text-weight-semibold">
                         <a href="${url}">${row.title}</a>
                     </h4>
+                    ${(row.thematic_indexation)?
+                    `<ul class="is-size-6">
+                    ${row.thematic_indexation.split(', ').map(function(elem){
+                        return `<li>${elem}</li>`;
+                    }).join('')}
+                    </ul>`
+                    :''}
                 </div>
                 ${(row.type)?
                 `<p class="has-text-weight-medium is-size-6">
