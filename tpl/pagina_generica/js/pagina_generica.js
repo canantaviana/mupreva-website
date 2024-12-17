@@ -33,6 +33,7 @@ var generic = {
                     templateModules.render_items(rows, row.term_id).forEach(node => {
                         appendTemplate(children_container, node);
                     });
+                    viewInit();
                 })
         }
 

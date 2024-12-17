@@ -31,7 +31,6 @@
     "collection_see_all": "Verlo todo",
     "collection_see_more": "Ver mas",
 
-
     "documents_explore": "Explora las publicaciones",
     "documents_seach_placeholder": "Busca entre las publicaciones del MuPreVa",
     "documents_title_label": "Título",
@@ -47,7 +46,6 @@
     "documents_popup_alt": "ArSe. Archaeological Search",
     "documents_default_last": "Últimas publicaciones del museo",
 
-
     "activitis_title_current": "Actividades actuales",
     "activitis_results": "Resultados busqueda",
     "activitis_seach_label": "Buscar actividades",
@@ -62,6 +60,12 @@
     "expositions_site_label": "Ubicación",
     "expositions_date_label": "Data",
     "expositions_category_label": "Categoria",
+
+    "immovables_seach_label": "Buscar yacimientos",
+    "immovables_localizacion": "Municipio",
+    "immovables_periodo": "Periodo",
+    "immovables_title": "Yacimientos",
+
 
     "close": "Cerrar",
 
@@ -107,19 +111,12 @@
     "item_tematica": "Temática",
     "item_group": "Elementos del conjunto",
     "item_show_more_info": "Despliega más información",
-
     "item_restoration_title": "Título",
     "item_restoration_date": "Fecha",
     "item_restoration_description": "Descripción de la intervención",
-
     "item_production": "Lugar de producción",
-
-
     "item_general_info": "Información general",
     "item_sala": "Sala",
-
-
-
     "item_num": "núm.",
     "item_audiovisual": "Audiovisuales",
     "item_documents": "Documentos",
@@ -159,10 +156,6 @@
 
     "timeline_elements": "elementos",
     "timeline_element": "elemento",
-
-
-
-
 
     "home_activities_more": "Descubrir mas",
 

@@ -132,11 +132,10 @@ var templateModules = {
                 <div class="accordion-content block-dedalo">
                 ${(info.body)?info.body:''}
                 </div>
-            </div>
-        `);
+            </div>`)
         var children_container = content[0].querySelector('.accordion-content')
         templateModules.render_items(rows, info.term_id).forEach(node => {
-            appendTemplate(children_container[0], node);
+            appendTemplate(children_container, node);
         });
         return content;
     },
@@ -692,8 +691,9 @@ var templateModules = {
                 ${results.map(function(row){
                     const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
                     var image_url = '/assets/img/placeholder.png';
+
                     if (row.identifying_image !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image;
+                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
                     }
                     var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 

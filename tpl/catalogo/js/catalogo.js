@@ -1273,19 +1273,7 @@ var catalog = {
             </a>
         </li>
         `)[0];
-        /*const mode = view_mode // list (masonry)
 
-        const row_node = common.create_dom_element({
-            element_type: 'div',
-            class_name: 'row_node grid-item ' + row.tpl
-        })
-
-        const item_fragment = item_list_row.render_item(row, mode, row_node)
-        if (item_fragment) {
-            row_node.appendChild(item_fragment)
-        }
-
-        return row_node*/
     },//end list_row_builder
 
 

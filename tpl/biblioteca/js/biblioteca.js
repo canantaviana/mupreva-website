@@ -667,51 +667,6 @@ var biblio = {
         const count = typeof options.count !== "undefined" ? options.count : true
         const process_result = options.process_result || null
 
-        // // parse_sql_filter
-        // 	const group = []
-        // 	const parse_sql_filter = function(filter){
-
-        // 		if (filter) {
-
-        // 			const op		= Object.keys(filter)[0]
-        // 			const ar_query	= filter[op]
-
-        // 			const ar_filter = []
-        // 			const ar_query_length = ar_query.length
-        // 			for (let i = 0; i < ar_query_length; i++) {
-
-        // 				const item = ar_query[i]
-
-        // 				const item_op = Object.keys(item)[0]
-        // 				if(item_op==="AND" || item_op==="OR") {
-
-        // 					const current_filter_line = "(" + parse_sql_filter(item) + ")"
-        // 					ar_filter.push(current_filter_line)
-        // 					continue;
-        // 				}
-
-        // 				// item_field
-        // 					const item_field = (item.field==="publication_date")
-        // 						? "YEAR(" + item.field + ")"
-        // 						: item.field
-
-        // 				// filter_line
-        // 					const filter_line = (item.field.indexOf("AS")!==-1 || item.field==="publication_date")
-        // 						? "" +item_field+""  +" "+ item.op +" "+ item.value + (" AND "+item_field+"!=''")
-        // 						: "`"+item_field+"`" +" "+ item.op +" "+ item.value + (" AND `"+item_field+"`!=''")
-
-        // 				ar_filter.push(filter_line)
-
-        // 				// group
-        // 					if (item.group) {
-        // 						group.push(item.group)
-        // 					}
-        // 			}
-        // 			return ar_filter.join(" "+op+" ")
-        // 		}
-
-        // 		return null
-        // 	}
 
         // // parsed_filters
         // 	const sql_filter = page.parse_sql_filter(filter, group)
