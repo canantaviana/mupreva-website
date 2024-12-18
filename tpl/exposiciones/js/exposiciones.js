@@ -681,8 +681,10 @@ var actividades = {
         // parse_sql_filter
         const group = []
         // const parsed_filter	= page.parse_sql_filter(filter, group)
-        //const parsed_filter = self.form.parse_sql_filter(filter, group)
-        const parsed_filter = filter
+        var parsed_filter = filter
+        if (typeof filter !== 'string') {
+            parsed_filter = self.form.parse_sql_filter(filter, group)
+        }
         let sql_filter = parsed_filter
             ? '(' + parsed_filter + ')'
             : null
