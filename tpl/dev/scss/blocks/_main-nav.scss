@@ -108,9 +108,9 @@
                 &::after {
                     right: calc(-800% + 1px);
                 }
-                .home & {
-                    background-color: transparent;
-                }
+                // .home & {
+                //     background-color: transparent;
+                // }
                 a {
                     display: block;
                     padding-right: 2rem;

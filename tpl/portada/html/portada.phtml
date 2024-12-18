@@ -18,11 +18,11 @@ require($base_path . '/' . $cwd . '.php');
                     <?php if ($image->title) : ?>
                     <div class="wrapper is-relative">
                     <?php if ($image->description) : ?>
-                    <a href="<?php echo $image->description ?>">
-                        <h2 class="has-text-white has-text-weight-semibold is-size-2">
+                    <h2 class="has-text-white has-text-weight-semibold is-size-2">
+                        <a href="<?php echo $image->description ?>">
                             <?php echo $image->title ?>
-                        </h2>
-                    </a>
+                        </a>
+                    </h2>
                     <?php else : ?>
                         <h2 class="has-text-white has-text-weight-semibold is-size-2">
                             <?php echo $image->title ?>
