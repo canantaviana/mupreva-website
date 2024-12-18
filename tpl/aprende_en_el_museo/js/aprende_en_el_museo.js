@@ -37,7 +37,7 @@ var biblio = {
     // fields
     ar_fields: [
         "section_id",
-        "identifying_image",
+        "identifying_image_data",
         "title",
         "type",
         "thematic_indexation"
@@ -227,7 +227,6 @@ var biblio = {
                 }
             }).then(function(result){
                 var select = currentForm.querySelector('#type');
-                console.log(result.result);
                 result.result.forEach(element => {
                     var option = htmlTemplate(`
                         <option value="${element.type}">${element.type}</option>
@@ -434,7 +433,7 @@ var biblio = {
                 order: order,
                 process_result: process_result,
                 resolve_portals_custom: {
-                    identifying_image: 'image'
+                    identifying_image_data: 'image',
                 }
             }
         })
@@ -506,8 +505,8 @@ var biblio = {
     list_row_builder: function (row) {
         const url = page_globals.__WEB_ROOT_WEB__ + '/actividad/' + row.section_id;
         var image_url = '/assets/img/placeholder.png';
-        if (row.identifying_image.length > 0) {
-            image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image[0].image;
+        if (row.identifying_image_data.length > 0) {
+            image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image_data[0].image;
         }
         return htmlTemplate(`
         <li class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen ${row.tpl}">

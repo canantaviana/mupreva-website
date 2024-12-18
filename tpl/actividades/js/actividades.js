@@ -72,7 +72,7 @@ var actividades = {
     // fields
     ar_fields: [
         "section_id",
-        "identifying_image",
+        "identifying_image_data",
         "title",
         "time_frame",
         "type",
@@ -728,7 +728,7 @@ var actividades = {
             process_result: process_result
         }
         request_body.resolve_portals_custom = {
-            identifying_image: 'image'
+            identifying_image_data: 'image'
         }
         const js_promise = data_manager.request({
             body: request_body
@@ -808,7 +808,6 @@ var actividades = {
                     self.list.render_list()
                         .then(function (list_node) {
                             var subtitle = document.getElementById('subtitle');
-                            console.log(subtitle);
                             if (self.default_submit === true) {
                                 subtitle.innerHTML = tstring.activitis_title_current;
                             } else {
@@ -824,7 +823,6 @@ var actividades = {
 
                 case 'timeline':
                     const timeline_data = page.parse_timeline_data_activity(ar_rows) // prepares data to use in timeline
-                    console.log(timeline_data);
                     self.timeline = self.timeline || new timeline_factory() // creates / get existing instance of timeline
                     self.timeline.init({
                         target: target,
@@ -852,8 +850,8 @@ var actividades = {
     list_row_builder: function (row, view_mode) {
         const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
         var image_url = '/assets/img/placeholder.png';
-        if (row.identifying_image.length > 0) {
-            image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image[0].image;
+        if (row.identifying_image_data.length > 0) {
+            image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image_data[0].image;
         }
         var date = null;
         if (row.time_frame) {

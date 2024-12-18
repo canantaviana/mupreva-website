@@ -1072,7 +1072,6 @@ var biblio_row_fields = {
 			// const day	= today.getUTCDate()
 
 			const browser_lang = window.navigator.language
-	console.log("tstring:",tstring);
 			const string_date	= new Intl.DateTimeFormat(browser_lang).format(today)
 			const accessed = common.create_dom_element({
 				element_type	: "span",

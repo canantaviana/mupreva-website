@@ -593,7 +593,6 @@ var item = {
         }
         var people = JSON.parse(row.people);
         var rols = JSON.parse(row.people_role);
-        console.log([people, rols])
         return htmlTemplate(`
             <h2 class="accordion-header">
                 <button type="button">${tstring.item_credits}</button>
@@ -707,7 +706,7 @@ var item = {
             class_name: 'accordion accordion--primary mt-9'
         })
         target.appendChild(acordion);
-console.log(row);
+
         //info
         appendTemplate(acordion, this.templateInfo(row));
 

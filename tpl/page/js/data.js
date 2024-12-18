@@ -633,7 +633,6 @@ page.parse_timeline_data_catalog = function (rows) {
 page.parse_timeline_data_activity = function (rows) {
 
     const self = this
-console.log(rows);
     const data = []
     const rows_length = rows.length
     for (let i = 0; i < rows_length; i++) {
@@ -650,8 +649,8 @@ console.log(row);
 
             if (group_date) {
                 var image_url = '/assets/img/placeholder.png';
-                if (row.identifying_image.length > 0) {
-                    image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image[0].image;
+                if (row.identifying_image_data.length > 0) {
+                    image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image_data[0].image;
                 }
 
                 const item_data = {

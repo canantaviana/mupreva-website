@@ -524,7 +524,7 @@ var templateModules = {
                     const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
                     var image_url = '/assets/img/placeholder.png';
                     if (row.identifying_image !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image;
+                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
                     }
                     var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
@@ -595,7 +595,7 @@ var templateModules = {
                     const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
                     var image_url = '/assets/img/placeholder.png';
                     if (row.identifying_image !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image;
+                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
                     }
                     var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
@@ -643,7 +643,7 @@ var templateModules = {
                     const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
                     var image_url = '/assets/img/placeholder.png';
                     if (row.identifying_image !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image;
+                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
                     }
                     var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
