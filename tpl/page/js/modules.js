@@ -1048,7 +1048,7 @@ var templateModules = {
                         var content = htmlTemplate(`
                             <div class="block-titol-text flow">
                                 <h3>${persona.nombre} ${persona.apellidos}</h3>
-                                ${(persona.cargo || persona.telefon)?
+                                ${(persona.cargo || persona.telefono)?
                                 `<div class="table">
                                     <table>
                                         <tbody>
@@ -1058,11 +1058,11 @@ var templateModules = {
                                                 <td>${persona.cargo}</td>
                                             </tr>`
                                             :''}
-                                            ${(persona.telefon)?
+                                            ${(persona.telefono)?
                                             `<tr>
                                                 <th>${tstring.directory_tel}</th>
                                                 <td>
-                                                    <a href="tel:${persona.telefon}">${persona.telefon}</a>
+                                                    <a href="tel:${persona.telefono}">${persona.telefono}</a>
                                                 </td>
                                             </tr>`
                                             :''}
