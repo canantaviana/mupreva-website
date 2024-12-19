@@ -222,4 +222,41 @@ var api = {
         return page.get_records(options);
     },
 
+    getDirectorio: function() {
+        var options = {
+            table: 'entities',
+            sql_filter: 'parent = "[\\"rsc106_1\\"]" and relations is not null',
+            order: 'section_id asc',
+            //ar_fields: '*',
+            //resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+        };
+        return page.get_records(options).then(function(results){
+            results = results.map(function(elem){
+                var relations = JSON.parse(elem.relations).filter(function(entry){
+                    return entry.section_tipo === 'rsc194';
+                });
+                elem.relations = relations.map(function(entry){
+                    return entry.section_id
+                });
+                return elem;
+            })
+            return results.filter(function(elem){
+                return elem.relations.length > 0;
+            });
+        });
+    },
+
+    getPersona: function(id) {
+        var options = {
+            table: 'people',
+            sql_filter: 'section_id = "'+id+'"',
+            order: 'section_id asc',
+            //section_id: id
+
+            //ar_fields: '*',
+            //resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+        };
+        return page.get_records(options);
+    },
+
 };

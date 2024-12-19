@@ -1015,5 +1015,73 @@ var templateModules = {
         return content;
     },
 
+    bloque_directorio: function(info){
+        var content = htmlTemplate(`<div class="flow--2xl"></div>`);
+        var children_container = content[0];
+        api.getDirectorio().then(function(results){
+            results.forEach(function(elem){
+                var content = htmlTemplate(`<div class="accordion accordion--primary mt-6">
+                        <h2 class="accordion-header">
+                            <button type="button">${elem.nombre}</button>
+                        </h2>
+                        <div class="accordion-content block-dedalo">
+                            ${(elem.estructura_funcionamiento)?`
+                            <p>${elem.estructura_funcionamiento}</p>
+                            `:''}
+                            <div class="block-dedalo columns is-multiline is-variable is-8">
+                            ${elem.relations.map(function(row){
+                                return `<div data-relation="${row}" class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen">
+                                </div>`
+                            }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `);
+                //var persons_container = content[0].querySelector('div.block-dedalo');
+                elem.relations.forEach(function(relation){
+                    var person_container = content[0].querySelector('div[data-relation="'+relation+'"]');
+                    api.getPersona(relation).then(function(persona){
+                        if (persona.length != 1) {
+                            return;
+                        }
+                        persona = persona[0];
+                        var content = htmlTemplate(`
+                            <div class="block-titol-text flow">
+                                <h3>${persona.nombre} ${persona.apellidos}</h3>
+                                ${(persona.cargo || persona.telefon)?
+                                `<div class="table">
+                                    <table>
+                                        <tbody>
+                                            ${(persona.cargo)?
+                                            `<tr>
+                                                <th>${tstring.directory_rol}</th>
+                                                <td>${persona.cargo}</td>
+                                            </tr>`
+                                            :''}
+                                            ${(persona.telefon)?
+                                            `<tr>
+                                                <th>${tstring.directory_tel}</th>
+                                                <td>
+                                                    <a href="tel:${persona.telefon}">${persona.telefon}</a>
+                                                </td>
+                                            </tr>`
+                                            :''}
+                                        </tbody>
+                                    </table>
+                                </div>`
+                                :''}
+                            </div>`);
+                        appendTemplate(person_container, content);
+                    })
+                });
+                appendTemplate(children_container, content);
+            })
+            viewInit();
+        });
+        return content;
+    },
+
+
+
 
 }
