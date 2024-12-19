@@ -52,6 +52,7 @@
 @import "utilities/link-decoration-none";
 @import "utilities/radius";
 @import "utilities/rounded";
+@import "utilities/shadow";
 @import "utilities/simple-list";
 @import "utilities/static";
 @import "utilities/table-responsive";
@@ -83,9 +84,10 @@
 @import "blocks/form-help";
 @import "blocks/form-label";
 // @import "blocks/form-login";
-// @import "blocks/full-bleed";
+@import "blocks/full-bleed";
 @import "blocks/form-autocomplete";
 @import "blocks/gallery";
+@import "blocks/hamburger";
 @import "blocks/highlighted-link";
 @import "blocks/highlighted-p-1";
 // @import "blocks/highlighted-p-2";
@@ -113,24 +115,41 @@
 // @import "blocks/social-list";
 @import "blocks/tabs";
 // @import "blocks/toggle";
-// @import "blocks/video-container";
+@import "blocks/video-container";
 @import "blocks/map";
 
 // Blocks específics del projecte
 // ------------------------------
+@import "blocks/actions-list";
+@import "blocks/activitats-list";
 @import "blocks/a11y-dialog";
 @import "blocks/button-like";
+@import "blocks/card";
+@import "blocks/desplegables";
 @import "blocks/dl-list";
 @import "blocks/dl-minimal";
 @import "blocks/galeria";
 @import "blocks/header-search";
+@import "blocks/home-grid";
+@import "blocks/masonry-grid";
+@import "blocks/more-link";
+@import "blocks/navigation-sub";
 @import "blocks/pubs-list";
 @import "blocks/pub-text-results";
+@import "blocks/swiper-expos";
 @import "blocks/swiper-fitxa";
 @import "blocks/swiper-home";
 @import "blocks/table-collapsibles";
 @import "blocks/timeline";
 @import "blocks/tooltip";
+
+// Blocks per pàgines de Dédalo
+// ----------------------------
+// @import "blocks/block-text-img-dreta";
+
+// Estils per editor Dédalo
+// -------------------------
+@import "blocks/block-dedalo";
 
 // només utilitzar pels exemples:
 .box {

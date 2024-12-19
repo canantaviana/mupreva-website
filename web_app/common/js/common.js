@@ -472,7 +472,8 @@ var common = {
         if (!file_name) {
             return null
         }
-
+        return __WEB_MEDIA_ENGINE_URL__+file_name;
+        /*
         // id. from 'rsc29_rsc170_1.jpg' to '1'
         const regex = /^.{3,}_.{3,}_(\d{1,})\.[\S]{3,4}$/;
         const id = (full_name)
@@ -495,6 +496,7 @@ var common = {
         const media_engine_url = __WEB_MEDIA_ENGINE_URL__ + '/' + type + '/' + id + (quality ? ('/' + quality) : '')
 
         return media_engine_url
+        */
     },//end get_media_engine_url
 
 
@@ -1079,6 +1081,27 @@ var common = {
         target.appendChild(spinner);
         return spinner;
     },
+
+    convertText: function(input) {
+        var output = input.replaceAll('&nbsp;', '');
+        output = output.replace(/<br>\s*&nbsp;\s*<br>/g, '<br>');
+        output = output.replace(/<br>\s*<br>/g, '<br>');
+        output = output.replace(/<br>\s*/g, '<br>');
+        output = output.replace(/<br>/g, '</p><p>');
+        output = `<p>${output}</p>`;
+        //treure br a l'inici del blockquote
+        output = output.replace(/<blockquote>\s*<br>/g, '<blockquote>');
+
+        output = output.replaceAll('../../../media', page_globals.__WEB_MEDIA_BASE_URL__ + '/dedalo/media')
+
+        output = output.replaceAll('background-color:hsl(0, 75%, 60%);', 'background-color:hsl(0,75%,60%);')
+
+        output = output.replace(
+            /<a href="(.*?)"><span style="(.*?)">(.*?)<\/span><\/a>/g,
+            '<span style="$2"><a href="$1">$3</a></span>'
+        );
+        return output;
+    }
 }//end common
 
 
@@ -1147,3 +1170,57 @@ function getPosterframe(video_url){
 
     return posterframe_url;
 }
+
+function shuffle(array) {
+    let currentIndex = array.length;
+
+    // While there remain elements to shuffle...
+    while (currentIndex != 0) {
+
+      // Pick a remaining element...
+        let randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+      // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+    }
+}
+
+function formatDateRange(dateRange, iso3) {
+    try {
+        const iso3ToLocale = {
+            'lg-spa': 'es-ES',  // Espanyol
+            'lg-vlc': 'ca-ES',  // Valencià (utilitza català)
+            'lg-eng': 'en-US',  // Anglès
+            'lg-fra': 'fr-FR',  // Francès
+            'lg-cat': 'ca-ES',  // Català
+            'lg-deu': 'de-DE',  // Alemany
+            'lg-ita': 'it-IT',  // Italià
+            'lg-por': 'pt-PT',  // Portuguès
+            // Afegeix altres idiomes segons sigui necessari
+        };
+        const locale = iso3ToLocale[iso3.toLowerCase()] || 'en-US'; // Anglès per defecte
+        const [start, end] = dateRange.split(",").map(date => new Date(date.trim()));
+
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        const formatter = new Intl.DateTimeFormat(locale, options);
+
+        return `${formatter.format(start)} - ${formatter.format(end)}`;
+    } catch (e) {
+        return null;
+    }
+}
+
+const formatDate = (dateString) => {
+    try {
+        const date = new Date(dateString); // Converteix la cadena de text a un objecte Date
+        const day = date.getDate(); // Obté el dia del mes
+        const month = date.getMonth() + 1; // Obté el mes (0-11, per això s'afegeix 1)
+        const year = date.getFullYear(); // Obté l'any
+
+        return `${day}/${month}/${year}`; // Crea el format desitjat
+    } catch (e) {
+        return null;
+    }
+};

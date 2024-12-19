@@ -8,11 +8,9 @@
 * column map : {"alt":16,"lat":42.72744993,"lon":-2.02195793,"zoom":14}
 */
 page.parse_map_data = function (rows) {
-
     const self = this
 
     const data = []
-
     const rows_length = rows.length
     for (let i = 0; i < rows_length; i++) {
 
@@ -351,6 +349,9 @@ page.parse_list_data = function (rows) {
 
         // tpl
         row.tpl = page.section_tipo_to_template(row.section_tipo)
+        if (row.table == 'activities') {
+            row.tpl = 'actividad';
+        }
 
         /*
         // unify media elements (to easy manage on filmstrip)
@@ -498,17 +499,19 @@ page.parse_timeline_data = function (rows) {
     for (let i = 0; i < rows_length; i++) {
 
         // not resolved portals case
-        if (typeof rows[i] !== 'object' || rows[i] === null) {
+        if ((
+            typeof rows[i] !== 'object' &&
+            typeof rows[i] !== 'pictures' &&
+            typeof rows[i] !== 'documents_catalog'
+        ) || rows[i] === null) {
             continue;
         }
-
         // clone row object to preserve it as immutable
         const row = Object.assign({}, rows[i]);
 
         const group_date = row.dating_start
             ? parseInt(row.dating_start)
             : null
-
         const complete_date = common.clean_date(row.dating, ',').join(' - ')
 
         if (group_date) {
@@ -550,6 +553,126 @@ page.parse_timeline_data = function (rows) {
             } else {
                 // already existing item
                 found.data_group.push(item_data)
+            }
+        }
+    }
+
+    // sort by property date asc
+    data.sort((a, b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0));
+
+
+    return data
+}//end parse_timeline_data
+
+
+/**
+* PARSE_TIMELINE_DATA
+* Parse rows data to use in timeline_factory grouping rows by date
+*/
+page.parse_timeline_data_catalog = function (rows) {
+
+    const self = this
+
+    const data = []
+    const rows_length = rows.length
+    for (let i = 0; i < rows_length; i++) {
+
+        // not resolved portals case
+        if (typeof rows[i] !== 'object' || rows[i] === null) {
+            continue;
+        }
+        // clone row object to preserve it as immutable
+        const row = Object.assign({}, rows[i]);
+
+        if (row.periodo) {
+            var periodos = row.periodo.split('|');
+            for (var group_date of periodos) {
+                if (group_date) {
+                    var image_url = '/assets/img/placeholder.png';
+                    if (row.imagenes_identificativas.length > 0) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
+                    }
+
+                    const item_data = {
+                        section_id: row.section_id,
+                        tpl: page.section_tipo_to_template(row.section_tipo),
+                        title: row.titulo,
+                        image_src: image_url // image_url
+                    }
+
+                    const found = data.find(el => el.date === group_date)
+                    if (!found) {
+                        // first item
+                        const item = {
+                            date: group_date,
+                            data_group: [item_data]
+                        }
+
+                        data.push(item)
+                    } else {
+                        // already existing item
+                        found.data_group.push(item_data)
+                    }
+                }
+            }
+        }
+    }
+
+    // sort by property date asc
+    data.sort((a, b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0));
+
+
+    return data
+}//end parse_timeline_data
+
+
+/**
+* PARSE_TIMELINE_DATA
+* Parse rows data to use in timeline_factory grouping rows by date
+*/
+page.parse_timeline_data_activity = function (rows) {
+
+    const self = this
+    const data = []
+    const rows_length = rows.length
+    for (let i = 0; i < rows_length; i++) {
+
+        // not resolved portals case
+        if (typeof rows[i] !== 'object' || rows[i] === null) {
+            continue;
+        }
+        // clone row object to preserve it as immutable
+        const row = Object.assign({}, rows[i]);
+console.log(row);
+        if (row.date_start_year) {
+            var group_date = row.date_start_year;
+
+            if (group_date) {
+                var image_url = '/assets/img/placeholder.png';
+                if (row.identifying_image_data.length > 0) {
+                    image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image_data[0].image;
+                }
+
+                const item_data = {
+                    section_id: row.section_id,
+                    tpl: page.section_tipo_to_template(row.section_tipo),
+                    title: row.title,
+                    image_src: image_url // image_url
+                }
+
+                const found = data.find(el => el.date === group_date)
+                if (!found) {
+                    // first item
+                    const item = {
+                        date: group_date,
+                        data_group: [item_data]
+                    }
+
+                    data.push(item)
+                } else {
+                    // already existing item
+                    found.data_group.push(item_data)
+                }
             }
         }
     }
@@ -1392,7 +1515,6 @@ page.combine_marks = function (row) {
 * @return array rows
 */
 page.parse_ts_web = function (rows) {
-
     rows = !common.is_array(rows)
         ? [rows]
         : rows
@@ -1419,11 +1541,11 @@ page.parse_ts_web = function (rows) {
 
         // fix link paths to absolute paths
         row.body = row.body
-            ? row.body.replaceAll('../../../media', page_globals.__WEB_MEDIA_BASE_URL__ + '/dedalo/media')
+            ? common.convertText(row.body)
             : null
 
         row.abstract = row.abstract
-            ? row.abstract.replaceAll('../../../media', page_globals.__WEB_MEDIA_BASE_URL__ + '/dedalo/media')
+            ? common.convertText(row.abstract)
             : null
 
         // row.identify_image_big = row.identify_image
@@ -1432,15 +1554,37 @@ page.parse_ts_web = function (rows) {
         // 	  })
         // 	: null;
 
+        row.uri = row.uri
+            ? JSON.parse(row.uri)
+            : [];
+
         row.identify_image = row.identify_image
             ? JSON.parse(row.identify_image).map((el) => {
                 return common.get_media_engine_url(el, 'image')
             })
             : null;
 
-        row.image = row.image
+        /*row.image = row.image
             ? JSON.parse(row.image)
-            : null
+            : null*/
+        if (row.image) {
+            row.image_icon = row.image.filter(function(elem){
+                return elem.title === 'icon';
+            }).map(function(elem){
+                elem.image = common.get_media_engine_url(elem.image, 'image')
+                return elem;
+            });
+
+            row.image = row.image.filter(function(elem){
+                return elem.title !== 'icon';
+            }).map(function(elem){
+                elem.image = common.get_media_engine_url(elem.image, 'image')
+                return elem;
+            });
+        } else {
+            row.image_icon = [];
+            row.image = [];
+        }
 
         row.other_images_resolved = row.other_images_resolved
             ? JSON.parse(row.other_images_resolved)
@@ -1471,7 +1615,7 @@ page.parse_ts_web = function (rows) {
 
         row.pdf_resolved = row.pdf_resolved
             ? JSON.parse(row.pdf_resolved)
-            : null
+            : []
         // resolve full absolute url
         if (row.pdf_resolved) {
             for (let i = 0; i < row.pdf_resolved.length; i++) {
@@ -1506,7 +1650,7 @@ page.get_records = function (options) {
     const self = this
 
     // options
-    const table = options.table || 'ts_web'
+    const table = options.table || 'ts_web_mupreva'
     const sql_filter = options.sql_filter || null
     const limit = options.limit || 0
     const count = options.count || false
@@ -1514,6 +1658,7 @@ page.get_records = function (options) {
     const order = options.order || 'norder ASC'
     const ar_fields = options.ar_fields || '*'
     const parse = options.parse || page.parse_ts_web
+    const resolve_portals_custom = options.resolve_portals_custom || ''
 
 
     return new Promise(function (resolve) {
@@ -1523,18 +1668,18 @@ page.get_records = function (options) {
                 dedalo_get: 'records',
                 db_name: page_globals.WEB_DB,
                 lang: page_globals.WEB_CURRENT_LANG_CODE,
-                table: 'ts_web',
+                table: table,
                 ar_fields: ar_fields,
                 sql_filter: sql_filter,
                 limit: limit,
                 count: count,
                 offset: offset,
-                order: order
+                order: order,
+                resolve_portals_custom: resolve_portals_custom
             }
         })
             .then(function (response) {
-                console.log("page.get_records API response:", response);
-
+                //console.log("page.get_records API response:", response);
                 const data = (typeof parse === "function")
                     ? parse(response.result)
                     : response.result

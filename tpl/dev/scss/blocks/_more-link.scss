@@ -1,0 +1,14 @@
+.more-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    font-size: var(--step-1);
+    &::after {
+        content: "";
+        display: block;
+        width: 30px;
+        height: 30px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M6.25 15h17.5M18.75 20l5-5M18.75 10l5 5'/%3E%3C/svg%3E");
+    }
+}

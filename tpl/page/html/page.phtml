@@ -7,7 +7,7 @@ $cwd        = basename($base_path); # Current dir name
 require($base_path . '/' . $cwd . '.php');
 ?>
 <!DOCTYPE html>
-<html>
+<html class="no-js">
 
 <head>
     <meta charset="UTF-8">
@@ -58,7 +58,7 @@ require($base_path . '/' . $cwd . '.php');
     <?php include $base_path . '/html/google_analytics.inc' ?>
 </head>
 
-<body class="<?php if ($this->area_name === 'main_home') echo 'homepage ' ?>is-preload">
+<body class="<?php if ($this->area_name === 'main_home') echo 'home ' ?>is-preload">
     <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/header.phtml'; ?>
 
     <?php echo $content_html ?>

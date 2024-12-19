@@ -2,7 +2,7 @@
   font-family: 'Archivo';
   font-style: normal;
   font-weight: 300;
-  src: url(../../fonts/Archivo-normal-300.woff) format('woff'), url(../../fonts/Archivo-normal-300.woff2) format('woff2'), url(../../fonts/Archivo-normal-300.ttf) format('truetype');
+  src: url(../../fonts/Archivo-normal-300.ttf) format('truetype'), url(../../fonts/Archivo-normal-300.woff) format('woff'), url(../../fonts/Archivo-normal-300.woff2) format('woff2');
 }
 
 @font-face {
@@ -10,48 +10,55 @@
   font-style: normal;
   font-weight: 400;
   src: url(../../fonts/Archivo);
-  src: local('Archivo'), url(../../fonts/Archivo?#iefix) format('embedded-opentype'), url(../../fonts/Archivo.woff) format('woff'), url(../../fonts/Archivo.woff2) format('woff2'), url(../../fonts/Archivo.ttf) format('truetype'), url(../../fonts/Archivo.svg#Archivo) format('svg');
+  src: local('Archivo'), url(../../fonts/Archivo?#iefix) format('embedded-opentype'), url(../../fonts/Archivo.ttf) format('truetype'), url(../../fonts/Archivo.woff) format('woff'), url(../../fonts/Archivo.woff2) format('woff2'), url(../../fonts/Archivo.svg#Archivo) format('svg');
 }
 
 @font-face {
   font-family: 'Archivo';
   font-style: normal;
   font-weight: 500;
-  src: url(../../fonts/Archivo-normal-500.woff) format('woff'), url(../../fonts/Archivo-normal-500.woff2) format('woff2'), url(../../fonts/Archivo-normal-500.ttf) format('truetype');
+  src: url(../../fonts/Archivo-normal-500.ttf) format('truetype'), url(../../fonts/Archivo-normal-500.woff) format('woff'), url(../../fonts/Archivo-normal-500.woff2) format('woff2');
 }
 
 @font-face {
   font-family: 'Archivo';
   font-style: normal;
   font-weight: 600;
-  src: url(../../fonts/Archivo-normal-600.woff) format('woff'), url(../../fonts/Archivo-normal-600.woff2) format('woff2'), url(../../fonts/Archivo-normal-600.ttf) format('truetype');
+  src: url(../../fonts/Archivo-normal-600.ttf) format('truetype'), url(../../fonts/Archivo-normal-600.woff) format('woff'), url(../../fonts/Archivo-normal-600.woff2) format('woff2');
 }
 
 @font-face {
   font-family: 'Archivo';
   font-style: normal;
   font-weight: 700;
-  src: url(../../fonts/Archivo-normal-700.woff) format('woff'), url(../../fonts/Archivo-normal-700.woff2) format('woff2'), url(../../fonts/Archivo-normal-700.ttf) format('truetype');
+  src: url(../../fonts/Archivo-normal-700.ttf) format('truetype'), url(../../fonts/Archivo-normal-700.woff) format('woff'), url(../../fonts/Archivo-normal-700.woff2) format('woff2');
 }
 
 @font-face {
   font-family: 'Archivo';
   font-style: normal;
   font-weight: 800;
-  src: url(../../fonts/Archivo-normal-800.woff) format('woff'), url(../../fonts/Archivo-normal-800.woff2) format('woff2'), url(../../fonts/Archivo-normal-800.ttf) format('truetype');
+  src: url(../../fonts/Archivo-normal-800.ttf) format('truetype'), url(../../fonts/Archivo-normal-800.woff) format('woff'), url(../../fonts/Archivo-normal-800.woff2) format('woff2');
 }
 
 @font-face {
   font-family: 'Archivo';
   font-style: normal;
   font-weight: 900;
-  src: url(../../fonts/Archivo-normal-900.woff) format('woff'), url(../../fonts/Archivo-normal-900.woff2) format('woff2'), url(../../fonts/Archivo-normal-900.ttf) format('truetype');
+  src: url(../../fonts/Archivo-normal-900.ttf) format('truetype'), url(../../fonts/Archivo-normal-900.woff) format('woff'), url(../../fonts/Archivo-normal-900.woff2) format('woff2');
 }
 
 @font-face {
   font-family: 'Archivo';
   font-style: italic;
   font-weight: 400;
-  src: url(../../fonts/Archivo-italic-400.woff) format('woff'), url(../../fonts/Archivo-italic-400.woff2) format('woff2'), url(../../fonts/Archivo-italic-400.ttf) format('truetype');
+  src: url(../../fonts/Archivo-italic-400.ttf) format('truetype'), url(../../fonts/Archivo-italic-400.woff) format('woff'), url(../../fonts/Archivo-italic-400.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Archivo';
+  font-style: italic;
+  font-weight: 500;
+  src: url(../../fonts/Archivo-italic-500.ttf) format('truetype'), url(../../fonts/Archivo-italic-500.woff) format('woff'), url(../../fonts/Archivo-italic-500.woff2) format('woff2');
 }
 

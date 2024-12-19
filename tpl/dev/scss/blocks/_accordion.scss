@@ -88,6 +88,13 @@
         display: none;
         visibility: hidden;
     }
+    p {
+        font-weight: 500;
+        max-width: 114ch;
+    }
+    > * + * {
+        margin-top: var(--space-l);
+    }
 }
 .accordion--primary {
     > .accordion-header {
@@ -96,7 +103,7 @@
             background: none;
             border: 1px solid #000;
             border-width: 0 0 1px 0;
-            padding: var(--space-m) 0;
+            padding: var(--space-s) 0;
             display: flex;
             justify-content: space-between;
             align-items: center;

@@ -1,0 +1,8 @@
+.hamburger {
+    cursor: default;
+    height: 1.25rem;
+    margin-left: 1.25rem;
+    @include widescreen {
+        display: none;
+    }
+}

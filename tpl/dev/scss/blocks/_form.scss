@@ -38,10 +38,14 @@ select {
 }
 input,
 textarea {
-    &:not(:placeholder-shown):not([type="button"]) {
+    &:not(:placeholder-shown):not([type="button"]):not([type="date"]) {
         border-color: #000;
     }
 }
+input[type="date"].filled {
+    border-color: #000;
+}
+
 .input,
 .textarea,
 .select {
@@ -103,7 +107,7 @@ ul.field {
         height: auto !important;
         select {
             border-width: 0 0 2px 0;
-            padding: 0 0.5rem 0 0.25rem !important;
+            padding: 0 1rem 0 0.25rem !important;
             height: auto;
         }
         &::after {

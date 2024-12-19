@@ -8,7 +8,7 @@ define('BASE_LINKS', $base_links);
 
 // css
 page::$css_ar_url[] = __WEB_TEMPLATE_WEB__ . '/assets/css/app.css';
-page::$css_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/css/page.css';
+//page::$css_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/css/page.css';
 
 
 // js
@@ -37,7 +37,14 @@ page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/render_page.js';
 page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/data.js';
 page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/data_export.js';
 page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/video_player.js';
+
+page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/api.js';
+page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/modules.js';
+
 // fi app-min
+
+// breadcrumb
+$this->breadcrumb = $this->get_breadcrumb();
 
 // menu tree
 $menu_tree = $this->get_menu_tree_plain(WEB_MENU_PARENT, []);
@@ -45,31 +52,38 @@ $menu_tree = $this->get_menu_tree_plain(WEB_MENU_PARENT, []);
 // ul drawer
 $ul_drawer = function ($term_id, $html) {
     if ($term_id === WEB_MENU_PARENT) {
-        $html = PHP_EOL . '<ul class="main-nav link-dn" id="main-nav">' . $html . '</ul>' . PHP_EOL;
+        $html = PHP_EOL . '<ul class="has-text-weight-medium">' . $html . '</ul>' . PHP_EOL;
     } else {
-        $html = PHP_EOL . '<ul class="link-dn">' . $html . '</ul>' . PHP_EOL;
+        $html = PHP_EOL . '<ul class="">' . $html . '</ul>' . PHP_EOL;
     }
 
     return $html;
 };
 
 // li drawer
-$li_drawer = function ($menu_element, $embed_html = '') {
+$li_drawer = function ($menu_element, $embed_html = '', $current = null) {
 
     $web_path = $menu_element->web_path === 'main_home' ? '' : $menu_element->web_path;
 
     $html  = '';
-    $html .= PHP_EOL . ' <li class="has-submenu" role="' . $menu_element->web_path . '">';
+    $html .= PHP_EOL . ' <li class="'.((!empty($embed_html))?'has-submenu':'').'" role="' . $menu_element->web_path . '">';
 
-    $url    = __WEB_ROOT_WEB__ . '/' . $web_path;
-    $active    = (isset($menu_element->active) && $menu_element->active !== 'no')
+    $url = __WEB_ROOT_WEB__ . '/' . $web_path;
+    $active = (isset($menu_element->active) && $menu_element->active !== 'no')
         ? true
         : false;
 
+    $currentClass = '';
+    $currentAria = '';
+    if ('/'.$current == $url) {
+        $currentClass = '';
+        $currentAria = 'aria-current="page"';
+    }
+
     if ($active === true) {
-        $html .= '<a href="' . $url . '" class="has-text-white">' . $menu_element->term . '</a>';
+        $html .= '<a href="' . $url . '" '.$currentAria.' class="is-relative has-text-white '.$currentClass.'">' . $menu_element->term . '</a>';
     } else {
-        $html .= '<a href="#" class="has-text-white">' . $menu_element->term . '</a>';
+        $html .= '<a href="#" '.$currentAria.' class="is-relative has-text-white '.$currentClass.'">' . $menu_element->term . '</a>';
     }
 
     $html .= $embed_html;
@@ -79,11 +93,56 @@ $li_drawer = function ($menu_element, $embed_html = '') {
 };
 
 // menu_tree_html
-$this->menu_tree_html = page::render_menu_tree_plain(WEB_MENU_PARENT, $menu_tree, $li_drawer, $ul_drawer, 'children');
+$this->menu_tree_html = page::render_menu_tree_plain(WEB_MENU_PARENT, $menu_tree, $this->area_name, $li_drawer, $ul_drawer, 'children', 2);
 
 $this->menu_footer = array_filter($menu_tree, function($item){
     return in_array($item->web_path, WEB_MENU_FOOTER);
 });
+
+//menu apartat
+// ul drawer
+$ul_title_drawer = function ($term_id, $html) {
+    $html = PHP_EOL . '<ul class="is-flex is-flex-wrap-wrap is-align-items-baseline link-dn has-text-weight-medium">' . $html . '</ul>' . PHP_EOL;
+    return $html;
+};
+
+// li drawer
+$li_title_drawer = function ($menu_element, $embed_html = '', $current = null) {
+
+    $web_path = $menu_element->web_path === 'main_home' ? '' : $menu_element->web_path;
+
+    $html  = '';
+    $html .= PHP_EOL . ' <li role="' . $menu_element->web_path . '">';
+
+    $url = __WEB_ROOT_WEB__ . '/' . $web_path;
+    $active = (isset($menu_element->active) && $menu_element->active !== 'no')
+        ? true
+        : false;
+
+    $currentClass = '';
+    $currentAria = '';
+    if ('/'.$current == $url) {
+        $currentClass = 'current is-italic has-text-primary';
+        $currentAria = 'aria-current="page"';
+    }
+
+    if ($active === true) {
+        $html .= '<a href="' . $url . '" '.$currentAria.' class="'.$currentClass.'">' . $menu_element->term . '</a>';
+    } else {
+        $html .= '<a href="#" '.$currentAria.' class="'.$currentClass.'">' . $menu_element->term . '</a>';
+    }
+    $html .= '</li>';
+
+    return $html;
+};
+// menu_tree_html
+if ($this->breadcrumb && count($this->breadcrumb) > 2) {
+    $this->menu_title_html = page::render_menu_tree_plain($this->breadcrumb[2]->term_id, $menu_tree, $this->area_name, $li_title_drawer, $ul_title_drawer);
+}
+
+
+
+
 
 // custom_strings
 /*$this->custom_strings = [];
@@ -103,24 +162,12 @@ $this->custom_strings['sitemap'] = array_find($menu_tree, function ($item) {
 // footer_html
 $this->footer_html = '';
 
-// breadcrumb
-$this->breadcrumb = empty($this->breadcrumb)
-    ? (!empty($this->row)
-        ? [
-            (object)[
-                'label'    => $this->row->term,
-                'path'    => '/' . $this->row->web_path
-            ]
-        ]
-        : null)
-    : $this->breadcrumb;
-
 // content_html
 $content_options = new stdClass();
 $content_options->template_map         = $template_map; // Defined in method page->render_page_html
 $content_options->mode                 = $mode; // Defined in method page->render_page_html
 $content_options->add_common_css     = false;
-$content_options->add_template_css     = true;
+$content_options->add_template_css     = false;
 $content_options->resolve_values     = true;
 
 $content_html = $this->get_template_html($content_options);

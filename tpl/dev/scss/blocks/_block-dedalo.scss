@@ -1,0 +1,274 @@
+// Estils per contingut entrat des de Dédalo
+
+.block-dedalo {
+    @extend .text-base;
+    font-weight: 500;
+
+    h2 {
+        font-size: var(--step-3);
+    }
+
+    // Separació vertical de columnes
+    & > .column {
+        // @include mobile {
+        margin-bottom: var(--space-l);
+        // }
+    }
+    // &.is-desktop > .column {
+    //     @include touch {
+    //         margin-bottom: var(--space-xl);
+    //     }
+    // }
+    // &.is-widescreen > .column {
+    //     @include until-widescreen {
+    //         margin-bottom: var(--space-xl);
+    //     }
+    // }
+
+    // Reescriu tots els estils que es puguin posar amb l'editor
+    * {
+        [style*="color"] {
+            color: inherit !important;
+        }
+        [style*="background-color"] {
+            background-color: inherit !important;
+        }
+        [style*="font-family"] {
+            font-family: inherit !important;
+        }
+        [style*="margin-left"] {
+            margin-left: initial !important;
+        }
+        [style*="text-align"] {
+            text-align: initial !important;
+        }
+    }
+    // br {
+    //     display: none;
+    // }
+    u,
+    s {
+        text-decoration: none;
+    }
+    .text-tiny,
+    .text-small,
+    .text-big,
+    .text-huge {
+        font-size: inherit !important;
+    }
+    .page-break {
+        page-break-after: initial !important;
+    }
+
+    // Blocks
+    .block-titol-text {
+        a {
+            color: $primary;
+            font-weight: 600;
+        }
+    }
+    .block-titol-vermell-text {
+        h3 {
+            color: $primary;
+        }
+        a {
+            font-weight: 600;
+        }
+    }
+
+    // Text destacat
+    blockquote {
+        background-color: $primary-light;
+        padding: var(--space-l);
+        font: inherit;
+        font-weight: 600;
+    }
+
+    // Taula
+    .table {
+        text-align: left;
+        background-color: transparent;
+        table {
+            font-size: var(--step--1);
+            th {
+                padding-left: 0;
+                padding-right: var(--space-l);
+                font-weight: 500;
+            }
+            td {
+                font-weight: 600;
+                font-size: var(--step-0);
+                padding-right: 0;
+                padding-left: var(--space-2xs);
+            }
+            th,
+            td {
+                border: 0;
+                vertical-align: baseline;
+                padding-top: var(--space-3xs);
+                padding-bottom: var(--space-3xs);
+            }
+            a {
+                color: $primary;
+            }
+        }
+    }
+
+    // Botó
+    a:has(span[style="background-color:hsl(0,75%,60%);"]:only-child),
+    span[style="background-color:hsl(0,75%,60%);"] a:only-child {
+        @extend .button;
+    }
+
+    // Llista amb dues columnes
+    .is-half-widescreen ul {
+        @include tablet-only {
+            column-count: 2;
+        }
+        @include widescreen {
+            column-count: 2;
+        }
+        li {
+            page-break-inside: avoid;
+        }
+    }
+
+    // Llistat amb separadors
+    ul[style*="disc"] {
+        list-style-type: "";
+        font-weight: 600;
+        padding-left: 0;
+        max-width: 62ch;
+        li {
+            display: block;
+            border-bottom: 1px solid #000;
+            padding-bottom: var(--space-3xs);
+            padding-left: 0;
+            &::before {
+                display: none;
+            }
+            + li {
+                margin-top: var(--space-s);
+            }
+        }
+    }
+
+    // Ajustos al contingut dins un accordion
+    .accordion-content & {
+        h3 {
+            --flow: var(--space-l);
+            + .table {
+                margin-top: var(--space-xs);
+            }
+        }
+        a {
+            font-weight: 600;
+        }
+        p + p {
+            margin-top: var(--space-xs);
+        }
+
+        & > .column {
+            margin-bottom: var(--space-l);
+        }
+
+        @include tablet {
+            &.block-text-img-dreta,
+            &.block-text-img-esquerra {
+                display: flex !important;
+                .column.is-5-widescreen {
+                    flex-grow: 1;
+                    > * {
+                        max-width: 114ch;
+                    }
+                }
+                .column:has(img:only-child) {
+                    flex: none;
+                    width: unset;
+                }
+            }
+        }
+    }
+
+    // link a PDF
+    a[href$=".pdf"] {
+        display: inline-flex;
+        gap: var(--space-xs);
+        align-items: center;
+        color: $text;
+        text-decoration: none;
+        font-weight: 600;
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+        }
+        &::before {
+            flex-shrink: 0;
+            content: "";
+            display: block;
+            background-repeat: no-repeat;
+            width: 30px;
+            height: 30px;
+            background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 0h30v30H0z'/%3E%3Cpath d='M5 21.25v2.5a2.5 2.5 0 0 0 2.5 2.5h15a2.5 2.5 0 0 0 2.5-2.5v-2.5M8.75 13.75 15 20l6.25-6.25M15 5v15' stroke='%23870D01' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
+        }
+    }
+}
+
+// Fons negre
+.block-text-img-dreta-fons-negre {
+    .column {
+        margin-bottom: 0;
+        @include until-widescreen {
+            &:first-child {
+                padding-bottom: 0;
+            }
+            &:last-child {
+                padding-top: 0;
+            }
+        }
+        @include widescreen {
+            &:first-child {
+                padding-right: 0;
+            }
+            &:last-child {
+                padding-left: 0;
+            }
+        }
+        > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+// Forcem estils pels blocs imatge dreta/esquerra/fons-gris dins un accordion
+.accordion-content .block-text-img-dreta-fons-gris,
+.accordion-content .block-text-img-esquerra-fons-gris {
+    display: contents;
+    .wrapper {
+        display: contents;
+    }
+    .columns {
+        @include tablet {
+            display: flex !important;
+            .column.is-5-widescreen {
+                flex-grow: 1;
+                > * {
+                    max-width: 114ch;
+                }
+            }
+            .column:has(img:only-child) {
+                flex: none;
+                width: unset;
+            }
+        }
+    }
+}
+// Evitem que posin text amb imatge esquerra dins els accordions
+.accordion-content {
+    .block-text-img-esquerra,
+    .block-text-img-esquerra-fons-gris .columns {
+        flex-direction: initial !important;
+    }
+}

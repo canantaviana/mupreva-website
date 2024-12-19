@@ -64,8 +64,6 @@ define('__WEB_TEMPLATE_PATH__',    __WEB_BASE_PATH__ . '/tpl');
 define('__WEB_TEMPLATE_WEB__',    __WEB_ROOT_WEB__  . '/tpl');
 define('__WEB_HOME_URL__',    __WEB_ROOT_WEB__);
 
-define('WEB_FAKE_FILE', __WEB_TEMPLATE_PATH__.'/webfake.json');
-
 // safe_image url
 // define('__WEB_SAFE_IMAGE_URL__', ($source_data_api==='remote')
 // 	? __WEB_MEDIA_BASE_URL__ .'/web_1.0/tpl/img/'
@@ -152,15 +150,16 @@ define('SHOW_DEBUG', $SHOW_DEBUG);
 
 
 // web config
-define('WEB_MENU_TABLE',         'ts_web');
-define('WEB_MENU_SECTION_TIPO', 'ww1');
-define('WEB_MENU_PARENT',         'ww1_1');
+define('WEB_MENU_TABLE',         'ts_web_mupreva');
+define('WEB_MENU_SECTION_TIPO', 'www1');
+define('WEB_MENU_PARENT',         'www1_106');
 
 define('WEB_MENU_FOOTER', [
+    'contact',
+    'accessibility',
     'legal',
     'cookies',
-    'help',
-    'sitemap'
+    'credits'
 ]);
 
 
@@ -179,7 +178,7 @@ define('WEB_TEMPLATE_MAP', __WEB_BASE_PATH__ . '/config/template_maps/' . WEB_EN
 define('WEB_TEMPLATE_MAP_DEFAULT_SOURCE', 'db');
 
 # web_path_map . run name map for url's path like redirect 'mon' to 'catalogo'
-define('WEB_PATH_MAP',    []);
+define('WEB_PATH_MAP', []);
 
 
 
@@ -213,9 +212,10 @@ define('WEB_FIELDS_MAP', json_encode([
     // others
     'identify_image'        => 'identify_image',
     'other_images_resolved'    => 'other_images_resolved',
-    'audiovisual_resolved'    => 'audiovisual_resolved',
-    'pdf_resolved'            => 'pdf_resolved',
-    'pdf_title'                => 'pdf_title'
+    'other_images'    => 'other_images',
+    //'audiovisual_resolved'    => 'audiovisual_resolved',
+    //'pdf_resolved'            => 'pdf_resolved',
+    //'pdf_title'                => 'pdf_title'
 ]));
 
 

@@ -74,6 +74,8 @@ class page
     // menu_tree_html
     public $menu_tree_html;
 
+    public $menu_title_html;
+
     // custom_strings
     public $custom_strings;
 
@@ -85,8 +87,6 @@ class page
 
     // menu_tree
     public $menu_tree;
-
-
 
     /**
      * __CONSTRUCT
@@ -110,7 +110,6 @@ class page
             // use reference page to get already calculated data. inject data
             $this->data_combi     = $reference_page->data_combi;
             $this->template_map = (array)$this->get_template_map();
-
             $this->status = 'initied';
         }
 
@@ -132,12 +131,11 @@ class page
 
         // load page data combi	(templates, menu all)
         $this->get_page_data_combi();
-
         // set template_map file
         $this->template_map = (array)$this->get_template_map();
+
         return true;
     } //end init
-
 
 
     /**
@@ -146,10 +144,6 @@ class page
      */
     public function get_page_data_combi()
     {
-        if (defined('WEB_FAKE_FILE')) {
-            $this->data_combi = json_decode(file_get_contents(WEB_FAKE_FILE));
-            return $this->data_combi;
-        }
         $ar_calls = [];
 
         // templates all
@@ -174,6 +168,8 @@ class page
             $options->table            = WEB_MENU_TABLE;
             $options->ar_fields        = array_values(get_object_vars(self::$web_fields_map));
             $options->lang            = WEB_CURRENT_LANG_CODE;
+            $options->sql_filter         = "template_name is not null";
+            $options->resolve_portals_custom = '{"other_images": "image"}';
             $options->order            = 'norder ASC';
         }
 
@@ -225,17 +221,53 @@ class page
         });
         // template_items
         $template_items = $this->data_combi[0]->result;
+
         $global_template = array_find($template_items, function ($item) use ($global_page) {
             return ($item->name === $global_page->template_name);
         });
         // set
-        $global_page->template    = json_decode($global_template->data);
-        $this->global_page        = $global_page;
+        if ($global_template->data == 'null' || $global_template->data == '{}') {
+            $global_template->data = $this->defaultTemplateData($global_template);
+        }
+        $global_page->template = json_decode($global_template->data);
+        $this->global_page = $global_page;
 
         return $this->data_combi;
     } //end get_page_data_combi
 
 
+
+    private function defaultTemplateData($value) {
+        //$template_name = str_replace(' ', '_', strtolower(iconv('UTF-8', 'ASCII//TRANSLIT', $value->name)));
+        $template_name = $value->name;
+        return '{
+            "id": "'.$template_name.'",
+            "template": "'.$template_name.'",
+            "table": "ts_web_mupreva",
+            "detail": [
+                {
+                    "type": "title",
+                    "colname": "title"
+                },
+                {
+                    "type": "abstract",
+                    "colname": "abstract"
+                },
+                {
+                    "type": "body",
+                    "colname": "body"
+                },
+                {
+                    "type": "image",
+                    "colname": "image",
+                    "target": {
+                        "table": "image",
+                        "colname": "image"
+                    }
+                }
+            ]
+        }';
+    }
 
     /**
      * GET_TEMPLATE_MAP
@@ -246,7 +278,6 @@ class page
     public function get_template_map($source = WEB_TEMPLATE_MAP_DEFAULT_SOURCE)
     {
         $template_map = array();
-
         switch ($source) {
             case 'file':
                 // Load template_map file
@@ -268,12 +299,16 @@ class page
                 if (empty($this->data_combi)) {
                     exit("Error. Empty page data_combi. API connection seems broken.");
                 }
-
                 $data = array_reduce($this->data_combi, function ($carry, $item) {
                     return ($item->id === 'templates_all') ? $item : $carry;
                 });
+
                 if ($data->result !== false) foreach ($data->result as $key => $value) {
-                    $current_template     = json_decode($value->data);
+
+                    if ($value->data == 'null' || $value->data == '{}') {
+                        $value->data = $this->defaultTemplateData($value);
+                    }
+                    $current_template = json_decode($value->data);
                     // Convert always to array allow use multiple maps in a one file/record
                     $ar_current_template = is_array($current_template) ? $current_template : array($current_template);
                     foreach ($ar_current_template as $element) {
@@ -282,7 +317,6 @@ class page
                 }
                 break;
         }
-
 
         return $template_map;
     } //end get_template_map
@@ -369,6 +403,15 @@ class page
         return $html;
     } //end get_header_links
 
+    static private function getFileTimeStamp($filePath)
+    {
+        if (file_exists(__WEB_BASE_PATH__ . $filePath)) {
+            $fileInfo = pathinfo($filePath);
+            $filePath = $fileInfo['dirname'] . '/' . $fileInfo['filename'] . '_' . filemtime(__WEB_BASE_PATH__ . $filePath) . '.' . $fileInfo['extension'];
+        }
+        return $filePath;
+    }
+
 
 
     /**
@@ -377,15 +420,8 @@ class page
      */
     static function build_css_tag($url, $media = null)
     {
-
-        if (defined('USE_CDN') && USE_CDN !== false) {
-            $url = USE_CDN . $url;
-        }
-
-        # Add version
-        $url = $url . '?' . WEB_VERSION;
-
-
+        # Add timestamp
+        $url = self::getFileTimeStamp($url);
         $media_attr = '';
         if (!is_null($media)) {
             $media_attr = ' media="' . $media . '"';  // Like screen
@@ -404,13 +440,8 @@ class page
      */
     static function build_js_tag($url, $media = null, $async = null)
     {
-
-        if (defined('USE_CDN') && USE_CDN !== false) {
-            $url = USE_CDN . $url;
-        }
-
-        // Add version to avoid cache
-        $url = $url . '?' . WEB_VERSION;
+        # Add timestamp
+        $url = self::getFileTimeStamp($url);
 
         // javascript files builded in php use lang cache param
         if (strpos($url, '.php') !== false) {
@@ -593,20 +624,8 @@ class page
     /**
      * RENDER_MENU_TREE_PLAIN
      */
-    public static function render_menu_tree_plain($term_id, $menu_tree, $li_drawer, $ul_drawer, $children_column_name = 'childrens')
+    public static function render_menu_tree_plain($term_id, $menu_tree, $current, $li_drawer, $ul_drawer, $children_column_name = 'childrens', $level = null, $current_level = 1)
     {
-        // TODO: treure menú fake
-        return '
-<ul class="main-nav link-dn" id="main-nav">
-    <li>
-        <a href="/catalog/" class="has-text-white">Col·lecció</a>
-    </li>
-    <li>
-        <a href="/biblio/" class="has-text-white">Publicacions</a>
-    </li>
-</ul>';
-
-
         $html = '';
 
         // filter menu tree for parent $term_id (and include root parent when is $term_id)
@@ -636,14 +655,14 @@ class page
                 !empty($menu_element->{$children_column_name})
                 && $current_term_id !== WEB_MENU_PARENT
                 && (true === page::have_menu_children($menu_element->{$children_column_name}, $menu_tree))
+                && ($level == null || $current_level < $level)
             ) {
                 // recursion
-                $embed_html = self::render_menu_tree_plain($current_term_id, $menu_tree, $li_drawer, $ul_drawer, $children_column_name);
+                $embed_html = self::render_menu_tree_plain($current_term_id, $menu_tree, $current, $li_drawer, $ul_drawer, $children_column_name, $level, $current_level + 1);
             } else {
                 $embed_html = '';
             }
-
-            $html .= $li_drawer($menu_element, $embed_html);
+            $html .= $li_drawer($menu_element, $embed_html, $current);
         }
 
         // wrap
@@ -748,6 +767,12 @@ class page
         $data = json_web_data::get_data($options);
 
         $breadcrumb = array_reverse($data->result);
+        foreach ($breadcrumb as $key => $value) {
+            if ($value->web_path == 'main_home') {
+                $value->web_path = '';
+                $breadcrumb[$key] = $value;
+            }
+        }
 
         $object = new stdClass();
         foreach ($options->ar_fields as $key => $name) {
@@ -1028,7 +1053,7 @@ class page
             $current_options->template_map        = $portal_template_map;
             $current_options->mode                = $temp_page_mode;
             $current_options->add_common_css    = false;
-            $current_options->add_template_css    = true;
+            $current_options->add_template_css    = false;
             $current_options->resolve_values    = true;
             $html .= $temp_page->get_template_html($current_options);
 
@@ -1135,7 +1160,7 @@ class page
         $options->template_map         = false;
         $options->mode                 = false;
         $options->add_common_css     = false;
-        $options->add_template_css     = true;
+        $options->add_template_css     = false;
         $options->resolve_values     = true;
         $options->content              = false;
         foreach ($request_options as $key => $value) {
@@ -1145,7 +1170,6 @@ class page
         # Fix var to template access
         $template_map     = $options->template_map;
         $mode             = $options->mode;
-
         if ($options->template_map === false) {
             # error template
             $template_name = 'error';
@@ -1165,23 +1189,15 @@ class page
             }
             $template_name = $template_map->template;
         }
-
-        // TODO: eliminar dades fake
-        if ($template_name == 'main_home') {
-            $template_name = 'generic';
-            $this->row->title = 'Museu de Prehistòria de València';
-            $this->row->abstract = '';
-            $this->row->body = '';
-            $this->row->identify_image = null;
-        }
+        $template_name = str_replace(' ', '_', strtolower(iconv('UTF-8', 'ASCII//TRANSLIT', $template_name)));
 
         #
         # TEMPLATE CSS / JS
         if ($options->add_template_css === true) {
             # Add url to final header render
             page::$css_ar_url[] = __WEB_TEMPLATE_WEB__ . '/' . $template_name . '/css/' . $template_name . CSS_SUFFIX . '.css';
-            page::$js_ar_url[]  = __WEB_TEMPLATE_WEB__ . '/' . $template_name . '/js/'  . $template_name . JS_SUFFIX . '.js';
         }
+        page::$js_ar_url[]  = __WEB_TEMPLATE_WEB__ . '/' . $template_name . '/js/'  . $template_name . JS_SUFFIX . '.js';
 
         #
         # TEMPLATE_HTML

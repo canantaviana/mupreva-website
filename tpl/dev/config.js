@@ -23,6 +23,8 @@ module.exports = function () {
         'node_modules/@10up/component-tabs/dist/index.umd.js',
         'node_modules/a11y-dialog/dist/a11y-dialog.js',
         "dev/js/timelify.js",
+        "node_modules/imagesloaded/imagesloaded.pkgd.min.js",
+        "node_modules/masonry-layout/dist/masonry.pkgd.min.js",
         'dev/js/app.js'
         // 'dev/js/jquery.ihavecookies.js',
         // 'dev/js/ihavecookies.js',
@@ -51,6 +53,7 @@ module.exports = function () {
     ],
 
     fontFiles: [
+      'node_modules/@accessible360/accessible-slick/slick/fonts/**/*',
       'dev/fonts/**/*',
       'dev/fonts/*'
     ],
@@ -62,6 +65,7 @@ module.exports = function () {
         '400',
         '400italic',
         '500',
+        '500italic',
         '600',
         '700',
         '800',

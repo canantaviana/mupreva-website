@@ -1,44 +1,33 @@
 .lang {
-    //     position: relative;
-    //     button {
-    //         background: transparent;
-    //         border: 0;
-    //         &::after {
-    //             content: "";
-    //             display: block;
-    //             width: 6px;
-    //             height: 6px;
-    //             border: solid $primary;
-    //             border-width: 0 0 1px 1px;
-    //             transform: rotate(-45deg) scale(1.25); /* augmenta mida del botó*/
-    //             position: relative;
-    //             top: -2px;
-    //         }
-    //         &[aria-expanded="true"]::after {
-    //             transform: rotate(135deg) scale(1.25);
-    //             top: 1px;
-    //         }
-    //     }
-    //     ul {
-    //         position: absolute;
-    //         left: 0;
-    //         top: 100%;
-    //         z-index: 1;
-    //         @include mobile {
-    //             left: calc(var(--space-2xs) * -1);
-    //         }
-    //     }
+    button {
+        all: inherit;
+        color: #fff;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        &::after {
+            content: "";
+            display: block;
+            width: 10px;
+            height: 6px;
+            margin-left: 5px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='m.823.823 4 4 4-4'/%3E%3C/svg%3E");
+        }
+        &[aria-expanded="true"]::after {
+            transform: rotate(0.5turn);
+        }
+    }
     a {
         color: #fff;
     }
-}
-
-// // ocultem el dropdown quan està carregant la pàgina
-// .js #lang:not([aria-hidden="false"]) {
-//     display: none;
-// }
-
-// Perquè no es vegi el desplegable al carregar la pàgina
-.js #lang:not([aria-hidden="false"]) {
-    display: none;
+    ul {
+        position: absolute;
+        z-index: 1;
+        margin-top: 0.5rem;
+        min-width: max-content;
+        @include widescreen {
+            margin-top: 0;
+            top: 100%;
+        }
+    }
 }

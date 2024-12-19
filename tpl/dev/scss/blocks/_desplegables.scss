@@ -1,0 +1,12 @@
+// https://github.com/nico3333fr/van11y-accessible-hide-show-aria
+.js-to_expand[aria-hidden="true"],
+.js-to_expand[data-hidden="true"] {
+    display: none;
+}
+
+// oculta desplegables durant la càrrega
+.js {
+    .js-to_expand:not(.expandmore__to_expand) {
+        display: none;
+    }
+}

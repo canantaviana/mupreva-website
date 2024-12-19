@@ -149,10 +149,19 @@
         &:focus {
             color: $primary;
         }
+        &.is-active {
+            background-color: inherit;
+            color: inherit;
+        }
     }
     &--linia-temps {
         &::before {
             background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 0h30v30H0z'/%3E%3Cpath d='M12.5 25a2.5 2.5 0 1 0 5 0 2.5 2.5 0 0 0-5 0M12.5 25H5M17.5 25H25M15 18.75l-2.5-2.5H8.75c-.69 0-1.25-.56-1.25-1.25V5c0-.69.56-1.25 1.25-1.25h12.5c.69 0 1.25.56 1.25 1.25v10c0 .69-.56 1.25-1.25 1.25H17.5l-2.5 2.5Z' stroke='%233B3333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        &:hover,
+        &:focus {
+            color: inherit;
+            background: $grey-light;
         }
     }
     &--copiar {
@@ -204,9 +213,9 @@
 button.button {
     cursor: default;
 }
-a.button {
-    cursor: pointer;
-}
+// a.button {
+// cursor: pointer;
+// }
 // p.button {
 // &:hover,
 // &:focus {

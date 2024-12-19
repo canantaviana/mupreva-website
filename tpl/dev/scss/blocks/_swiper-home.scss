@@ -1,2 +1,77 @@
 .swiper--home {
+    --swiper-navigation-color: #fff;
+    --swiper-pagination-bullet-inactive-color: rgba(255, 255, 255, 0.5);
+    --swiper-pagination-color: #fff;
+    --swiper-navigation-size: 15px;
+    --swiper-pagination-bullet-size: 15px;
+    --swiper-pagination-bullet-horizontal-gap: 1rem;
+    width: 100%;
+    height: 70vh;
+    @include widescreen {
+        height: 80vh;
+    }
+    @include fullhd {
+        height: 50.625rem;
+    }
+    .swiper-slide {
+        &::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0.7) 0%,
+                rgba(0, 0, 0, 0.12) 37%,
+                rgba(0, 0, 0, 0) 60%,
+                rgba(0, 0, 0, 1) 100%
+            );
+            z-index: 10;
+        }
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    .wrapper:has(h2) {
+        position: absolute;
+        left: 50%;
+        width: 100%;
+        transform: translateX(-50%);
+        bottom: var(--space-3xl);
+        z-index: 10;
+        box-sizing: border-box;
+    }
+    h2 {
+        @include tablet {
+            max-width: 40ch;
+        }
+        a {
+            color: inherit;
+        }
+    }
+    .swiper-controls {
+        width: 100%;
+        position: absolute;
+        bottom: var(--space-xl);
+        left: 0;
+        z-index: 40;
+        justify-content: center;
+        @include desktop {
+            right: var(--space-xl);
+            left: auto;
+            width: auto;
+            justify-content: flex-end;
+        }
+        > div {
+            position: static;
+        }
+    }
+    .swiper-pagination {
+        width: auto;
+    }
 }
