@@ -76,7 +76,7 @@ var api = {
             table: 'publications',
             sql_filter: 'imagen_identificativa is not null',
             limit: 6,
-            order: 'fecha_publicacion ASC',
+            order: 'fecha_publicacion desc',
             //ar_fields: '*',
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"imagen_identificativa": "image"}'
@@ -105,7 +105,7 @@ var api = {
         var options = {
             table: 'activities',
             sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.activitadesCategorias()),
-            limit: 6,
+            limit: 5,
             order: 'RAND()',
             ar_fields: '*',
             parse: page.parse_list_data,

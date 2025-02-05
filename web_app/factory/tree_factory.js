@@ -277,7 +277,7 @@ function tree_factory() {
             btn_relations = common.create_dom_element({
                 element_type: "span",
                 class_name: "btn_relations",
-                // inner_html	: "Relations",
+                inner_html: "Relations",
                 parent: tree_node
             })
             btn_relations.addEventListener("mousedown", function () {
@@ -319,6 +319,7 @@ function tree_factory() {
             const arrow = common.create_dom_element({
                 element_type: "span",
                 class_name: "arrow" + open_style,
+                inner_html	: ">",
                 parent: tree_node
             })
             arrow.addEventListener("mousedown", function () {
