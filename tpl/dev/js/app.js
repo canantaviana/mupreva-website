@@ -1,131 +1,224 @@
-const onListener = function(element, type, selector, handler) {
-    element.addEventListener(type, function(event) {
+const onListener = function (element, type, selector, handler) {
+    element.addEventListener(type, function (event) {
         if (event.target.closest(selector)) {
             handler(event);
         }
     });
-  };
+};
 
-
-
-  document.addEventListener("DOMContentLoaded", function () {
-
-      // --------------
-      // Tancar pàgina
-      // --------------
-      var close = document.getElementById("close-page");
-      if (close) {
-      close.addEventListener("click", function () {
-          window.close();
-      });
-      }
-
-
-      // ----------------
-      // Hamburger button
-      // ----------------
-
-      var button = document.createElement("button");
-      button.className = "hamburger hamburger--spring";
-      button.type = "button";
-      button.setAttribute("aria-expanded", "false");
-      button.setAttribute("aria-controls", "menu");
-      button.innerHTML = '<span class="hamburger-box"><span class="hamburger-inner"></span></span><span class="is-sr-only">Menú</span>';
-
-      var menu = document.getElementById("menu");
-
-      menu.parentNode.insertBefore(button, menu);
-
-      menu.setAttribute("hidden", "true");
-
-      var toggleMenu = document.querySelector(".navigation button");
-
-      if (toggleMenu) {
-      toggleMenu.addEventListener("click", function () {
-          var open = JSON.parse(toggleMenu.getAttribute("aria-expanded"));
-          toggleMenu.setAttribute("aria-expanded", !open);
-          menu.hidden = !menu.hidden;
-      });
-      }
-
-      // Select the hamburger element
-      var hamburger = document.querySelector(".hamburger");
-
-      // Add a click event listener to the hamburger element
-      hamburger.addEventListener("click", function() {
-          // Toggle the 'is-active' class on the hamburger element
-          this.classList.toggle("is-active");
-          // Toggle the 'js-menu-open' class on the body element
-          // document.body.classList.toggle("js-menu-open");
-      });
-
-      // -------------------------------
-      // Menú principal amb desplegables (https://www.w3.org/WAI/tutorials/menus/flyout/#use-button-as-toggle)
-      // -------------------------------
-
-      function hasClass(el, className) {
-        return el.classList ? el.classList.contains(className) : new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
+document.addEventListener("DOMContentLoaded", function () {
+    // --------------
+    // Tancar pàgina
+    // --------------
+    var close = document.getElementById("close-page");
+    if (close) {
+        close.addEventListener("click", function () {
+            window.close();
+        });
     }
 
-    var menuItems1 = document.querySelectorAll('li.has-submenu');
+    // ------------------
+    // Cercador capçalera
+    // ------------------
+    const searchButton = document.querySelector(".header-search button");
+    const searchInput = document.querySelector(
+        '.header-search input[type="search"]'
+    );
+
+    if (searchButton && searchInput) {
+        searchButton.addEventListener("click", function () {
+            searchInput.focus();
+        });
+    }
+
+    // ---------------
+    // Cerca / Idiomes
+    // ---------------
+
+    const searchExpandButton = document.querySelector(
+        ".header-search .js-expandmore-button"
+    );
+    const searchExpandContent = document.querySelector(
+        ".header-search .js-to_expand"
+    );
+    const langExpandButton = document.querySelector(
+        ".lang .js-expandmore-button"
+    );
+    const langExpandContent = document.querySelector(".lang .js-to_expand");
+
+    if (
+        searchExpandButton &&
+        searchExpandContent &&
+        langExpandButton &&
+        langExpandContent
+    ) {
+        searchExpandButton.addEventListener("click", function () {
+            const isMenuOpen = menu.getAttribute("hidden") !== "true";
+            if (isMenuOpen) {
+                menu.setAttribute("hidden", "true");
+                toggleMenu.setAttribute("aria-expanded", "false");
+                hamburger.classList.remove("is-active");
+            }
+            const isOpen =
+                searchExpandContent.getAttribute("data-hidden") !== "true";
+            if (isOpen) {
+                langExpandContent.setAttribute("data-hidden", "true");
+                langExpandButton.setAttribute("aria-expanded", "false");
+            }
+        });
+
+        langExpandButton.addEventListener("click", function () {
+            const isMenuOpen = menu.getAttribute("hidden") !== "true";
+            if (isMenuOpen) {
+                menu.setAttribute("hidden", "true");
+                toggleMenu.setAttribute("aria-expanded", "false");
+                hamburger.classList.remove("is-active");
+            }
+            const isOpen =
+                langExpandContent.getAttribute("data-hidden") !== "true";
+            if (isOpen) {
+                searchExpandContent.setAttribute("data-hidden", "true");
+                searchExpandButton.setAttribute("aria-expanded", "false");
+            }
+        });
+    }
+
+    // ----------------
+    // Hamburger button
+    // ----------------
+
+    var button = document.createElement("button");
+    button.className = "hamburger hamburger--spring";
+    button.type = "button";
+    button.setAttribute("aria-expanded", "false");
+    button.setAttribute("aria-controls", "menu");
+    button.innerHTML =
+        '<span class="hamburger-box"><span class="hamburger-inner"></span></span><span class="is-sr-only">Menú</span>';
+
+    var menu = document.getElementById("menu");
+
+    menu.parentNode.insertBefore(button, menu);
+
+    menu.setAttribute("hidden", "true");
+
+    var toggleMenu = document.querySelector(".navigation button");
+
+    if (toggleMenu) {
+        toggleMenu.addEventListener("click", function () {
+            var open = JSON.parse(toggleMenu.getAttribute("aria-expanded"));
+            toggleMenu.setAttribute("aria-expanded", !open);
+            menu.hidden = !menu.hidden;
+        });
+    }
+
+    // Select the hamburger element
+    var hamburger = document.querySelector(".hamburger");
+
+    // Add a click event listener to the hamburger element
+    hamburger.addEventListener("click", function () {
+        // Toggle the 'is-active' class on the hamburger element
+        this.classList.toggle("is-active");
+        // Toggle the 'js-menu-open' class on the body element
+        // document.body.classList.toggle("js-menu-open");
+
+        // Close the lang menu if it is open
+        if (langExpandContent.getAttribute("data-hidden") !== "true") {
+            langExpandContent.setAttribute("data-hidden", "true");
+            langExpandButton.setAttribute("aria-expanded", "false");
+        }
+
+        // Close the search form if it is open
+        if (searchExpandContent.getAttribute("data-hidden") !== "true") {
+            searchExpandContent.setAttribute("data-hidden", "true");
+            searchExpandButton.setAttribute("aria-expanded", "false");
+        }
+    });
+
+    // -------------------------------
+    // Menú principal amb desplegables (https://www.w3.org/WAI/tutorials/menus/flyout/#use-button-as-toggle)
+    // -------------------------------
+
+    function hasClass(el, className) {
+        return el.classList
+            ? el.classList.contains(className)
+            : new RegExp("(^| )" + className + "( |$)", "gi").test(
+                  el.className
+              );
+    }
+
+    var menuItems1 = document.querySelectorAll("li.has-submenu");
     var timer1, timer2;
 
-    var parseHTML = function(str) {
+    var parseHTML = function (str) {
         var tmp = document.implementation.createHTMLDocument();
         tmp.body.innerHTML = str;
         return tmp.body.children;
     };
 
-    Array.prototype.forEach.call(menuItems1, function(el, i) {
-        var activatingA = el.querySelector('a');
-        var btn = '<button type="button"><span class="is-sr-only">Mostra el submenú de “' + activatingA.text + '”</span></button>';
-        activatingA.insertAdjacentHTML('afterend', btn);
+    Array.prototype.forEach.call(menuItems1, function (el, i) {
+        var activatingA = el.querySelector("a");
+        var btn =
+            '<button type="button"><span class="is-sr-only">Mostra el submenú de “' +
+            activatingA.text +
+            "”</span></button>";
+        activatingA.insertAdjacentHTML("afterend", btn);
 
         // Handle hover event for non-touch devices
-        el.addEventListener("mouseover", function(event) {
+        el.addEventListener("mouseover", function (event) {
             this.classList.add("open");
-            this.querySelector('a').setAttribute('aria-expanded', "true");
-            this.querySelector('button').setAttribute('aria-expanded', "true");
+            this.querySelector("a").setAttribute("aria-expanded", "true");
+            this.querySelector("button").setAttribute("aria-expanded", "true");
             clearTimeout(timer1);
         });
 
-        el.addEventListener("mouseout", function(event) {
-            timer1 = setTimeout(function() {
-                var openMenu = document.querySelector('.has-submenu.open');
+        el.addEventListener("mouseout", function (event) {
+            timer1 = setTimeout(function () {
+                var openMenu = document.querySelector(".has-submenu.open");
                 if (openMenu) {
-                    openMenu.querySelector('a').setAttribute('aria-expanded', "false");
-                    openMenu.querySelector('button').setAttribute('aria-expanded', "false");
+                    openMenu
+                        .querySelector("a")
+                        .setAttribute("aria-expanded", "false");
+                    openMenu
+                        .querySelector("button")
+                        .setAttribute("aria-expanded", "false");
                     openMenu.classList.remove("open");
                 }
             }, 5);
         });
 
         // Handle click and touchstart events for touch devices
-        el.querySelector('button').addEventListener("click", function(event) {
+        el.querySelector("button").addEventListener("click", function (event) {
             event.preventDefault();
             toggleSubmenu(el);
         });
 
-        el.querySelector('button').addEventListener("touchstart", function(event) {
-            event.preventDefault();
-            toggleSubmenu(el);
-        });
+        el.querySelector("button").addEventListener(
+            "touchstart",
+            function (event) {
+                event.preventDefault();
+                toggleSubmenu(el);
+            }
+        );
 
-        var links = el.querySelectorAll('a');
-        Array.prototype.forEach.call(links, function(link, i) {
-            link.addEventListener("focus", function() {
+        var links = el.querySelectorAll("a");
+        Array.prototype.forEach.call(links, function (link, i) {
+            link.addEventListener("focus", function () {
                 if (timer2) {
                     clearTimeout(timer2);
                     timer2 = null;
                 }
             });
-            link.addEventListener("blur", function(event) {
-                timer2 = setTimeout(function() {
-                    var openNav = document.querySelector(".has-submenu.open")
+            link.addEventListener("blur", function (event) {
+                timer2 = setTimeout(function () {
+                    var openNav = document.querySelector(".has-submenu.open");
                     if (openNav) {
                         openNav.className = "has-submenu";
-                        openNav.querySelector('a').setAttribute('aria-expanded', "false");
-                        openNav.querySelector('button').setAttribute('aria-expanded', "false");
+                        openNav
+                            .querySelector("a")
+                            .setAttribute("aria-expanded", "false");
+                        openNav
+                            .querySelector("button")
+                            .setAttribute("aria-expanded", "false");
                     }
                 }, 10);
             });
@@ -136,140 +229,110 @@ const onListener = function(element, type, selector, handler) {
         var isOpen = hasClass(el, "open");
 
         // Close any other open submenus
-        var allMenus = document.querySelectorAll('li.has-submenu');
-        Array.prototype.forEach.call(allMenus, function(item) {
+        var allMenus = document.querySelectorAll("li.has-submenu");
+        Array.prototype.forEach.call(allMenus, function (item) {
             item.classList.remove("open");
-            item.querySelector('a').setAttribute('aria-expanded', "false");
-            item.querySelector('button').setAttribute('aria-expanded', "false");
+            item.querySelector("a").setAttribute("aria-expanded", "false");
+            item.querySelector("button").setAttribute("aria-expanded", "false");
         });
 
         // Open the clicked/touched submenu if it was not already open
         if (!isOpen) {
             el.classList.add("open");
-            el.querySelector('a').setAttribute('aria-expanded', "true");
-            el.querySelector('button').setAttribute('aria-expanded', "true");
+            el.querySelector("a").setAttribute("aria-expanded", "true");
+            el.querySelector("button").setAttribute("aria-expanded", "true");
         }
     }
 
-      // -------------------------------
-      // Menú principal amb desplegables (https://www.w3.org/WAI/tutorials/menus/flyout/#use-parent-as-toggle)
-      // -------------------------------
-      // var menuItems = document.querySelectorAll('li.has-submenu');
-      // Array.prototype.forEach.call(menuItems, function (el, i) {
-      //     el.addEventListener("mouseover", function(event){
-      //         this.className = "has-submenu open";
-      //         clearTimeout(timer);
-      //     });
-      //     el.addEventListener("mouseout", function(event){
-      //         timer = setTimeout(function(event){
-      //             document.querySelector(".has-submenu.open").className = "has-submenu";
-      //         }, 1000);
-      //     });
-      //     el.querySelector('a').addEventListener("click",  function(event){
-      //         if (this.parentNode.className == "has-submenu") {
-      //             this.parentNode.className = "has-submenu open";
-      //             this.setAttribute('aria-expanded', "true");
-      //         } else {
-      //             this.parentNode.className = "has-submenu";
-      //             this.setAttribute('aria-expanded', "false");
-      //         }
-      //         event.preventDefault();
-      //         return false;
-      //     });
-      // });
+    var menuItems = document.querySelectorAll("li.has-submenu");
+    Array.prototype.forEach.call(menuItems, function (el, i) {});
 
-
-      var menuItems = document.querySelectorAll('li.has-submenu');
-      Array.prototype.forEach.call(menuItems, function(el, i){
-
-      });
-
-      // --------
-      // timeline
-      // --------
-      var elements = document.querySelectorAll('.timeline');
-      elements.forEach(function(element) {
-          timelify(element, {
-              animLeft: "fadeInLeft",
-              animRight: "fadeInRight",
-              animCenter: "fadeInUp",
-              animSpeed: 600,
-              offset: 150
-          });
-      });
+    // --------
+    // timeline
+    // --------
+    var elements = document.querySelectorAll(".timeline");
+    elements.forEach(function (element) {
+        timelify(element, {
+            animLeft: "fadeInLeft",
+            animRight: "fadeInRight",
+            animCenter: "fadeInUp",
+            animSpeed: 600,
+            offset: 150,
+        });
+    });
     // -----------------------------
     // Estils per input[type="date"]
     // -----------------------------
     const dateInput = document.querySelector('.search-form input[type="date"]');
     if (dateInput) {
-        dateInput.addEventListener('input', function() {
-        if (this.value) {
-            this.classList.add('filled');
-        } else {
-            this.classList.remove('filled');
-        }
+        dateInput.addEventListener("input", function () {
+            if (this.value) {
+                this.classList.add("filled");
+            } else {
+                this.classList.remove("filled");
+            }
         });
     }
 
+    onListener(document, "click", "[data-copy-url]", function (event) {
+        // Obtenim la URL del data attribute 'data-copy-url'
+        const element = event.target;
+        const urlToCopy = element.getAttribute("data-copy-url");
 
-      onListener(document, 'click', '[data-copy-url]', function(event){
-          // Obtenim la URL del data attribute 'data-copy-url'
-          const element = event.target;
-          const urlToCopy = element.getAttribute('data-copy-url');
+        // Creem un element de tipus input per poder copiar la URL
+        const tempInput = document.createElement("input");
+        tempInput.value = urlToCopy;
+        document.body.appendChild(tempInput);
 
-          // Creem un element de tipus input per poder copiar la URL
-          const tempInput = document.createElement('input');
-          tempInput.value = urlToCopy;
-          document.body.appendChild(tempInput);
+        // Seleccionem el text dins l'input i el copiem al portapapers
+        tempInput.select();
+        document.execCommand("copy");
 
-          // Seleccionem el text dins l'input i el copiem al portapapers
-          tempInput.select();
-          document.execCommand('copy');
+        // Eliminen l'element temporal
+        document.body.removeChild(tempInput);
 
-          // Eliminen l'element temporal
-          document.body.removeChild(tempInput);
+        // Trobar el contenedor del missatge de confirmació
+        const messageContainer = element.nextElementSibling;
 
-          // Trobar el contenedor del missatge de confirmació
-          const messageContainer = element.nextElementSibling;
+        // Mostrar un missatge de confirmació sota el botó
+        if (
+            messageContainer &&
+            messageContainer.classList.contains("copy-message")
+        ) {
+            messageContainer.textContent = tstring.share_copy_ok;
+            messageContainer.style.color = "green"; // Opcional: estilitzar el missatge
 
-          // Mostrar un missatge de confirmació sota el botó
-          if (messageContainer && messageContainer.classList.contains('copy-message')) {
-              messageContainer.textContent = tstring.share_copy_ok;
-              messageContainer.style.color = 'green';  // Opcional: estilitzar el missatge
+            // Opcional: amaga el missatge després de 3 segons
+            setTimeout(function () {
+                messageContainer.textContent = "";
+            }, 3000);
+        }
+    });
 
-              // Opcional: amaga el missatge després de 3 segons
-              setTimeout(function(){
-                  messageContainer.textContent = '';
-              }, 3000);
-          }
-      });
-
-        // -----------
+    // -----------
     // Swiper home
     // -----------
-    const swiperHome = new Swiper('.swiper--home', {
-    cssMode: true,
+    const swiperHome = new Swiper(".swiper--home", {
+        cssMode: true,
         navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
         },
         pagination: {
-        el: ".swiper-pagination",
+            el: ".swiper-pagination",
         },
         mousewheel: true,
         keyboard: true,
     });
+});
 
-  });
-
-  function swiperExpos() {
-
+function swiperExpos() {
     // ---------------------------------
     // Swiper (Exposicions i activitats)
     // ---------------------------------
     var swiperExpos = new Swiper(".swiper--expos", {
         // spaceBetween: 10,
-        slideActiveClass: 'active',
+        slideActiveClass: "active",
         navigation: {
             nextEl: ".swiper-button-next",
             prevEl: ".swiper-button-prev",
@@ -287,30 +350,27 @@ const onListener = function(element, type, selector, handler) {
             },
         },
     });
-  }
+}
 
-
-
-  function massonryEnable() {
-        // -------
+function massonryEnable() {
+    // -------
     // Masonry
     // -------
-    var grid = document.querySelector('.masonry-grid');
+    var grid = document.querySelector(".masonry-grid");
 
-    var msnry = new Masonry( grid, {
-        itemSelector: '.masonry-grid-item',
-        columnWidth: '.masonry-grid-sizer',
+    var msnry = new Masonry(grid, {
+        itemSelector: ".masonry-grid-item",
+        columnWidth: ".masonry-grid-sizer",
         percentPosition: true,
-        gutter: 10
+        gutter: 10,
     });
 
-    imagesLoaded( grid ).on( 'progress', function() {
-    msnry.layout();
+    imagesLoaded(grid).on("progress", function () {
+        msnry.layout();
     });
-  }
+}
 
-  function viewInit() {
-
+function viewInit() {
     // -------------------------
     // Swiper (fitxa Col·lecció)
     // -------------------------
@@ -320,37 +380,37 @@ const onListener = function(element, type, selector, handler) {
         freeMode: true,
         watchSlidesProgress: true,
         breakpoints: {
-        600: {
-            spaceBetween: 10,
-            slidesPerView: 5,
-        },
-        768: {
-            slidesPerView: 4,
-        },
-        1400: {
-            slidesPerView: 5,
-        },
-        1500: {
-            spaceBetween: 15,
-        },
+            600: {
+                spaceBetween: 10,
+                slidesPerView: 5,
+            },
+            768: {
+                slidesPerView: 4,
+            },
+            1400: {
+                slidesPerView: 5,
+            },
+            1500: {
+                spaceBetween: 15,
+            },
         },
     });
     var swiper2 = new Swiper(".swiper--fitxa", {
         // spaceBetween: 10,
-        slideActiveClass: 'active',
+        slideActiveClass: "active",
         navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
         },
         thumbs: {
-        swiper: swiper,
+            swiper: swiper,
         },
     });
 
     // ---------
     // Accordion (https://github.com/10up/component-library/tree/develop/packages/accordion)
     // ---------
-    let accordionInstance = new TenUp.accordion('.accordion', {
+    let accordionInstance = new TenUp.accordion(".accordion", {
         // onCreate: function() {
         //   console.log( 'onCreate callback' );
         // },
@@ -368,7 +428,7 @@ const onListener = function(element, type, selector, handler) {
     // ----
     // Tabs (https://github.com/10up/component-library/tree/develop/packages/tabs)
     // ----
-    let myTabs = new TenUp.tabs('.tabs', {
+    let myTabs = new TenUp.tabs(".tabs", {
         // onCreate: function() {
         //   console.log( 'onCreate callback' );
         // },
@@ -380,17 +440,16 @@ const onListener = function(element, type, selector, handler) {
     // ----------------
     // Div com a button (quan no podem posar un element figure dins un button (ja que no valida) posem el div com si fos un button)
     // ----------------
-    const divButtons = document.querySelectorAll('.button-like');
+    const divButtons = document.querySelectorAll(".button-like");
 
-    divButtons.forEach(divButton => {
-        divButton.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
+    divButtons.forEach((divButton) => {
+        divButton.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
                 event.preventDefault();
                 divButton.click();
             }
         });
     });
-
 
     /*
     images-group
@@ -398,34 +457,38 @@ const onListener = function(element, type, selector, handler) {
     image-action-download
     image-action-fullscreen
     */
-    const images = document.getElementsByClassName('images-group');
+    const images = document.getElementsByClassName("images-group");
     if (images.length > 0) {
-        images.forEach(function(group){
-            const zoom = group.querySelector('.image-action-zoom');
+        images.forEach(function (group) {
+            const zoom = group.querySelector(".image-action-zoom");
             if (zoom) {
-                zoom.addEventListener('click', function(event){
+                zoom.addEventListener("click", function (event) {
                     event.preventDefault();
-                    const activeImage = group.querySelector('img.active, div.active img');
+                    const activeImage = group.querySelector(
+                        "img.active, div.active img"
+                    );
                     const urlImg = activeImage.dataset.original;
                     hiresViewer(urlImg);
                 });
             }
-            const download = group.querySelector('.image-action-download');
+            const download = group.querySelector(".image-action-download");
             if (download) {
-                download.addEventListener('click', function(event){
+                download.addEventListener("click", function (event) {
                     event.preventDefault();
-                    const activeImage = group.querySelector('img.active, div.active img');
+                    const activeImage = group.querySelector(
+                        "img.active, div.active img"
+                    );
                     const urlImg = activeImage.dataset.original;
-                    return common.download_item(urlImg)
+                    return common.download_item(urlImg);
                 });
             }
-            const fullscreen = group.querySelector('.image-action-fullscreen');
+            const fullscreen = group.querySelector(".image-action-fullscreen");
             if (fullscreen) {
-                fullscreen.addEventListener('click', function(event){
+                fullscreen.addEventListener("click", function (event) {
                     event.preventDefault();
                     document.body.classList.toggle("fullscreen");
                     window.scrollTo({
-                        top: 0
+                        top: 0,
                     });
                     const img = this.querySelector("img");
 
@@ -442,33 +505,33 @@ const onListener = function(element, type, selector, handler) {
                         img.height = 30;
                     }
 
-                        // Quan és versió amb dues imatges, oculta una de les imatges a l'ampliar
-                    if (group.classList.contains('fullscreen__content--2')) {
-                        const columns = document.querySelectorAll(".fullscreen__content--2");
+                    // Quan és versió amb dues imatges, oculta una de les imatges a l'ampliar
+                    if (group.classList.contains("fullscreen__content--2")) {
+                        const columns = document.querySelectorAll(
+                            ".fullscreen__content--2"
+                        );
                         if (document.body.classList.contains("fullscreen")) {
-                            console.log('full');
-                            columns.forEach(function(elem){
+                            console.log("full");
+                            columns.forEach(function (elem) {
                                 console.log(elem);
                                 console.log(group.isEqualNode(elem));
                                 if (!group.isEqualNode(elem)) {
-                                    elem.style.display = 'none';
+                                    elem.style.display = "none";
                                 }
                             });
                         } else {
-                            columns.forEach(function(elem){
-                                elem.style.display = '';
+                            columns.forEach(function (elem) {
+                                elem.style.display = "";
                             });
                         }
-
                     }
                 });
             }
-
         });
     }
-  }
+}
 
-  function hiresViewer(hires_url) {
+function hiresViewer(hires_url) {
     const new_image = new Image();
     new_image.src = hires_url;
 
@@ -484,131 +547,124 @@ const onListener = function(element, type, selector, handler) {
         toolbar: {
             zoomIn: {
                 show: 2,
-                size: 'large'
+                size: "large",
             },
             zoomOut: {
                 show: 2,
-                size: 'large'
+                size: "large",
             },
             oneToOne: {
                 show: 2,
-                size: 'large'
+                size: "large",
             },
             reset: {
                 show: 2,
-                size: 'large'
+                size: "large",
             },
             prev: {
                 show: 0,
-                size: 'large',
+                size: "large",
             },
             play: {
                 show: 0,
-                size: 'large',
+                size: "large",
             },
             next: {
                 show: 0,
-                size: 'large',
+                size: "large",
             },
             rotateLeft: {
                 show: 2,
-                size: 'large'
+                size: "large",
             },
             rotateRight: {
                 show: 2,
-                size: 'large'
+                size: "large",
             },
             flipHorizontal: {
                 show: 2,
-                size: 'large'
+                size: "large",
             },
             flipVertical: {
                 show: 2,
-                size: 'large'
+                size: "large",
             },
-        }
+        },
     });
     // new_image.click();
     viewer.show();
 
-    return viewer
-  }
+    return viewer;
+}
 
+// ----------------------
+// Taula amb desplegables
+// ----------------------
+function toggle(btnID, eID) {
+    var theRow = document.getElementById(eID);
+    var theButton = document.getElementById(btnID);
+    if (theRow.style.display == "none") {
+        theRow.style.display = "table-row";
+        theButton.setAttribute("aria-expanded", "true");
+    } else {
+        theRow.style.display = "none";
+        theButton.setAttribute("aria-expanded", "false");
+    }
+}
 
+// -----------
+// A11y Dialog (https://github.com/KittyGiraudel/a11y-dialog)
+// -----------
+var dialogEl = document.getElementById("dialog-01");
 
+if (dialogEl) {
+    var dialog = new A11yDialog(dialogEl);
 
+    dialog.on("show", function (event) {
+        const container = event.target;
 
+        // And if the event is the result of a UI interaction (i.e. was not triggered
+        // programmatically via `.show(..)`), the `detail` prop contains the original
+        // event
+        const target = event.detail.target;
+        const opener = target.closest("[data-a11y-dialog-show]");
 
-  // ----------------------
-  // Taula amb desplegables
-  // ----------------------
-  function toggle(btnID, eID) {
-      var theRow = document.getElementById(eID);
-      var theButton = document.getElementById(btnID);
-      if (theRow.style.display == "none") {
-      theRow.style.display = "table-row";
-      theButton.setAttribute("aria-expanded", "true");
-      } else {
-      theRow.style.display = "none";
-      theButton.setAttribute("aria-expanded", "false");
-      }
-  }
+        console.log(container, target, opener);
+    });
 
-  // -----------
-  // A11y Dialog (https://github.com/KittyGiraudel/a11y-dialog)
-  // -----------
-  var dialogEl = document.getElementById('dialog-01')
+    // To manually control the dialog:
+    // dialog.show()
+    // dialog.hide()
+    // dialog.destroy()
+}
 
-  if (dialogEl) {
-      var dialog = new A11yDialog(dialogEl)
+// ------------------------------------------------------------------------------
+// Comprova si la primera opció del select està seleccionada (per ajustar colors)
+// ------------------------------------------------------------------------------
+// Function to check the selected option for a given select element
+function checkSelectOption(selectElement) {
+    if (selectElement.selectedIndex !== 0) {
+        selectElement.classList.add("not-first-selected");
+    } else {
+        selectElement.classList.remove("not-first-selected");
+    }
+}
 
-      dialog.on('show', function (event) {
-      const container = event.target
+// Function to initialize the checks on page load and set event listeners
+function initializeSelectChecks() {
+    // Get all select elements on the page
+    const selectElements = document.querySelectorAll("select");
 
-      // And if the event is the result of a UI interaction (i.e. was not triggered
-      // programmatically via `.show(..)`), the `detail` prop contains the original
-      // event
-      const target = event.detail.target
-      const opener = target.closest('[data-a11y-dialog-show]')
+    // Loop through each select element and check its initial state
+    selectElements.forEach((selectElement) => {
+        checkSelectOption(selectElement);
 
-      console.log(container, target, opener)
-      })
+        // Add an event listener to check the option on change
+        selectElement.addEventListener("change", () => {
+            checkSelectOption(selectElement);
+        });
+    });
+}
 
-      // To manually control the dialog:
-      // dialog.show()
-      // dialog.hide()
-      // dialog.destroy()
-
-
-  }
-
-  // ------------------------------------------------------------------------------
-  // Comprova si la primera opció del select està seleccionada (per ajustar colors)
-  // ------------------------------------------------------------------------------
-  // Function to check the selected option for a given select element
-  function checkSelectOption(selectElement) {
-      if (selectElement.selectedIndex !== 0) {
-          selectElement.classList.add('not-first-selected');
-      } else {
-          selectElement.classList.remove('not-first-selected');
-      }
-  }
-
-  // Function to initialize the checks on page load and set event listeners
-  function initializeSelectChecks() {
-      // Get all select elements on the page
-      const selectElements = document.querySelectorAll('select');
-
-      // Loop through each select element and check its initial state
-      selectElements.forEach(selectElement => {
-          checkSelectOption(selectElement);
-
-          // Add an event listener to check the option on change
-          selectElement.addEventListener('change', () => {
-              checkSelectOption(selectElement);
-          });
-      });
-  }
-
-  // Run the initialize function when the page loads
-  window.onload = initializeSelectChecks;
+// Run the initialize function when the page loads
+window.onload = initializeSelectChecks;

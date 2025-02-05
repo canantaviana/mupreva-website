@@ -2,7 +2,7 @@
     cursor: default;
     height: 1.25rem;
     margin-left: 1.25rem;
-    @include widescreen {
+    @include fullhd {
         display: none;
     }
 }

@@ -1,0 +1,104 @@
+// Sobreescriu estils per ajustar timeline existent al disseny
+.cd-timeline {
+    background-color: transparent;
+    padding-top: 0;
+
+    --cd-color-2: #000;
+    --cd-color-4: #870d01;
+}
+.cd-timeline__container {
+    padding: 0;
+    @include mobile {
+        margin: 0;
+    }
+    &::before {
+        width: 2px;
+        left: 0;
+    }
+}
+.cd-timeline__content {
+    border-radius: 0;
+    box-shadow: none;
+    margin-left: 2px;
+    padding-top: 0;
+    padding-left: 0;
+    padding-bottom: 0;
+    > * {
+        padding-left: var(--space-m);
+    }
+    &::before {
+        display: none;
+    }
+    p {
+        border-bottom: 2px solid #000;
+        padding-bottom: var(--space-xs);
+    }
+}
+.cd-timeline__block {
+    margin-bottom: var(--space-3xl);
+}
+.cd-timeline__date {
+    font-size: var(--step-3);
+    margin: 0 0 var(--space-s) 0 !important;
+}
+.cd-timeline__img {
+    display: none;
+}
+@media (min-width: 64rem) {
+    .cd-timeline__container {
+        &::before {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+    .cd-timeline__content {
+        width: calc(50% - 1px);
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 0;
+        > div:has(h2) {
+            padding-left: 0;
+        }
+    }
+    .cd-timeline__date {
+        position: static;
+        text-align: center;
+        transform: translateX(50%);
+        background-color: #fff;
+        padding: var(--space-s) 0;
+        margin-bottom: 0 !important;
+    }
+    .cd-timeline__block:nth-child(even) {
+        .cd-timeline__date {
+            transform: translateX(-50%);
+            text-align: center;
+        }
+        p {
+            text-align: right;
+        }
+    }
+    .cd-timeline__block:nth-child(odd) {
+        .cd-timeline__content {
+            > * {
+                padding-left: 0;
+                padding-right: var(--space-m);
+            }
+            > div:has(h2) {
+                padding-right: 0;
+            }
+        }
+    }
+}
+@include fullhd {
+    .cd-timeline__block:nth-child(even) {
+        .galeria,
+        .galeria + div {
+            padding-left: 15rem;
+        }
+    }
+    .cd-timeline__block:nth-child(odd) {
+        .galeria {
+            padding-right: 15rem;
+        }
+    }
+}

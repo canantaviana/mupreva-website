@@ -3,15 +3,10 @@
 /*jshint esversion: 6 */
 "use strict";
 
-
-
 var catalog = {
-
-
-
     /**
-    * VARS
-    */
+     * VARS
+     */
     // row
     row: null,
 
@@ -70,8 +65,6 @@ var catalog = {
     // full_data_cache
     full_data_cache: null,
 
-
-
     // fields
     ar_fields: [
         "section_id",
@@ -81,117 +74,135 @@ var catalog = {
         "datacion_ini",
         "datacion_fin",
         "periodo_data",
-        "periodo"
+        "periodo",
     ],
 
     /**
-    * SET_UP
-    */
+     * SET_UP
+     */
     set_up: function (options) {
-
-        const self = this
+        const self = this;
 
         // options
-        const row = options.row
-        const rows_list_container = options.rows_list_container
-        const export_data_container = options.export_data_container
+        const row = options.row;
+        const rows_list_container = options.rows_list_container;
+        const export_data_container = options.export_data_container;
         const area_name = options.area_name; // catalog
-        const q = options.q
+        const q = options.q;
 
         // fix vars
-        self.row = row
-        self.rows_list_container = rows_list_container
-        self.export_data_container = export_data_container
-        self.area_name = area_name
-        self.q = q
+        self.row = row;
+        self.rows_list_container = rows_list_container;
+        self.export_data_container = export_data_container;
+        self.area_name = area_name;
+        self.q = q;
 
         // set config
-        self.set_config()
+        self.set_config();
 
         // fix mode
-        self.view_mode = (self.catalog_config.view_mode ? self.catalog_config.view_mode : 'list')
+        self.view_mode = self.catalog_config.view_mode
+            ? self.catalog_config.view_mode
+            : "list";
 
         // limit (read cookie 'catalog_config' for possible previous values)
-        const limit = (self.catalog_config.pagination && self.catalog_config.pagination.limit)
-            ? self.catalog_config.pagination.limit
-            : ((self.view_mode === 'timeline' || self.view_mode === 'map') ? 0 : 18)
+        const limit =
+            self.catalog_config.pagination &&
+            self.catalog_config.pagination.limit
+                ? self.catalog_config.pagination.limit
+                : self.view_mode === "timeline" || self.view_mode === "map"
+                ? 0
+                : 18;
 
         // q case
         if (q && q.length > 0) {
-            self.view_mode = 'list'
-            self.catalog_config.ar_tables = ['objects', 'pictures', 'immovables', 'documents_catalog']
+            self.view_mode = "list";
+            self.catalog_config.ar_tables = [
+                "objects",
+                "pictures",
+                "immovables",
+                "documents_catalog",
+            ];
         }
 
         // offset
-        const offset = 0
+        const offset = 0;
 
         // total
-        const total = null
+        const total = null;
 
         // pagination (only for list mode)
         self.pagination = {
             limit: parseInt(limit),
             offset: offset,
             total: total,
-            n_nodes: 5
-        }
+            n_nodes: 5,
+        };
 
         // form. Created DOM form
         self.render_form({
-            container: document.getElementById("items_container")
-        })
+            container: document.getElementById("items_container"),
+        });
 
         // order
         const order = (function () {
             switch (self.view_mode) {
-                case 'timeline': return 'datacion_ini asc, datacion_fin asc';
-                case 'map': return 'section_id ASC';
-                default: return 'RAND()';
+                case "timeline":
+                    return "datacion_ini asc, datacion_fin asc";
+                case "map":
+                    return "section_id ASC";
+                default:
+                    return "RAND()";
             }
-        })()
+        })();
 
         // exec first search
         if (self.q && self.q.length > 0) {
-
             // search based on q passed by url (from main home search for example)
-            const global_search_form_item = self.form.form_items.global_search
-            global_search_form_item.node_input.value = self.q
-            global_search_form_item.q = self.q
+            const global_search_form_item = self.form.form_items.global_search;
+            global_search_form_item.node_input.value = self.q;
+            global_search_form_item.q = self.q;
 
             self.form_submit({
                 order: order,
-                limit: limit
-            })
-
+                limit: limit,
+            });
         } else {
-
             // defaul random search
-            self.default_submit = true
+            self.default_submit = true;
             self.form_submit({
                 order: order,
-                limit: limit
-            })
+                limit: limit,
+            });
         }
 
         // subscribe events
         // event map_selected_marker
-        event_manager.subscribe('map_selected_marker', selected_marker)
+        event_manager.subscribe("map_selected_marker", selected_marker);
         function selected_marker(data) {
             console.log(" selected_marker data:", data);
         }
         // event map_popup_selected_item
-        event_manager.subscribe('map_popup_selected_item', map_popup_selected_item)
+        event_manager.subscribe(
+            "map_popup_selected_item",
+            map_popup_selected_item
+        );
         function map_popup_selected_item(data) {
-            const url = page_globals.__WEB_ROOT_WEB__ + '/' + data.tpl + '/' + data.section_id
-            window.open(url)
+            const url =
+                page_globals.__WEB_ROOT_WEB__ +
+                "/" +
+                data.tpl +
+                "/" +
+                data.section_id;
+            window.open(url);
         }
         // event paginate is triggered by list_factory.pagination nodes << < > >>
-        event_manager.subscribe('paginate', paginating)
+        event_manager.subscribe("paginate", paginating);
         function paginating(offset) {
             // update pagination vars
-            self.pagination.offset = offset
+            self.pagination.offset = offset;
             // force search again
-            self.form_submit()
+            self.form_submit();
         }
         // // event data_request_done is triggered when new search is done
         // event_manager.subscribe('data_request_done', data_request_done)
@@ -228,116 +239,111 @@ var catalog = {
 
         // update proxy
         // 	self.proxy.view_mode = self.view_mode
-        event_manager.publish('set_view_mode', self.view_mode)
+        event_manager.publish("set_view_mode", self.view_mode);
 
         // event publish template_render_end
-        event_manager.publish('template_render_end', {})
+        event_manager.publish("template_render_end", {});
 
-        return true
-    },//end set_up
-
-
+        return true;
+    }, //end set_up
 
     /**
-    * SET_CONFIG
-    * @param options object (optional)
-    * @return
-    */
+     * SET_CONFIG
+     * @param options object (optional)
+     * @return
+     */
     set_config: function (options) {
-
-        const self = this
+        const self = this;
 
         // cookie
-        const catalog_config = localStorage.getItem('catalog_config');
+        const catalog_config = localStorage.getItem("catalog_config");
         if (catalog_config) {
             // use existing one
-            self.catalog_config = JSON.parse(catalog_config)
+            self.catalog_config = JSON.parse(catalog_config);
         } else {
             // create a new one
             const catalog_config = {
                 view_mode: self.view_mode, // list, map, timeline
-                pagination: self.pagination
-            }
-            localStorage.setItem('catalog_config', JSON.stringify(catalog_config));
-            self.catalog_config = catalog_config
+                pagination: self.pagination,
+            };
+            localStorage.setItem(
+                "catalog_config",
+                JSON.stringify(catalog_config)
+            );
+            self.catalog_config = catalog_config;
         }
 
         if (options) {
             for (const key in options) {
-                self.catalog_config[key] = options[key]
+                self.catalog_config[key] = options[key];
             }
-            localStorage.setItem('catalog_config', JSON.stringify(self.catalog_config));
+            localStorage.setItem(
+                "catalog_config",
+                JSON.stringify(self.catalog_config)
+            );
         }
 
-
-        return self.catalog_config
-    },//end set_config
-
-
+        return self.catalog_config;
+    }, //end set_config
 
     /**
-    * SWITCH_VIEW
-    * @return promise
-    */
+     * SWITCH_VIEW
+     * @return promise
+     */
     switch_view: function (view_mode, list_mode_group, element) {
-
-        const self = this
+        const self = this;
 
         if (self.view_mode === view_mode) {
-            return // nothing to change
+            return; // nothing to change
         }
 
-        const previous_view_mode = JSON.parse(JSON.stringify(self.view_mode))
+        const previous_view_mode = JSON.parse(JSON.stringify(self.view_mode));
 
         // fix current across proxy
         // self.proxy.view_mode = view_mode
-        self.view_mode = view_mode
+        self.view_mode = view_mode;
 
-        event_manager.publish('set_view_mode', view_mode)
+        event_manager.publish("set_view_mode", view_mode);
 
         // set config (localstorage)
         self.set_config({
-            view_mode: view_mode
-        })
+            view_mode: view_mode,
+        });
 
         // reset active and set current
-        const active = list_mode_group.querySelector('.active')
+        const active = list_mode_group.querySelector(".active");
         if (active) {
-            active.classList.remove('active')
-            const imgActive = active.querySelector('img');
-            imgActive.src = imgActive.dataset.srcOff
+            active.classList.remove("active");
+            const imgActive = active.querySelector("img");
+            imgActive.src = imgActive.dataset.srcOff;
         }
-        element.classList.add('active')
-        const imgElement = element.querySelector('img');
-        imgElement.src = imgElement.dataset.srcOn
+        element.classList.add("active");
+        const imgElement = element.querySelector("img");
+        imgElement.src = imgElement.dataset.srcOn;
 
         switch (view_mode) {
-
-            case 'list':
+            case "list":
                 // fix limit again (is removed by map and timeline modes)
-                self.pagination.limit = 15
+                self.pagination.limit = 15;
                 // launch a new random search
                 return self.form_submit();
                 break;
-            case 'map':
-                self.pagination.limit = 0
+            case "map":
+                self.pagination.limit = 0;
                 return self.form_submit({
-                    order: 'section_id ASC'
-                })
+                    order: "section_id ASC",
+                });
                 break;
-            case 'timeline':
-                self.pagination.limit = 0
+            case "timeline":
+                self.pagination.limit = 0;
                 return self.form_submit({
-                    order: 'datacion_ini asc, datacion_fin asc'
-                })
+                    order: "datacion_ini asc, datacion_fin asc",
+                });
                 break;
         }
 
-
-        return true
-    },//end switch_view
-
-
+        return true;
+    }, //end switch_view
 
     form_template: function () {
         return htmlTemplate(`
@@ -496,25 +502,21 @@ var catalog = {
     },
 
     /**
-    * RENDER_FORM
-    * Create logic and view of search
-    */
+     * RENDER_FORM
+     * Create logic and view of search
+     */
     render_form: function (options) {
-
-        const self = this
+        const self = this;
 
         return new Promise(function (resolve) {
-
             const form = self.form_template();
             const currentForm = form[0];
             appendTemplate(options.container, form);
 
-
-
-            const fragment = new DocumentFragment()
+            const fragment = new DocumentFragment();
 
             // form_factory instance
-            self.form = self.form || new form_factory()
+            self.form = self.form || new form_factory();
 
             // input global search
             const global_search = self.form.item_factory({
@@ -526,21 +528,23 @@ var catalog = {
                 eq_in: "",
                 eq_out: "",
                 // q_table	: "catalog",
-                class_name: 'global_search',
-                node_input: currentForm.querySelector('#global_search'),
+                class_name: "global_search",
+                node_input: currentForm.querySelector("#global_search"),
                 callback: function (form_item) {
-                    const node_input = form_item.node_input
+                    const node_input = form_item.node_input;
                     //no fer res
-                }
-            })
+                },
+            });
 
-            const submit_button = currentForm.querySelector('button[type="submit"]');
+            const submit_button = currentForm.querySelector(
+                'button[type="submit"]'
+            );
 
             submit_button.addEventListener("click", function (e) {
-                e.preventDefault()
-                self.pagination.offset = 0 // reset pagination always
-                self.form_submit()
-            })
+                e.preventDefault();
+                self.pagination.offset = 0; // reset pagination always
+                self.form_submit();
+            });
 
             // ID
             self.form.item_factory({
@@ -550,8 +554,8 @@ var catalog = {
                 eq: "=",
                 eq_in: "",
                 eq_out: "",
-                node_input: currentForm.querySelector('#section_id'),
-            })
+                node_input: currentForm.querySelector("#section_id"),
+            });
 
             // object
             self.form.item_factory({
@@ -561,18 +565,22 @@ var catalog = {
                 eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
-                node_input: currentForm.querySelector('#object'),
+                node_input: currentForm.querySelector("#object"),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
                         table: self.get_tables,
                         limit: 60,
                         parse_result: function (ar_result, term) {
-                            return self.parse_autocomplete_result(ar_result, term, false)
-                        }
-                    })
-                }
-            })
+                            return self.parse_autocomplete_result(
+                                ar_result,
+                                term,
+                                false
+                            );
+                        },
+                    });
+                },
+            });
 
             // title
             self.form.item_factory({
@@ -582,18 +590,22 @@ var catalog = {
                 eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
-                node_input: currentForm.querySelector('#title'),
+                node_input: currentForm.querySelector("#title"),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
                         table: self.get_tables,
                         limit: 60,
                         parse_result: function (ar_result, term) {
-                            return self.parse_autocomplete_result(ar_result, term, false)
-                        }
-                    })
-                }
-            })
+                            return self.parse_autocomplete_result(
+                                ar_result,
+                                term,
+                                false
+                            );
+                        },
+                    });
+                },
+            });
 
             // periodo
             self.form.item_factory({
@@ -603,18 +615,22 @@ var catalog = {
                 eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
-                node_input: currentForm.querySelector('#period'),
+                node_input: currentForm.querySelector("#period"),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
                         table: self.get_tables,
                         limit: 60,
                         parse_result: function (ar_result, term) {
-                            return self.parse_autocomplete_result(ar_result, term, false)
-                        }
-                    })
-                }
-            })
+                            return self.parse_autocomplete_result(
+                                ar_result,
+                                term,
+                                false
+                            );
+                        },
+                    });
+                },
+            });
 
             // materia
             self.form.item_factory({
@@ -624,18 +640,22 @@ var catalog = {
                 eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
-                node_input: currentForm.querySelector('#material'),
+                node_input: currentForm.querySelector("#material"),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
                         table: self.get_tables,
                         limit: 60,
                         parse_result: function (ar_result, term) {
-                            return self.parse_autocomplete_result(ar_result, term, false)
-                        }
-                    })
-                }
-            })
+                            return self.parse_autocomplete_result(
+                                ar_result,
+                                term,
+                                false
+                            );
+                        },
+                    });
+                },
+            });
 
             // tecnica
             self.form.item_factory({
@@ -645,18 +665,22 @@ var catalog = {
                 eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
-                node_input: currentForm.querySelector('#technique'),
+                node_input: currentForm.querySelector("#technique"),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
                         table: self.get_tables,
                         limit: 60,
                         parse_result: function (ar_result, term) {
-                            return self.parse_autocomplete_result(ar_result, term, false)
-                        }
-                    })
-                }
-            })
+                            return self.parse_autocomplete_result(
+                                ar_result,
+                                term,
+                                false
+                            );
+                        },
+                    });
+                },
+            });
 
             // tipologia
             self.form.item_factory({
@@ -666,21 +690,22 @@ var catalog = {
                 eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
-                node_input: currentForm.querySelector('#typology'),
+                node_input: currentForm.querySelector("#typology"),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
                         table: self.get_tables,
                         limit: 60,
                         parse_result: function (ar_result, term) {
-                            return self.parse_autocomplete_result(ar_result, term, false)
-                        }
-                    })
-                }
-            })
-
-
-
+                            return self.parse_autocomplete_result(
+                                ar_result,
+                                term,
+                                false
+                            );
+                        },
+                    });
+                },
+            });
 
             // descripcion_relevante
             self.form.item_factory({
@@ -690,18 +715,22 @@ var catalog = {
                 eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
-                node_input: currentForm.querySelector('#site'),
+                node_input: currentForm.querySelector("#site"),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
                         table: self.get_tables,
                         limit: 60,
                         parse_result: function (ar_result, term) {
-                            return self.parse_autocomplete_result(ar_result, term, false)
-                        }
-                    })
-                }
-            })
+                            return self.parse_autocomplete_result(
+                                ar_result,
+                                term,
+                                false
+                            );
+                        },
+                    });
+                },
+            });
 
             // descripcion_relevante
             self.form.item_factory({
@@ -711,326 +740,334 @@ var catalog = {
                 eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
-                node_input: currentForm.querySelector('#field'),
+                node_input: currentForm.querySelector("#field"),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
                         table: self.get_tables,
                         limit: 60,
                         parse_result: function (ar_result, term) {
-                            return self.parse_autocomplete_result(ar_result, term, false)
-                        }
-                    })
-                }
-            })
+                            return self.parse_autocomplete_result(
+                                ar_result,
+                                term,
+                                false
+                            );
+                        },
+                    });
+                },
+            });
 
-            const limit = currentForm.querySelector('#input_limit');
+            const limit = currentForm.querySelector("#input_limit");
             limit.addEventListener("change", function () {
-                self.pagination.limit = this.value
+                self.pagination.limit = this.value;
                 self.set_config({
-                    pagination: self.pagination
-                })
-            })
+                    pagination: self.pagination,
+                });
+            });
 
-            const table_selector_container = currentForm.querySelector('#table_selector');
+            const table_selector_container =
+                currentForm.querySelector("#table_selector");
             self.table_selector_container = table_selector_container;
 
             common.when_in_dom(table_selector_container, function () {
                 // set_up_slider
                 // event changed_table_selector
-                event_manager.publish('changed_table_selector', {})
-            })
+                event_manager.publish("changed_table_selector", {});
+            });
 
             // checkbox_objects
             if (table_selector_container) {
-                const checkbox_objects = currentForm.querySelector('#checkbox_objects');
-                checkbox_objects.setAttribute("name", "catalog_tables")
-                checkbox_objects.setAttribute("value", "objects")
+                const checkbox_objects =
+                    currentForm.querySelector("#checkbox_objects");
+                checkbox_objects.setAttribute("name", "catalog_tables");
+                checkbox_objects.setAttribute("value", "objects");
                 const checked = self.catalog_config.ar_tables
-                    ? self.catalog_config.ar_tables.indexOf('objects') !== -1
-                    : true
-                if (checked) checkbox_objects.setAttribute("checked", checked)
+                    ? self.catalog_config.ar_tables.indexOf("objects") !== -1
+                    : true;
+                if (checked) checkbox_objects.setAttribute("checked", checked);
                 checkbox_objects.addEventListener("change", function (e) {
-                    self.changed_table_selector(e)
-                })
+                    self.changed_table_selector(e);
+                });
             }
-
 
             // checkbox_pictures
             if (table_selector_container) {
-                const checkbox_pictures = currentForm.querySelector('#checkbox_pictures');
-                checkbox_pictures.setAttribute("name", "catalog_tables")
-                checkbox_pictures.setAttribute("value", "pictures")
+                const checkbox_pictures =
+                    currentForm.querySelector("#checkbox_pictures");
+                checkbox_pictures.setAttribute("name", "catalog_tables");
+                checkbox_pictures.setAttribute("value", "pictures");
                 const checked = self.catalog_config.ar_tables
-                    ? self.catalog_config.ar_tables.indexOf('pictures') !== -1
-                    : true
-                if (checked) checkbox_pictures.setAttribute("checked", checked)
+                    ? self.catalog_config.ar_tables.indexOf("pictures") !== -1
+                    : true;
+                if (checked) checkbox_pictures.setAttribute("checked", checked);
                 checkbox_pictures.addEventListener("change", function (e) {
-                    self.changed_table_selector(e)
-                })
+                    self.changed_table_selector(e);
+                });
             }
 
             // checkbox_immovable
             if (table_selector_container) {
-                const checkbox_immovable = currentForm.querySelector('#checkbox_immovable');
-                checkbox_immovable.setAttribute("name", "catalog_tables")
-                checkbox_immovable.setAttribute("value", "immovables")
+                const checkbox_immovable = currentForm.querySelector(
+                    "#checkbox_immovable"
+                );
+                checkbox_immovable.setAttribute("name", "catalog_tables");
+                checkbox_immovable.setAttribute("value", "immovables");
                 const checked = self.catalog_config.ar_tables
-                    ? self.catalog_config.ar_tables.indexOf('immovables') !== -1
-                    : true
-                if (checked) checkbox_immovable.setAttribute("checked", checked)
+                    ? self.catalog_config.ar_tables.indexOf("immovables") !== -1
+                    : true;
+                if (checked)
+                    checkbox_immovable.setAttribute("checked", checked);
                 checkbox_immovable.addEventListener("change", function (e) {
-                    self.changed_table_selector(e)
-                })
+                    self.changed_table_selector(e);
+                });
             }
 
             // checkbox_immovable
             if (table_selector_container) {
-                const checkbox_documents = currentForm.querySelector('#checkbox_documents');
-                checkbox_documents.setAttribute("name", "catalog_tables")
-                checkbox_documents.setAttribute("value", "documents_catalog")
+                const checkbox_documents = currentForm.querySelector(
+                    "#checkbox_documents"
+                );
+                checkbox_documents.setAttribute("name", "catalog_tables");
+                checkbox_documents.setAttribute("value", "documents_catalog");
                 const checked = self.catalog_config.ar_tables
-                    ? self.catalog_config.ar_tables.indexOf('documents_catalog') !== -1
-                    : true
-                if (checked) checkbox_documents.setAttribute("checked", checked)
-                    checkbox_documents.addEventListener("change", function (e) {
-                    self.changed_table_selector(e)
-                })
+                    ? self.catalog_config.ar_tables.indexOf(
+                          "documents_catalog"
+                      ) !== -1
+                    : true;
+                if (checked)
+                    checkbox_documents.setAttribute("checked", checked);
+                checkbox_documents.addEventListener("change", function (e) {
+                    self.changed_table_selector(e);
+                });
             }
 
-
-            const list_mode_group = currentForm.querySelector('#mode_group');
+            const list_mode_group = currentForm.querySelector("#mode_group");
 
             // button_list_mode
-            const button_list_mode = currentForm.querySelector('#button_list');
-            if (self.view_mode === 'list') {
-                button_list_mode.classList.add('active')
-                const imgElement = button_list_mode.querySelector('img');
-                imgElement.src = imgElement.dataset.srcOn
+            const button_list_mode = currentForm.querySelector("#button_list");
+            if (self.view_mode === "list") {
+                button_list_mode.classList.add("active");
+                const imgElement = button_list_mode.querySelector("img");
+                imgElement.src = imgElement.dataset.srcOn;
             }
             button_list_mode.addEventListener("click", function (e) {
-                e.preventDefault()
-                self.switch_view('list', list_mode_group, this)
-            })
+                e.preventDefault();
+                self.switch_view("list", list_mode_group, this);
+            });
             // button_view_map_mode
-            const button_view_map_mode = currentForm.querySelector('#button_map');
-            if (self.view_mode === 'map') {
-                button_view_map_mode.classList.add('active')
-                const imgElement = button_view_map_mode.querySelector('img');
-                imgElement.src = imgElement.dataset.srcOn
+            const button_view_map_mode =
+                currentForm.querySelector("#button_map");
+            if (self.view_mode === "map") {
+                button_view_map_mode.classList.add("active");
+                const imgElement = button_view_map_mode.querySelector("img");
+                imgElement.src = imgElement.dataset.srcOn;
             }
             button_view_map_mode.addEventListener("click", function (e) {
-                e.preventDefault()
-                self.switch_view('map', list_mode_group, this)
-            })
+                e.preventDefault();
+                self.switch_view("map", list_mode_group, this);
+            });
             // button_view_timeline_mode
-            const button_view_timeline_mode = currentForm.querySelector('#button_timeline');
-            if (self.view_mode === 'timeline') {
-                button_view_timeline_mode.classList.add('active')
-                const imgElement = button_view_timeline_mode.querySelector('img');
-                imgElement.src = imgElement.dataset.srcOn
+            const button_view_timeline_mode =
+                currentForm.querySelector("#button_timeline");
+            if (self.view_mode === "timeline") {
+                button_view_timeline_mode.classList.add("active");
+                const imgElement =
+                    button_view_timeline_mode.querySelector("img");
+                imgElement.src = imgElement.dataset.srcOn;
             }
             button_view_timeline_mode.addEventListener("click", function (e) {
-                e.preventDefault()
-                self.switch_view('timeline', list_mode_group, this)
-            })
+                e.preventDefault();
+                self.switch_view("timeline", list_mode_group, this);
+            });
 
             // add node
-            self.form.node = currentForm
+            self.form.node = currentForm;
 
-            const input_limit_container = currentForm.querySelector('#limit_container');
-
+            const input_limit_container =
+                currentForm.querySelector("#limit_container");
 
             // set_view_mode event. Triggered when catalog instance property 'view_mode' changes its value across self.proxy
-            event_manager.subscribe('set_view_mode', set_view_mode)
+            event_manager.subscribe("set_view_mode", set_view_mode);
             function set_view_mode(mode) {
-                if (mode === 'list') {
-                    input_limit_container.classList.remove("hide")
+                if (mode === "list") {
+                    input_limit_container.classList.remove("hide");
                 } else {
-                    input_limit_container.classList.add("hide")
+                    input_limit_container.classList.add("hide");
                 }
             }
 
-            resolve(self.form.node)
-        })
-
-
-
-
-
-    },//end render_form
-
-
+            resolve(self.form.node);
+        });
+    }, //end render_form
 
     /**
-    * PARSE_AUTOCOMPLETE_RESULT
-    * @return array
-    */
+     * PARSE_AUTOCOMPLETE_RESULT
+     * @return array
+     */
     parse_autocomplete_result: function (ar_result, term, q_splittable) {
+        const self = this;
 
-        const self = this
+        const ar_ordered_result =
+            q_splittable === true
+                ? self.sort_array_by_property(ar_result, "value")
+                : ar_result;
+        const ar_filtered_result =
+            term.length != 0
+                ? self.filter_drop_down_list(ar_ordered_result, term)
+                : ar_ordered_result;
+        const ar_drow_down_list = ar_filtered_result.slice(0, 30);
 
-        const ar_ordered_result = (q_splittable === true) ? self.sort_array_by_property(ar_result, "value") : ar_result
-        const ar_filtered_result = (term.length != 0) ? self.filter_drop_down_list(ar_ordered_result, term) : ar_ordered_result
-        const ar_drow_down_list = ar_filtered_result.slice(0, 30)
-
-        return ar_drow_down_list
-    },//end parse_autocomplete_result
-
-
+        return ar_drow_down_list;
+    }, //end parse_autocomplete_result
 
     /**
-    * CHANGED_TABLE_SELECTOR
-    * @return bool
-    */
+     * CHANGED_TABLE_SELECTOR
+     * @return bool
+     */
     changed_table_selector: function (e) {
-
-        const self = this
+        const self = this;
 
         // tables
-        let ar_tables = []
-        const catalog_tables_checked = document.querySelectorAll('input[name="catalog_tables"]:checked');
+        let ar_tables = [];
+        const catalog_tables_checked = document.querySelectorAll(
+            'input[name="catalog_tables"]:checked'
+        );
 
         if (catalog_tables_checked) {
             for (let i = 0; i < catalog_tables_checked.length; i++) {
-                ar_tables.push(catalog_tables_checked[i].value)
+                ar_tables.push(catalog_tables_checked[i].value);
             }
         }
 
         // avoid de-select all options
         if (ar_tables < 1) {
             // recheck current checkbox item and return
-            e.target.checked = true
-            return false
+            e.target.checked = true;
+            return false;
         } else {
-
             self.set_config({
-                ar_tables: ar_tables
-            })
+                ar_tables: ar_tables,
+            });
 
             // event changed_table_selector
-            event_manager.publish('changed_table_selector', {})
+            event_manager.publish("changed_table_selector", {});
 
-            self.form_submit()
+            self.form_submit();
         }
 
-        return true
-    },//end changed_table_selector
-
-
+        return true;
+    }, //end changed_table_selector
 
     /**
-    * FORM_SUBMIT
-    * Form submit launch search
-    */
+     * FORM_SUBMIT
+     * Form submit launch search
+     */
     form_submit: function (options) {
-
-        const self = this
+        const self = this;
 
         return new Promise(function (resolve) {
-
             // options
-            options = typeof options !== 'undefined' ? options : {}
+            options = typeof options !== "undefined" ? options : {};
 
-            const order = options.order || 'section_id ASC'
-            const limit = options.limit || self.pagination.limit
-            const offset = options.offset || self.pagination.offset
+            const order = options.order || "section_id ASC";
+            const limit = options.limit || self.pagination.limit;
+            const offset = options.offset || self.pagination.offset;
 
             // state check
-            const remove_nodes = true
-            if (self.form_submit_state === 'searching' && remove_nodes) {
+            const remove_nodes = true;
+            if (self.form_submit_state === "searching" && remove_nodes) {
                 return new Promise(function () {
-                    console.warn("Rejected form_submit. One search is in progress");
-                })
+                    console.warn(
+                        "Rejected form_submit. One search is in progress"
+                    );
+                });
             }
-            self.form_submit_state = 'searching'
+            self.form_submit_state = "searching";
 
             // clean rows_list_container and add_spinner
-            const rows_list_container = self.rows_list_container
+            const rows_list_container = self.rows_list_container;
             if (remove_nodes) {
                 while (rows_list_container.hasChildNodes()) {
-                    rows_list_container.removeChild(rows_list_container.lastChild);
+                    rows_list_container.removeChild(
+                        rows_list_container.lastChild
+                    );
                 }
             }
             // add spinner
             const spinner = common.spinner(rows_list_container);
 
             // filter. Is built looking at form input values.
-            const filter = self.form.build_filter()
+            const filter = self.form.build_filter();
 
             // search rows exec against API
             self.search_rows({
                 filter: filter,
-                limit: (self.view_mode === 'map') ? null : limit,
-                offset: (self.view_mode === 'map') ? null : offset,
+                limit: self.view_mode === "map" ? null : limit,
+                offset: self.view_mode === "map" ? null : offset,
                 //order: (self.view_mode === 'map') ? null : order
-                order: order
-            })
-                .then((response) => {
+                order: order,
+            }).then((response) => {
+                // fix response in each call
+                self.ar_rows = response.result;
 
-                    // fix response in each call
-                    self.ar_rows = response.result
+                // update pagination total
+                if (response.total !== undefined) {
+                    self.pagination.total = response.total;
+                }
 
-                    // update pagination total
-                    if (response.total !== undefined) {
-                        self.pagination.total = response.total
+                // render
+                spinner.remove();
+
+                self.render_data({
+                    ar_rows: response.result,
+                    target: rows_list_container,
+                }).then(function (response) {
+                    if (common.is_node(response)) {
+                        rows_list_container.appendChild(response);
                     }
+                    self.form_submit_state = "done";
+                    event_manager.publish("rendered", {
+                        rows_list_container: rows_list_container,
+                        view_mode: self.view_mode,
+                    });
+                    resolve(rows_list_container); // All work is done. Final resolve !
+                });
 
-                    // render
-                    spinner.remove()
+                // fix mode
+                // set config
+                self.set_config({
+                    view_mode: self.view_mode,
+                });
 
-                    self.render_data({
-                        ar_rows: response.result,
-                        target: rows_list_container
-                    })
-                        .then(function (response) {
-
-                            if (common.is_node(response)) {
-                                rows_list_container.appendChild(response)
-                            }
-                            self.form_submit_state = 'done'
-                            event_manager.publish('rendered', {
-                                rows_list_container: rows_list_container,
-                                view_mode: self.view_mode
-                            })
-                            resolve(rows_list_container) // All work is done. Final resolve !
-                        })
-
-                    // fix mode
-                    // set config
-                    self.set_config({
-                        view_mode: self.view_mode
-                    })
-
-                    // scroll to head result
-                    // if (response.result.length>0) {
-                    // 	const div_result = document.querySelector(".result")
-                    // 	if (div_result) {
-                    // 		// div_result.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-                    // 		div_result.scrollIntoView({behavior: "auto", block: "center", inline: "nearest"});
-                    // 	}
-                    // }
-                })
-        })
-    },//end form_submit
-
-
+                // scroll to head result
+                // if (response.result.length>0) {
+                // 	const div_result = document.querySelector(".result")
+                // 	if (div_result) {
+                // 		// div_result.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+                // 		div_result.scrollIntoView({behavior: "auto", block: "center", inline: "nearest"});
+                // 	}
+                // }
+            });
+        });
+    }, //end form_submit
 
     /**
-    * SEARCH_ROWS
-    * Call to API and load JSON data results of search
-    */
+     * SEARCH_ROWS
+     * Call to API and load JSON data results of search
+     */
     search_rows: function (options) {
-
-        const self = this
+        const self = this;
 
         // options
-        const filter = options.filter || null
-        const ar_fields = options.ar_fields || this.ar_fields
-        const order = typeof options.order !== 'undefined' ? options.order : "titulo ASC, section_id ASC"
-        let limit = options.limit
-        let offset = options.offset
-        const process_result = options.process_result || null
+        const filter = options.filter || null;
+        const ar_fields = options.ar_fields || this.ar_fields;
+        const order =
+            typeof options.order !== "undefined"
+                ? options.order
+                : "titulo ASC, section_id ASC";
+        let limit = options.limit;
+        let offset = options.offset;
+        const process_result = options.process_result || null;
 
         // cache
         // if (self.full_data_cache && (self.view_mode==='timeline' || self.view_mode==='map')) {
@@ -1042,360 +1079,381 @@ var catalog = {
         // }
 
         // parse_sql_filter
-        const group = []
+        const group = [];
         // const parsed_filter	= page.parse_sql_filter(filter, group)
-        const parsed_filter = self.form.parse_sql_filter(filter, group)
-        let sql_filter = parsed_filter
-            ? '(' + parsed_filter + ')'
-            : null
+        const parsed_filter = self.form.parse_sql_filter(filter, group);
+        let sql_filter = parsed_filter ? "(" + parsed_filter + ")" : null;
 
         // prev_filter fix
-        self.prev_filter = sql_filter
+        self.prev_filter = sql_filter;
 
         // count
-        let count = true
+        let count = true;
 
         // timeline case
-        if (self.view_mode === 'timeline') {
-            sql_filter = (sql_filter) ? sql_filter + ' AND datacion_ini is not null' : 'datacion_ini is not null'
-            limit = 0
-            offset = 0
-            count = false
+        if (self.view_mode === "timeline") {
+            sql_filter = sql_filter
+                ? sql_filter + " AND datacion_ini is not null"
+                : "datacion_ini is not null";
+            limit = 0;
+            offset = 0;
+            count = false;
         }
 
         // tables
-        const ar_tables = self.get_tables()
+        const ar_tables = self.get_tables();
 
         // request
         const request_body = {
-            dedalo_get: 'records',
+            dedalo_get: "records",
             db_name: page_globals.WEB_DB,
             lang: page_globals.WEB_CURRENT_LANG_CODE,
             // table		: 'objects',
-            table: ar_tables.join(','),
+            table: ar_tables.join(","),
             ar_fields: ar_fields,
             sql_filter: sql_filter,
             limit: limit,
-            group: (group.length > 0) ? group.join(",") : null,
+            group: group.length > 0 ? group.join(",") : null,
             count: count,
             offset: offset,
             order: order,
-            process_result: process_result
-        }
+            process_result: process_result,
+        };
         //if (ar_tables.indexOf('sets') !== -1) {
-            request_body.resolve_portals_custom = {
-                imagenes_identificativas: 'image'
-            }
+        request_body.resolve_portals_custom = {
+            imagenes_identificativas: "image",
+        };
         //}
         const js_promise = data_manager.request({
-            body: request_body
-        })
+            body: request_body,
+        });
         js_promise.then((response) => {
-            event_manager.publish('data_request_done', {
+            event_manager.publish("data_request_done", {
                 request_body: request_body,
-                result: response.result
-            })
-        })
+                result: response.result,
+            });
+        });
 
-
-        return js_promise
-    },//end search_rows
-
-
+        return js_promise;
+    }, //end search_rows
 
     /**
-    * GET_TABLES
-    * @return array ar_tables
-    */
+     * GET_TABLES
+     * @return array ar_tables
+     */
     get_tables: function () {
-
-        let ar_tables = []
-        const catalog_tables_checked = document.querySelectorAll('input[name="catalog_tables"]:checked');
+        let ar_tables = [];
+        const catalog_tables_checked = document.querySelectorAll(
+            'input[name="catalog_tables"]:checked'
+        );
         if (catalog_tables_checked) {
             for (let i = 0; i < catalog_tables_checked.length; i++) {
-                ar_tables.push(catalog_tables_checked[i].value)
+                ar_tables.push(catalog_tables_checked[i].value);
             }
         }
         if (ar_tables.length < 1) {
-            ar_tables = ['objects', 'pictures', 'immovables', 'documents_catalog']
+            ar_tables = [
+                "objects",
+                "pictures",
+                "immovables",
+                "documents_catalog",
+            ];
         }
 
-        return ar_tables
-    },//end get_tables
-
-
+        return ar_tables;
+    }, //end get_tables
 
     /**
-    * RENDER_DATA
-    * Render received DB data based on 'view_mode' (list, map, timeline)
-    * @return bool
-    */
+     * RENDER_DATA
+     * Render received DB data based on 'view_mode' (list, map, timeline)
+     * @return bool
+     */
     render_data: function (options) {
-
-        const self = this
+        const self = this;
 
         return new Promise(function (resolve) {
-
-            const ar_rows = options.ar_rows
-            const target = options.target
+            const ar_rows = options.ar_rows;
+            const target = options.target;
 
             // css target reset
             //target.className = ''; // reset target class
             //target.style = ''; // reset target style
             //target.classList.add(self.view_mode)
 
-
             switch (self.view_mode) {
-
-                case 'list':
-
+                case "list":
                     // case no results
                     if (ar_rows.length < 1 && self.q && self.q.length > 0) {
-
                         // clean form q item value
-                        const global_search_form_item = self.form.form_items.global_search
-                        global_search_form_item.node_input.value = ''
-                        global_search_form_item.q = ''
+                        const global_search_form_item =
+                            self.form.form_items.global_search;
+                        global_search_form_item.node_input.value = "";
+                        global_search_form_item.q = "";
 
                         // reset submit state
-                        self.form_submit_state = 'done'
+                        self.form_submit_state = "done";
 
                         // exec default random search
-                        self.default_submit = true
+                        self.default_submit = true;
                         self.form_submit({
-                            order: 'RAND()',
-                            limit: self.limit
-                        })
-                        resolve()
-                        return
+                            order: "RAND()",
+                            limit: self.limit,
+                        });
+                        resolve();
+                        return;
                     }
 
                     if (self.default_submit) {
-                        var content = templateModules.bloque_catalogo_default()
+                        var content = templateModules.bloque_catalogo_default();
                         appendTemplate(self.rows_list_container, content);
-                        self.default_submit = false
-                        resolve()
-                        return
+                        self.default_submit = false;
+                        resolve();
+                        return;
                     } else {
-
-                        const pagination = self.default_submit === true
-                            ? false
-                            : self.pagination
-                        const list_data = page.parse_list_data(ar_rows) // prepares data to use in list
-                        self.list = self.list || new list_factory() // creates / get existing instance of list
+                        const pagination =
+                            self.default_submit === true
+                                ? false
+                                : self.pagination;
+                        const list_data = page.parse_list_data(ar_rows); // prepares data to use in list
+                        self.list = self.list || new list_factory(); // creates / get existing instance of list
                         self.list.init({
                             data: list_data,
                             fn_row_builder: self.list_row_builder,
-                            container_class: 'galeria galeria--242x242 link-dn',
+                            container_class: "galeria galeria--242x242 link-dn",
                             pagination: pagination,
-                            caller: self
-                        })
-                        self.list.render_list()
-                            .then(function (list_node) {
-
-                                if (self.default_submit === true) {
-                                    const suggesting_text = common.create_dom_element({
+                            caller: self,
+                        });
+                        self.list.render_list().then(function (list_node) {
+                            if (self.default_submit === true) {
+                                const suggesting_text =
+                                    common.create_dom_element({
                                         element_type: "h2",
                                         class_name: "suggesting_text",
-                                        inner_html: self.row.abstract
-                                    })
-                                    list_node.prepend(suggesting_text)
-                                }
+                                        inner_html: self.row.abstract,
+                                    });
+                                list_node.prepend(suggesting_text);
+                            }
 
-                                // reset default_submit state
-                                self.default_submit = false
+                            // reset default_submit state
+                            self.default_submit = false;
 
-                                resolve(list_node)
-                            })
+                            resolve(list_node);
+                        });
                     }
                     break;
-                case 'map':
-                    const map_data = page.parse_map_data(ar_rows) // prepares data to use in map
-                    self.map = self.map || new map_factory() // creates / get existing instance of map
-                    self.map.init({
-                        source_maps: page.maps_config.source_maps,
-                        map_position: null,
-                        container: target,
-                        popup_builder: page.map_popup_builder,
-                        popup_options: page.maps_config.popup_options
-                    })
+                case "map":
+                    const map_data = page.parse_map_data(ar_rows); // prepares data to use in map
+                    self.map = self.map || new map_factory(); // creates / get existing instance of map
+                    self.map
+                        .init({
+                            source_maps: page.maps_config.source_maps,
+                            map_position: null,
+                            container: target,
+                            popup_builder: page.map_popup_builder,
+                            popup_options: page.maps_config.popup_options,
+                        })
                         .then(function (leaflet_map) {
                             // parse data points
-                            self.map.parse_data_to_map(map_data)
+                            self.map
+                                .parse_data_to_map(map_data)
                                 .then(function (map_node) {
-                                    resolve(true)
-                                })
-                        })
+                                    resolve(true);
+                                });
+                        });
                     break;
 
-                case 'timeline':
-                    const timeline_data = page.parse_timeline_data_catalog(ar_rows) // prepares data to use in timeline
-                    self.timeline = self.timeline || new timeline_factory() // creates / get existing instance of timeline
-                    self.timeline.init({
-                        target: target,
-                        block_builder: self.timelime_block_builder,
-                        max_group_nodes: 5 // max nodes rendered by group (year)
-                    })
-                        .then(function () {
-                            self.timeline.render_timeline({
-                                data: timeline_data
-                            })
-                                .then(function (timeline_node) {
-                                    resolve(timeline_node)
-                                })
+                case "timeline":
+                    const timeline_data =
+                        page.parse_timeline_data_catalog(ar_rows); // prepares data to use in timeline
+                    self.timeline = self.timeline || new timeline_factory(); // creates / get existing instance of timeline
+                    self.timeline
+                        .init({
+                            target: target,
+                            block_builder: self.timelime_block_builder,
+                            max_group_nodes: 5, // max nodes rendered by group (year)
                         })
+                        .then(function () {
+                            self.timeline
+                                .render_timeline({
+                                    data: timeline_data,
+                                })
+                                .then(function (timeline_node) {
+                                    resolve(timeline_node);
+                                });
+                        });
                     break;
             }
-        })
-    },//end render_data
-
+        });
+    }, //end render_data
 
     /**
-    * LIST_ROW_BUILDER
-    * Build DOM nodes to insert into list pop-up
-    */
+     * LIST_ROW_BUILDER
+     * Build DOM nodes to insert into list pop-up
+     */
     list_row_builder: function (row, view_mode) {
-
-        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-        var image_url = '/assets/img/placeholder.png';
+        const url =
+            page_globals.__WEB_ROOT_WEB__ +
+            "/" +
+            row.tpl +
+            "/" +
+            row.section_id;
+        var image_url = "/assets/img/placeholder.png";
         if (row.imagenes_identificativas.length > 0) {
-            image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
+            image_url =
+                __WEB_MEDIA_ENGINE_URL__ +
+                row.imagenes_identificativas[0].image;
         }
         return htmlTemplate(`
         <li class="${row.tpl}">
             <a href="${url}" target="_blank">
                 <figure>
                     <img loading="lazy" src="${image_url}" alt="">
-                    ${(row.titulo)?`
+                    ${
+                        row.titulo
+                            ? `
                     <figcaption>${row.titulo}</figcaption>
-                    `:''}
+                    `
+                            : ""
+                    }
                 </figure>
             </a>
         </li>
         `)[0];
-
-    },//end list_row_builder
-
-
+    }, //end list_row_builder
 
     /**
-    * FORMAT_DROP_DOWN_LIST
-    * Formats drop down list items to show their content depending on the data type
-    */
+     * FORMAT_DROP_DOWN_LIST
+     * Formats drop down list items to show their content depending on the data type
+     */
     format_drop_down_list: function (column, value) {
-
         if (column === "dating") {
-
-            return common.clean_date(value, ',').join(' - ')
-
+            return common.clean_date(value, ",").join(" - ");
         } else {
-
             if (column === "collection") {
-                return common.clean_gaps(value)
+                return common.clean_gaps(value);
             } else {
-                return value
+                return value;
             }
         }
-    },//end format_drop_down_list
-
-
+    }, //end format_drop_down_list
 
     /**
-    * SORT_ARRAY_BY_PROPERTY
-    * Sorts an array by a given property
-    */
+     * SORT_ARRAY_BY_PROPERTY
+     * Sorts an array by a given property
+     */
     sort_array_by_property: function (array, property) {
-
         const ar_ordered = array.sort(function (a, b) {
             return a[property].localeCompare(b[property]);
         });
 
-        return ar_ordered
+        return ar_ordered;
     }, //end sort_array_by_property
 
-
-
     /**
-    * FILTER_DROP_DOWN_LIST
-    * Filters drop down list items to show a filtered list depending on the filtering string
-    */
+     * FILTER_DROP_DOWN_LIST
+     * Filters drop down list items to show a filtered list depending on the filtering string
+     */
     filter_drop_down_list: function (array, filter_string) {
         return array.filter(function (el) {
-            const el_normalized = el.value.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-            const filtered = (el.value.toLowerCase().indexOf(filter_string.toLowerCase()) > -1) || (el_normalized.toLowerCase().indexOf(filter_string.toLowerCase()) > -1)
-            return filtered
-        })
-    },//end filter_drop_down_list
-
-
+            const el_normalized = el.value
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+            const filtered =
+                el.value.toLowerCase().indexOf(filter_string.toLowerCase()) >
+                    -1 ||
+                el_normalized
+                    .toLowerCase()
+                    .indexOf(filter_string.toLowerCase()) > -1;
+            return filtered;
+        });
+    }, //end filter_drop_down_list
 
     /**
-    * TIMELIME_BLOCK_BUILDER
-    */
+     * TIMELIME_BLOCK_BUILDER
+     */
     timelime_block_builder: function (item, max_group_nodes) {
+        const self = this;
 
-        const self = this
-
-        const timeline_icon_src = __WEB_TEMPLATE_WEB__ + "/assets/images/cd-icon-picture.svg"
-        const group_date = item.date
-
+        const timeline_icon_src =
+            __WEB_TEMPLATE_WEB__ + "/assets/images/cd-icon-picture.svg";
+        const group_date = item.date;
 
         // NEW WAY (without limit, only group nodes are limited)
         // wrapper
         const block = common.create_dom_element({
             element_type: "div",
-            class_name: "cd-timeline__block"
-        })
+            class_name: "cd-timeline__block",
+        });
 
         // icon
         const image_icon = common.create_dom_element({
             element_type: "div",
             class_name: "cd-timeline__img cd-timeline__img--picture",
-            parent: block
-        })
-
+            parent: block,
+        });
 
         // content
         const block_content = common.create_dom_element({
             element_type: "div",
             class_name: "cd-timeline__content text-component",
-            parent: block
-        })
+            parent: block,
+        });
+
+        // date and link
+        const below_container = common.create_dom_element({
+            element_type: "div",
+            class_name: "flex justify-between items-center",
+            parent: block_content,
+        });
+        const date_span = common.create_dom_element({
+            element_type: "h2",
+            class_name: "cd-timeline__date",
+            text_content: group_date,
+            parent: below_container,
+        });
 
         // content
         common.create_dom_element({
             element_type: "p",
             class_name: "has-text-weight-light is-size-6 has-text-grey-dark",
-            inner_html: item.data_group.length+' '+((item.data_group.length > 1)?tstring.timeline_elements:tstring.timeline_element),
-            parent: block_content
-        })
+            inner_html:
+                item.data_group.length +
+                " " +
+                (item.data_group.length > 1
+                    ? tstring.timeline_elements
+                    : tstring.timeline_element),
+            parent: block_content,
+        });
 
         // content
         const block_content_list = common.create_dom_element({
             element_type: "ul",
             class_name: "galeria galeria--92x92 link-dn mt-0",
-            parent: block_content
-        })
+            parent: block_content,
+        });
 
         // render block items loop data_group
-        const limit = max_group_nodes
-        let vieved = 0
-        const data_group_length = item.data_group.length
+        const limit = max_group_nodes;
+        let vieved = 0;
+        const data_group_length = item.data_group.length;
 
         // iterate function
         function iterate(from, to) {
-
-            const fragment2 = new DocumentFragment()
+            const fragment2 = new DocumentFragment();
 
             for (let i = from; i < to; i++) {
-                const section_id = item.data_group[i].section_id //|| "Undefined title"
-                const tpl = item.data_group[i].tpl //|| "Undefined title"
-                const title = item.data_group[i].title //|| "Undefined title"
-                const image_src = item.data_group[i].image_src
-                const date = item.data_group[i].date
+                const section_id = item.data_group[i].section_id; //|| "Undefined title"
+                const tpl = item.data_group[i].tpl; //|| "Undefined title"
+                const title = item.data_group[i].title; //|| "Undefined title"
+                const image_src = item.data_group[i].image_src;
+                const date = item.data_group[i].date;
 
-
-                const url = page_globals.__WEB_ROOT_WEB__ + "/" + tpl + "/" + section_id
+                const url =
+                    page_globals.__WEB_ROOT_WEB__ +
+                    "/" +
+                    tpl +
+                    "/" +
+                    section_id;
                 var content = htmlTemplate(`
                     <li>
                         <a href="${url}" target="_blank">
@@ -1408,122 +1466,113 @@ var catalog = {
                 `);
 
                 appendTemplate(block_content_list, content);
-            }//end for (let i = from; i < to; i++)
+            } //end for (let i = from; i < to; i++)
 
             // load more button
-            if (to < (data_group_length - 1)) {
-
-                vieved = vieved + (to - from)
+            if (to < data_group_length - 1) {
+                vieved = vieved + (to - from);
 
                 const block_item = common.create_dom_element({
                     element_type: "div",
-                    class_name: "pb-4 has-text-centered-mobile",
-                    parent: fragment2
-                })
+                    class_name: "has-text-centered-mobile",
+                    parent: fragment2,
+                });
 
-                const label = (tstring['load_more'] || "Load more..") + " (" + vieved + " " + tstring.of + " " + data_group_length + ")"
+                const label =
+                    (tstring["load_more"] || "Load more..") +
+                    " (" +
+                    vieved +
+                    " " +
+                    tstring.of +
+                    " " +
+                    data_group_length +
+                    ")";
                 const more_node = common.create_dom_element({
                     element_type: "button",
-                    class_name: "button button--icon button--carrega",
+                    class_name:
+                        "button button--icon button--carrega has-text-black",
                     type: "button",
                     inner_html: label,
-                    parent: block_item
-                })
+                    parent: block_item,
+                });
 
-                more_node.offset = to
+                more_node.offset = to;
 
                 more_node.addEventListener("click", function () {
-                    const _from = parseInt(this.offset)
-                    const _to = data_group_length // view all in one click
-                    iterate(_from, _to)
+                    const _from = parseInt(this.offset);
+                    const _to = data_group_length; // view all in one click
+                    iterate(_from, _to);
 
-                    this.remove()
-                })
+                    this.remove();
+                });
             }
 
             // append to parent
-            block_content.appendChild(fragment2)
+            block_content.appendChild(fragment2);
         }
 
         // first, iterate elements from zero to limit
-        const to = limit < data_group_length ? limit : data_group_length
-        iterate(0, to)
+        const to = limit < data_group_length ? limit : data_group_length;
+        iterate(0, to);
 
-
-        // date and link
-        const below_container = common.create_dom_element({
-            element_type: "div",
-            class_name: "flex justify-between items-center",
-            parent: block_content
-        })
-        const date_span = common.create_dom_element({
-            element_type: "span",
-            class_name: "cd-timeline__date",
-            text_content: group_date,
-            parent: below_container
-        })
-
-
-        return block
-    },//end timelime_block_builder
-
-
+        return block;
+    }, //end timelime_block_builder
 
     /**
-    * GET_RANGE_YEARS
-    * @return
-    */
+     * GET_RANGE_YEARS
+     * @return
+     */
     get_range_years: function () {
-
-        const self = this
+        const self = this;
 
         return new Promise(function (resolve) {
-
-            const ar_tables = self.get_tables()
-            const ar_fields = ['id', 'section_tipo', 'MIN(datacion_fin) AS min', 'MAX(datacion_fin) AS max']
+            const ar_tables = self.get_tables();
+            const ar_fields = [
+                "id",
+                "section_tipo",
+                "MIN(datacion_fin) AS min",
+                "MAX(datacion_fin) AS max",
+            ];
 
             const request_body = {
-                dedalo_get: 'records',
+                dedalo_get: "records",
                 db_name: page_globals.WEB_DB,
                 lang: page_globals.WEB_CURRENT_LANG_CODE,
-                table: ar_tables.join(','),
+                table: ar_tables.join(","),
                 ar_fields: ar_fields,
                 limit: 0,
                 count: false,
                 offset: 0,
-                order: 'id ASC'
-            }
-            data_manager.request({
-                body: request_body
-            })
+                order: "id ASC",
+            };
+            data_manager
+                .request({
+                    body: request_body,
+                })
                 .then(function (api_response) {
-
-                    let min = 0
-                    let max = 0
+                    let min = 0;
+                    let max = 0;
                     if (api_response.result) {
                         for (let i = 0; i < api_response.result.length; i++) {
-                            const row = api_response.result[i]
-                            const current_min = parseInt(row.min)
+                            const row = api_response.result[i];
+                            const current_min = parseInt(row.min);
                             if (min === 0 || current_min < min) {
-                                min = current_min
+                                min = current_min;
                             }
-                            const current_max = parseInt(row.max)
+                            const current_max = parseInt(row.max);
                             if (current_max > max) {
-                                max = current_max
+                                max = current_max;
                             }
                         }
                     }
 
                     const data = {
                         min: min,
-                        max: max
-                    }
+                        max: max,
+                    };
 
-                    resolve(data)
-                })
-        })
-    },//end get_range_years
-
-
-
-}//end catalog
+                    resolve(data);
+                });
+        });
+    }, //end get_range_years
+}; //end catalog

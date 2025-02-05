@@ -47,6 +47,7 @@
         box-sizing: border-box;
     }
     h2 {
+        line-height: 1.4;
         @include tablet {
             max-width: 40ch;
         }

@@ -25,7 +25,7 @@
         z-index: 1;
         margin-top: 0.5rem;
         min-width: max-content;
-        @include widescreen {
+        @include fullhd {
             margin-top: 0;
             top: 100%;
         }

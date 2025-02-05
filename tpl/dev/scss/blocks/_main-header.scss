@@ -28,7 +28,7 @@
                 order: 4;
             }
         }
-        @include widescreen {
+        @include fullhd {
             .lang {
                 order: 4;
                 padding-bottom: var(--space-m);
@@ -46,7 +46,7 @@
             }
         }
     }
-    @include widescreen {
+    @include fullhd {
         background-color: $primary;
         padding-bottom: 0;
         .home & {
@@ -61,7 +61,7 @@
     }
     .wrapper {
         align-items: center;
-        @include widescreen {
+        @include fullhd {
             align-items: flex-end;
         }
     }

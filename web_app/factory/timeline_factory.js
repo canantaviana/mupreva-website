@@ -3,150 +3,131 @@
 
 "use strict";
 
-
-
 function timeline_factory() {
-
-
-
     /**
-    * VARS
-    */
+     * VARS
+     */
     // target. DOM element where timeline section is placed
-    this.target = null
+    this.target = null;
 
     // data. Database parsed rows data to create the map
-    this.data = null
+    this.data = null;
 
     // container. Where block nodes are placed
-    this.container = null
+    this.container = null;
 
     // scroll_activated. Scroll activation state
-    this.scroll_activated = false
+    this.scroll_activated = false;
 
     // block_builder. Function that manage node creation of each block
-    this.block_builder = null
+    this.block_builder = null;
 
     // max_group_nodes
-    this.max_group_nodes = null
-
-
+    this.max_group_nodes = null;
 
     /**
-    * INIT
-    */
+     * INIT
+     */
     this.init = function (options) {
-
-        const self = this
+        const self = this;
 
         // options
         // target. DOM element where map is placed
-        self.target = options.target
+        self.target = options.target;
         // block_builder. Use custom options block_builder function
-        self.block_builder = options.block_builder
+        self.block_builder = options.block_builder;
         // max_group_nodes
-        self.max_group_nodes = options.max_group_nodes || 10
+        self.max_group_nodes = options.max_group_nodes || 10;
 
         return new Promise(function (resolve) {
-
             // build wrapper
             const section = common.create_dom_element({
                 element_type: "section",
-                class_name: "cd-timeline js-cd-timeline"
-            })
+                class_name: "cd-timeline js-cd-timeline",
+            });
             // set and fix container (where block nodes will be placed)
             self.container = common.create_dom_element({
                 element_type: "div",
-                class_name: "container max-width-lg cd-timeline__container",
-                parent: section
-            })
+                // class_name: "container max-width-lg cd-timeline__container",
+                class_name: "cd-timeline__container",
+                parent: section,
+            });
 
-            self.target.appendChild(section)
+            self.target.appendChild(section);
 
-            resolve(true)
-        })
-    }//end init
-
-
+            resolve(true);
+        });
+    }; //end init
 
     /**
-    * RENDER_TIMELINE
-    */
+     * RENDER_TIMELINE
+     */
     this.render_timeline = function (options) {
-
-        const self = this
+        const self = this;
 
         // options
         // data. Pre-parsed data from rows. Contains items with properties 'lat', 'lon', and 'data' like [{lat: lat, lon: lon, data: []}]
-        self.data = options.data
+        self.data = options.data;
 
         return new Promise(function (resolve) {
-
             // parse_data. Create individual blocks for each data row
-            self.parse_data_to_timeline(self.data)
-                .then(function () {
+            self.parse_data_to_timeline(self.data).then(function () {
+                // activate_timeline_scroll
+                common.when_in_dom(self.target, function () {
+                    self.activate_timeline_scroll();
+                });
 
-                    // activate_timeline_scroll
-                    common.when_in_dom(self.target, function () {
-                        self.activate_timeline_scroll()
-                    })
-
-                    resolve(true)
-                })
-        })
-    }//end render_timeline
-
-
+                resolve(true);
+            });
+        });
+    }; //end render_timeline
 
     /**
-    * PARSE_DATA_TO_TIMELINE
-    * @return promise
-    */
+     * PARSE_DATA_TO_TIMELINE
+     * @return promise
+     */
     this.parse_data_to_timeline = function (data) {
-
-        const self = this
+        const self = this;
 
         return new Promise(function (resolve) {
-
             const fragment = new DocumentFragment();
 
-            const data_length = data.length
+            const data_length = data.length;
             for (let i = 0; i < data_length; i++) {
-
-                const row = data[i]
+                const row = data[i];
 
                 // build timeline block
-                const block = self.block_builder(row, self.max_group_nodes)
+                const block = self.block_builder(row, self.max_group_nodes);
 
                 // add
-                fragment.appendChild(block)
+                fragment.appendChild(block);
             }
 
             // add all nodes in one operation
-            self.container.appendChild(fragment)
+            self.container.appendChild(fragment);
 
-
-            resolve(fragment)
-        })
-    }//end parse_data_to_timeline
-
-
+            resolve(fragment);
+        });
+    }; //end parse_data_to_timeline
 
     /**
-    * ACTIVATE_TIMELINE_SCROLL
-    */
+     * ACTIVATE_TIMELINE_SCROLL
+     */
     this.activate_timeline_scroll = function () {
-
         (function () {
             // Vertical Timeline - by CodyHouse.co
             function VerticalTimeline(element) {
                 this.element = element;
-                this.blocks = this.element.getElementsByClassName("cd-timeline__block");
-                this.images = this.element.getElementsByClassName("cd-timeline__img");
-                this.contents = this.element.getElementsByClassName("cd-timeline__content");
+                this.blocks =
+                    this.element.getElementsByClassName("cd-timeline__block");
+                this.images =
+                    this.element.getElementsByClassName("cd-timeline__img");
+                this.contents = this.element.getElementsByClassName(
+                    "cd-timeline__content"
+                );
                 this.offset = 0.8; //0.8;
                 this.hideBlocks();
-            };
+            }
 
             VerticalTimeline.prototype.hideBlocks = function () {
                 if (!"classList" in document.documentElement) {
@@ -158,83 +139,100 @@ function timeline_factory() {
                 const blocks_count = this.blocks.length;
                 for (let i = 0; i < blocks_count; i++) {
                     (function (i) {
-                        if (self.blocks[i].getBoundingClientRect().top > window.innerHeight * self.offset) {
-                            self.images[i].classList.add("cd-timeline__img--hidden");
-                            self.contents[i].classList.add("cd-timeline__content--hidden");
+                        if (
+                            self.blocks[i].getBoundingClientRect().top >
+                            window.innerHeight * self.offset
+                        ) {
+                            self.images[i].classList.add(
+                                "cd-timeline__img--hidden"
+                            );
+                            self.contents[i].classList.add(
+                                "cd-timeline__content--hidden"
+                            );
                         }
                     })(i);
                 }
             };
 
             VerticalTimeline.prototype.showBlocks = function () {
-                if (! "classList" in document.documentElement) {
+                if (!"classList" in document.documentElement) {
                     return;
                 }
 
                 const self = this;
                 const blocks_count = this.blocks.length;
                 for (let i = 0; i < blocks_count; i++) {
-
                     (function (i) {
-
-                        if (self.contents[i].classList.contains("cd-timeline__content--hidden")) {
-
-                            const block_top = self.blocks[i].getBoundingClientRect().top
-                            const window_compare = window.innerHeight * self.offset
+                        if (
+                            self.contents[i].classList.contains(
+                                "cd-timeline__content--hidden"
+                            )
+                        ) {
+                            const block_top =
+                                self.blocks[i].getBoundingClientRect().top;
+                            const window_compare =
+                                window.innerHeight * self.offset;
 
                             if (block_top <= window_compare) {
                                 // add bounce-in animation
-                                self.images[i].classList.add("cd-timeline__img--bounce-in");
-                                self.contents[i].classList.add("cd-timeline__content--bounce-in");
+                                self.images[i].classList.add(
+                                    "cd-timeline__img--bounce-in"
+                                );
+                                self.contents[i].classList.add(
+                                    "cd-timeline__content--bounce-in"
+                                );
                                 // remove hidden
-                                self.images[i].classList.remove("cd-timeline__img--hidden");
-                                self.contents[i].classList.remove("cd-timeline__content--hidden");
+                                self.images[i].classList.remove(
+                                    "cd-timeline__img--hidden"
+                                );
+                                self.contents[i].classList.remove(
+                                    "cd-timeline__content--hidden"
+                                );
                             }
                         }
                     })(i);
                 }
             };
 
-            const verticalTimelines = document.getElementsByClassName("js-cd-timeline")
-            const verticalTimelinesArray = []
-            let scrolling = false
+            const verticalTimelines =
+                document.getElementsByClassName("js-cd-timeline");
+            const verticalTimelinesArray = [];
+            let scrolling = false;
             if (verticalTimelines.length > 0) {
-
                 for (let i = 0; i < verticalTimelines.length; i++) {
                     (function (i) {
-                        verticalTimelinesArray.push(new VerticalTimeline(verticalTimelines[i]));
+                        verticalTimelinesArray.push(
+                            new VerticalTimeline(verticalTimelines[i])
+                        );
                     })(i);
                 }
 
-                const timeline_container = document.getElementsByClassName("cd-timeline__container")
+                const timeline_container = document.getElementsByClassName(
+                    "cd-timeline__container"
+                );
 
                 // show timeline blocks on scrolling
                 window.addEventListener("scroll", function (event) {
-
                     if (!scrolling) {
                         scrolling = true;
-                        (!window.requestAnimationFrame)
+                        !window.requestAnimationFrame
                             ? setTimeout(checkTimelineScroll, 250)
                             : window.requestAnimationFrame(checkTimelineScroll);
                     }
-                })
-            }//end if(verticalTimelines.length>0)
+                });
+            } //end if(verticalTimelines.length>0)
 
             function checkTimelineScroll() {
                 verticalTimelinesArray.forEach(function (timeline) {
                     timeline.showBlocks();
                 });
                 scrolling = false;
-            };
+            }
         })();
 
         // fix state
-        self.scroll_activated = true
+        self.scroll_activated = true;
 
-
-        return true
-    }//end activate_timeline_scroll
-
-
-
-}//end timeline_factory
+        return true;
+    }; //end activate_timeline_scroll
+} //end timeline_factory
