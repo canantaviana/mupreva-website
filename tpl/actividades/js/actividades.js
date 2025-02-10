@@ -295,7 +295,7 @@ var actividades = {
                     <div class="field">
                         <label class="label is-sr-only" for="cercaType">${tstring.activitis_category_label}</label>
                         <div class="control">
-                            <input type="search" name="cercaType" id="type" placeholder="${tstring.activitis_category_label}" value="" class="input is-small">
+                            <input type="search" name="cercaType" id="type" placeholder="${tstring.activitis_category_label}" value="" class="input">
                         </div>
                     </div>
                 </div>
@@ -311,7 +311,7 @@ var actividades = {
                     <div class="field">
                         <label class="label is-sr-only" for="cercaUbicacio">${tstring.activitis_site_label}</label>
                         <div class="control">
-                            <input type="search" name="cercaLloc" id="place" placeholder="${tstring.activitis_site_label}" value="" class="input is-small">
+                            <input type="search" name="cercaLloc" id="place" placeholder="${tstring.activitis_site_label}" value="" class="input">
                         </div>
                     </div>
                 </div>

@@ -3,18 +3,14 @@
     //     opacity: 0;
     // }
     width: 50px;
+    height: 50px;
     box-sizing: content-box;
-    // position: fixed;
-    // bottom: 0;
-    // right: var(--space-l);
-    // transition: opacity 0.3s ease-in-out;
-    // z-index: 2;
-    // position: sticky;
-    // top: 20px;
+    position: absolute;
+    bottom: var(--space-l);
+    right: var(--space-l);
+    transition: opacity 0.3s ease-in-out;
+    z-index: 2;
     // &.visible {
     //     opacity: 1;
-    // }
-    // &:hover {
-    //     filter: invert(1);
     // }
 }

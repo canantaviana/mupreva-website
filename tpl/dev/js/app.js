@@ -17,6 +17,23 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // ----------
+    // scroll top
+    // ----------
+    // $(window).on("scroll", function () {
+    //     if ($(this).scrollTop() > 400) {
+    //         $(".scrolltop").addClass("visible");
+    //         const footerHeight = $("footer").outerHeight();
+    //         $(".scrolltop").css("bottom", footerHeight + "px");
+    //     } else {
+    //         $(".scrolltop").removeClass("visible");
+    //     }
+    // });
+    $(window).on("scroll", function () {
+        const footerHeight = $("footer").outerHeight();
+        $(".scrolltop").css("bottom", footerHeight + 50 + "px");
+    });
+
     // ------------------
     // Cercador capçalera
     // ------------------
