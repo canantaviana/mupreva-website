@@ -175,6 +175,14 @@ var biblio = {
                     </select>
                 </div>
             </div>
+            <label class="label mb-0" for="thematic">${tstring.activitis_filter_thematic}:</label>
+            <div class="control">
+                <div class="select select--simple is-flex is-align-items-center">
+                    <select id="thematic" name="thematic">
+                        <option value="">${tstring.activitis_thematic_label}</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
 </form>`);
@@ -243,6 +251,66 @@ var biblio = {
                 eq_in: "",
                 eq_out: "",
                 node_input: currentForm.querySelector("#type"),
+            });
+
+
+
+            data_manager
+            .request({
+                body: {
+                    dedalo_get: "records",
+                    db_name: page_globals.WEB_DB,
+                    table: self.biblio_table,
+                    ar_fields: "thematic_indexation",
+                    lang: page_globals.WEB_CURRENT_LANG_CODE,
+                    sql_filter: api.categoryToSql(
+                        api.aprendeMuseoCategorias()
+                    ),
+                    group: "thematic_indexation",
+                    //count: count,
+                    //limit: limit,
+                    //offset: offset,
+                    order: "thematic_indexation asc",
+                    //process_result: process_result,
+                },
+            })
+            .then(function (result) {
+                return result.result.filter(function(value){
+                    return value.thematic_indexation != null;
+                }).map(function(value){
+                    return value.thematic_indexation.split(', ');
+                }).flat().sort().filter(function(item, pos, ary) {
+                    return !pos || item != ary[pos - 1];
+                });
+            })
+            .then(function (result) {
+                console.log(result);
+                var select = currentForm.querySelector("#thematic");
+                result.forEach((element) => {
+                    var option = htmlTemplate(`
+                    <option value="${element}">${element}</option>
+                `);
+                    appendTemplate(select, option);
+                });
+                currentForm
+                    .querySelector("#thematic")
+                    .addEventListener("change", function (e) {
+                        e.preventDefault();
+                        self.pagination.offset = 0;
+                        self.form_submit(null, {
+                            filter: self.form.build_filter(),
+                        });
+                    });
+            });
+
+            self.form.item_factory({
+                id: "thematic",
+                name: "thematic",
+                q_column: "thematic_indexation",
+                eq: "=",
+                eq_in: "",
+                eq_out: "",
+                node_input: currentForm.querySelector("#thematic"),
             });
 
             // fix form node

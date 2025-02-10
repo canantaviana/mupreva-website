@@ -53,6 +53,8 @@
     "activitis_date_label": "Data",
     "activitis_category_label": "Categoria",
     "activitis_filter_category": "Filtrar por categoria",
+    "activitis_filter_thematic": "Filtrar por nivel",
+    "activitis_thematic_label": "Nivel",
 
     "expositions_title_current": "Exposiciones actuales",
     "expositions_results": "Resultados busqueda",
