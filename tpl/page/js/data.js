@@ -1659,7 +1659,7 @@ page.get_records = function (options) {
     const ar_fields = options.ar_fields || '*'
     const parse = options.parse || page.parse_ts_web
     const resolve_portals_custom = options.resolve_portals_custom || ''
-
+    const group = options.group || null
 
     return new Promise(function (resolve) {
 
@@ -1675,6 +1675,7 @@ page.get_records = function (options) {
                 count: count,
                 offset: offset,
                 order: order,
+                group: group,
                 resolve_portals_custom: resolve_portals_custom
             }
         })

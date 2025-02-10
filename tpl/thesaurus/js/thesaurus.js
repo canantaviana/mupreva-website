@@ -224,8 +224,18 @@ var thesaurus = {
             return null
         }
 
+        var filterAux = this.root_term.map(function(elem){
+            return 'term_id = "'+elem+'" or parents like "%\\"'+elem+'\\"%"';
+        }).join(' or ');
+
         // parsed_filters
-        const sql_filter = parse_sql_filter(filter)
+        var sql_filter = parse_sql_filter(filter)
+
+        if (sql_filter) {
+            sql_filter = '('+filterAux+')'+' and '+filter;
+        } else {
+            sql_filter = '('+filterAux+')'
+        }
 
         return new Promise(function (resolve) {
             // request
@@ -342,7 +352,7 @@ var thesaurus = {
                 : null
 
             self.data_clean = page.parse_tree_data(ar_rows, hilite_terms) // prepares data to use in list
-console.log(self.data_clean);
+
             self.tree = self.tree || new tree_factory() // creates / get existing instance of tree
             self.tree.init({
                 target: target,

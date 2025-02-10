@@ -247,14 +247,39 @@ var item = {
 ${(row.children.length && row.children.length > 0)?`
 <div class="flow--xl mt-8">
     <h2 class="is-size-3">${tstring.item_content}</h2>
-    <ol class="dl-list link-dn is-size-6">
+    <ol class="link-dn cols-list-2 is-size-6">
         ${row.children.map(function(value){
-            return `<li>
-                <a href="${__WEB_MEDIA_ENGINE_URL__+value.pdf}" download target="_blank">${value.autor}<br>
-                    <span class="has-text-weight-semibold">${value.titulo}</span><br>
-                    ${(value.num_paginas)?`
-                    ${tstring.item_pag} ${value.num_paginas}
-                    `:''}
+            const url = page_globals.__WEB_ROOT_WEB__ + '/publication/' + value.section_id;
+            return `<li class="mb-3">
+                <div class="columns is-mobile is-flex-direction-row-reverse">
+                    <div class="column">
+                        ${value.autor}<br>
+                        <a href="${url}"><span class="has-text-weight-semibold">${value.titulo}</span></a><br>
+                        ${(value.num_paginas)?`
+                        ${tstring.item_pag} ${value.num_paginas}
+                        `:''}
+                    </div>
+                    <div class="column is-narrow">
+                        <div class="columns is-mobile is-variable is-1">
+                            <div class="column is-narrow">
+                                <a href="${__WEB_MEDIA_ENGINE_URL__+value.pdf}">
+                                    <img src="/assets/img/ico-descarregar.svg" width="30" height="30">
+                                </a>
+                            </div>
+                            <div class="column is-narrow">
+                                <a href="${url}">
+                                    <img src="/assets/img/ico-lupa-2.svg" width="30" height="30">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <a href="${__WEB_MEDIA_ENGINE_URL__+value.pdf}" download target="_blank"><br>
+                    <span class="has-text-weight-semibold"></span><br>
+
                 </a>
             </li>`
         }).join("\n")}

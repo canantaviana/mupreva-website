@@ -74,7 +74,7 @@ var api = {
     getPublicacionesDestacados: function(serie = null) {
         var options = {
             table: 'publications',
-            sql_filter: 'imagen_identificativa is not null',
+            //sql_filter: 'imagen_identificativa is not null',
             limit: 6,
             order: 'fecha_publicacion desc',
             //ar_fields: '*',
@@ -82,24 +82,42 @@ var api = {
             //resolve_portals_custom: '{"imagen_identificativa": "image"}'
         };
         if (serie !== null) {
-            options.sql_filter = options.sql_filter+' and serie_data = "'+serie+'"'
+            //options.sql_filter = options.sql_filter+' and serie_data = \'["'+serie+'"]\''
+            options.sql_filter = 'serie_data = \'["'+serie+'"]\''
         }
         return page.get_records(options);
     },
 
     getPublicacionesSeries: function() {
+        //Galeria de Serie de Trabajos Varios -> 3
+        //Galeria de Revista APL -> 9
+        //Galeria de Labor del SIP -> 4
+        //Galeria de Catálogos -> 8
+        //Galeria de Publicaciones Diverses -> 7
+        //Galeria Didáctica -> 6
+        //Galeria de Dodia -> 13
         var options = {
             table: 'publications',
             ar_fields: "serie,serie_data",
-            sql_filter: 'serie_data is not null and serie_data in ()',
+            sql_filter: 'serie_data is not null and serie_data in (\'["3"]\', \'["9"]\', \'["4"]\', \'["8"]\', \'["7"]\', \'["6"]\', \'["13"]\')',
             limit: 6,
             order: 'fecha_publicacion ASC',
             //ar_fields: '*',
-            parse: page.parse_list_data,
+            group: 'serie_data',
+            parse: this.parseSeries,
         };
         return page.get_records(options);
     },
 
+    parseSeries: function(rows) {
+        var result = rows.map(value => {
+            return {
+                'name': value.serie,
+                'id': JSON.parse(value.serie_data)[0]
+            }
+        });
+        return result;
+    },
 
     getActividadesDestacados: function() {
         var options = {
@@ -162,7 +180,7 @@ var api = {
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
             order: 'RAND()',
-            //ar_fields: '*',
+            ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}'
         };
@@ -175,7 +193,7 @@ var api = {
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
             order: 'RAND()',
-            //ar_fields: '*',
+            ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}'
         };
@@ -188,7 +206,7 @@ var api = {
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
             order: 'RAND()',
-            //ar_fields: '*',
+            ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}'
         };
@@ -201,7 +219,7 @@ var api = {
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
             order: 'RAND()',
-            //ar_fields: '*',
+            ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}'
         };

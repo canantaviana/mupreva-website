@@ -9,7 +9,7 @@ var templateModules = {
     render_items: function (rows, term_id) {
         const self = this;
         const elems = rows.filter(function(elem){
-            return elem.parent == term_id
+            return elem.parent == term_id && elem.template_name != null
         })
         return elems.map(function(elem){
             var template = self.fix_names(elem.template_name);
@@ -912,13 +912,15 @@ var templateModules = {
 */
 
     bloque_publicaciones_default: function(){
-        var content = htmlTemplate(`
-        <div>
+        var contentBase = htmlTemplate(`<div>
             <div class="default_last mt-8 flow--xl">
             </div>
-        </div>
-        `);
-        var children_container = content[0].querySelector('div.default_last');
+            <div class="default_cats mt-8 flow--xl">
+            </div>
+        </div>`);
+        console.log(contentBase[0]);
+        var children_container = contentBase[0].querySelector('div.default_last');
+        var children_container_cats = contentBase[0].querySelector('div.default_cats');
         api.getPublicacionesDestacados().then(function(results){
             var content = htmlTemplate(`
                 <h2>${tstring.documents_default_last}</h2>
@@ -957,7 +959,6 @@ var templateModules = {
             `);
             appendTemplate(children_container, content);
         });
-        /*var children_container_cats = content[0];
         api.getPublicacionesSeries().then(function(results){
             results.forEach(function(elem){
                 var content = htmlTemplate(`
@@ -972,7 +973,7 @@ var templateModules = {
                 </div>
                 `);
                 var children_container = content[0].querySelector('ul');
-                api.getPublicacionesDestacados(elem.section_id).then(function(results){
+                api.getPublicacionesDestacados(elem.id).then(function(results){
                     var content = htmlTemplate(`
                         ${results.map(function(row){
                             const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
@@ -1007,12 +1008,10 @@ var templateModules = {
                     `);
                     appendTemplate(children_container, content);
                 });
+                appendTemplate(children_container_cats, content);
             });
-
-            appendTemplate(children_container_cats, content);
         });
-        */
-        return content;
+        return contentBase;
     },
 
     bloque_directorio: function(info){
