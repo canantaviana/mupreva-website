@@ -769,6 +769,7 @@ function form_factory() {
         const table = options.table || form_item.table;
         const cross_filter = options.cross_filter || true; // look the other form values to generate the sql filter (default true)
         const order = options.order || 'name ASC'; // 'name' is the generic column alias
+        const custom_filter = options.custom_filter || null;
         const parse_result = options.parse_result || function (ar_result, term) {
             return ar_result.map(function (item) {
                 item.label = item.label.replace(/<br>/g, " ")
@@ -933,11 +934,13 @@ function form_factory() {
                 }
 
                 // sql_filter
-                const sql_filter = self.parse_sql_filter(filter)
+                var sql_filter = self.parse_sql_filter(filter)
+                if (custom_filter) {
+                    sql_filter = sql_filter + ' and ' + custom_filter;
+                }
 
                 // table resolved
                 const table_resolved = typeof table === "function" ? table() : table;
-
                 // search
                 data_manager.request({
                     body: {

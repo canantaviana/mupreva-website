@@ -270,7 +270,7 @@ var actividades = {
                     <div class="field">
                         <label class="label is-sr-only" for="localizacion">${tstring.immovables_localizacion}</label>
                         <div class="control">
-                            <input type="search" name="localizacion" id="localizacion" placeholder="${tstring.immovables_localizacion}" value="" class="input is-small">
+                            <input type="search" name="localizacion" id="localizacion" placeholder="${tstring.immovables_localizacion}" value="" class="input">
                         </div>
                     </div>
                 </div>
@@ -278,7 +278,7 @@ var actividades = {
                     <div class="field">
                         <label class="label is-sr-only" for="periodo">${tstring.immovables_periodo}</label>
                         <div class="control">
-                            <input type="search" name="periodo" id="periodo" placeholder="${tstring.immovables_periodo}" value="" class="input is-small">
+                            <input type="search" name="periodo" id="periodo" placeholder="${tstring.immovables_periodo}" value="" class="input">
                         </div>
                     </div>
                 </div>

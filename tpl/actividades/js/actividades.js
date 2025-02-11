@@ -390,6 +390,7 @@ var actividades = {
                 self.form_submit();
             });
 
+            var customFilter = api.categoryToSql(api.activitadesCategorias());
             // object
             self.form.item_factory({
                 id: "type",
@@ -404,6 +405,7 @@ var actividades = {
                         form_item: form_item,
                         table: self.activity_table,
                         limit: 60,
+                        custom_filter: customFilter,
                         parse_result: function (ar_result, term) {
                             return self.parse_autocomplete_result(
                                 ar_result,
