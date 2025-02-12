@@ -253,6 +253,27 @@ function tree_factory() {
         }
 
         // buttons
+        // button definition
+        if (row.definition && row.definition.length > 0) {
+            const definition = common.create_dom_element({
+                element_type: "p",
+                class_name: "definition",
+                inner_html: row.definition,
+                parent: tree_node
+            });
+        }
+
+        // buttons
+        // button definition
+        if (row.illustration && row.illustration.length > 0) {
+            const illustration = common.create_dom_element({
+                element_type: "img",
+                src: __WEB_MEDIA_ENGINE_URL__+row.illustration,
+                parent: tree_node
+            });
+        }
+
+        // buttons
         // button scope_note
         if (row.scope_note && row.scope_note.length > 0) {
             const btn_scope_note = common.create_dom_element({
