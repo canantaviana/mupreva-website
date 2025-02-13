@@ -4,7 +4,7 @@
 
 // css
 page::$css_ar_url[] = __WEB_TEMPLATE_WEB__ . '/assets/lib/jquery-ui/jquery-ui.min.css';
-page::$css_ar_url[] = __WEB_TEMPLATE_WEB__ . '/thesaurus/css/thesaurus.css';
+//page::$css_ar_url[] = __WEB_TEMPLATE_WEB__ . '/thesaurus/css/thesaurus.css';
 
 
 // js

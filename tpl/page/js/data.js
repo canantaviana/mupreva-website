@@ -112,7 +112,7 @@ page.parse_tree_data = function (rows, hilite_terms) {
         return null;
     }
 
-    const ar_parse = ['parent', 'children', 'space', 'indexation', 'relations']
+    const ar_parse = ['parent', 'children', 'space', 'indexation', 'relations', 'dd_relations']
     function decode_field(field) {
         if (field) {
             return JSON.parse(field)
@@ -196,7 +196,7 @@ page.parse_tree_data = function (rows, hilite_terms) {
                     }
 
                     // remove me as child
-                    parent_row.children.splice(child_key, 1)
+                    //parent_row.children.splice(child_key, 1)
 
                     // recursion with parent
                     update_children_data(data, parent_row)

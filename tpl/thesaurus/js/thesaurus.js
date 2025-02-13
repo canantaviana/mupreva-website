@@ -159,7 +159,8 @@ var thesaurus = {
             'space',
             'time',
             'tld',
-            'relations'
+            'relations',
+            'dd_relations'
         ]
 
         // options
