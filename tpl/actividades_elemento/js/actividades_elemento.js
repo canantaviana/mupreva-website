@@ -346,8 +346,10 @@ var item = {
 
     renderExport: function() {
         return `
+        <div class="column fullscreen__fullheight is-7-tablet is-half-desktop">
             <div id="export_data_container" class="is-flex is-justify-content-flex-end gap-4 mt-4">
             </div>
+        </div>
         `;
     },
 

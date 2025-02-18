@@ -34,6 +34,6 @@ $term_id = isset($ar_parts[1])
 // thesaurus_options
 $thesaurus_options = (object)[
     'table'        => ['ts_ubication'],
-    'root_term'    => ['ubication1_1'],
+    'root_term'    => ['ubication1_18'],
     'term_id'    => $term_id // options request term_id add
 ];
