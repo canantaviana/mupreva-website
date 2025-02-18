@@ -191,7 +191,7 @@
     }
 
     // link a PDF
-    a[href$=".pdf"] {
+    :not(li) > a[href$=".pdf"] {
         display: inline-flex;
         gap: var(--space-xs);
         align-items: center;

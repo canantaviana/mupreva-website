@@ -1,5 +1,5 @@
 
-<div class="has-background-grey-light mb-8">
+<div class="has-background-grey-light mb-6">
     <div class="wrapper py-6">
         <nav class="breadcrumb-nav link-dn is-size-6 has-text-weight-light" aria-label="Molla de pa">
             <ol itemscope="" itemtype="https://schema.org/BreadcrumbList">
@@ -21,7 +21,7 @@
         </nav>
         <div class="is-flex is-flex-wrap-wrap gap-5 is-align-items-baseline is-justify-content-space-between mt-6">
             <?php if (count($this->breadcrumb) > 2) : ?>
-            <p class="has-text-weight-semibold is-size-2 is-flex-grow-0"><?php echo $this->breadcrumb[1]->term ?></p>
+            <p class="has-text-weight-semibold is-size-3 is-flex-grow-0"><?php echo $this->breadcrumb[1]->term ?></p>
             <?php else: ?>
             <h1 class="has-text-weight-semibold is-size-2 is-flex-grow-0"><?php echo $title ?></h1>
             <?php endif ?>
@@ -36,7 +36,7 @@
 </div>
 <?php if (count($this->breadcrumb) > 2) : ?>
 <div class="wrapper">
-    <h1 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">
+    <h1 class="is-flex is-align-items-center gap-2 mb-6 has-text-black">
         <?php if (!empty($ar_image) && count($ar_image) > 0) : ?>
         <img src="<?php echo __WEB_MEDIA_ENGINE_URL__.$ar_image[0] ?>" alt="" width="30" height="30">
         <?php endif ?>

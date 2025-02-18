@@ -3,11 +3,7 @@
 /*jshint esversion: 6 */
 "use strict";
 
-
-
 var item = {
-
-
     // section id
     section_id: null,
 
@@ -20,89 +16,80 @@ var item = {
     // footer_info (default hidden)
     footer_info: null,
 
-
-
     /**
-    * INIT
-    * @return bool true
-    */
+     * INIT
+     * @return bool true
+     */
     init: function (options) {
-
-        const self = this
+        const self = this;
 
         // options
-        self.table = options.table // string (objects / pictures)
-        self.section_id = options.section_id // int
-        self.target = options.target // DOM node
+        self.table = options.table; // string (objects / pictures)
+        self.section_id = options.section_id; // int
+        self.target = options.target; // DOM node
 
         // load and render
-        self.load_data({})
-            .then(function (response) {
+        self.load_data({}).then(function (response) {
+            if (!response.result || response.result.length < 1) {
+                self.target.innerHTML = `<div class="not_found">Sorry, record not available (${self.section_id})</div>`;
+                console.warn("self.target:", self.target);
+                return;
+            }
 
-                if (!response.result || response.result.length < 1) {
-                    self.target.innerHTML = `<div class="not_found">Sorry, record not available (${self.section_id})</div>`
-                    console.warn("self.target:", self.target);
-                    return
-                }
-
-                const data = page.parse_list_data(response.result)
-                const row = data[0] || null
-                self.render({
-                    row: row,
-                    target: self.target
-                })
-                viewInit();
-            })
+            const data = page.parse_list_data(response.result);
+            const row = data[0] || null;
+            self.render({
+                row: row,
+                target: self.target,
+            });
+            viewInit();
+        });
 
         // events
-        event_manager.subscribe('image_selected', image_selected)
+        event_manager.subscribe("image_selected", image_selected);
         function image_selected(data) {
-
-            const item = data.item
+            const item = data.item;
 
             if (!self.footer_info) {
                 console.warn("No self.footer_info is set", self.footer_info);
-                return false
+                return false;
             }
 
             if (item.footer && item.footer.length > 0) {
+                const footer = item.footer;
 
-                const footer = item.footer
-
-                self.footer_info.innerHTML = footer
-                self.footer_info.classList.remove("hide")
+                self.footer_info.innerHTML = footer;
+                self.footer_info.classList.remove("hide");
             } else {
-                self.footer_info.innerHTML = ''
-                self.footer_info.classList.add("hide")
+                self.footer_info.innerHTML = "";
+                self.footer_info.classList.add("hide");
             }
         }
 
-
-        return true
-    },//end init
+        return true;
+    }, //end init
 
     /**
-    * LOAD_DATA
-    * @return promise
-    */
+     * LOAD_DATA
+     * @return promise
+     */
     load_data: function (options) {
+        const self = this;
 
-        const self = this
-
-        const default_fields = ['*']
+        const default_fields = ["*"];
 
         // options
-        const table = options.table || self.table
-        const section_id = options.section_id || self.section_id
-        const ar_fields = options.ar_fields || default_fields || ["*"]
-        const lang = options.lang || page_globals.WEB_CURRENT_LANG_CODE
-        const sql_filter = options.filter || ('section_id=' + parseInt(section_id))
+        const table = options.table || self.table;
+        const section_id = options.section_id || self.section_id;
+        const ar_fields = options.ar_fields || default_fields || ["*"];
+        const lang = options.lang || page_globals.WEB_CURRENT_LANG_CODE;
+        const sql_filter =
+            options.filter || "section_id=" + parseInt(section_id);
 
         return new Promise(function (resolve) {
-
             // request
             const request_body = {
-                dedalo_get: 'records',
+                dedalo_get: "records",
                 db_name: page_globals.WEB_DB,
                 table: table,
                 ar_fields: ar_fields,
@@ -110,13 +97,13 @@ var item = {
                 sql_filter: sql_filter,
                 limit: 1,
                 count: false,
-                resolve_portals_custom : {
-                    children :"publications"
-                }
-            }
+                resolve_portals_custom: {
+                    children: "publications",
+                },
+            };
             console.log(request_body);
             //if (table === 'sets') {
-                /*request_body.resolve_portals_custom = {
+            /*request_body.resolve_portals_custom = {
                     imagenes_identificativas: 'image',
                     //imagenes: 'image',
                     //medidas: 'measures',
@@ -124,23 +111,28 @@ var item = {
                     //bibliografia_relacionada: 'measures'
                 }*/
             //}
-            data_manager.request({
-                body: request_body
-            })
-                .then((response) => {
-                    console.log(response)
-                    event_manager.publish('data_request_done', {
-                        request_body: request_body,
-                        result: response.result
-                    })
-
-                    resolve(response)
+            data_manager
+                .request({
+                    body: request_body,
                 })
-        })
-    },//end load_data
+                .then((response) => {
+                    console.log(response);
+                    event_manager.publish("data_request_done", {
+                        request_body: request_body,
+                        result: response.result,
+                    });
 
-    absUrl: function(row) {
-        return page_globals.__WEB_MEDIA_BASE_URL__ + '/publication/' + row.section_id;
+                    resolve(response);
+                });
+        });
+    }, //end load_data
+
+    absUrl: function (row) {
+        return (
+            page_globals.__WEB_MEDIA_BASE_URL__ +
+            "/publication/" +
+            row.section_id
+        );
     },
 
     templateShare: function (row) {
@@ -148,17 +140,23 @@ var item = {
         const title = row.titulo;
         return htmlTemplate(`
 <div class="has-text-right-tablet mb-3">
-    <span class="simple-tooltip-container"><button type="button" class="js-tooltip button button--icon button--compartir" data-tooltip-prefix-class="simple-tooltip" data-tooltip-content-id="compartir" data-tooltip-title="Compartir URL" data-tooltip-close-text="${tstring.close}" id="label_tooltipnk434h0i7m">${tstring.share_title}</button></span>
+    <span class="simple-tooltip-container"><button type="button" class="js-tooltip button button--icon button--compartir" data-tooltip-prefix-class="simple-tooltip" data-tooltip-content-id="compartir" data-tooltip-title="Compartir URL" data-tooltip-close-text="${
+        tstring.close
+    }" id="label_tooltipnk434h0i7m">${tstring.share_title}</button></span>
     <div id="compartir" class="is-hidden">
         <div class="my-7 flow">
             <p>${tstring.share_copy_desc}</p>
-            <button type="button" class="button button--copiar" data-copy-url="${url}">${tstring.share_copy_link}</button>
+            <button type="button" class="button button--copiar" data-copy-url="${url}">${
+            tstring.share_copy_link
+        }</button>
         </div>
         <div class="flow">
             <p>${tstring.share_other_desc}</p>
             <ul class="is-flex is-flex-wrap-wrap gap-3">
                 <li>
-                    <a href="https://twitter.com/intent/tweet?url=${encodeURI(url)}&text=${encodeURI(title)}" target="_blank">
+                    <a href="https://twitter.com/intent/tweet?url=${encodeURI(
+                        url
+                    )}&text=${encodeURI(title)}" target="_blank">
                         <img src="/assets/img/ico-twitter.svg" alt="X" width="40" height="40">
                     </a>
                 </li>
@@ -173,7 +171,9 @@ var item = {
                     </a>
                 </li -->
                 <li>
-                    <a href="https://www.facebook.com/sharer.php?u=${encodeURI(url)}" target="_blank">
+                    <a href="https://www.facebook.com/sharer.php?u=${encodeURI(
+                        url
+                    )}" target="_blank">
                         <img src="/assets/img/ico-facebook.svg" alt="Facebook" width="40" height="40">
                     </a>
                 </li>
@@ -184,7 +184,6 @@ var item = {
         `);
     },
 
-
     template: function (row) {
         const url = this.absUrl(row);
         return htmlTemplate(`
@@ -192,77 +191,134 @@ var item = {
     <div class="column flow--xl">
         <h1>${row.titulo}</h1>
         <dl>
-            ${(row.autor)?`
+            ${
+                row.autor
+                    ? `
             <dt>${tstring.item_author}</dt>
             <dd><a href="/biblio/">${row.autor}</a></dd>
-            `:''}
-            ${(row.fecha_publicacion)?`
+            `
+                    : ""
+            }
+            ${
+                row.fecha_publicacion
+                    ? `
             <dt>${tstring.item_year}</dt>
             <dd>${row.fecha_publicacion}</dd>
-            `:''}
-            ${(row.serie)?`
+            `
+                    : ""
+            }
+            ${
+                row.serie
+                    ? `
             <dt>${tstring.item_serie}</dt>
             <dd><a href="/publicaciones/?serie=${row.serie_id}">${row.serie}</a>
-            ${(row.num_serie)?`
+            ${
+                row.num_serie
+                    ? `
             ${tstring.item_num} ${row.num_serie}
-            `:''}
+            `
+                    : ""
+            }
             </dd>
-            `:''}
-            ${(row.num_paginas)?`
+            `
+                    : ""
+            }
+            ${
+                row.num_paginas
+                    ? `
             <dt>${tstring.item_pages}</dt>
             <dd>${row.num_paginas} ${tstring.item_pag}</dd>
-            `:''}
+            `
+                    : ""
+            }
         </dl>
-        ${(row.descripcion)?`
+        ${
+            row.descripcion
+                ? `
         <div class="flow">
             ${row.descripcion}
         </div>
-        `:''}
+        `
+                : ""
+        }
         <p> ${tstring.item_url_perm} <br>
             <a href="${url}">${url}</a>
         </p>
     </div>
     <div class="column is-1 is-hidden-touch is-hidden-desktop-only"></div>
     <div class="fullscreen__fullheight images-group column is-7-tablet is-half-desktop">
-    ${(row.imagen_identificativa)?`
+    ${
+        row.imagen_identificativa
+            ? `
         <figure class="fullscreen__content fullscreen__content--3 has-text-left">
-            <img loading="lazy" class="active" src="${__WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa}" data-original="${__WEB_MEDIA_ENGINE_URL__+imgOriginal(row.imagen_identificativa)}" alt="${row.titulo}">
+            <img loading="lazy" class="active" src="${
+                __WEB_MEDIA_ENGINE_URL__ + row.imagen_identificativa
+            }" data-original="${
+                  __WEB_MEDIA_ENGINE_URL__ +
+                  imgOriginal(row.imagen_identificativa)
+              }" alt="${row.titulo}">
             <!-- Eines -->
             <div class="is-flex gap-5 mt-2">
-                ${(row.pdf)?`
-                <a href="${__WEB_MEDIA_ENGINE_URL__+row.pdf}" download type="button" class="button button--icon">
-                    <img src="/assets/img/ico-descarregar.svg" alt="" width="30" height="30"> ${tstring.item_download}
+                ${
+                    row.pdf
+                        ? `
+                <a href="${
+                    __WEB_MEDIA_ENGINE_URL__ + row.pdf
+                }" download type="button" class="button button--icon">
+                    <img src="/assets/img/ico-descarregar.svg" alt="" width="30" height="30"> ${
+                        tstring.item_download
+                    }
                 </a>
-                `:''}
-                <a href="${__WEB_MEDIA_ENGINE_URL__+row.pdf}" target="_blank" type="button" class="button button--icon">
-                    <img src="/assets/img/ico-lupa-2.svg" alt="" width="30" height="30"> ${tstring.item_show_online}
+                `
+                        : ""
+                }
+                <a href="${
+                    __WEB_MEDIA_ENGINE_URL__ + row.pdf
+                }" target="_blank" type="button" class="button button--icon">
+                    <img src="/assets/img/ico-lupa-2.svg" alt="" width="30" height="30"> ${
+                        tstring.item_show_online
+                    }
                 </a>
             </div>
             <!-- /Eines -->
         </figure>
-    `:''}
+    `
+            : ""
+    }
     </div>
 </div>
 
-${(row.children.length && row.children.length > 0)?`
+${
+    row.children.length && row.children.length > 0
+        ? `
 <div class="flow--xl mt-8">
     <h2 class="is-size-3">${tstring.item_content}</h2>
     <ol class="link-dn cols-list-2 is-size-6">
-        ${row.children.map(function(value){
-            const url = page_globals.__WEB_ROOT_WEB__ + '/publication/' + value.section_id;
-            return `<li class="mb-3">
+        ${row.children
+            .map(function (value) {
+                const url =
+                    page_globals.__WEB_ROOT_WEB__ +
+                    "/publication/" +
+                    value.section_id;
+                return `<li class="mb-3">
                 <div class="columns is-mobile is-flex-direction-row-reverse">
                     <div class="column">
                         ${value.autor}<br>
                         <a href="${url}"><span class="has-text-weight-semibold">${value.titulo}</span></a><br>
-                        ${(value.num_paginas)?`
+                        ${
+                            value.num_paginas
+                                ? `
                         ${tstring.item_pag} ${value.num_paginas}
-                        `:''}
+                        `
+                                : ""
+                        }
                     </div>
                     <div class="column is-narrow">
                         <div class="columns is-mobile is-variable is-1">
                             <div class="column is-narrow">
-                                <a href="${__WEB_MEDIA_ENGINE_URL__+value.pdf}">
+                                <a href="${
+                                    __WEB_MEDIA_ENGINE_URL__ + value.pdf
+                                }">
                                     <img src="/assets/img/ico-descarregar.svg" width="30" height="30">
                                 </a>
                             </div>
@@ -277,22 +333,27 @@ ${(row.children.length && row.children.length > 0)?`
 
 
 
-                <a href="${__WEB_MEDIA_ENGINE_URL__+value.pdf}" download target="_blank"><br>
+                <a href="${
+                    __WEB_MEDIA_ENGINE_URL__ + value.pdf
+                }" download target="_blank"><br>
                     <span class="has-text-weight-semibold"></span><br>
 
                 </a>
-            </li>`
-        }).join("\n")}
+            </li>`;
+            })
+            .join("\n")}
 
     </ol>
 </div>
-`:''}
+`
+        : ""
+}
 `);
     },
 
     templateContent: function (row) {
         //TODO
-        return '';
+        return "";
         return htmlTemplate(`
 <div class="flow--xl mt-8">
     <h2 class="is-size-3">${tstring.item_content}</h2>
@@ -302,38 +363,35 @@ ${(row.children.length && row.children.length > 0)?`
 
     templateRelated: function (row) {
         //TODO
-        return '';
+        return "";
         return htmlTemplate(`
     <h2 class="accordion-header">
         <button type="button">${tstring.item_rel_content}</button>
     </h2>
-    <div class="accordion-content">
+    <div class="accordion-content block-dedalo">
     </div>
         `);
     },
 
     /**
-    * RENDER
-    * @return promise
-    */
+     * RENDER
+     * @return promise
+     */
     render: function (options) {
+        const self = this;
 
-        const self = this
-
-        const target = options.target
-        const row = options.row
+        const target = options.target;
+        const row = options.row;
 
         appendTemplate(target, this.templateShare(row));
         appendTemplate(target, this.template(row));
         appendTemplate(target, this.templateContent(row));
 
         const acordion = common.create_dom_element({
-            element_type: 'div',
-            class_name: 'accordion accordion--primary mt-9'
-        })
+            element_type: "div",
+            class_name: "accordion accordion--primary mt-6",
+        });
         target.appendChild(acordion);
         appendTemplate(acordion, this.templateRelated(row));
-
-    },//end render
-
-}//end thesaurus
+    }, //end render
+}; //end thesaurus
