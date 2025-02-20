@@ -251,7 +251,7 @@ var api = {
         return page.get_records(options).then(function(results){
             results = results.map(function(elem){
                 var relations = JSON.parse(elem.relations).filter(function(entry){
-                    return entry.section_tipo === 'rsc194';
+                    return entry.section_tipo === 'rsc197';
                 });
                 elem.relations = relations.map(function(entry){
                     return entry.section_id
