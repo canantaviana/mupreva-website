@@ -134,7 +134,7 @@ var api = {
 
     getExposicionesDestacados: function() {
         var options = {
-            table: 'activities',
+            table: 'exposicion',
             sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.exposicionesCategorias()),
             limit: 3,
             order: 'RAND()',

@@ -352,6 +352,9 @@ page.parse_list_data = function (rows) {
         if (row.table == 'activities') {
             row.tpl = 'actividad';
         }
+        if (row.table == 'exhibitions') {
+            row.tpl = 'exposicion';
+        }
 
         /*
         // unify media elements (to easy manage on filmstrip)

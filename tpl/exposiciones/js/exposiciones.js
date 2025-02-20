@@ -72,7 +72,7 @@ var actividades = {
         "date_start_year",
     ],
 
-    activity_table: "activities",
+    activity_table: "exhibitions",
 
     /**
      * SET_UP
@@ -1025,7 +1025,7 @@ var actividades = {
                 const date = item.data_group[i].date;
 
                 const url =
-                    page_globals.__WEB_ROOT_WEB__ + "/actividad/" + section_id;
+                    page_globals.__WEB_ROOT_WEB__ + "/exposicion/" + section_id;
                 var content = htmlTemplate(`
                     <li>
                         <a href="${url}" target="_blank">
