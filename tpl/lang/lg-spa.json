@@ -1,7 +1,6 @@
 {
     "search_button": "Buscar",
     "advanced_search": "Búsqueda avanzada",
-
     "collection_explore": "Explora la colección del Museo de Prehistoria de Valencia",
     "collection_seach_label": "Busca objetos, fotografías, documentos, yacimientos…",
     "collection_seach_placeholder": "Busca objetos, fotografías, documentos, yacimientos…",
@@ -22,15 +21,12 @@
     "collection_filter_fields": "Yacimientos",
     "collection_filter_documents": "Documentos",
     "collection_input_limit": "Máx. registros",
-
     "collection_objects_default": "Objectos de la colección",
     "collection_pictures_default": "Fotografías de la colección",
     "collection_inmovables_default": "Yacimientos de la colección",
     "collection_documents_default": "Documentos de la colección",
-    "collection_documents_default": "Documentos de la colección",
     "collection_see_all": "Verlo todo",
     "collection_see_more": "Ver mas",
-
     "documents_explore": "Explora las publicaciones",
     "documents_seach_placeholder": "Busca entre las publicaciones del MuPreVa",
     "documents_title_label": "Título",
@@ -45,7 +41,6 @@
     "documents_popup_content": "<p>El buscador ArSe (Archaeological Search) es una herramienta diseñada para localizar publicaciones relacionadas con la investigación arqueológica de la Península Ibérica. La herramienta permite localizar palabras que aparezcan en el texto de las publicaciones, ofreciendo una previsualización del contexto donde dichos términos han sido empleados. La búsqueda se realiza sobre los artículos de series publicadas por diferentes instituciones peninsulares cuyos contenidos se vinculan con este ámbito de investigación. Se incluyen los libros y artículos editados por el Museu de Prehistoria de Valencia, único caso donde además se proporciona el acceso al pdf del documento.</p><p>El listado de series que ofrece el desplegable del buscador constituye la referencia más actualizada de los títulos sobre los que se ejecuta la petición. Hay que tener presente que sólo se incluyen aquellos títulos que los editores ofrecen en abierto en sus respectivas páginas, que muchas de las series no están completas y que el proceso de inclusión de artículos en ArSe es progresivo, incorporando nuevas referencias cada semana. Adicionalmente la indexación de algunos textos resulta complicada y sus contenidos no se recuperan con toda la calidad que sería deseable. Así, los resultados de las búsquedas han de servir como una guía para investigadores y aficionados, pero deben interpretarse con cautela ya que pueden encontrarse mermados por limitaciones de diversa índole.</p>",
     "documents_popup_alt": "ArSe. Archaeological Search",
     "documents_default_last": "Últimas publicaciones del museo",
-
     "activitis_title_current": "Actividades actuales",
     "activitis_results": "Resultados busqueda",
     "activitis_seach_label": "Buscar actividades",
@@ -55,22 +50,17 @@
     "activitis_filter_category": "Filtrar por categoria",
     "activitis_filter_thematic": "Filtrar por nivel",
     "activitis_thematic_label": "Nivel",
-
     "expositions_title_current": "Exposiciones actuales",
     "expositions_results": "Resultados busqueda",
     "expositions_seach_label": "Buscar exposiciones",
     "expositions_site_label": "Ubicación",
     "expositions_date_label": "Data",
     "expositions_category_label": "Categoria",
-
     "immovables_seach_label": "Buscar yacimientos",
     "immovables_localizacion": "Municipio",
     "immovables_periodo": "Periodo",
     "immovables_title": "Yacimientos",
-
-
     "close": "Cerrar",
-
     "item_content": "Contenido",
     "item_rel_content": "Patrimonio relacionados",
     "item_rel_activities": "Actividades relacionadas",
@@ -122,17 +112,14 @@
     "item_num": "núm.",
     "item_audiovisual": "Audiovisuales",
     "item_documents": "Documentos",
-
     "show_list": "Ver los resultados en una tabla",
     "show_timeline": "Ver resultados en una línea de tiempo",
     "show_map": "Visualiza resultados en un mapa",
-
     "share_title": "Compartir",
     "share_copy_desc": "Puedes compartir esta ficha copiando la dirección web:",
     "share_copy_link": "Copiar el enlace web",
     "share_other_desc": "O bien directamente en redes sociales haciendo clic en los siguientes íconos:",
     "share_copy_ok": "¡URL copiada al portapapeles!",
-
     "footer_address": "Museo de Prehistoria de Valencia<br>Centro Cultural La Beneficencia<br>C/ de la Corona, 36<br>46003 Valencia, España",
     "footer_visits": "Visitas y actividades didácticas",
     "footer_visits_telephone": "963 883 579",
@@ -151,27 +138,14 @@
     "header_change_lang": "Cambiar idioma",
     "header_search": "Buscador",
     "header_search_button": "Buscar",
-
     "404_title": "No se ha encontrado la página",
     "404_description": "Por alguna razón la página que busca no se encuentra en nuestro servidor.<br>Si ha escrito la dirección directamente compruebe que sea correcta.<br>Si proviene de algún motor de búsqueda, puede que el enlace sea demasiado antiguo y ya no existe.",
     "404_button": "Ir a la portada",
-
     "timeline_elements": "elementos",
     "timeline_element": "elemento",
-
     "home_activities_more": "Descubrir mas",
-
     "directory_rol": "Cargo",
     "directory_tel": "Teléfono",
-
-
-
-
-
-
-
-
-
     "abstract": "Resumen",
     "advanced": "Avanzado",
     "and": "y",
