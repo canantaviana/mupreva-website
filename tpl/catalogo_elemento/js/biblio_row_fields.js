@@ -628,15 +628,19 @@ var biblio_row_fields = {
 			biblio_object = parse_zenon_bibliography(biblio_object);
 		}
 
+
+
 		// line
 			const lineLi = common.create_dom_element({
 				element_type 	: "li",
 				class_name 		: "info_line row_title"
 			})
 
+
+
             const line = common.create_dom_element({
 				element_type 	: "a",
-                href: '/publication/'+JSON.parse(biblio_object.publications_data)[0],
+                href: (biblio_object.publications_data)?'/publication/'+JSON.parse(biblio_object.publications_data)[0]:'#',
                 parent			: lineLi
 			})
 
