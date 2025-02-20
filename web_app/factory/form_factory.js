@@ -180,9 +180,9 @@ function form_factory() {
                 let label_node
                 const node_input = common.create_dom_element({
                     element_type: 'input',
-                    type: 'text',
+                    type: 'search',
                     id: form_item.id,
-                    class_name: "form-control ui-autocomplete-input" + (form_item.class_name ? (' ' + form_item.class_name) : ''),
+                    class_name: "form-control ui-autocomplete-input input" + (form_item.class_name ? (' ' + form_item.class_name) : ''),
                     placeholder: form_item.label,
                     value: form_item.q || '',
                     parent: group
@@ -339,7 +339,7 @@ function form_factory() {
         // awesome font 4 <i class="fal fa-trash-alt"></i>
         // awesome font 5 <i class="far fa-trash-alt"></i>
         const trash = common.create_dom_element({
-            element_type: "i",
+            element_type: "button",
             class_name: "icon remove fal far fa-trash fa-trash-alt", //  fa-trash awesome font 4
             parent: line
         })
@@ -372,7 +372,7 @@ function form_factory() {
         // input
         const input = common.create_dom_element({
             element_type: "input",
-            class_name: "input_values",
+            class_name: "input_values input",
             parent: line
         })
         input.value = value

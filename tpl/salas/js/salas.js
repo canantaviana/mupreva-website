@@ -423,7 +423,7 @@ var salas = {
                 type: "submit",
                 id: "submit",
                 value: tstring["buscar"] || "Search",
-                class_name: "btn btn-light btn-block primary",
+                class_name: "button",
                 parent: submit_group
             })
             submit_button.addEventListener("click", function (e) {
@@ -435,7 +435,7 @@ var salas = {
             self.form.node = common.create_dom_element({
                 element_type: "form",
                 id: "search_form",
-                class_name: "form-inline form_factory"
+                class_name: "form-inline form_factory py-5 px-6 mb-5 has-background-grey-light"
             })
             self.form.node.appendChild(fragment)
 
