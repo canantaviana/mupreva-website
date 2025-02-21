@@ -355,8 +355,8 @@ var templateModules = {
                     ${(info.body)?info.body:''}
                 </div>
                 ${(info.uri && info.uri.length > 0 || info.pdf_resolved && info.pdf_resolved.length > 0)?
-                `<div class="column is-narrow">
-                    <div class="is-flex is-flex-wrap-wrap is-align-items-center gap-8">
+                `<div class="column">
+                    <div class="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end gap-6">
                     ${info.pdf_resolved.map(function(elem, index){
                         return `<a href="${elem.url}" class="is-flex is-align-items-center link-dn has-text-weight-semibold gap-2 is-size-6">
                             <img src="/assets/img/ico-descarregar.svg" alt="" width="30" height="30">
@@ -424,8 +424,8 @@ var templateModules = {
                     ${(info.body)?info.body:''}
                 </div>
                 ${(info.uri && info.uri.length > 0 || info.pdf_resolved && info.pdf_resolved.length > 0)?
-                `<div class="column is-narrow">
-                    <div class="is-flex is-flex-wrap-wrap is-align-items-center gap-8">
+                `<div class="column">
+                    <div class="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end gap-6">
                     ${info.pdf_resolved.map(function(elem, index){
                         return `<a href="${elem.url}" class="is-flex is-align-items-center link-dn has-text-weight-semibold gap-2 is-size-6">
                             <img src="/assets/img/ico-descarregar.svg" alt="" width="30" height="30">
@@ -496,8 +496,8 @@ var templateModules = {
                     ${(info.body)?info.body:''}
                 </div>
                 ${(info.uri && info.uri.length > 0 || info.pdf_resolved && info.pdf_resolved.length > 0)?
-                `<div class="column is-narrow">
-                    <div class="is-flex is-flex-wrap-wrap is-align-items-center gap-8">
+                `<div class="column">
+                    <div class="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end gap-6">
                     ${info.pdf_resolved.map(function(elem, index){
                         return `<a href="${elem.url}" class="is-flex is-align-items-center link-dn has-text-weight-semibold gap-2 is-size-6">
                             <img src="/assets/img/ico-descarregar.svg" alt="" width="30" height="30">
@@ -568,8 +568,8 @@ var templateModules = {
                     ${(info.body)?info.body:''}
                 </div>
                 ${(info.uri && info.uri.length > 0 || info.pdf_resolved && info.pdf_resolved.length > 0)?
-                `<div class="column is-narrow">
-                    <div class="is-flex is-flex-wrap-wrap is-align-items-center gap-8">
+                `<div class="column">
+                    <div class="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end gap-6">
                     ${info.pdf_resolved.map(function(elem, index){
                         return `<a href="${elem.url}" class="is-flex is-align-items-center link-dn has-text-weight-semibold gap-2 is-size-6">
                             <img src="/assets/img/ico-descarregar.svg" alt="" width="30" height="30">
