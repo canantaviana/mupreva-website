@@ -165,16 +165,18 @@ var biblio = {
     form_template: function () {
         var template = htmlTemplate(`
 <form action="#" class="search-form">
-    <div class="is-flex is-flex-wrap-wrap is-justify-content-space-between is-align-items-center gap-8">
-        <div class="field is-flex is-flex-wrap-wrao is-align-items-center mb-0 gap-2">
+    <div class="is-flex is-flex-wrap-wrap gap-8">
+        <div class="field is-flex is-flex-wrap-wrap is-align-items-center mb-0 gap-2">
             <label class="label mb-0" for="categories">${tstring.activitis_filter_category}:</label>
             <div class="control">
                 <div class="select select--simple is-flex is-align-items-center">
-                    <select id="type" name="type">
+                    <select id="categories" name="type">
                         <option value="">${tstring.activitis_category_label}</option>
                     </select>
                 </div>
             </div>
+        </div>
+        <div class="field is-flex is-flex-wrap-wrap is-align-items-center mb-0 gap-2">
             <label class="label mb-0" for="thematic">${tstring.activitis_filter_thematic}:</label>
             <div class="control">
                 <div class="select select--simple is-flex is-align-items-center">
