@@ -1,5 +1,5 @@
 .main-header {
-    background-color: #000;
+    background-color: $primary;
     padding-top: var(--space-s-l);
     padding-bottom: var(--space-m);
     &:not(:has(+ main > .has-background-grey-light:first-child)) {
@@ -47,7 +47,6 @@
         }
     }
     @include fullhd {
-        background-color: $primary;
         padding-bottom: 0;
         .home & {
             background-color: transparent;
