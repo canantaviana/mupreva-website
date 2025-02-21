@@ -1,0 +1,36 @@
+// sobreescrivim estils del visor d'imatges de la col·lecció
+.viewer-container {
+    .viewer-button {
+        border-radius: 0;
+        width: 50px;
+        height: 50px;
+        top: 0;
+        right: 0;
+    }
+    .viewer-close::before {
+        background-image: url("data:image/svg+xml,%0A%3Csvg width='27.748' height='27.748' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m1.5 1.5 24.748 24.748m0-24.748L1.5 26.248' stroke='%23000' stroke-width='3' fill='none' fill-rule='evenodd' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-size: auto;
+        background-position: 0 0;
+        filter: invert(1);
+        left: 50%;
+        top: 50%;
+        width: 28px;
+        height: 28px;
+        transform: translate(-50%, -50%);
+    }
+    .viewer-title {
+        color: #fff;
+        font-size: var(--step--1);
+        transition: none;
+        opacity: 1;
+    }
+    .viewer-toolbar > ul {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        margin-bottom: 1rem;
+        > li {
+            background-color: #000;
+        }
+    }
+}

@@ -451,7 +451,7 @@ var item = {
         const url = this.absUrl(row);
         return htmlTemplate(`
 <div class="fitxa-intro columns is-variable is-8">
-    <div class="column flow--xl">
+    <div class="column flow--l">
         ${
             row.titulo
                 ? `
@@ -492,7 +492,7 @@ var item = {
 
     renderExport: function () {
         return `
-        <div class="column fullscreen__fullheight is-7-tablet is-half-desktop">
+        <div class="column fullscreen__fullheight">
             <div id="export_data_container" class="is-flex is-justify-content-flex-end gap-4 mt-4">
             </div>
         </div>

@@ -43,9 +43,9 @@
             text-align: initial !important;
         }
     }
-    // br {
-    //     display: none;
-    // }
+    br + br {
+        display: none;
+    }
     u,
     s {
         text-decoration: none;

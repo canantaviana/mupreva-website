@@ -188,7 +188,7 @@ var item = {
         const url = this.absUrl(row);
         return htmlTemplate(`
 <div class="fitxa-intro columns is-variable is-8">
-    <div class="column flow--xl">
+    <div class="column flow--l">
         <h1>${row.titulo}</h1>
         <dl>
             ${
