@@ -26,6 +26,13 @@
 
 
 // Thesaurus search form
+
+// Millora visualment la càrrega del form, perquè no es produeixi layout shift
+body:not(:has(.tree_wrapper)) {
+    .form.wrapper {
+        opacity: 0;
+    }
+}
 body:has(.tree_wrapper) main .form {
     .form-inline {
         display: flex;
