@@ -391,6 +391,16 @@ var item = {
                 lugarData = JSON.parse(row.lugar_data)[0];
             } catch (e) {}
         }
+
+        var ubicationName = null;
+        var ubicationId = null;
+        if (row.ubicacion && row.ubicacion_data) {
+            try {
+                ubicationName = row.ubicacion.split(' - ');
+                ubicationId = JSON.parse(row.ubicacion_data);
+            } catch (e) {}
+        }
+
         const datacion = this.datacion(row);
         return `
             ${
@@ -426,10 +436,15 @@ var item = {
                     : ""
             }
             ${
-                row.sala
+                ubicationName
                     ? `
             <dt>${tstring.item_ubication}</dt>
-            <dd>${row.sala}</dd>
+            <dd>${ubicationName.map(function(value, index){
+                if (typeof ubicationId[index] != 'undefined') {
+                    return `<a href="/salas?termid=${ubicationId[index]}">${value}</a>`
+                }
+                return `${value}`
+                }).join(', ')}</dd>
             `
                     : ""
             }
