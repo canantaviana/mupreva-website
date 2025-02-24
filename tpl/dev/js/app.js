@@ -629,6 +629,21 @@ function toggle(btnID, eID) {
     }
 }
 
+function enableDialogs(elem) {
+    var dialogs = $(elem).find('.dialog-container');
+    dialogs.each(function(){
+        var dialog = new A11yDialog(this);
+        dialog.on("show", function (event) {
+            const container = event.target;
+
+            const target = event.detail.target;
+            const opener = target.closest("[data-a11y-dialog-show]");
+
+            console.log(container, target, opener);
+        });
+    });
+}
+
 // -----------
 // A11y Dialog (https://github.com/KittyGiraudel/a11y-dialog)
 // -----------

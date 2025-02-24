@@ -1158,7 +1158,6 @@ var item = {
 
     templateGroup: function (row) {
         var self = this;
-        console.log(row);
         if (!this.isGroup(row)) {
             return "";
         }
@@ -1189,7 +1188,6 @@ var item = {
     templateRelated: function (row) {
         //TODO: passar a camp patrimonio_relacionado
         var self = this;
-        console.log(row);
         if (!this.hasRelated(row)) {
             return "";
         }
@@ -1237,7 +1235,76 @@ var item = {
         appendTemplate(target, template);
     },
 
-    templateExcavations: function (row) {},
+    templateExcavations: function (target, row) {
+        const self = this;
+
+        if (!row.relations) {
+            return null;
+        }
+        const relations = JSON.parse(row.relations).filter(function(value){
+            return value.section_tipo == 'excavation1';
+        }).map(function(value){
+            return value.section_id;
+        });
+        const template = htmlTemplate(`
+            <h2 class="accordion-header">
+                <button type="button">${tstring.item_excavations}</button>
+            </h2>
+            <div class="accordion-content">
+                <ul class="galeria galeria--185x185 link-dn">
+                </ul>
+            </div>
+        `);
+        const ul = template[2].querySelector("ul");
+        api.getExcavaciones(relations).then(function(results){
+            var content = htmlTemplate(`
+                ${results.map(function(row, index){
+                    var image_url = '/assets/img/placeholder.png';
+                    if (row.identifying_image !== null) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                    }
+
+                    return `
+                        <li>
+                            <div class="button-like" data-a11y-dialog-show="dialog-${index}" role="button" tabindex="0">
+                                <figure>
+                                    <img loading="lazy" src="${image_url}" width="400" height="400" alt="">
+                                    <figcaption>${row.title}</figcaption>
+                                </figure>
+                            </div>
+        <div class="dialog-container" data-a11y-dialog="dialog-${index}" aria-hidden="true" aria-labelledby="dialog-${index}-title">
+            <div class="dialog-overlay" data-a11y-dialog-hide></div>
+            <div class="dialog-content" role="document">
+                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                    <svg width="44" height="44">
+                        <g fill="none" fill-rule="evenodd">
+                            <path d="M0 0h44v44H0z" />
+                            <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                        </g>
+                    </svg>
+                </button>
+                <div class="columns is-widescreen is-variable is-8">
+                    <div class="column">
+                        <img loading="lazy" src="${image_url}" width="600" height="600" alt="">
+                    </div>
+                    <div class="column text-base flow--m">
+                        <h1 id="dialog-${index}-title">
+                            ${row.title}
+                        </h1>
+                        ${row.description}
+                    </div>
+                </div>
+            </div>
+        </div>
+                        </li>
+                    `;
+                }).join('')}
+            `);
+            appendTemplate(ul, content);
+            enableDialogs(ul);
+        })
+        appendTemplate(target, template);
+    },
 
     /**
      * LIST_ROW_BUILDER
@@ -1320,7 +1387,7 @@ var item = {
         this.templateBiblio(acordion, row);
 
         //excavacions
-        appendTemplate(acordion, this.templateExcavations(row));
+        this.templateExcavations(acordion, row);
 
         /*return new Promise(function (resolve) {
 

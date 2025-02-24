@@ -1663,6 +1663,7 @@ page.get_records = function (options) {
     const parse = options.parse || page.parse_ts_web
     const resolve_portals_custom = options.resolve_portals_custom || ''
     const group = options.group || null
+    const section_id = options.section_id || null
 
     return new Promise(function (resolve) {
 
@@ -1673,6 +1674,7 @@ page.get_records = function (options) {
                 lang: page_globals.WEB_CURRENT_LANG_CODE,
                 table: table,
                 ar_fields: ar_fields,
+                section_id: section_id,
                 sql_filter: sql_filter,
                 limit: limit,
                 count: count,

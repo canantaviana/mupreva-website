@@ -277,4 +277,17 @@ var api = {
         return page.get_records(options);
     },
 
+    getExcavaciones: function(excavacions) {
+        var options = {
+            table: 'excavations',
+            section_id: excavacions.join(','),
+            //sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.exposicionesCategorias()),
+            //limit: 3,
+            order: 'section_id asc',
+            ar_fields: '*',
+            //parse: page.parse_list_data,
+            resolve_portals_custom: '{"identifying_image_data": "image"}'
+        };
+        return page.get_records(options);
+    },
 };
