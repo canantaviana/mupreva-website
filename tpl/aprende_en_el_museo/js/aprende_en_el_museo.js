@@ -527,7 +527,7 @@ var biblio = {
                 data: list_data,
                 fn_row_builder: self.list_row_builder,
                 pagination: pagination,
-                container_class: "columns is-multiline link-dn",
+                container_class: "galeria galeria--380x250 link-dn",
                 caller: self,
             });
             self.list.render_list().then(function (list_node) {
@@ -566,9 +566,7 @@ var biblio = {
                 __WEB_MEDIA_ENGINE_URL__ + row.identifying_image_data[0].image;
         }
         return htmlTemplate(`
-        <li class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen ${
-            row.tpl
-        }">
+        <li class="">
             <div class="card is-flex is-flex-direction-column full-link">
                 <div class="p-5 flow--xs has-background-grey-light">
                     <h4 class="is-size-5 has-text-weight-semibold">

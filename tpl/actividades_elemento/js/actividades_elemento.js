@@ -412,7 +412,7 @@ var item = {
             return `
             <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
                 <figure class="fullscreen__content fullscreen__content--3 has-text-left">
-                    <img loading="lazy" class="active" src="${
+                    <img loading="lazy" class="active image-action-zoom" src="${
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)

@@ -542,7 +542,7 @@ var item = {
             <div class="fullscreen__fullheight column is-7-tablet is-half-desktop">
                 <div class="columns">
                     <div class="images-group column fullscreen__content fullscreen__content--2">
-                        <img loading="lazy" class="active" src="${
+                        <img loading="lazy" class="active image-action-zoom" src="${
                             __WEB_MEDIA_ENGINE_URL__ + image1.image
                         }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image1.image)
