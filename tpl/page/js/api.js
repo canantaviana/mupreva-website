@@ -290,4 +290,29 @@ var api = {
         };
         return page.get_records(options);
     },
+
+    getVisitasYacimiento: function() {
+        var options = {
+            table: 'ts_route',
+            sql_filter: "parent_data = \"[\\\"265\\\"]\"",
+            order: 'section_id asc',
+            ar_fields: 'section_id',
+        };
+        return page.get_records(options);
+    },
+
+    getVisitaYacimiento: function(id) {
+        var options = {
+            table: 'ts_route',
+            section_id: id,
+            order: 'section_id asc',
+            ar_fields: '*',
+            parse: function(info){return info},
+            resolve_portals_custom: '{"children_data":"ts_route", "children_data.identifying_image_data": "image", "children_data.images": "image", "children_data.documents_data": "documents","children_data.children_data":"ts_route"}'
+        };
+        return page.get_records(options).then(function(results){
+            return results[0]
+        });
+    },
+
 };

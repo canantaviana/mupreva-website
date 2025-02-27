@@ -552,7 +552,7 @@ var item = {
                         </div>
                     </div>
                     <div class="images-group column fullscreen__content fullscreen__content--2">
-                        <img loading="lazy" class="active" src="${
+                        <img loading="lazy" class="active image-action-zoom" src="${
                             __WEB_MEDIA_ENGINE_URL__ + image2.image
                         }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image2.image)
@@ -571,7 +571,7 @@ var item = {
             return `
             <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
                 <figure class="fullscreen__content fullscreen__content--3 has-text-left">
-                    <img loading="lazy" class="active" src="${
+                    <img loading="lazy" class="active image-action-zoom" src="${
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
@@ -602,7 +602,7 @@ var item = {
             return `
             <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
                 <figure class="fullscreen__content fullscreen__content--3 has-text-left">
-                    <img loading="lazy" class="active" src="${
+                    <img loading="lazy" class="active image-action-zoom" src="${
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
@@ -627,7 +627,7 @@ var item = {
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" alt="${image.title ? image.title : ""}">
+                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-action-zoom" alt="${image.title ? image.title : ""}">
                                 </div>
                             `;
                             })
@@ -1275,7 +1275,7 @@ var item = {
         <div class="dialog-container" data-a11y-dialog="dialog-${index}" aria-hidden="true" aria-labelledby="dialog-${index}-title">
             <div class="dialog-overlay" data-a11y-dialog-hide></div>
             <div class="dialog-content" role="document">
-                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close}">
                     <svg width="44" height="44">
                         <g fill="none" fill-rule="evenodd">
                             <path d="M0 0h44v44H0z" />

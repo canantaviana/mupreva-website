@@ -165,7 +165,6 @@ switch (WEB_TEMPLATE_MAP_DEFAULT_SOURCE) {
 } //end switch (WEB_TEMPLATE_MAP_DEFAULT_SOURCE)
 
 
-
 // error. Not valid template found case
 if ($template_found === false) {
     # Error. Term with this web_path not found in DDBB
@@ -176,8 +175,6 @@ if ($template_found === false) {
 
     http_response_code(404);
 }
-
-
 
 // html. Render full page html
 $options = new stdClass();
