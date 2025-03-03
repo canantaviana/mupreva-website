@@ -42,6 +42,8 @@
             width: auto;
             height: auto;
             margin: auto;
+            max-width: 100%;
+            max-height: 100%;
         }
     }
 }
@@ -55,8 +57,6 @@
             width: auto;
             display: block;
             margin: 0 auto;
-            max-width: 100%;
-            max-height: 100%;
         }
     }
     .swiper-slide-thumb-active {
