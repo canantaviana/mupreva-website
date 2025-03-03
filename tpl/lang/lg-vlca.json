@@ -258,5 +258,9 @@
     "directory_rol": "Càrrec",
     "activitis_category_label": "Categoria",
     "item_to_public": "Dirigit a",
-    "collection_documents_default": "Documents de la col·lecció"
+    "collection_documents_default": "Documents de la col·lecció",
+    "route_sites": "Els Jaciments Ruta",
+    "route_visit": "Visitar",
+    "route_more_info": "Més informació sobre",
+    "site_how_arrive": "Com arribar"
 }

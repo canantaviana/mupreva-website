@@ -259,5 +259,9 @@
     "directory_rol": "Poste",
     "activitis_category_label": "Catégorie",
     "item_to_public": "Destiné à",
-    "collection_documents_default": "Documents de la collection"
+    "collection_documents_default": "Documents de la collection",
+    "route_sites": "Les Sites de la Route",
+    "route_visit": "Visiter",
+    "route_more_info": "Plus d'informations sur",
+    "site_how_arrive": "Comment arriver"
 }

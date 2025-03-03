@@ -259,5 +259,9 @@
     "directory_rol": "Position",
     "activitis_category_label": "Category",
     "item_to_public": "Target audience",
-    "collection_documents_default": "Collection documents"
+    "collection_documents_default": "Collection documents",
+    "route_sites": "The Route Sites",
+    "route_visit": "Visit",
+    "route_more_info": "More information about",
+    "site_how_arrive": "How to arrive"
 }
