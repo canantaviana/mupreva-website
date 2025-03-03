@@ -542,7 +542,7 @@ var item = {
             <div class="fullscreen__fullheight column is-7-tablet is-half-desktop">
                 <div class="columns">
                     <div class="images-group column fullscreen__content fullscreen__content--2">
-                        <img loading="lazy" class="active image-action-zoom" src="${
+                        <img loading="lazy" class="active image-zoom" src="${
                             __WEB_MEDIA_ENGINE_URL__ + image1.image
                         }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image1.image)
@@ -552,7 +552,7 @@ var item = {
                         </div>
                     </div>
                     <div class="images-group column fullscreen__content fullscreen__content--2">
-                        <img loading="lazy" class="active image-action-zoom" src="${
+                        <img loading="lazy" class="active image-zoom" src="${
                             __WEB_MEDIA_ENGINE_URL__ + image2.image
                         }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image2.image)
@@ -571,7 +571,7 @@ var item = {
             return `
             <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
                 <figure class="fullscreen__content fullscreen__content--3 has-text-left">
-                    <img loading="lazy" class="active image-action-zoom" src="${
+                    <img loading="lazy" class="active image-zoom" src="${
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
@@ -602,7 +602,7 @@ var item = {
             return `
             <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
                 <figure class="fullscreen__content fullscreen__content--3 has-text-left">
-                    <img loading="lazy" class="active image-action-zoom" src="${
+                    <img loading="lazy" class="active image-zoom" src="${
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
@@ -627,7 +627,7 @@ var item = {
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-action-zoom" alt="${image.title ? image.title : ""}">
+                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}">
                                 </div>
                             `;
                             })

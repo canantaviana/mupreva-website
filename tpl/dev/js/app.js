@@ -485,6 +485,18 @@ function viewInit() {
     const images = document.getElementsByClassName("images-group");
     if (images.length > 0) {
         images.forEach(function (group) {
+            const zoomBase = group.querySelectorAll(".image-zoom");
+            if (zoomBase) {
+                zoomBase.forEach(function (elem) {
+                    elem.addEventListener("click", function (event) {
+                        event.preventDefault();
+                        const activeImage = this;
+                        const urlImg = activeImage.dataset.original;
+                        hiresViewer(urlImg);
+                    });
+                });
+            }
+
             const zoom = group.querySelector(".image-action-zoom");
             if (zoom) {
                 zoom.addEventListener("click", function (event) {
