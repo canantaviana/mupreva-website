@@ -170,7 +170,7 @@ var biblio = {
             <label class="label mb-0" for="categories">${tstring.activitis_filter_category}:</label>
             <div class="control">
                 <div class="select select--simple is-flex is-align-items-center">
-                    <select id="categories" name="type">
+                    <select id="type" name="type">
                         <option value="">${tstring.activitis_category_label}</option>
                     </select>
                 </div>
@@ -314,6 +314,7 @@ var biblio = {
                 eq_out: "",
                 node_input: currentForm.querySelector("#thematic"),
             });
+
 
             // fix form node
             self.form.node = currentForm;
@@ -568,7 +569,8 @@ var biblio = {
         return htmlTemplate(`
         <li class="">
             <div class="card is-flex is-flex-direction-column full-link">
-                <div class="p-5 flow--xs has-background-grey-light">
+                <div class
+                ="p-5 flow--xs has-background-grey-light">
                     <h4 class="is-size-5 has-text-weight-semibold">
                         <a href="${url}">${row.title}</a>
                     </h4>
