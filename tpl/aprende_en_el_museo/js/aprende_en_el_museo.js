@@ -165,7 +165,7 @@ var biblio = {
     form_template: function () {
         var template = htmlTemplate(`
 <form action="#" class="search-form">
-    <div class="is-flex is-flex-wrap-wrap gap-8">
+    <div class="is-flex is-flex-wrap-wrap gap-6">
         <div class="field is-flex is-flex-wrap-wrap is-align-items-center mb-0 gap-2">
             <label class="label mb-0" for="categories">${tstring.activitis_filter_category}:</label>
             <div class="control">
