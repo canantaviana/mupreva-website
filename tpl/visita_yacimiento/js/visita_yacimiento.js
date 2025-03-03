@@ -31,6 +31,8 @@ var generic = {
                         var visita = templateModules.visitaYacimiento(info);
                         appendTemplate(document.getElementById("route"+row.section_id), visita)
                         enableDialogs(document.getElementById("route"+row.section_id));
+                        new TenUp.tabs('#route'+row.section_id+' .tabs-2', {
+                        });
                     });
 
                 });

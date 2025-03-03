@@ -918,7 +918,6 @@ var templateModules = {
             <div class="default_cats mt-8 flow--xl">
             </div>
         </div>`);
-        console.log(contentBase[0]);
         var children_container = contentBase[0].querySelector('div.default_last');
         var children_container_cats = contentBase[0].querySelector('div.default_cats');
         api.getPublicacionesDestacados().then(function(results){
@@ -1084,7 +1083,7 @@ var templateModules = {
         if (info.identifying_image !== null && info.identifying_image.length > 0) {
             logo_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(info.identifying_image)[0];
         }
-        var image_url = '/assets/img/placeholder.png';
+        var image_url = null;
         if (info.images !== null && info.images.length > 0) {
             image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(info.images)[0];
         }
@@ -1117,120 +1116,130 @@ var templateModules = {
                 `:''}
                 ${(info.children_data.length > 0)?`
                 <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${tstring.route_sites}</h2>
-                <ul class="is-flex is-flex-wrap-wrap gap-3 mb-6">
-                ${info.children_data.map(function(elem){
-                    return `<li>
-                        <button data-tab-elem="route-tab-${elem.section_id}" type="button" class="button button--minimal">${elem.title}</button>
-                    </li>`;
-                }).join('')}
-                </ul>
-                ${info.children_data.map(function(elem){
-                    return `
-                    <div class="column is-half-tablet">
-                        <div id="route-tab-${elem.section_id}" class="block-titol-text flow">
-                            <h3>${elem.title}</h3>
-                            ${(elem.summary)?`
-                            <h4>${elem.summary}</h4>
-                            `:''}
-                            ${(elem.description)?`
-                            ${common.convertText(elem.description)}
-                            `:''}
-                        </div>
+                <div class="tabs-2">
+                    <div class="tab-control">
+                        <ul class="tab-list" role="tablist">
+                        ${info.children_data.map(function(elem){
+                            return `<li class="tab-item">
+                                <button role="tab" aria-controls="route-tab-${elem.section_id}">${elem.title}</button>
+                            </li>`;
+                        }).join('')}
+                        </ul>
                     </div>
-                    ${(elem.children_data.length > 0)?`
-                    <div class="has-background-grey-light py-8">
-                        <div class="wrapper">
-                            <ul class="columns is-multiline is-variable is-7">
-                            ${elem.children_data.map(function(site){
-                            console.log(site);
-                                var image_url = null;
-                                if (site.images !== null && site.images.length > 0) {
-                                    image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(site.images)[0];
-                                }
-                                var documents = [];
-                                if (site.documents) {
-                                    documents = JSON.parse(site.documents);
-                                }
-                                var documentsTitles = [];
-                                if (site.documents_title) {
-                                    documentsTitles = JSON.parse(site.documents_title);
-                                }
-                                return `
-                                <li class="column is-half-tablet mb-8">
-                                    <div class="columns is-desktop is-flex-direction-row-reverse">
-                                        <div class="column is-flex is-flex-direction-column">
-                                            <div class="flow--2xs mb-5">
-                                                <h3 class="is-size-3 has-text-weight-semibold">${site.title}</h3>
-                                                ${(elem.place)?`
-                                                <p class="is-size-6 has-text-weight-medium">${site.place}</p>
-                                                `:''}
-                                            </div>
-                                            <ul class="actions-list mt-auto mb-4 has-text-weight-medium link-dn flow--xs is-size-5">
-                                                <li>
-                                                    <div class="button-like" data-a11y-dialog-show="dialog-route-${site.section_id}" role="button" tabindex="0">
-                                                        ${tstring.route_visit} ${site.title}
-                                                    </div>
-                                                </li>
-                                                <!-- li>
-                                                    <a href="/jaciments/fitxa-jaciment/">${tstring.route_more_info} ${site.title}</a>
-                                                </li -->
-                                                ${documents.map(function(document, index){
-                                                return `
-                                                <li>
-                                                    <a href="${__WEB_MEDIA_ENGINE_URL__+document}">${documentsTitles[index]}</a>
-                                                </li>
-                                                `;
-                                                }).join('')}
-                                            </ul>
-                                        </div>
-                                        ${(image_url)?`
-                                        <div class="column">
-                                            <img loading="lazy" src="${image_url}" width="380" height="250" alt="" class="is-block">
-                                        </div>
+                    <div class="tab-group">
+
+                    ${info.children_data.map(function(elem){
+                        return `
+                        <div class="tab-content" id="route-tab-${elem.section_id}" role="tabpanel">
+                            <div class="block-dedalo columns is-variable is-8 is-multiline">
+                                <div class="column is-half-tablet">
+                                    <div class="block-titol-text flow">
+                                        <h3>${elem.title}</h3>
+                                        ${(elem.summary)?`
+                                        <h4>${elem.summary}</h4>
+                                        `:''}
+                                        ${(elem.description)?`
+                                        ${common.convertText(elem.description)}
                                         `:''}
                                     </div>
-                                    <div class="dialog-container" data-a11y-dialog="dialog-route-${site.section_id}" aria-hidden="true" aria-labelledby="dialog-route-${site.section_id}-title">
-                                        <div class="dialog-overlay" data-a11y-dialog-hide></div>
-                                        <div class="dialog-content" role="document">
-                                            <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close}">
-                                                <svg width="44" height="44">
-                                                    <g fill="none" fill-rule="evenodd">
-                                                        <path d="M0 0h44v44H0z" />
-                                                        <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
-                                                    </g>
-                                                </svg>
-                                            </button>
-                                            <div class="columns is-widescreen is-variable is-8">
-                                                ${(image_url)?`
-                                                <div class="column">
-                                                    <img loading="lazy" src="${image_url}" alt="">
-                                                </div>
-                                                `:''}
-                                                <div class="column text-base flow--m">
-                                                    <div class="flow--xs">
-                                                        <h1 id="dialog-01-title">${site.title}</h1>
+                                </div>
+                                <div class="column is-half-tablet"></div>
+                            </div>
+                            ${(elem.children_data.length > 0)?`
+                            <div class="has-background-grey-light pt-7">
+                                <div class="wrapper">
+                                    <ul class="columns is-multiline is-variable is-7">
+                                    ${elem.children_data.map(function(site){
+                                        var image_url = null;
+                                        if (site.images !== null && site.images.length > 0) {
+                                            image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(site.images)[0];
+                                        }
+                                        var documents = [];
+                                        if (site.documents) {
+                                            documents = JSON.parse(site.documents);
+                                        }
+                                        var documentsTitles = [];
+                                        if (site.documents_title) {
+                                            documentsTitles = JSON.parse(site.documents_title);
+                                        }
+                                        return `
+                                        <li class="column is-half-tablet mb-8">
+                                            <div class="columns is-desktop is-flex-direction-row-reverse">
+                                                <div class="column is-flex is-flex-direction-column">
+                                                    <div class="flow--2xs mb-5">
+                                                        <h3 class="is-size-3 has-text-weight-semibold">${site.title}</h3>
                                                         ${(elem.place)?`
-                                                        <p class="is-size-3 has-text-weight-medium">${site.place}</p>
+                                                        <p class="is-size-6 has-text-weight-medium">${site.place}</p>
                                                         `:''}
                                                     </div>
-                                                    <h2 class="is-flex is-align-items-center gap-2 mt-7">
-                                                        <img src="/assets/img/ico-localitzacio-small.svg" alt="" width="20" height="20">
-                                                        ${tstring.site_how_arrive}
-                                                    </h2>
-                                                    ${common.convertText(elem.description)}
+                                                    <ul class="actions-list mt-auto mb-4 has-text-weight-medium link-dn flow--xs is-size-5">
+                                                        <li>
+                                                            <div class="button-like" data-a11y-dialog-show="dialog-route-${site.section_id}" role="button" tabindex="0">
+                                                                ${tstring.route_visit} ${site.title}
+                                                            </div>
+                                                        </li>
+                                                        <!-- li>
+                                                            <a href="/jaciments/fitxa-jaciment/">${tstring.route_more_info} ${site.title}</a>
+                                                        </li -->
+                                                        ${documents.map(function(document, index){
+                                                        return `
+                                                        <li>
+                                                            <a href="${__WEB_MEDIA_ENGINE_URL__+document}">${documentsTitles[index]}</a>
+                                                        </li>
+                                                        `;
+                                                        }).join('')}
+                                                    </ul>
+                                                </div>
+                                                ${(image_url)?`
+                                                <div class="column">
+                                                    <img loading="lazy" src="${image_url}" width="380" height="250" alt="" class="is-block">
+                                                </div>
+                                                `:''}
+                                            </div>
+                                            <div class="dialog-container" data-a11y-dialog="dialog-route-${site.section_id}" aria-hidden="true" aria-labelledby="dialog-route-${site.section_id}-title">
+                                                <div class="dialog-overlay" data-a11y-dialog-hide></div>
+                                                <div class="dialog-content" role="document">
+                                                    <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close}">
+                                                        <svg width="44" height="44">
+                                                            <g fill="none" fill-rule="evenodd">
+                                                                <path d="M0 0h44v44H0z" />
+                                                                <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                                            </g>
+                                                        </svg>
+                                                    </button>
+                                                    <div class="columns is-widescreen is-variable is-8">
+                                                        ${(image_url)?`
+                                                        <div class="column">
+                                                            <img loading="lazy" src="${image_url}" alt="">
+                                                        </div>
+                                                        `:''}
+                                                        <div class="column text-base flow--m">
+                                                            <div class="flow--xs">
+                                                                <h1 id="dialog-01-title">${site.title}</h1>
+                                                                ${(elem.place)?`
+                                                                <p class="is-size-3 has-text-weight-medium">${site.place}</p>
+                                                                `:''}
+                                                            </div>
+                                                            <h2 class="is-flex is-align-items-center gap-2 mt-7">
+                                                                <img src="/assets/img/ico-localitzacio-small.svg" alt="" width="20" height="20">
+                                                                ${tstring.site_how_arrive}
+                                                            </h2>
+                                                            ${common.convertText(elem.description)}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </li>`;
-                            }).join('')}
-                            </ul>
-                        </div>
+                                        </li>`;
+                                    }).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                            `:''}
+                        </div>`;
+                    }).join('')}
                     </div>
-                    `:''}
-                    `;
-                }).join('')}
                 `:''}
+                </div>
         `);
     },
 
