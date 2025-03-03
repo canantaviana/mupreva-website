@@ -323,7 +323,7 @@ var actividades = {
             </div>
         </div>
 
-        <div class="is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap gap-3">
+        <div class="is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap gap-3 mt-7">
             <h2 id="subtitle"></h2>
 
 
