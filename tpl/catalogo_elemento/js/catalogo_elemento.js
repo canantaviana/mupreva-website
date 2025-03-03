@@ -583,7 +583,7 @@ var item = {
                             <div class="column has-text-left has-text-weight-semibold is-size-4">
                                 ${image.footprint}
                             </div>
-                            <div class="column is-narrow">
+                            <div class="column is-narrow is-flex gap-5">
                                 ${this.renderImageButtons()}
                             </div>
                         </div>
