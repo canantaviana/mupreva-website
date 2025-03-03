@@ -27,13 +27,6 @@ var api = {
         ];
     },
 
-    exposicionesCategorias: function() {
-        return [
-            11,//Exposición temporal
-            12,//Exposición itinerante
-        ];
-    },
-
     aprendeMuseoCategorias: function() {
         return [
             5,//Didáctica
@@ -135,7 +128,7 @@ var api = {
     getExposicionesDestacados: function() {
         var options = {
             table: 'exposicion',
-            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.exposicionesCategorias()),
+            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
             limit: 3,
             order: 'RAND()',
             ar_fields: '*',
@@ -162,7 +155,7 @@ var api = {
     getExposicionesActuales: function() {
         var options = {
             table: 'activities',
-            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.exposicionesCategorias()),
+            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
             limit: 10,
             order: 'time_frame asc',
             ar_fields: '*',
@@ -281,7 +274,7 @@ var api = {
         var options = {
             table: 'excavations',
             section_id: excavacions.join(','),
-            //sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.exposicionesCategorias()),
+            //sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
             //limit: 3,
             order: 'section_id asc',
             ar_fields: '*',
