@@ -1,5 +1,5 @@
 .main-header {
-    background-color: #000;
+    background-color: $primary;
     padding-top: var(--space-s-l);
     padding-bottom: var(--space-m);
     &:not(:has(+ main > .has-background-grey-light:first-child)) {
@@ -28,7 +28,7 @@
                 order: 4;
             }
         }
-        @include widescreen {
+        @include fullhd {
             .lang {
                 order: 4;
                 padding-bottom: var(--space-m);
@@ -46,8 +46,7 @@
             }
         }
     }
-    @include widescreen {
-        background-color: $primary;
+    @include fullhd {
         padding-bottom: 0;
         .home & {
             background-color: transparent;
@@ -61,7 +60,7 @@
     }
     .wrapper {
         align-items: center;
-        @include widescreen {
+        @include fullhd {
             align-items: flex-end;
         }
     }

@@ -1,10 +1,9 @@
 {
     "search_button": "Rechercher",
     "advanced_search": "Recherche avancée",
-
     "collection_explore": "Explorez la collection du Musée de Préhistoire de Valence",
-    "collection_seach_label": "Recherchez des objets, ensembles, photographies, documents, sites...",
-    "collection_seach_placeholder": "Recherchez des objets, ensembles, photographies, documents, sites...",
+    "collection_seach_label": "Recherchez des objets, photographies, documents, sites...",
+    "collection_seach_placeholder": "Recherchez des objets, photographies, documents, sites...",
     "collection_id_label": "Numéro de catalogue",
     "collection_object_label": "Objet",
     "collection_title_label": "Titre",
@@ -22,7 +21,6 @@
     "collection_filter_fields": "Sites",
     "collection_filter_documents": "Documents",
     "collection_input_limit": "Max. d'enregistrements",
-
     "documents_explore": "Explorez les publications",
     "documents_seach_placeholder": "Recherchez parmi les publications de MuPreVa",
     "documents_title_label": "Titre",
@@ -36,9 +34,7 @@
     "documents_popup_title": "Moteur de recherche de publications archéologiques",
     "documents_popup_content": "<p>Le moteur de recherche ArSe (Archaeological Search) est un outil conçu pour localiser des publications liées à la recherche archéologique sur la péninsule Ibérique. L'outil permet de localiser des mots apparaissant dans le texte des publications, offrant un aperçu du contexte dans lequel ces termes ont été utilisés. La recherche est effectuée sur des articles de séries publiées par différentes institutions péninsulaires dont les contenus sont liés à ce domaine de recherche. Il comprend les livres et articles édités par le Musée de Préhistoire de Valence, seul cas où l'accès au PDF du document est également fourni.</p><p>La liste des séries proposée par le menu déroulant du moteur de recherche constitue la référence la plus à jour des titres sur lesquels la demande est exécutée. Il convient de noter que seuls sont inclus les titres que les éditeurs proposent ouvertement sur leurs pages respectives, que de nombreuses séries ne sont pas complètes et que le processus d'inclusion des articles dans ArSe est progressif, incorporant de nouvelles références chaque semaine. De plus, l'indexation de certains textes est compliquée et leurs contenus ne sont pas récupérés avec la qualité souhaitée. Ainsi, les résultats de la recherche doivent servir de guide pour les chercheurs et les amateurs, mais ils doivent être interprétés avec prudence car ils peuvent être limités par diverses contraintes.</p>",
     "documents_popup_alt": "ArSe. Archaeological Search",
-
     "close": "Fermer",
-
     "item_content": "Contenu",
     "item_rel_content": "Contenus associés",
     "item_download": "Télécharger",
@@ -75,21 +71,17 @@
     "item_tematica": "Thème",
     "item_group": "Éléments de l'ensemble",
     "item_show_more_info": "Afficher plus d'informations",
-
     "item_num": "num.",
     "item_audiovisual": "Audiovisuels",
     "item_documents": "Documents",
-
     "show_list": "Voir les résultats sous forme de tableau",
     "show_timeline": "Voir les résultats sur une chronologie",
     "show_map": "Voir les résultats sur une carte",
-
     "share_title": "Partager",
     "share_copy_desc": "Vous pouvez partager cette fiche en copiant l'adresse web :",
     "share_copy_link": "Copier le lien web",
     "share_other_desc": "Ou directement sur les réseaux sociaux en cliquant sur les icônes suivantes :",
     "share_copy_ok": "URL copiée dans le presse-papiers !",
-
     "footer_address": "Musée de la Préhistoire de Valence<br>Centre Culturel La Beneficència<br>C/ de la Corona, 36<br>46003 Valence, Espagne",
     "footer_visits": "Visites et activités éducatives",
     "footer_visits_telephone": "963 883 579",
@@ -108,23 +100,9 @@
     "header_change_lang": "Changer de langue",
     "header_search": "Recherche",
     "header_search_button": "Rechercher",
-
     "404_title": "Page introuvable",
     "404_description": "Pour une raison quelconque, la page que vous cherchez n'est pas disponible sur notre serveur.<br>Si vous avez saisi l'adresse directement, veuillez vérifier qu'elle est correcte.<br>Si vous venez d'un moteur de recherche, il est possible que le lien soit trop ancien et n'existe plus.",
     "404_button": "Aller à la page d'accueil",
-
-
-
-
-
-
-
-
-
-
-
-
-
     "abstract": "Résumé",
     "advanced": "Avancé",
     "and": "et",
@@ -237,5 +215,53 @@
     "view_hires": "Voir en haute résolution",
     "share": "Partager",
     "zoom": "Zoom",
-    "error_send_mail": "Nous sommes désolés. Une erreur s'est produite lors de l'envoi du courrier. Veuillez réessayer plus tard ou contacter l'administrateur à l'adresse :"
+    "error_send_mail": "Nous sommes désolés. Une erreur s'est produite lors de l'envoi du courrier. Veuillez réessayer plus tard ou contacter l'administrateur à l'adresse :",
+    "item_rel_activities": "Activités liées",
+    "item_credits": "Crédits",
+    "activitis_site_label": "Emplacement",
+    "item_sala": "Salle",
+    "activitis_thematic_label": "Niveau",
+    "home_activities_more": "Découvrir plus",
+    "item_restoration_date": "Date",
+    "item_restoration_title": "Titre",
+    "collection_objects_default": "Objets de la collection",
+    "timeline_element": "élément",
+    "expositions_results": "Résultats de recherche",
+    "activitis_filter_category": "Filtrer par catégorie",
+    "activitis_results": "Résultats de recherche",
+    "item_production": "Lieu de production",
+    "item_pag": "P.",
+    "cerrar": "Fermer",
+    "item_hour": "Heure",
+    "activitis_title_current": "Activités actuelles",
+    "collection_see_more": "Voir plus",
+    "activitis_filter_thematic": "Filtrer par niveau",
+    "expositions_title_current": "Expositions actuelles",
+    "timeline_elements": "éléments",
+    "immovables_title": "Sites archéologiques",
+    "documents_default_last": "Dernières publications du musée",
+    "immovables_periodo": "Période",
+    "immovables_localizacion": "Municipalité",
+    "expositions_category_label": "Catégorie",
+    "expositions_seach_label": "Rechercher des expositions",
+    "item_restoration_description": "Description de l'intervention",
+    "expositions_site_label": "Emplacement",
+    "collection_pictures_default": "Photographies de la collection",
+    "activitis_seach_label": "Rechercher des activités",
+    "collection_inmovables_default": "Sites archéologiques de la collection",
+    "directory_tel": "Téléphone",
+    "item_general_info": "Informations générales",
+    "collection_see_all": "Tout voir",
+    "activitis_date_label": "Date",
+    "expositions_date_label": "Date",
+    "item_galery": "Galerie",
+    "immovables_seach_label": "Rechercher des sites",
+    "directory_rol": "Poste",
+    "activitis_category_label": "Catégorie",
+    "item_to_public": "Destiné à",
+    "collection_documents_default": "Documents de la collection",
+    "route_sites": "Les Sites de la Route",
+    "route_visit": "Visiter",
+    "route_more_info": "Plus d'informations sur",
+    "site_how_arrive": "Comment arriver"
 }

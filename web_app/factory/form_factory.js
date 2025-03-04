@@ -180,9 +180,9 @@ function form_factory() {
                 let label_node
                 const node_input = common.create_dom_element({
                     element_type: 'input',
-                    type: 'text',
+                    type: 'search',
                     id: form_item.id,
-                    class_name: "form-control ui-autocomplete-input" + (form_item.class_name ? (' ' + form_item.class_name) : ''),
+                    class_name: "form-control ui-autocomplete-input input" + (form_item.class_name ? (' ' + form_item.class_name) : ''),
                     placeholder: form_item.label,
                     value: form_item.q || '',
                     parent: group
@@ -339,7 +339,7 @@ function form_factory() {
         // awesome font 4 <i class="fal fa-trash-alt"></i>
         // awesome font 5 <i class="far fa-trash-alt"></i>
         const trash = common.create_dom_element({
-            element_type: "i",
+            element_type: "button",
             class_name: "icon remove fal far fa-trash fa-trash-alt", //  fa-trash awesome font 4
             parent: line
         })
@@ -372,7 +372,7 @@ function form_factory() {
         // input
         const input = common.create_dom_element({
             element_type: "input",
-            class_name: "input_values",
+            class_name: "input_values input",
             parent: line
         })
         input.value = value
@@ -769,6 +769,7 @@ function form_factory() {
         const table = options.table || form_item.table;
         const cross_filter = options.cross_filter || true; // look the other form values to generate the sql filter (default true)
         const order = options.order || 'name ASC'; // 'name' is the generic column alias
+        const custom_filter = options.custom_filter || null;
         const parse_result = options.parse_result || function (ar_result, term) {
             return ar_result.map(function (item) {
                 item.label = item.label.replace(/<br>/g, " ")
@@ -933,11 +934,13 @@ function form_factory() {
                 }
 
                 // sql_filter
-                const sql_filter = self.parse_sql_filter(filter)
+                var sql_filter = self.parse_sql_filter(filter)
+                if (custom_filter) {
+                    sql_filter = sql_filter + ' and ' + custom_filter;
+                }
 
                 // table resolved
                 const table_resolved = typeof table === "function" ? table() : table;
-
                 // search
                 data_manager.request({
                     body: {

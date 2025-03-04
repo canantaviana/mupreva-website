@@ -1,10 +1,9 @@
 {
     "search_button": "Cercar",
     "advanced_search": "Cerca avançada",
-
     "collection_explore": "Explora la col·lecció del Museu de Prehistòria de València",
-    "collection_seach_label": "Cerca objectes, conjunts, fotografies, documents, jaciments...",
-    "collection_seach_placeholder": "Cerca objectes, conjunts, fotografies, documents, jaciments...",
+    "collection_seach_label": "Cerca objectes, fotografies, documents, jaciments...",
+    "collection_seach_placeholder": "Cerca objectes, fotografies, documents, jaciments...",
     "collection_id_label": "Núm. de catàleg",
     "collection_object_label": "Objecte",
     "collection_title_label": "Títol",
@@ -22,7 +21,6 @@
     "collection_filter_fields": "Jaciments",
     "collection_filter_documents": "Documents",
     "collection_input_limit": "Màx. registres",
-
     "documents_explore": "Explora les publicacions",
     "documents_seach_placeholder": "Cerca entre les publicacions del MuPreVa",
     "documents_title_label": "Títol",
@@ -36,9 +34,7 @@
     "documents_popup_title": "Cercador de publicacions arqueològiques",
     "documents_popup_content": "<p>El cercador ArSe (Archaeological Search) és una eina dissenyada per localitzar publicacions relacionades amb la investigació arqueològica de la Península Ibèrica. L'eina permet localitzar paraules que apareguen en el text de les publicacions, oferint una previsualització del context on aquests termes han estat utilitzats. La cerca es realitza sobre els articles de sèries publicades per diferents institucions peninsulars els continguts de les quals es vinculen amb aquest àmbit de recerca. S'inclouen els llibres i articles editats pel Museu de Prehistòria de València, l'únic cas on, a més, es proporciona l'accés al PDF del document.</p><p>El llistat de sèries que ofereix el desplegable del cercador constitueix la referència més actualitzada dels títols sobre els quals s'executa la petició. Cal tenir present que només s'inclouen aquells títols que els editors ofereixen en obert en les seves respectives pàgines, que moltes de les sèries no estan completes i que el procés d'inclusió d'articles a ArSe és progressiu, incorporant noves referències cada setmana. Addicionalment, la indexació d'alguns textos resulta complicada i els seus continguts no es recuperen amb tota la qualitat que seria desitjable. Així, els resultats de les cerques han de servir com una guia per a investigadors i aficionats, però s'han d'interpretar amb cautela ja que poden estar limitats per diverses restriccions.</p>",
     "documents_popup_alt": "ArSe. Archaeological Search",
-
     "close": "Tancar",
-
     "item_content": "Contingut",
     "item_rel_content": "Continguts relacionats",
     "item_download": "Descarregar",
@@ -75,22 +71,17 @@
     "item_tematica": "Temàtica",
     "item_group": "Elements del conjunt",
     "item_show_more_info": "Mostra més informació",
-
     "item_num": "núm.",
     "item_audiovisual": "Audiovisuals",
     "item_documents": "Documents",
-
     "show_list": "Veure els resultats en una taula",
     "show_timeline": "Veure els resultats en una línia de temps",
     "show_map": "Visualitza els resultats en un mapa",
-
     "share_title": "Compartir",
     "share_copy_desc": "Pots compartir aquesta fitxa copiant l'adreça web:",
     "share_copy_link": "Copiar l'enllaç web",
     "share_other_desc": "O directament a les xarxes socials fent clic als següents icones:",
     "share_copy_ok": "URL copiada al portapapers!",
-
-
     "footer_address": "Museu de Prehistòria de València<br>Centro Cultural La Beneficència<br>C/ de la Corona, 36<br>46003 Valencia, Espanya",
     "footer_visits": "Visites i activitats didàctiques",
     "footer_visits_telephone": "963 883 579",
@@ -98,32 +89,20 @@
     "footer_visits_email": "servici.visites@dival.es",
     "footer_general": "Informació general del Museu",
     "footer_general_telephone": "963 883 565",
-
     "footer_visits_hours": "De dimarts a diumenge, de 10:00 a 20:00h. Dilluns tancat.",
     "footer_visits_arranged": "Visites concertades al museu",
     "footer_visits_arranged_hours": "Dimarts a divendres 10:00 a 14:00 h <br> Dimarts 16:00 a 18:00 h",
     "footer_found_in": "Troba'ns a",
     "footer_to_top": "Tornar a l'inici",
-
     "header_jump_menu": "Saltar al menú principal",
     "header_jump_content": "Saltar al contingut principal",
     "header_select_lang": "Idioma seleccionat",
     "header_change_lang": "Canviar idioma",
     "header_search": "Cercador",
     "header_search_button": "Cercar",
-
     "404_title": "No s'ha trobat la pàgina",
     "404_description": "Per alguna raó la pàgina que busca no es troba en el nostre servidor.<br>Si ha escrit l'adreça directament, comprovi que sigui correcta.<br>Si prové d'algun motor de cerca, pot ser que l'enllaç sigui massa antic i ja no existeixi.",
     "404_button": "Anar a la portada",
-
-
-
-
-
-
-
-
-
     "abstract": "Resum",
     "advanced": "Avançat",
     "and": "i",
@@ -131,7 +110,6 @@
     "author": "Autor",
     "buscar": "Cercar",
     "catalogo": "Catàleg",
-
     "codigo": "Codi",
     "collection": "Col·lecció",
     "compartir": "Compartir",
@@ -236,5 +214,53 @@
     "view_hires": "Veure en alta resolució",
     "share": "Compartir",
     "zoom": "Zoom",
-    "error_send_mail": "Ho sentim. S'ha produït un error en l'enviament de correu. Si us plau, torneu-ho a provar més tard o contacteu amb l'administrador a:"
+    "error_send_mail": "Ho sentim. S'ha produït un error en l'enviament de correu. Si us plau, torneu-ho a provar més tard o contacteu amb l'administrador a:",
+    "item_rel_activities": "Activitats relacionades",
+    "item_credits": "Crèdits",
+    "activitis_site_label": "Ubicació",
+    "item_sala": "Sala",
+    "activitis_thematic_label": "Nivell",
+    "home_activities_more": "Descobrir més",
+    "item_restoration_date": "Data",
+    "item_restoration_title": "Títol",
+    "collection_objects_default": "Objectes de la col·lecció",
+    "timeline_element": "element",
+    "expositions_results": "Resultats de la cerca",
+    "activitis_filter_category": "Filtrar per categoria",
+    "activitis_results": "Resultats de la cerca",
+    "item_production": "Lloc de producció",
+    "item_pag": "Pàg.",
+    "cerrar": "Tancar",
+    "item_hour": "Hora",
+    "activitis_title_current": "Activitats actuals",
+    "collection_see_more": "Veure més",
+    "activitis_filter_thematic": "Filtrar per nivell",
+    "expositions_title_current": "Exposicions actuals",
+    "timeline_elements": "elements",
+    "immovables_title": "Jaciments",
+    "documents_default_last": "Últimes publicacions del museu",
+    "immovables_periodo": "Període",
+    "immovables_localizacion": "Municipi",
+    "expositions_category_label": "Categoria",
+    "expositions_seach_label": "Cercar exposicions",
+    "item_restoration_description": "Descripció de la intervenció",
+    "expositions_site_label": "Ubicació",
+    "collection_pictures_default": "Fotografies de la col·lecció",
+    "activitis_seach_label": "Cercar activitats",
+    "collection_inmovables_default": "Jaciments de la col·lecció",
+    "directory_tel": "Telèfon",
+    "item_general_info": "Informació general",
+    "collection_see_all": "Veure-ho tot",
+    "activitis_date_label": "Data",
+    "expositions_date_label": "Data",
+    "item_galery": "Galeria",
+    "immovables_seach_label": "Cercar jaciments",
+    "directory_rol": "Càrrec",
+    "activitis_category_label": "Categoria",
+    "item_to_public": "Dirigit a",
+    "collection_documents_default": "Documents de la col·lecció",
+    "route_sites": "Els Jaciments Ruta",
+    "route_visit": "Visitar",
+    "route_more_info": "Més informació sobre",
+    "site_how_arrive": "Com arribar"
 }

@@ -3,7 +3,7 @@
         margin-left: auto;
         margin-right: auto;
     }
-    @include widescreen {
+    @include fullhd {
         padding-bottom: var(--space-m);
     }
     @include fullhd {
@@ -12,8 +12,12 @@
             bottom: -0.15em;
         }
     }
-    @include widescreen {
-        // display: flex;
-        // order: -1;
+    span span {
+        @include mobile {
+            display: none;
+        }
+        @media screen and (min-width: 1408px) and (max-width: 1680px) {
+            display: none;
+        }
     }
 }

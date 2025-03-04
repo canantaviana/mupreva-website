@@ -1,10 +1,9 @@
 {
     "search_button": "Search",
     "advanced_search": "Advanced search",
-
     "collection_explore": "Explore the collection of the Prehistory Museum of Valencia",
-    "collection_seach_label": "Search for objects, sets, photographs, documents, sites...",
-    "collection_seach_placeholder": "Search for objects, sets, photographs, documents, sites...",
+    "collection_seach_label": "Search for objects, photographs, documents, sites...",
+    "collection_seach_placeholder": "Search for objects, photographs, documents, sites...",
     "collection_id_label": "Catalog number",
     "collection_object_label": "Object",
     "collection_title_label": "Title",
@@ -22,7 +21,6 @@
     "collection_filter_fields": "Sites",
     "collection_filter_documents": "Documents",
     "collection_input_limit": "Max. records",
-
     "documents_explore": "Explore publications",
     "documents_seach_placeholder": "Search among MuPreVa publications",
     "documents_title_label": "Title",
@@ -36,9 +34,7 @@
     "documents_popup_title": "Archaeological publications search engine",
     "documents_popup_content": "<p>The ArSe search engine (Archaeological Search) is a tool designed to locate publications related to archaeological research on the Iberian Peninsula. The tool allows you to locate words that appear in the text of publications, offering a preview of the context where those terms have been used. The search is carried out on articles from series published by different peninsular institutions whose contents are linked to this field of research. It includes books and articles edited by the Prehistory Museum of Valencia, the only case where access to the PDF of the document is also provided.</p><p>The series list offered by the search engine's dropdown constitutes the most updated reference of the titles on which the request is executed. It should be noted that only those titles that the editors offer openly on their respective pages are included, many of the series are not complete, and the process of including articles in ArSe is progressive, incorporating new references every week. Additionally, the indexing of some texts is complicated and their contents are not retrieved with the desired quality. Thus, the search results should serve as a guide for researchers and enthusiasts, but they should be interpreted with caution as they may be limited by various constraints.</p>",
     "documents_popup_alt": "ArSe. Archaeological Search",
-
     "close": "Close",
-
     "item_content": "Content",
     "item_rel_content": "Related contents",
     "item_download": "Download",
@@ -75,21 +71,17 @@
     "item_tematica": "Theme",
     "item_group": "Set elements",
     "item_show_more_info": "Show more information",
-
     "item_num": "no.",
     "item_audiovisual": "Audiovisuals",
     "item_documents": "Documents",
-
     "show_list": "View results in a table",
     "show_timeline": "View results on a timeline",
     "show_map": "View results on a map",
-
     "share_title": "Share",
     "share_copy_desc": "You can share this record by copying the web address:",
     "share_copy_link": "Copy the web link",
     "share_other_desc": "Or directly on social networks by clicking on the following icons:",
     "share_copy_ok": "URL copied to clipboard!",
-
     "footer_address": "Prehistory Museum of Valencia<br>La Beneficencia Cultural Center<br>C/ de la Corona, 36<br>46003 Valencia, Spain",
     "footer_visits": "Visits and educational activities",
     "footer_visits_telephone": "963 883 579",
@@ -108,19 +100,9 @@
     "header_change_lang": "Change language",
     "header_search": "Search",
     "header_search_button": "Search",
-
     "404_title": "Page Not Found",
     "404_description": "For some reason, the page you are looking for cannot be found on our server.<br>If you typed the address directly, please check that it is correct.<br>If you came from a search engine, the link may be outdated and no longer exists.",
     "404_button": "Go to the homepage",
-
-
-
-
-
-
-
-
-
     "abstract": "Abstract",
     "advanced": "Advanced",
     "and": "and",
@@ -233,5 +215,53 @@
     "view_hires": "View high resolution",
     "share": "Share",
     "zoom": "Zoom",
-    "error_send_mail": "We are sorry. There was an error sending mail. Please try again later or contact the administrator at:"
+    "error_send_mail": "We are sorry. There was an error sending mail. Please try again later or contact the administrator at:",
+    "item_rel_activities": "Related activities",
+    "item_credits": "Credits",
+    "activitis_site_label": "Location",
+    "item_sala": "Room",
+    "activitis_thematic_label": "Level",
+    "home_activities_more": "Discover more",
+    "item_restoration_date": "Date",
+    "item_restoration_title": "Title",
+    "collection_objects_default": "Collection objects",
+    "timeline_element": "element",
+    "expositions_results": "Search results",
+    "activitis_filter_category": "Filter by category",
+    "activitis_results": "Search results",
+    "item_production": "Place of production",
+    "item_pag": "Page",
+    "cerrar": "Close",
+    "item_hour": "Hour",
+    "activitis_title_current": "Current activities",
+    "collection_see_more": "See more",
+    "activitis_filter_thematic": "Filter by level",
+    "expositions_title_current": "Current exhibitions",
+    "timeline_elements": "elements",
+    "immovables_title": "Archaeological sites",
+    "documents_default_last": "Latest museum publications",
+    "immovables_periodo": "Period",
+    "immovables_localizacion": "Municipality",
+    "expositions_category_label": "Category",
+    "expositions_seach_label": "Search exhibitions",
+    "item_restoration_description": "Description of intervention",
+    "expositions_site_label": "Location",
+    "collection_pictures_default": "Collection photographs",
+    "activitis_seach_label": "Search activities",
+    "collection_inmovables_default": "Collection archaeological sites",
+    "directory_tel": "Phone",
+    "item_general_info": "General information",
+    "collection_see_all": "See all",
+    "activitis_date_label": "Date",
+    "expositions_date_label": "Date",
+    "item_galery": "Gallery",
+    "immovables_seach_label": "Search sites",
+    "directory_rol": "Position",
+    "activitis_category_label": "Category",
+    "item_to_public": "Target audience",
+    "collection_documents_default": "Collection documents",
+    "route_sites": "The Route Sites",
+    "route_visit": "Visit",
+    "route_more_info": "More information about",
+    "site_how_arrive": "How to arrive"
 }

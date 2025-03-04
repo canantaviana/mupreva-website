@@ -1,9 +1,10 @@
 body {
-  font-family: 'Alegreya Sans', sans-serif;
+  font-family: "Alegreya Sans", sans-serif;
   background: url("../img/pattern.svg");
   background-size: cover;
   background-attachment: fixed;
-  color: #757575; }
+  color: #757575;
+}
 
 .container {
   width: 1000px;
@@ -11,9 +12,9 @@ body {
   padding: 40px;
   background: rgba(255, 255, 255, 0.82);
   border: 1px solid white;
-  box-shadow: 0 0 80px rgba(0, 0, 0, 0.2); }
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.2);
+}
 
 h3 {
-  text-transform: uppercase; }
-
-/*# sourceMappingURL=style.css.map */
+  text-transform: uppercase;
+}/*# sourceMappingURL=style.css.map */

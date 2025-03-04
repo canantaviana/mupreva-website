@@ -62,6 +62,7 @@
 @import "utilities/visible";
 @import "utilities/w-100";
 @import "utilities/wrapper";
+@import "utilities/zoom-in-cursor";
 
 // Block (https://cube.fyi/block.html#block)
 // -----
@@ -114,6 +115,7 @@
 @import "blocks/slider";
 // @import "blocks/social-list";
 @import "blocks/tabs";
+@import "blocks/tabs-2";
 // @import "blocks/toggle";
 @import "blocks/video-container";
 @import "blocks/map";
@@ -125,6 +127,7 @@
 @import "blocks/a11y-dialog";
 @import "blocks/button-like";
 @import "blocks/card";
+@import "blocks/copy-message";
 @import "blocks/desplegables";
 @import "blocks/dl-list";
 @import "blocks/dl-minimal";
@@ -140,8 +143,11 @@
 @import "blocks/swiper-fitxa";
 @import "blocks/swiper-home";
 @import "blocks/table-collapsibles";
+@import "blocks/thesaurus";
 @import "blocks/timeline";
+@import "blocks/timeline-overwrites";
 @import "blocks/tooltip";
+@import "blocks/viewer";
 
 // Blocks per pàgines de Dédalo
 // ----------------------------
@@ -172,15 +178,3 @@
 .test--color::before {
     background-image: url("../img/sprites-svg/skull-fuchsia.svg");
 }
-
-// .example {
-//     color: red;
-
-//     a {
-//         font-weight: bold;
-//     }
-
-//     & {
-//         font-weight: normal;
-//     }
-// }

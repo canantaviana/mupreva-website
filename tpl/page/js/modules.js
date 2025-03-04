@@ -9,7 +9,7 @@ var templateModules = {
     render_items: function (rows, term_id) {
         const self = this;
         const elems = rows.filter(function(elem){
-            return elem.parent == term_id
+            return elem.parent == term_id && elem.template_name != null
         })
         return elems.map(function(elem){
             var template = self.fix_names(elem.template_name);
@@ -355,8 +355,8 @@ var templateModules = {
                     ${(info.body)?info.body:''}
                 </div>
                 ${(info.uri && info.uri.length > 0 || info.pdf_resolved && info.pdf_resolved.length > 0)?
-                `<div class="column is-narrow">
-                    <div class="is-flex is-flex-wrap-wrap is-align-items-center gap-8">
+                `<div class="column">
+                    <div class="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end gap-6">
                     ${info.pdf_resolved.map(function(elem, index){
                         return `<a href="${elem.url}" class="is-flex is-align-items-center link-dn has-text-weight-semibold gap-2 is-size-6">
                             <img src="/assets/img/ico-descarregar.svg" alt="" width="30" height="30">
@@ -424,8 +424,8 @@ var templateModules = {
                     ${(info.body)?info.body:''}
                 </div>
                 ${(info.uri && info.uri.length > 0 || info.pdf_resolved && info.pdf_resolved.length > 0)?
-                `<div class="column is-narrow">
-                    <div class="is-flex is-flex-wrap-wrap is-align-items-center gap-8">
+                `<div class="column">
+                    <div class="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end gap-6">
                     ${info.pdf_resolved.map(function(elem, index){
                         return `<a href="${elem.url}" class="is-flex is-align-items-center link-dn has-text-weight-semibold gap-2 is-size-6">
                             <img src="/assets/img/ico-descarregar.svg" alt="" width="30" height="30">
@@ -496,8 +496,8 @@ var templateModules = {
                     ${(info.body)?info.body:''}
                 </div>
                 ${(info.uri && info.uri.length > 0 || info.pdf_resolved && info.pdf_resolved.length > 0)?
-                `<div class="column is-narrow">
-                    <div class="is-flex is-flex-wrap-wrap is-align-items-center gap-8">
+                `<div class="column">
+                    <div class="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end gap-6">
                     ${info.pdf_resolved.map(function(elem, index){
                         return `<a href="${elem.url}" class="is-flex is-align-items-center link-dn has-text-weight-semibold gap-2 is-size-6">
                             <img src="/assets/img/ico-descarregar.svg" alt="" width="30" height="30">
@@ -568,8 +568,8 @@ var templateModules = {
                     ${(info.body)?info.body:''}
                 </div>
                 ${(info.uri && info.uri.length > 0 || info.pdf_resolved && info.pdf_resolved.length > 0)?
-                `<div class="column is-narrow">
-                    <div class="is-flex is-flex-wrap-wrap is-align-items-center gap-8">
+                `<div class="column">
+                    <div class="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end gap-6">
                     ${info.pdf_resolved.map(function(elem, index){
                         return `<a href="${elem.url}" class="is-flex is-align-items-center link-dn has-text-weight-semibold gap-2 is-size-6">
                             <img src="/assets/img/ico-descarregar.svg" alt="" width="30" height="30">
@@ -912,13 +912,14 @@ var templateModules = {
 */
 
     bloque_publicaciones_default: function(){
-        var content = htmlTemplate(`
-        <div>
+        var contentBase = htmlTemplate(`<div>
             <div class="default_last mt-8 flow--xl">
             </div>
-        </div>
-        `);
-        var children_container = content[0].querySelector('div.default_last');
+            <div class="default_cats mt-8 flow--xl">
+            </div>
+        </div>`);
+        var children_container = contentBase[0].querySelector('div.default_last');
+        var children_container_cats = contentBase[0].querySelector('div.default_cats');
         api.getPublicacionesDestacados().then(function(results){
             var content = htmlTemplate(`
                 <h2>${tstring.documents_default_last}</h2>
@@ -957,14 +958,13 @@ var templateModules = {
             `);
             appendTemplate(children_container, content);
         });
-        /*var children_container_cats = content[0];
         api.getPublicacionesSeries().then(function(results){
             results.forEach(function(elem){
                 var content = htmlTemplate(`
                 <div class="default_last mt-8 flow--xl">
                     <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
                     <h2>${elem.name}</h2>
-                    <a href="/catalogo/?catalog_tables=objects" class="button button--simple-2">${tstring.collection_see_all}</a>
+                    <a href="/publicaciones/?cercaSerie=${elem.name}" class="button button--simple-2">${tstring.collection_see_all}</a>
                 </div>
 
                     <ul class="pubs-list link-dn mt-7">
@@ -972,7 +972,7 @@ var templateModules = {
                 </div>
                 `);
                 var children_container = content[0].querySelector('ul');
-                api.getPublicacionesDestacados(elem.section_id).then(function(results){
+                api.getPublicacionesDestacados(elem.id).then(function(results){
                     var content = htmlTemplate(`
                         ${results.map(function(row){
                             const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
@@ -1007,12 +1007,10 @@ var templateModules = {
                     `);
                     appendTemplate(children_container, content);
                 });
+                appendTemplate(children_container_cats, content);
             });
-
-            appendTemplate(children_container_cats, content);
         });
-        */
-        return content;
+        return contentBase;
     },
 
     bloque_directorio: function(info){
@@ -1080,7 +1078,170 @@ var templateModules = {
         });
         return content;
     },
+    visitaYacimiento: function(info){
+        var logo_url = null;
+        if (info.identifying_image !== null && info.identifying_image.length > 0) {
+            logo_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(info.identifying_image)[0];
+        }
+        var image_url = null;
+        if (info.images !== null && info.images.length > 0) {
+            image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(info.images)[0];
+        }
+        return htmlTemplate(`
+            <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${info.title}</h2>
+                <!-- block-text-img-dreta-fons-negre -->
+                <div class="block-text-img-dreta-fons-negre">
+                    <div class="block-dedalo columns is-widescreen">
+                        <div class="column is-5-widescreen">
+                            <div class="has-background-black h-100 has-text-white flow--l p-8">
+                                ${(logo_url)?`
+                                <img src="${logo_url}" width="157" height="78">
+                                `:''}
+                                ${(info.summary)?`
+                                ${common.convertText(info.summary)}
+                                `:''}
+                            </div>
+                        </div>
+                        ${(image_url)?`
+                        <div class="column">
+                            <img loading="lazy" src="${image_url}" alt="" class="is-block">
+                        </div>
+                        `:''}
+                    </div>
+                </div>
+                ${(info.description)?`
+                <div class="block-dedalo is-variable is-8 is-multiline">
+                    ${common.convertText(info.description)}
+                </div>
+                `:''}
+                ${(info.children_data.length > 0)?`
+                <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${tstring.route_sites}</h2>
+                <div class="tabs-2">
+                    <div class="tab-control">
+                        <ul class="tab-list" role="tablist">
+                        ${info.children_data.map(function(elem){
+                            return `<li class="tab-item">
+                                <button role="tab" aria-controls="route-tab-${elem.section_id}">${elem.title}</button>
+                            </li>`;
+                        }).join('')}
+                        </ul>
+                    </div>
+                    <div class="tab-group">
 
+                    ${info.children_data.map(function(elem){
+                        return `
+                        <div class="tab-content" id="route-tab-${elem.section_id}" role="tabpanel">
+                            <div class="block-dedalo columns is-variable is-8 is-multiline">
+                                <div class="column is-half-tablet">
+                                    <div class="block-titol-text flow">
+                                        <h3>${elem.title}</h3>
+                                        ${(elem.summary)?`
+                                        <h4>${elem.summary}</h4>
+                                        `:''}
+                                        ${(elem.description)?`
+                                        ${common.convertText(elem.description)}
+                                        `:''}
+                                    </div>
+                                </div>
+                                <div class="column is-half-tablet"></div>
+                            </div>
+                            ${(elem.children_data.length > 0)?`
+                            <div class="has-background-grey-light pt-7">
+                                <div class="wrapper">
+                                    <ul class="columns is-multiline is-variable is-7">
+                                    ${elem.children_data.map(function(site){
+                                        var image_url = null;
+                                        if (site.images !== null && site.images.length > 0) {
+                                            image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(site.images)[0];
+                                        }
+                                        var documents = [];
+                                        if (site.documents) {
+                                            documents = JSON.parse(site.documents);
+                                        }
+                                        var documentsTitles = [];
+                                        if (site.documents_title) {
+                                            documentsTitles = JSON.parse(site.documents_title);
+                                        }
+                                        return `
+                                        <li class="column is-half-tablet mb-8">
+                                            <div class="columns is-desktop is-flex-direction-row-reverse">
+                                                <div class="column is-flex is-flex-direction-column">
+                                                    <div class="flow--2xs mb-5">
+                                                        <h3 class="is-size-3 has-text-weight-semibold">${site.title}</h3>
+                                                        ${(elem.place)?`
+                                                        <p class="is-size-6 has-text-weight-medium">${site.place}</p>
+                                                        `:''}
+                                                    </div>
+                                                    <ul class="actions-list mt-auto mb-4 has-text-weight-medium link-dn flow--xs is-size-5">
+                                                        <li>
+                                                            <div class="button-like" data-a11y-dialog-show="dialog-route-${site.section_id}" role="button" tabindex="0">
+                                                                ${tstring.route_visit} ${site.title}
+                                                            </div>
+                                                        </li>
+                                                        <!-- li>
+                                                            <a href="/jaciments/fitxa-jaciment/">${tstring.route_more_info} ${site.title}</a>
+                                                        </li -->
+                                                        ${documents.map(function(document, index){
+                                                        return `
+                                                        <li>
+                                                            <a href="${__WEB_MEDIA_ENGINE_URL__+document}">${documentsTitles[index]}</a>
+                                                        </li>
+                                                        `;
+                                                        }).join('')}
+                                                    </ul>
+                                                </div>
+                                                ${(image_url)?`
+                                                <div class="column">
+                                                    <img loading="lazy" src="${image_url}" width="380" height="250" alt="" class="is-block">
+                                                </div>
+                                                `:''}
+                                            </div>
+                                            <div class="dialog-container" data-a11y-dialog="dialog-route-${site.section_id}" aria-hidden="true" aria-labelledby="dialog-route-${site.section_id}-title">
+                                                <div class="dialog-overlay" data-a11y-dialog-hide></div>
+                                                <div class="dialog-content" role="document">
+                                                    <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close}">
+                                                        <svg width="44" height="44">
+                                                            <g fill="none" fill-rule="evenodd">
+                                                                <path d="M0 0h44v44H0z" />
+                                                                <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                                            </g>
+                                                        </svg>
+                                                    </button>
+                                                    <div class="columns is-widescreen is-variable is-8">
+                                                        ${(image_url)?`
+                                                        <div class="column">
+                                                            <img loading="lazy" src="${image_url}" alt="">
+                                                        </div>
+                                                        `:''}
+                                                        <div class="column text-base flow--m">
+                                                            <div class="flow--xs">
+                                                                <h1 id="dialog-01-title">${site.title}</h1>
+                                                                ${(elem.place)?`
+                                                                <p class="is-size-3 has-text-weight-medium">${site.place}</p>
+                                                                `:''}
+                                                            </div>
+                                                            <h2 class="is-flex is-align-items-center gap-2 mt-7">
+                                                                <img src="/assets/img/ico-localitzacio-small.svg" alt="" width="20" height="20">
+                                                                ${tstring.site_how_arrive}
+                                                            </h2>
+                                                            ${common.convertText(elem.description)}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>`;
+                                    }).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                            `:''}
+                        </div>`;
+                    }).join('')}
+                    </div>
+                `:''}
+                </div>
+        `);
+    },
 
 
 

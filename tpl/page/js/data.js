@@ -112,7 +112,7 @@ page.parse_tree_data = function (rows, hilite_terms) {
         return null;
     }
 
-    const ar_parse = ['parent', 'children', 'space', 'indexation', 'relations']
+    const ar_parse = ['parent', 'children', 'space', 'indexation', 'relations', 'dd_relations']
     function decode_field(field) {
         if (field) {
             return JSON.parse(field)
@@ -196,7 +196,7 @@ page.parse_tree_data = function (rows, hilite_terms) {
                     }
 
                     // remove me as child
-                    parent_row.children.splice(child_key, 1)
+                    //parent_row.children.splice(child_key, 1)
 
                     // recursion with parent
                     update_children_data(data, parent_row)
@@ -351,6 +351,9 @@ page.parse_list_data = function (rows) {
         row.tpl = page.section_tipo_to_template(row.section_tipo)
         if (row.table == 'activities') {
             row.tpl = 'actividad';
+        }
+        if (row.table == 'exhibitions') {
+            row.tpl = 'exposicion';
         }
 
         /*
@@ -1659,7 +1662,8 @@ page.get_records = function (options) {
     const ar_fields = options.ar_fields || '*'
     const parse = options.parse || page.parse_ts_web
     const resolve_portals_custom = options.resolve_portals_custom || ''
-
+    const group = options.group || null
+    const section_id = options.section_id || null
 
     return new Promise(function (resolve) {
 
@@ -1670,11 +1674,13 @@ page.get_records = function (options) {
                 lang: page_globals.WEB_CURRENT_LANG_CODE,
                 table: table,
                 ar_fields: ar_fields,
+                section_id: section_id,
                 sql_filter: sql_filter,
                 limit: limit,
                 count: count,
                 offset: offset,
                 order: order,
+                group: group,
                 resolve_portals_custom: resolve_portals_custom
             }
         })
