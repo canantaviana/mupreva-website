@@ -1,0 +1,10 @@
+version: "3.1"
+services:
+
+  web:
+    build: docker/php-apache2
+    container_name: mupreva-web
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8080:80"
