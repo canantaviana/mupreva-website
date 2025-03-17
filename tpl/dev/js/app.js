@@ -343,16 +343,86 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-function swiperExpos() {
+function swiperPublicaciones() {
     // ---------------------------------
-    // Swiper (Exposicions i activitats)
+    // Swiper Ultimas publicaciones
     // ---------------------------------
-    var swiperExpos = new Swiper(".swiper--expos", {
+    var swiperPublicacions = new Swiper(".swiper--publicacions", {
         // spaceBetween: 10,
-        slideActiveClass: "active",
+        slideActiveClass: 'active',
         navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
+            nextEl: ".swiper--publicacions__btns .swiper-button-next",
+            prevEl: ".swiper--publicacions__btns .swiper-button-prev",
+        },
+        slidesPerView: 1,
+        spaceBetween: 24,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            600: {
+                slidesPerView: 2,
+            },
+            850: {
+                slidesPerView: 3,
+            },
+            1100: {
+                slidesPerView: 4,
+            },
+            1400: {
+                slidesPerView: 5,
+            },
+            1700: {
+                slidesPerView: 6,
+            },
+        },
+    });
+}
+
+function swiperActividades() {
+    // ---------------------------------
+    // Swiper Proximas Actividades
+    // ---------------------------------
+    var swiperActivitats = new Swiper(".swiper--activitats", {
+        // spaceBetween: 10,
+        slideActiveClass: 'active',
+        navigation: {
+            nextEl: ".swiper--activitats__btns .swiper-button-next",
+            prevEl: ".swiper--activitats__btns .swiper-button-prev",
+        },
+        slidesPerView: 1,
+        spaceBetween: 24,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            600: {
+                slidesPerView: 2,
+            },
+            850: {
+                slidesPerView: 3,
+            },
+            1100: {
+                slidesPerView: 4,
+            },
+            1400: {
+                slidesPerView: 5,
+            },
+            1700: {
+                slidesPerView: 6,
+            },
+        },
+    });
+}
+
+function swiperExposicionesDestacadas() {
+    // ---------------------------------
+    // Swiper Exposiciones destacadas
+    // ---------------------------------
+    var swiperExposicionesDestacadas = new Swiper(".swiper--exposiciones-destacadas", {
+        // spaceBetween: 10,
+        slideActiveClass: 'active',
+        navigation: {
+            nextEl: ".swiper--exposiciones-destacadas__btns .swiper-button-next",
+            prevEl: ".swiper--exposiciones-destacadas__btns .swiper-button-prev",
         },
         slidesPerView: 1,
         spaceBetween: 33,

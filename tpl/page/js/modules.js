@@ -439,47 +439,56 @@ var templateModules = {
                 </div>`
                 :''}
             </div>
-            <div class="children_container">
+            <div class="children_container swiper-container is-relative mt-7">
             </div>
         </div>
         `);
         var children_container = content[0].querySelector('div.children_container');
         api.getPublicacionesDestacados().then(function(results){
             var content = htmlTemplate(`
-                <ul class="pubs-list link-dn mt-7">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var info = [];
-                    if (row.autor) {
-                        info.push(row.autor);
-                    }
-                    if (row.fecha_publicacion) {
-                        info.push(row.fecha_publicacion);
-                    }
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.imagen_identificativa !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
-                    }
+                <div class="swiper swiper--publicacions">
+                    <div class="swiper-wrapper link-dn">
+                        ${results.map(function(row){
+                            const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                            var info = [];
+                            if (row.autor) {
+                                info.push(row.autor);
+                            }
+                            if (row.fecha_publicacion) {
+                                info.push(row.fecha_publicacion);
+                            }
+                            var image_url = '/assets/img/placeholder.png';
+                            if (row.imagen_identificativa !== null) {
+                                image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+                            }
 
-                    return `
-                    <li class="is-flex is-flex-direction-column full-link gap-2 ${row.tpl}">
-                        <h3 class="is-size-6">
-                            <a href="${url}" target="_blank">${row.titulo}</a>
-                        </h3>
-                        <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
-                            <img loading="lazy" src="${image_url}" alt="">
-                        </div>
-                        ${(info.length > 0)?`
-                        <p class="is-size-7">
-                            ${info.join('<br>')}
-                        </p>
-                        `:''}
-                    </li>
-                    `;
-                }).join('')}
-                </ul>
+                            return `
+                            <div class="swiper-slide">
+                                <div class="is-flex is-flex-direction-column full-link gap-2">
+                                    <h3 class="is-size-6">
+                                        <a href="${url}" target="_blank">${row.titulo}</a>
+                                    </h3>
+                                    <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
+                                        <img loading="lazy" src="${image_url}" alt="">
+                                    </div>
+                                    ${(info.length > 0)?`
+                                    <p class="is-size-7">
+                                        ${info.join('<br>')}
+                                    </p>
+                                    `:''}
+                                </div>
+                            </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                <div class="swiper--publicacions__btns">
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
             `);
             appendTemplate(children_container, content);
+            swiperPublicaciones();
         });
         return content;
     },
@@ -512,46 +521,53 @@ var templateModules = {
                 :''}
             </div>
             <div class="is-flex is-flex-wrap-wrap is-align-items-center gap-8 mb-8"></div>
-            <div class="children_container">
+            <div class="children_container swiper-container is-relative mt-7">
             </div>
         </div>
         `);
         var children_container = content[0].querySelector('div.children_container');
         api.getActividadesDestacados().then(function(results){
             var content = htmlTemplate(`
-                <ul class="galeria galeria--242x342 activitats-list link-dn">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.identifying_image !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
-                    }
-                    var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+                <div class="swiper swiper--activitats">
+                    <div class="swiper-wrapper activitats-list link-dn">
+                        ${results.map(function(row){
+                            const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                            var image_url = '/assets/img/placeholder.png';
+                            if (row.identifying_image !== null) {
+                                image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                            }
+                            var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
-                    return `
-                    <li>
-                        <div class="is-flex is-flex-direction-column gap-4 full-link ${row.tpl}">
-                            <h3 class="is-size-4">
-                                <a href="${url}">${row.title}</a>
-                            </h3>
-                            ${(row.type)?
-                            `<p class="has-text-weight-medium is-size-6">
-                                <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
-                            </p>`
-                            :''}
-                            <img loading="lazy" src="${image_url}" alt="">
-                            ${(date)?
-                            `<div class="has-text-primary has-text-weight-semibold is-size-6">
-                                ${date}
-                            </div>`
-                            :''}
-                        </div>
-                    </li>
-                    `;
-                }).join('')}
-                </ul>
+                            return `
+                            <div class="swiper-slide">
+                                <div class="is-flex is-flex-direction-column gap-4 full-link">
+                                    <h3 class="is-size-4">
+                                        <a href="${url}">${row.title}</a>
+                                    </h3>
+                                    ${(row.type)?
+                                    `<p class="has-text-weight-medium is-size-6">
+                                        <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                    </p>`
+                                    :''}
+                                    <img loading="lazy" src="${image_url}" alt="">
+                                    ${(date)?
+                                    `<div class="has-text-primary has-text-weight-semibold is-size-6">
+                                        ${date}
+                                    </div>`
+                                    :''}
+                                </div>
+                            </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                <div class="swiper--activitats__btns">
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
             `);
             appendTemplate(children_container, content);
+            swiperActividades();
         });
         return content;
     },
@@ -583,47 +599,54 @@ var templateModules = {
                 </div>`
                 :''}
             </div>
-            <div class="children_container">
+            <div class="children_container swiper-container is-relative mt-7">
             </div>
         </div>
         `);
         var children_container = content[0].querySelector('div.children_container');
         api.getExposicionesDestacados().then(function(results){
             var content = htmlTemplate(`
-                <ul class="columns is-multiline mt-7">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.identifying_image !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
-                    }
-                    var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+                <div class="swiper swiper--exposiciones-destacadas">
+                    <div class="swiper-wrapper">
+                        ${results.map(function(row){
+                            const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                            var image_url = '/assets/img/placeholder.png';
+                            if (row.identifying_image !== null) {
+                                image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                            }
+                            var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
-                    return `
-                    <li class="column is-half-tablet is-one-third-desktop ${row.tpl}">
-                        <div class="card is-flex is-flex-direction-column full-link">
-                            <div class="pt-7 pb-5 px-6 flow--xl">
-                                <h3 class="is-size-3 has-text-weight-semibold">
-                                    <a href="${url}">${row.title}</a>
-                                </h3>
-                                ${(date)?
-                                `<p class="has-text-weight-medium is-uppercase">${date}</p>`
-                                :''}
-                                <p class="more-link">${tstring.home_activities_more}</p>
+                            return `
+                            <div class="swiper-slide">
+                                <div class="card is-flex is-flex-direction-column full-link">
+                                    <div class="pt-7 pb-5 px-6 flow--xl">
+                                        <h3 class="is-size-3 has-text-weight-semibold">
+                                            <a href="${url}">${row.title}</a>
+                                        </h3>
+                                        ${(date)?
+                                        `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                        :''}
+                                        <p class="more-link">${tstring.home_activities_more}</p>
+                                    </div>
+                                    ${(row.type)?
+                                    `<p class="has-text-weight-medium mb-3">
+                                        <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                    </p>`
+                                    :''}
+                                    <img loading="lazy" src="${image_url}" alt="">
+                                </div>
                             </div>
-                            ${(row.type)?
-                            `<p class="has-text-weight-medium mb-3">
-                                <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
-                            </p>`
-                            :''}
-                            <img loading="lazy" src="${image_url}" alt="">
-                        </div>
-                    </li>
-                    `;
-                }).join('')}
-                </ul>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                <div class="swiper--exposiciones-destacadas__btns">
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
             `);
             appendTemplate(children_container, content);
+            swiperExposicionesDestacadas();
         });
         return content;
     },
