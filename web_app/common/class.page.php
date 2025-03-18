@@ -1189,8 +1189,6 @@ class page
             $template_name = $template_map->template;
         }
         $template_name = str_replace(' ', '_', strtolower($this->remove_accents($template_name)));
-var_dump($template_name);
-exit();
         #
         # TEMPLATE CSS / JS
         if ($options->add_template_css === true) {
