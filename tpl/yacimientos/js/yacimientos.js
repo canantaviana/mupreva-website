@@ -694,7 +694,7 @@ console.log(sql_filter);
             <div class="card is-flex is-flex-direction-column full-link">
                 <div class="p-5 flow--xs">
                     <h3 class="is-size-5 has-text-weight-semibold">
-                        <a href="${url}" target="_blank">${row.titulo}</a>
+                        <a href="${url}" target="_blank">${(row.titulo)?row.titulo:''}</a>
                     </h3>
                     ${(row.localizacion)?
                     `<p class="is-size-6 has-text-weight-medium">${row.localizacion}</p>`
