@@ -287,7 +287,7 @@ var api = {
     getVisitasYacimiento: function() {
         var options = {
             table: 'ts_route',
-            sql_filter: "parent_data = \"[\\\"265\\\"]\"",
+            sql_filter: "parent_data = \"[\\\"27\\\"]\"",
             order: 'section_id asc',
             ar_fields: 'section_id',
         };
@@ -308,4 +308,16 @@ var api = {
         });
     },
 
+    getVisitaYacimientoCatalog: function(title) {
+        var options = {
+            table: 'ts_route',
+            sql_filter: 'title = "'+title+'"',
+            ar_fields: 'section_id,summary',
+            order: 'section_id asc',
+            parse: function(info){return info}
+        };
+        return page.get_records(options).then(function(results){
+            return results[0]
+        });
+    },
 };

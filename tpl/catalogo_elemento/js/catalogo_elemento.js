@@ -951,16 +951,24 @@ var item = {
         `);
     },
 
-    templateJacimentVisit: function (row) {
-        //TODO
-        return "";
-        return htmlTemplate(`
-            <h2 class="accordion-header">
+    templateJacimentVisit: function (target, row) {
+        const template = htmlTemplate(`
+            <h2 class="accordion-header visit-jaciment" style="display:none">
                 <button type="button">${tstring.item_jaciment_visit}</button>
             </h2>
-            <div class="accordion-content block-dedalo">
+            <div class="accordion-content block-dedalo visit-jaciment-content">
             </div>
         `);
+        appendTemplate(target, template);
+
+        const self = this;
+        api.getVisitaYacimientoCatalog(row.titulo).then(function(result) {
+            const target = document.querySelector(".visit-jaciment-content");
+            target.innerHTML = common.convertText(result.summary);
+
+            const target2 = document.querySelector(".visit-jaciment");
+            target2.style.display = "block";
+        })
     },
 
     templateResources: function (row) {
@@ -1369,9 +1377,9 @@ var item = {
         //patrimoni relacionat
         appendTemplate(acordion, this.templateRelated(row));
 
-        if (row.lugar) {
+        if (row.tpl === "immovable") {
             //visita al jaciment
-            appendTemplate(acordion, this.templateJacimentVisit(row));
+            this.templateJacimentVisit(acordion, row);
         }
 
         //recursos

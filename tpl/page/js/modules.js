@@ -1247,7 +1247,7 @@ var templateModules = {
                                                                 <img src="/assets/img/ico-localitzacio-small.svg" alt="" width="20" height="20">
                                                                 ${tstring.site_how_arrive}
                                                             </h2>
-                                                            ${common.convertText(elem.description)}
+                                                            ${common.convertText(site.summary)}
                                                         </div>
                                                     </div>
                                                 </div>
