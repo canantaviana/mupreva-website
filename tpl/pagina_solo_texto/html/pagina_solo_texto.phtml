@@ -19,3 +19,4 @@ require($base_path . '/' . $cwd . '.php');
     <?php endif ?>
 </main>
 <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/footer.phtml'; ?>
+<?php echo $this->get_header_links('js', ['js_async' => 'defer']) ?>
