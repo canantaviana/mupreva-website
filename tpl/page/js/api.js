@@ -48,7 +48,54 @@ var api = {
         return '('+filter.join(' or ')+')';
     },
 
+    getSliderPortada: function() {
+        const portada_ar_calls = [
+            {
+                id: "salas",
+                options: {
+                    dedalo_get: "records",
+                    table: "ts_ubication",
+                    sql_filter: `parents LIKE '%\"ubication1_18\"%' AND model_name IN ("Sala", "Sala general museo")`,
+                    order: "RAND()",
+                    ar_fields: ["term", "illustration", "imagenes", "section_id"],
+                    limit: 4,
+                    resolve_portals_custom: `{"imagenes":"image"}`,
+                    lang: page_globals.WEB_CURRENT_LANG_CODE,
+                }
+            },
+            {
+                id: "exposiciones",
+                options: {
+                    dedalo_get: "records",
+                    table: "exhibitions",
+                    sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
+                    order: "RAND()",
+                    ar_fields: ["identifying_image", "section_id", "title"],
+                    parse: page.parse_list_data,
+                    limit: 4,
+                    lang: page_globals.WEB_CURRENT_LANG_CODE,
+                }
+            }
+        ];
 
+        return new Promise(function (resolve) {
+            data_manager.request({
+                body: {
+                    dedalo_get: 'combi',
+                    db_name: page_globals.WEB_DB,
+                    lang: page_globals.WEB_CURRENT_LANG_CODE,
+                    ar_calls: JSON.stringify(portada_ar_calls)
+                }
+            })
+                .then(function (response) {
+                    const data = (typeof parse === "function")
+                        ? parse(response.result)
+                        : response.result
+
+                    resolve(data)
+                })
+        })
+    },
 
     getCatalogDestacados: function() {
         var options = {
@@ -127,7 +174,7 @@ var api = {
 
     getExposicionesDestacados: function() {
         var options = {
-            table: 'exposicion',
+            table: 'exhibitions',
             sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
             limit: 3,
             order: 'RAND()',

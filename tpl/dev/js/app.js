@@ -325,10 +325,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }, 3000);
         }
     });
+});
 
-    // -----------
-    // Swiper home
-    // -----------
+// -----------
+// Swiper home
+// -----------
+function swiperHome() {
     const swiperHome = new Swiper(".swiper--home", {
         cssMode: true,
         navigation: {
@@ -341,7 +343,7 @@ document.addEventListener("DOMContentLoaded", function () {
         mousewheel: true,
         keyboard: true,
     });
-});
+};
 
 function swiperPublicaciones() {
     // ---------------------------------
