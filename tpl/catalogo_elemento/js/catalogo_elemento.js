@@ -1001,19 +1001,17 @@ var item = {
                                 .map(function (entry) {
                                     return `
                                 <li>
-                                    <a href="${
-                                        __WEB_MEDIA_ENGINE_URL__ + entry.video
-                                    }" data-subtitles="${__WEB_MEDIA_ENGINE_URL__ + entry.subtitles}" class="video-popup">
+                                    <button
+                                        type="button"
+                                        class="video-button"
+                                        data-video-title="${entry.title}"
+                                        data-video-url="${__WEB_MEDIA_ENGINE_URL__ + entry.video}"
+                                        data-subtitles-url="${__WEB_MEDIA_ENGINE_URL__ + entry.subtitles}">
                                         <figure>
-                                            <img src="${getPosterframe(
-                                                __WEB_MEDIA_ENGINE_URL__ +
-                                                    entry.video
-                                            )}" alt="">
-                                            <figcaption>${
-                                                entry.title
-                                            }</figcaption>
+                                            <img src="${getPosterframe(__WEB_MEDIA_ENGINE_URL__ + entry.video)}" alt="">
+                                            <figcaption>${entry.title}</figcaption>
                                         </figure>
-                                    </a>
+                                    </button>
                                 </li>
                                 `;
                                 })
@@ -1314,6 +1312,55 @@ var item = {
         appendTemplate(target, template);
     },
 
+    template_modal: function () {
+        return htmlTemplate(`
+            <div id="video-modal" class="modal">
+                <div class="modal-content">
+                    <video controls>
+                        <source id="video-source" src="" type="video/mp4">
+                        <track id="video-track" kind="subtitles" src="">
+                    </video>
+                    <p id="modal-title"></p>
+                </div>
+                <button class="modal-close"></button>
+            </div>`);
+    },
+
+    load_modal: function () {
+        const modal = document.getElementById('video-modal');
+        const title = modal.querySelector('#modal-title');
+        const video = modal.querySelector('video');
+        const videoSource = modal.querySelector('#video-source');
+        const videoTrack = modal.querySelector('#video-track');
+
+        document.querySelectorAll('.video-button').forEach((button) => {
+            button.addEventListener('click', function() {
+                // afegir titol, src, subtitols
+                title.textContent = this.dataset.videoTitle;
+                videoSource.src = this.dataset.videoUrl;
+                videoTrack.src = this.dataset.subtitlesUrl;
+
+                video.load();
+
+                modal.classList.add('is-active');
+            });
+        });
+
+        modal.querySelectorAll('.modal-close').forEach((element) => {
+            element.addEventListener('click', function(e) {
+                video.pause();
+                modal.classList.remove('is-active');
+            });
+        });
+
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) {
+                video.pause();
+                modal.classList.remove('is-active');
+            }
+        })
+    },
+
     /**
      * LIST_ROW_BUILDER
      * Build DOM nodes to insert into list pop-up
@@ -1384,6 +1431,8 @@ var item = {
 
         //recursos
         appendTemplate(acordion, this.templateResources(row));
+        appendTemplate(acordion, this.template_modal());
+        this.load_modal();
 
         //restauració
         appendTemplate(acordion, this.templateRestoration(row));
