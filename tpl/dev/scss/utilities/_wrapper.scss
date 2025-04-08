@@ -4,9 +4,11 @@
     margin-right: auto;
     padding-left: var(--space-l);
     padding-right: var(--space-l);
-    @media screen and (min-width: 1024px) and (max-width: 1750px) {
-        padding-left: var(--space-l-3xl);
-        padding-right: var(--space-l-3xl);
+    main & {
+        @media screen and (min-width: 1024px) and (max-width: 1750px) {
+            padding-left: var(--space-l-3xl);
+            padding-right: var(--space-l-3xl);
+        }
     }
     &--narrow {
         max-width: 76.5rem;
