@@ -162,27 +162,47 @@ var api = {
     getActividadesDestacados: function() {
         var options = {
             table: 'activities',
-            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.activitadesCategorias()),
+            //sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.activitadesCategorias()),
+            sql_filter: "time_frame is not null and NOW() < STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.activitadesCategorias()),
             limit: 5,
             order: 'RAND()',
             ar_fields: '*',
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"image": "image"}'
         };
-        return page.get_records(options);
+        return page.get_records(options).then(function(results){
+            //ordenacion por time_frame
+            results = results.sort(function(a, b){
+                var dateA = new Date(a.time_frame.split(',')[0]);
+                var dateB = new Date(b.time_frame.split(',')[0]);
+                return dateA - dateB;
+            });
+            console.log(results);
+            return results;
+        });
     },
 
     getExposicionesDestacados: function() {
         var options = {
             table: 'exhibitions',
-            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
+            //sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
+            sql_filter: "time_frame is not null",
             limit: 3,
             order: 'RAND()',
             ar_fields: '*',
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"image": "image"}'
         };
-        return page.get_records(options);
+        return page.get_records(options).then(function(results){
+            //ordenacion por time_frame
+            results = results.sort(function(a, b){
+                var dateA = new Date(a.time_frame.split(',')[0]);
+                var dateB = new Date(b.time_frame.split(',')[0]);
+                return dateB - dateA;
+            });
+            console.log(results);
+            return results;
+        });
     },
 
 
