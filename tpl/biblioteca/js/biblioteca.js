@@ -731,9 +731,9 @@ var biblio = {
                 self.list = self.list || new list_factory() // creates / get existing instance of list
                 self.list.init({
                     data: list_data,
-                    fn_row_builder: self.list_row_builder,
+                    fn_row_builder: self.literal_search_results,
                     pagination: pagination,
-                    container_class: 'pubs-list link-dn',
+                    container_class: 'pub-text-results flow--l link-dn',
                     caller: self
                 })
                 self.list.render_list()
@@ -765,6 +765,109 @@ var biblio = {
 
         return data
     },// end list_data
+
+    /**
+     * LITERAL SEARCH RESULTS
+     */
+
+    literal_search_results: function (row) {
+        row.tpl = page.section_tipo_to_template(row.section_tipo);
+
+        const parser = new DOMParser();
+        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+        var info = [];
+        if (row.autor) {
+            info.push(row.autor);
+        }
+        if (row.fecha_publicacion) {
+            info.push(row.fecha_publicacion);
+        }
+
+        var image_url = '/assets/img/placeholder.png';
+        if (row.imagen_identificativa !== null) {
+            image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+        }
+        const year = row.fecha_publicacion;
+
+        function getWordContexts(row, searchWord, contextSize = 30) {
+            const regex = new RegExp(searchWord, 'i');
+
+            // find first page
+            const pageRange = row.num_paginas.match(/\d+/g);
+            const firstPage = pageRange.length > 1 ? parseInt(pageRange[0]) : 1;
+
+            // find all word instances and extract text context
+            const words = row.global_search.split(/\s+/);
+            const contexts = [];
+            words.forEach((word, index) => {
+                const itsTheWord = regex.test(word)
+                if (itsTheWord) {
+                    const start = Math.max(0, index - contextSize/2);
+                    const end = Math.min(words.length, index + contextSize/2 + 1);
+                    const contextArr = words.slice(start, end);
+                    const context = contextArr
+                        .join(' ')
+                        .replace(regex, (match) => {
+                            return `<span class="has-background-primary has-text-white px-1">${match}</span>`
+                        });
+                    contexts.push(context+'...');
+                }
+            })
+
+            // split transcript by pages
+            const splitPattern = /\[page-n-\d+]/;
+            const pages = row.transcripcion.split(splitPattern).filter(el => el !== '');
+
+            // store page of each word instance
+            let pageOfEachContext = [];
+            pages.forEach((page, pageIndex) => {
+                const words = page.split(/\s+/);
+                words.forEach((word, i) => {
+                    const itsTheWord = regex.test(word);
+                    if (itsTheWord) {
+                        pageOfEachContext.push(firstPage + pageIndex);
+                    }
+                })
+            })
+
+            const result = contexts.map((context, i) => ({context, page: pageOfEachContext[i]}));
+
+            return result;
+        }
+
+        const content = parser.parseFromString(`
+            <li class="pb-6">
+                <div class="columns">
+                    <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen">
+                        <div class="columns is-flex-direction-row-reverse full-link">
+                            <div class="column flow">
+                                <h3 class="is-size-6">
+                                    <a href=${url}>${row.titulo}</a>
+                                </h3>
+                                <p class="is-size-7">${row.autor}<br> 2004 </p>
+                            </div>
+                            <div class="column is-narrow">
+                                <img loading="lazy" src=${image_url} width="102" height="132" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column flow--xl">
+                        ${
+                            getWordContexts(row, this.caller.form.form_items.global_search.q)
+                                .map(result => (`
+                                    <div class="flow--2xs">
+                                        <h4 class="is-size-6">${tstring.item_pag} ${result.page}</h4>
+                                        <p class="is-size-6">${result.context}</p>
+                                    </div>
+                                `)).join('')
+                        }
+                    </div>
+                </div>
+            </li>
+        `, "text/html");
+        return content.body.firstChild;
+
+    },
 
     /**
     * LIST_ROW_BUILDER
