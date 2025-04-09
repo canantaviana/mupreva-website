@@ -115,7 +115,7 @@ var api = {
         var options = {
             table: 'publications',
             //sql_filter: 'imagen_identificativa is not null',
-            limit: 6,
+            limit: 24,
             order: 'fecha_publicacion desc',
             //ar_fields: '*',
             parse: page.parse_list_data,
