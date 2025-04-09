@@ -793,44 +793,54 @@ var biblio = {
             const regex = new RegExp(searchWord, 'i');
 
             // find first page
-            const pageRange = row.num_paginas.match(/\d+/g);
-            const firstPage = pageRange.length > 1 ? parseInt(pageRange[0]) : 1;
-
-            // find all word instances and extract text context
-            const words = row.global_search.split(/\s+/);
-            const contexts = [];
-            words.forEach((word, index) => {
-                const itsTheWord = regex.test(word)
-                if (itsTheWord) {
-                    const start = Math.max(0, index - contextSize/2);
-                    const end = Math.min(words.length, index + contextSize/2 + 1);
-                    const contextArr = words.slice(start, end);
-                    const context = contextArr
-                        .join(' ')
-                        .replace(regex, (match) => {
-                            return `<span class="has-background-primary has-text-white px-1">${match}</span>`
-                        });
-                    contexts.push(context+'...');
+            let firstPage = 1;
+            if (row.num_paginas) {
+                const pageRange = row.num_paginas.match(/\d+/g);
+                if (pageRange.length > 1) {
+                    firstPage = parseInt(pageRange[0])
                 }
-            })
+            }
 
-            // split transcript by pages
-            const splitPattern = /\[page-n-\d+]/;
-            const pages = row.transcripcion.split(splitPattern).filter(el => el !== '');
+            let result = [];
 
-            // store page of each word instance
-            let pageOfEachContext = [];
-            pages.forEach((page, pageIndex) => {
-                const words = page.split(/\s+/);
-                words.forEach((word, i) => {
-                    const itsTheWord = regex.test(word);
+            if (row.global_search && row.transcripcion) {
+
+                // find all word instances and extract text context
+                const words = row.global_search.split(/\s+/);
+                const contexts = [];
+                words.forEach((word, index) => {
+                    const itsTheWord = regex.test(word)
                     if (itsTheWord) {
-                        pageOfEachContext.push(firstPage + pageIndex);
+                        const start = Math.max(0, index - contextSize/2);
+                        const end = Math.min(words.length, index + contextSize/2 + 1);
+                        const contextArr = words.slice(start, end);
+                        const context = contextArr
+                            .join(' ')
+                            .replace(regex, (match) => {
+                                return `<span class="has-background-primary has-text-white px-1">${match}</span>`
+                            });
+                        contexts.push(context+'...');
                     }
                 })
-            })
 
-            const result = contexts.map((context, i) => ({context, page: pageOfEachContext[i]}));
+                // split transcript by pages
+                const splitPattern = /\[page-n-\d+]/;
+                const pages = row.transcripcion.split(splitPattern).filter(el => el !== '');
+
+                // store page of each word instance
+                let pageOfEachContext = [];
+                pages.forEach((page, pageIndex) => {
+                    const words = page.split(/\s+/);
+                    words.forEach((word, i) => {
+                        const itsTheWord = regex.test(word);
+                        if (itsTheWord) {
+                            pageOfEachContext.push(firstPage + pageIndex);
+                        }
+                    })
+                })
+
+                result = contexts.map((context, i) => ({context, page: pageOfEachContext[i]}));
+            }
 
             return result;
         }
