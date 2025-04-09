@@ -790,7 +790,9 @@ var biblio = {
         const year = row.fecha_publicacion;
 
         function getWordContexts(row, searchWord, contextSize = 30) {
-            const regex = new RegExp(searchWord, 'i');
+            const normalizeWord = (w) => w.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+            const regex = new RegExp(normalizeWord(searchWord), 'i');
 
             // find first page
             let firstPage = 1;
@@ -807,18 +809,15 @@ var biblio = {
 
                 // find all word instances and extract text context
                 const words = row.global_search.split(/\s+/);
+                const finalText = Array.from(words);
                 const contexts = [];
                 words.forEach((word, index) => {
-                    const itsTheWord = regex.test(word)
+                    const itsTheWord = regex.test(normalizeWord(word))
                     if (itsTheWord) {
                         const start = Math.max(0, index - contextSize/2);
                         const end = Math.min(words.length, index + contextSize/2 + 1);
-                        const contextArr = words.slice(start, end);
-                        const context = contextArr
-                            .join(' ')
-                            .replace(regex, (match) => {
-                                return `<span class="has-background-primary has-text-white px-1">${match}</span>`
-                            });
+                        finalText[index] = `<span class="has-background-primary has-text-white px-1">${word}</span>`
+                        const context = finalText.slice(start, end).join(' ');
                         contexts.push(context+'...');
                     }
                 })
@@ -832,7 +831,7 @@ var biblio = {
                 pages.forEach((page, pageIndex) => {
                     const words = page.split(/\s+/);
                     words.forEach((word, i) => {
-                        const itsTheWord = regex.test(word);
+                        const itsTheWord = regex.test(normalizeWord(word));
                         if (itsTheWord) {
                             pageOfEachContext.push(firstPage + pageIndex);
                         }
