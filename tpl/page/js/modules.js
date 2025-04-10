@@ -1217,7 +1217,11 @@ var templateModules = {
                                                 <div class="column">
                                                     <img loading="lazy" src="${image_url}" width="380" height="250" alt="" class="is-block">
                                                 </div>
-                                                `:''}
+                                                `:`
+                                                <div class="column">
+                                                    <img loading="lazy" src="/assets/img/placeholder2.png" width="380" height="250" alt="" class="is-block">
+                                                </div>
+                                                `}
                                             </div>
                                             <div class="dialog-container" data-a11y-dialog="dialog-route-${site.section_id}" aria-hidden="true" aria-labelledby="dialog-route-${site.section_id}-title">
                                                 <div class="dialog-overlay" data-a11y-dialog-hide></div>
