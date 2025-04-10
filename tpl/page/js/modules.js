@@ -1170,7 +1170,7 @@ var templateModules = {
                             </div>
                             ${(elem.children_data.length > 0)?`
                             <div class="has-background-grey-light pt-7">
-                                <div class="wrapper">
+                                <div class="px-6">
                                     <ul class="columns is-multiline is-variable is-7">
                                     ${elem.children_data.map(function(site){
                                         var image_url = null;
