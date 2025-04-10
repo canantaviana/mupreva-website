@@ -1133,7 +1133,7 @@ var templateModules = {
                     </div>
                 </div>
                 ${(info.description)?`
-                <div class="block-dedalo is-variable is-8 is-multiline">
+                <div class="block-dedalo is-variable is-8 is-multiline flow">
                     ${common.convertText(info.description)}
                 </div>
                 `:''}
