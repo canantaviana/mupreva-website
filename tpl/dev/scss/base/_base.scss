@@ -325,7 +325,7 @@ dl {
         display: grid;
         grid-template-columns: max-content auto;
         column-gap: var(--space-2xl);
-        row-gap: var(--space-xs);
+        row-gap: var(--space-2xs);
     }
 }
 dt {
