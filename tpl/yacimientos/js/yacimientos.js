@@ -700,7 +700,7 @@ console.log(sql_filter);
                     `<p class="is-size-6 has-text-weight-medium">${row.localizacion}</p>`
                     :''}
                 </div>
-                <img loading="lazy" src="${image_url}" alt="">
+                <img loading="lazy" src="${image_url}" alt="" class="card__img-square">
             </div>
         </li>
         `)[0];
