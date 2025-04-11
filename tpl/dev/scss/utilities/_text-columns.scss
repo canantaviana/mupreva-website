@@ -13,3 +13,9 @@
         break-before: column;
     }
 }
+.text-columns-2 {
+    @include tablet {
+        column-count: 2;
+        column-gap: var(--space-xl);
+    }
+}
