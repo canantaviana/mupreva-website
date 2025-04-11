@@ -101,7 +101,7 @@ html:has(.dialog-container:not([aria-hidden])) {
     color: #fff;
     background-color: #000;
     padding: var(--space-xl);
-    @include tablet {
+    @include desktop {
         max-width: 30vw;
         &:has(.column>img) {
             max-width: 50vw;

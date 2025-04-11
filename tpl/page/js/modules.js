@@ -1234,7 +1234,7 @@ var templateModules = {
                                                             </g>
                                                         </svg>
                                                     </button>
-                                                    <div class="columns is-widescreen is-variable is-8">
+                                                    <div class="columns is-fullhd is-variable is-8">
                                                         ${(image_url)?`
                                                         <div class="column">
                                                             <img loading="lazy" src="${image_url}" alt="">
