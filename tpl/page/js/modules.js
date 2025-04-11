@@ -1240,7 +1240,7 @@ var templateModules = {
                                                             <img loading="lazy" src="${image_url}" alt="">
                                                         </div>
                                                         `:''}
-                                                        <div class="column text-base flow--m">
+                                                        <div class="column text-base flow--2xs">
                                                             <div class="flow--xs">
                                                                 <h1 id="dialog-01-title">${site.title}</h1>
                                                                 ${(elem.place)?`
