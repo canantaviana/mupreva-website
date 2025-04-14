@@ -68,6 +68,24 @@ var page = {
         },
         // markers
         markers: {
+            hallazgo: {
+                iconUrl: page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/point_orange.png",
+                shadowUrl: page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/marker-shadow.png",
+                iconSize: [47, 43], // size of the icon
+                shadowSize: [41, 41], // size of the shadow
+                iconAnchor: [10, 19], // point of the icon which will correspond to marker's location
+                shadowAnchor: [0, 20],  // the same for the shadow
+                popupAnchor: [12, -20] // point from which the popup should open relative to the iconAnchor
+            },
+            produccion: {
+                iconUrl: page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/point_blue.png",
+                shadowUrl: page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/marker-shadow.png",
+                iconSize: [47, 43], // size of the icon
+                shadowSize: [41, 41], // size of the shadow
+                iconAnchor: [10, 19], // point of the icon which will correspond to marker's location
+                shadowAnchor: [0, 20],  // the same for the shadow
+                popupAnchor: [12, -20] // point from which the popup should open relative to the iconAnchor
+            },
             objects: {
                 iconUrl: page_globals.__WEB_TEMPLATE_WEB__ + "/assets/images/map/point_purple.png",
                 shadowUrl: page_globals.__WEB_TEMPLATE_WEB__ + "/assets/images/map/marker-shadow.png",
@@ -776,42 +794,42 @@ var page = {
                 parent: popup_wrapper
             })
 
-            // image
-            const image_wrapper = common.create_dom_element({
-                element_type: "div",
-                class_name: "image_wrapper",
-                parent: popup_item
-            })
-            image_wrapper.addEventListener("click", function (e) {
-                // event publish map_selected_marker
-                event_manager.publish('map_popup_selected_item', {
-                    item: image_wrapper,
-                    section_id: section_id,
-                    tpl: tpl,
-                    title: title
-                })
-            })
-            const item_image = common.create_dom_element({
-                element_type: "img",
-                parent: image_wrapper
-            })
-            const image_in_dom = function () {
-                // calculate bg color and load hi res image
-                page.build_image_with_background_color(image_url, image_wrapper)
-                    .then(function (response) {
+            // // image
+            // const image_wrapper = common.create_dom_element({
+            //     element_type: "div",
+            //     class_name: "image_wrapper",
+            //     parent: popup_item
+            // })
+            // image_wrapper.addEventListener("click", function (e) {
+            //     // event publish map_selected_marker
+            //     event_manager.publish('map_popup_selected_item', {
+            //         item: image_wrapper,
+            //         section_id: section_id,
+            //         tpl: tpl,
+            //         title: title
+            //     })
+            // })
+            // const item_image = common.create_dom_element({
+            //     element_type: "img",
+            //     parent: image_wrapper
+            // })
+            // const image_in_dom = function () {
+            //     // calculate bg color and load hi res image
+            //     page.build_image_with_background_color(image_url, image_wrapper)
+            //         .then(function (response) {
 
-                        const img = response.img // dom node
-                        const format = response.format // vertical | horinzontal
-                        const bg_color_rgb = response.bg_color_rgb
+            //             const img = response.img // dom node
+            //             const format = response.format // vertical | horinzontal
+            //             const bg_color_rgb = response.bg_color_rgb
 
-                        // set image node style to loaded (activate opacity transition)
-                        item_image.classList.add('loaded')
+            //             // set image node style to loaded (activate opacity transition)
+            //             item_image.classList.add('loaded')
 
-                        // load image
-                        item_image.src = image_url
-                    })
-            }
-            item_image.image_in_dom = image_in_dom
+            //             // load image
+            //             item_image.src = image_url
+            //         })
+            // }
+            // item_image.image_in_dom = image_in_dom
 
             // text_title
             const text_title = common.create_dom_element({
@@ -823,7 +841,7 @@ var page = {
         }
 
         const group_length = group.length
-        let limit = 100
+        let limit = 5
 
         function iterate(from, to) {
             for (let i = from; i < to; i++) {

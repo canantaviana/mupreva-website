@@ -13,6 +13,12 @@ var catalog = {
     // rows_list_container
     rows_list_container: null,
 
+    // map_results_list_container
+    map_results_list_container: null,
+    map_legend: null,
+    map_marker_results: null,
+    reset_map_results: null,
+
     // export_data_container
     export_data_container: null,
 
@@ -75,6 +81,8 @@ var catalog = {
         "datacion_fin",
         "periodo_data",
         "periodo",
+        "geolocalizacion",
+        "geolocalizacion_produccion"
     ],
 
     /**
@@ -86,6 +94,9 @@ var catalog = {
         // options
         const row = options.row;
         const rows_list_container = options.rows_list_container;
+        const map_legend = options.map_legend;
+        const map_results_list_container = options.map_results_list_container;
+        let map_marker_results = [];
         const export_data_container = options.export_data_container;
         const area_name = options.area_name; // catalog
         const q = options.q;
@@ -93,6 +104,9 @@ var catalog = {
         // fix vars
         self.row = row;
         self.rows_list_container = rows_list_container;
+        self.map_legend = map_legend;
+        self.map_results_list_container = map_results_list_container;
+        self.map_marker_results = map_marker_results;
         self.export_data_container = export_data_container;
         self.area_name = area_name;
         self.q = q;
@@ -181,6 +195,8 @@ var catalog = {
         event_manager.subscribe("map_selected_marker", selected_marker);
         function selected_marker(data) {
             console.log(" selected_marker data:", data);
+            self.map_marker_results = data.item.group;
+            self.reset_map_results();
         }
         // event map_popup_selected_item
         event_manager.subscribe(
@@ -1100,6 +1116,13 @@ var catalog = {
             count = false;
         }
 
+        // map case
+        if (self.view_mode === "map") {
+            sql_filter = sql_filter
+                ? sql_filter + " AND (geolocalizacion IS NOT NULL OR geolocalizacion_produccion IS NOT NULL)"
+                : "geolocalizacion IS NOT NULL OR geolocalizacion_produccion IS NOT NULL";
+        }
+
         // tables
         const ar_tables = self.get_tables();
 
@@ -1243,7 +1266,9 @@ var catalog = {
                     break;
                 case "map":
                     const map_data = page.parse_map_data(ar_rows); // prepares data to use in map
-                    self.map = self.map || new map_factory(); // creates / get existing instance of map
+                    //TODO: millorar mantenint el mapa anterior si ja n'hi ha, per evitar instanciar multiples mapes sense esborrar els anteriors event listeners i evitar memory leak
+                    // self.map = self.map || new map_factory(); // creates / get existing instance of map
+                    self.map = new map_factory(); // creates / get existing instance of map
                     self.map
                         .init({
                             source_maps: page.maps_config.source_maps,
@@ -1260,6 +1285,55 @@ var catalog = {
                                     resolve(true);
                                 });
                         });
+
+                    var legendContent = htmlTemplate(`
+                        <p>
+                            <img src="${page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/point_orange.png"}" style="width: 27px; height: 23px;">
+                            ${tstring.location_discovery}
+                            <img src="${page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/point_blue.png"}" style="width: 27px; height: 23px;">
+                            ${tstring.location_production}
+                        </p>`)
+                    self.map_legend.innerHTML = '';
+                    appendTemplate(self.map_legend, legendContent);
+
+                    var content = htmlTemplate(`
+                        <ul class="galeria galeria--242x242 link-dn" id="map_gallery">
+                        </ul>
+                    `)
+                    appendTemplate(self.map_results_list_container, content);
+
+                    const map_gallery = document.getElementById('map_gallery');
+
+                    function reset_map_results() {
+                        map_gallery.innerHTML = '';
+                        appendTemplate(map_gallery, loadResults())
+                    }
+
+                    self.reset_map_results = reset_map_results;
+
+                    function loadResults() {
+                        return htmlTemplate(`
+                            ${self.map_marker_results.map(function(data){
+                                const url = page_globals.__WEB_ROOT_WEB__ + '/' + data.tpl + '/' + data.section_id;
+                                var image_url = '/assets/img/placeholder.png';
+                                if (data.identifying_images !== null && data.identifying_images !== '') {
+                                    image_url = data.identifying_images;
+                                }
+                                return `
+                                <li class="${data.tpl}">
+                                    <a href="${url}" target="_blank">
+                                        <figure>
+                                            <img loading="lazy" src="${image_url}" alt="">
+                                            ${(data.title)?`
+                                            <figcaption>${data.title}</figcaption>
+                                            `:''}
+                                        </figure>
+                                    </a>
+                                </li>`;
+                            }).join('')}
+                        `)
+                    }
+
                     break;
 
                 case "timeline":
