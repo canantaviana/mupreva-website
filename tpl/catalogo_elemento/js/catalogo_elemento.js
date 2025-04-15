@@ -807,12 +807,12 @@ var item = {
                         : ""
                 }
                 ${
-                    row.adquisicion
+                    row.fecha_ingreso && row.fuente_ingreso && row.forma_ingreso && row.tipo_recuperacion
                         ? `
                 <tr>
                     <td></td>
                     <th>${tstring.item_adquisicion}</th>
-                    <td>${row.adquisicion}</td>
+                    <td>${common.timestamp_to_fecha(row.fecha_ingreso)} | ${row.fuente_ingreso} | ${row.forma_ingreso} | ${row.tipo_recuperacion}</td>
                 </tr>
                 `
                         : ""
