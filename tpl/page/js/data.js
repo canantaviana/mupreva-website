@@ -215,7 +215,7 @@ page.parse_tree_data = function (rows, hilite_terms) {
                 }
             }
             // set to remove
-            term_id_to_remove.push(row.term_id)
+            // term_id_to_remove.push(row.term_id)
         }
 
         return true

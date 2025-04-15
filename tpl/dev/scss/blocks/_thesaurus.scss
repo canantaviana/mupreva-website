@@ -74,7 +74,7 @@ body:has(.tree_wrapper) main .form {
         // display: block;
         font-size: var(--step--1);
     }
-    
+
     // Fix button {
     input.button {
         border-color: $primary;
@@ -121,6 +121,7 @@ html {
             background-color: transparent;
             padding: 0;
             cursor: pointer;
+            min-height: 1em;
         }
         > .btn_scope_note {
             background-image: url("img/icon-info.svg");
@@ -177,11 +178,11 @@ html {
         > .grouped_children {
             border-bottom: 2px solid #000;
             padding: var(--space-s);
-    
+
             button {
                 flex-shrink: 0;
             }
-    
+
             > .term {
                 font-weight: 600;
                 margin-right: auto;
@@ -201,7 +202,7 @@ html {
                 color: $grey;
                 margin-right: auto;
             }
-    
+
             > .arrow {
                 background-image: url("img/ico-fletxa-desplegar.svg");
                 width: 20px;
@@ -355,7 +356,7 @@ html {
             margin-top: var(--space-2xs);
         }
     }
-    
+
 }
 
 // .relations_container {

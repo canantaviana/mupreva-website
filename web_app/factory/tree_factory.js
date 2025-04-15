@@ -180,7 +180,7 @@ function tree_factory() {
                 parent: tree_node
             })
         }
-        
+
         // --- Creació dels botons i elements especials ---
         // Creació del p.definition (ara guardat a definitionEl)
         let definitionEl = null;
@@ -297,6 +297,91 @@ function tree_factory() {
                 inner_html: scope_note_text,
                 parent: tree_node
             })
+        }
+
+        // relations wrapper
+        let relations_container
+        if (row.relations && row.relations.length>0) {
+
+            // relations_container
+                relations_container = common.create_dom_element({
+                    element_type	: "div",
+                    class_name		: "relations_container hide",
+                    parent			: tree_node
+                })
+
+                // Callback function to execute when mutations are observed
+                const callback = function(mutationsList, observer) {
+                    // Use traditional 'for loops' for IE 11
+                    for(let mutation of mutationsList) {
+                        if (mutation.type==='attributes' && mutation.attributeName==='class') {
+                            if (!mutationsList[0].target.classList.contains("hide")) {
+
+                                // draw nodes
+                                self.render_relation_nodes(row, relations_container, self, false)
+
+                                // Stop observing
+                                observer.disconnect();
+                            }
+                        }
+                    }
+                };
+
+                // Create an observer instance linked to the callback function
+                const observer = new MutationObserver(callback);
+
+                // Start observing the target node for configured mutations
+                observer.observe(relations_container, { attributes: true, childList: false, subtree: false });
+
+                if (row.hilite===true && self.hilite_relations_showed<self.hilite_relations_limit) {
+                    relations_container.classList.remove("hide")
+                    btn_relations.classList.add("open")
+                    // increment hilite_relations_showed until reach self.hilite_relations_limit
+                    self.hilite_relations_showed++
+                }
+        }
+
+        // indexation wrapper
+        let indexation_container
+        if (row.indexation && row.indexation.length>0) {
+
+            // indexation_container
+                indexation_container = common.create_dom_element({
+                    element_type	: "div",
+                    class_name		: "indexation_container hide",
+                    parent			: tree_node
+                })
+
+                // Callback function to execute when mutations are observed
+                const callback = function(mutationsList, observer) {
+                    // Use traditional 'for loops' for IE 11
+                    for(let mutation of mutationsList) {
+                        if (mutation.type==='attributes' && mutation.attributeName==='class') {
+                            if (!mutationsList[0].target.classList.contains("hide")) {
+
+                                // draw nodes
+                                self.render_indexation_nodes(row, indexation_container, self)
+
+                                // Stop observing
+                                observer.disconnect();
+                            }
+                        }
+                    }
+                };
+
+                // Create an observer instance linked to the callback function
+                const observer = new MutationObserver(callback);
+
+                // Start observing the target node for configured mutations
+                observer.observe(indexation_container, { attributes: true, childList: false, subtree: false });
+
+                if (row.hilite===true && self.hilite_indexation_showed<self.hilite_indexation_limit) {
+                    indexation_container.classList.remove("hide")
+                    btn_indexation.classList.add("open")
+
+                    // increment hilite_indexation_showed until reach self.hilite_indexation_limit
+                    self.hilite_indexation_showed++
+                }
         }
 
         // --- Manipulació dels elements img i p.definition ---

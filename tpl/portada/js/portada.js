@@ -46,7 +46,6 @@ var portada = {
 
         api.getSliderPortada()
             .then(function (rows) {
-                console.log('got em!', rows)
 
                 const salas = rows[0].result.map(sala => {
                     const img = sala.imagenes.find(img => img.image !== '')?.image || sala.illustration;
