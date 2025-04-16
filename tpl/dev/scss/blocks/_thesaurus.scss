@@ -1,30 +1,3 @@
-// rows_list
-// #rows_list {
-//     min-height: 14em;
-//     position: relative;
-
-//     &.list {
-//         height: 50vh;
-//         min-height: 640px;
-//         border: 1px solid green;
-//         background-color: #dae8dc;
-//     }
-
-//     &.map {
-//         height: 50vh;
-//         min-height: 640px;
-//         border: 1px solid red;
-//         background-color: #eeeeee;
-//     }
-
-//     &.timeline {
-//         height: 50vh;
-//         min-height: 640px;
-//         border: 1px solid orange;
-//     }
-// }
-
-
 // Thesaurus search form
 
 // Millora visualment la càrrega del form, perquè no es produeixi layout shift
@@ -92,11 +65,11 @@ html {
     background: url("img/icon-close-subtree.svg") no-repeat -9999px -9999px;
 }
 .tree_wrapper {
-    @include tablet {
+    @include desktop {
         width: 75%;
     }
-    @include desktop {
-        width: 40%;
+    @include widescreen {
+        width: 60%;
     }
 
     // all levels
@@ -111,6 +84,9 @@ html {
         align-items: center;
         gap: var(--space-s);
         padding: var(--space-xs) var(--space-s);
+        &:has(>.btn_relations) {
+            flex-wrap: wrap;
+        }
         > .arrow {
             background-repeat: no-repeat;
             background-position: center;
@@ -133,7 +109,9 @@ html {
                 opacity: 0.5;
             }
             &.open {
-                opacity: 0.5;
+                // opacity: 0.5;
+                background-image: url("img/icon-x.svg");
+                background-size: 60%;
             }
         }
         > .btn_scope_note {
@@ -348,17 +326,20 @@ html {
 
 }
 
-// .relations_container {
-//     // background-color: #efb9f0;
-//     // @media screen and (max-width: 960px) {
-//     padding-left: 0;
-//     padding-right: 0;
-//     margin-left: 0.25em;
-//     // }
+.relations_container {
+    flex-basis: 100%;
+    .relation_item {
+        cursor: pointer;
+        &:hover,
+        &:focus {
+            img {
+                opacity: .85;
+            }
+        }
+    }
+}
 
-//     .relation_item {
-//         @media screen and (max-width: 960px) {
-//             width: 30.8%;
-//         }
-//     }
-// }
+.more_node:last-child {
+    grid-column: 1 / -1;
+    margin: var(--space-s) 0 var(--space-m) 0;
+}

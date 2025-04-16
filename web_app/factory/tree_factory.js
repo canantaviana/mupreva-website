@@ -306,7 +306,7 @@ function tree_factory() {
             // relations_container
                 relations_container = common.create_dom_element({
                     element_type	: "div",
-                    class_name		: "relations_container hide",
+                    class_name		: "relations_container hide galeria galeria--92x92",
                     parent			: tree_node
                 })
 
@@ -490,7 +490,7 @@ function tree_factory() {
                         vieved = vieved + (to - from)
                         const more_node = common.create_dom_element({
                             element_type: "div",
-                            class_name: "more_node btn btn-light btn-block primary relation_item",
+                            class_name: "more_node relation_item",
                             parent: fragment
                         })
                         more_node.offset = to
@@ -502,7 +502,8 @@ function tree_factory() {
                         })
                         const label = (tstring['load_more'] || "Load more..") + " <small>[" + vieved + " " + tstring.of + " " + relations_length + "]</small>"
                         const more_label = common.create_dom_element({
-                            element_type: "span",
+                            element_type: "button",
+                            class_name: "button button--carrega button--icon",
                             inner_html: label,
                             parent: more_node
                         })
@@ -531,7 +532,7 @@ function tree_factory() {
             const path = data.path || data.table
             const title_text = title ? title : ''
             const relation_item = common.create_dom_element({
-                element_type: "div",
+                element_type: "button",
                 class_name: "relation_item",
                 title: title_text + (SHOW_DEBUG ? (" [" + path + " " + options.data.section_tipo + " " + options.data.section_id + "]") : '')
             })
