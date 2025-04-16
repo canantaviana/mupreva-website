@@ -80,6 +80,7 @@
 }
 
 .accordion-content {
+    max-width: 114ch;
     &[aria-hidden="false"] {
         display: block;
         visibility: visible;
@@ -90,7 +91,6 @@
     }
     p {
         font-weight: 500;
-        max-width: 114ch;
     }
     > * + * {
         margin-top: var(--space-l);
