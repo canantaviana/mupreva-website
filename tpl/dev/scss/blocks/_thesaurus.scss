@@ -121,10 +121,9 @@ html {
             background-color: transparent;
             padding: 0;
             cursor: pointer;
-            min-height: 1em;
         }
-        > .btn_scope_note {
-            background-image: url("img/icon-info.svg");
+        > .btn_scope_note,
+        > .btn_relations {
             background-repeat: no-repeat;
             background-size: 100%;
             background-position: center center;
@@ -137,21 +136,11 @@ html {
                 opacity: 0.5;
             }
         }
-
+        > .btn_scope_note {
+            background-image: url("img/icon-info.svg");
+        }
         > .btn_relations {
             background-image: url("img/icon_eye_color.svg");
-            background-repeat: no-repeat;
-            background-size: 80%;
-            background-position: center;
-            width: 1em;
-
-            &:active {
-                opacity: 0.5;
-            }
-
-            &.open {
-                transform: rotate(180deg);
-            }
         }
     }
     .scope_note {
