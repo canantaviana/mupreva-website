@@ -21,11 +21,11 @@
         @include tablet {
             right: 0;
             left: auto;
-            width: 50rem;
+            // width: 50rem;
         }
-        @include desktop {
-            width: 60rem;
-        }
+        // @include desktop {
+        //     width: 60rem;
+        // }
         .js-tooltip-close {
             position: absolute;
             top: var(--space-s-m);
