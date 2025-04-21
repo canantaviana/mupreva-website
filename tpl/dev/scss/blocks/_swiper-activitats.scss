@@ -1,5 +1,5 @@
-.swiper-container {
-    @media screen and (max-width: 111em) {
+.swiper-container:has(.swiper--activitats) {
+    @include touch {
         padding-left: 3rem;
         padding-right: 3rem;
     }
@@ -31,7 +31,7 @@
         }
     }
     .swiper-button-prev {
-        @media screen and (min-width: calc(111em + 1px)) {
+        @include desktop {
             left: -3rem;
         }
         &::after {
@@ -39,7 +39,7 @@
         }
     }
     .swiper-button-next {
-        @media screen and (min-width: calc(111em + 1px)) {
+        @include desktop {
             right: -3rem;
         }
         &::after {

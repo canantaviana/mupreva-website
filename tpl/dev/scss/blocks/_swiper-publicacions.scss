@@ -1,18 +1,7 @@
-.swiper-container {
-    @media screen and (max-width: 111em) {
+.swiper-container:has(.swiper--publicacions) {
+    @include touch {
         padding-left: 3rem;
         padding-right: 3rem;
-    }
-}
-.swiper--publicacions {
-    .swiper-slide {
-        // img {
-        //     display: block;
-        //     width: 100%;
-        //     // height: var(--fluid-200-350);
-        //     height: 342px;
-        //     object-fit: cover;
-        // }
     }
 }
 .swiper--publicacions__btns {
@@ -29,7 +18,7 @@
         }
     }
     .swiper-button-prev {
-        @media screen and (min-width: calc(111em + 1px)) {
+        @include desktop {
             left: -3rem;
         }
         &::after {
@@ -37,7 +26,7 @@
         }
     }
     .swiper-button-next {
-        @media screen and (min-width: calc(111em + 1px)) {
+        @include desktop {
             right: -3rem;
         }
         &::after {
