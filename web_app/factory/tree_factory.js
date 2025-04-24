@@ -88,7 +88,7 @@ function tree_factory() {
             // Crear el contenidor principal de l'arbre
             const tree_wrapper = common.create_dom_element({
                 element_type: "div",
-                class_name: "tree_wrapper",
+                class_name: "tree_wrapper mx-auto",
                 parent: fragment
             })
 
