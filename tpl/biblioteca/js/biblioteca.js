@@ -274,7 +274,7 @@ var biblio = {
                     </details>
                 </div>
                 <div class="column is-3-tablet is-2-desktop has-text-centered">
-                    <span class="simple-tooltip-container"><button type="button" class="js-tooltip button button--arse" data-tooltip-prefix-class="simple-tooltip" data-tooltip-content-id="arse" data-tooltip-title="ArSe" data-tooltip-close-text="${tstring.close}" id="label_tooltiph7actu5160">
+                    <span class="simple-tooltip-container simple-tooltip-container--lg"><button type="button" class="js-tooltip button button--arse" data-tooltip-prefix-class="simple-tooltip" data-tooltip-content-id="arse" data-tooltip-title="ArSe" data-tooltip-close-text="${tstring.close}" id="label_tooltiph7actu5160">
                         ${tstring.documents_popup_title}
                     </button></span>
                     <div id="arse" class="is-hidden">
