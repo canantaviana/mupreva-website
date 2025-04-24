@@ -413,7 +413,7 @@ var templateModules = {
     },
     bloque_descubrir_publicaciones: function(info){
         var content = htmlTemplate(`
-        <div class="wrapper py-8">
+        <div class="wrapper">
             <div class="columns is-justify-content-space-between">
                 <div class="column is-half-desktop is-one-third-widescreen flow--m">
                     ${(info.title)?
@@ -494,7 +494,7 @@ var templateModules = {
     },
     bloque_proximas_actividades: function(info){
         var content = htmlTemplate(`
-        <div class="wrapper py-8">
+        <div class="wrapper">
             <div class="columns is-justify-content-space-between">
                 <div class="column is-half-desktop is-one-third-widescreen flow--m">
                     ${(info.title)?
@@ -573,7 +573,7 @@ var templateModules = {
     },
     bloque_exposiciones_destacadas: function(info){
         var content = htmlTemplate(`
-        <div class="wrapper py-8">
+        <div class="wrapper">
             <div class="columns is-justify-content-space-between">
                 <div class="column is-half-desktop is-one-third-widescreen flow--m">
                     ${(info.title)?
