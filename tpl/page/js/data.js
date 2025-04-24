@@ -1702,7 +1702,11 @@ page.get_records = function (options) {
                     ? parse(response.result)
                     : response.result
 
-                resolve(data)
+                if(options.get_count) {
+                    resolve({data, total: response.total})
+                } else {
+                    resolve(data)
+                }
             })
     })
 }//end get_records

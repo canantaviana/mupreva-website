@@ -56,7 +56,7 @@ var portada = {
                                 <a href="/salas/${sala.section_id}">${sala.term}</a>
                             </h2>
                         </div>
-                        <img src="https://pre-dedalo.mupreva.org/${img}" alt=""></img>
+                        <img src="${__WEB_MEDIA_ENGINE_URL__}/${img}" alt=""></img>
                     </div>`
                 })
 
@@ -69,7 +69,7 @@ var portada = {
                                 <a href="/exposicion/${expo.section_id}">${expo.title}</a>
                             </h2>
                         </div>
-                        <img src="https://pre-dedalo.mupreva.org/${img}" alt=""></img>
+                        <img src="${__WEB_MEDIA_ENGINE_URL__}/${img}" alt=""></img>
                     </div>`
                 })
 

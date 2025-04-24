@@ -282,6 +282,23 @@ var api = {
         return page.get_records(options);
     },
 
+    getRelatedElements: function(table, relation, relationId, offset = 0) {
+        var options = {
+            table: table,
+            sql_filter: `${relation} LIKE '%\"${relationId}\"%' and imagenes_identificativas is not null`,
+            parse: page.parse_list_data,
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+            limit: 50,
+            order: 'datacion_ini ASC',
+            ar_fields: 'section_id,titulo,periodo,imagenes_identificativas',
+            count: true,
+            offset: offset,
+            get_count: true,
+        }
+
+        return page.get_records(options);
+    },
+
     getDirectorio: function() {
         var options = {
             table: 'entities',

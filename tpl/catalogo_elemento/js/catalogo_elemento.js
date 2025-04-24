@@ -854,7 +854,27 @@ var item = {
                 <tr style="display:none;" id="TableCollapse01More">
                     <td colspan="3" class="p-0">
                         <div class="has-background-grey-light p-5 mb-5">
-                        //TODO
+                            <div class="tabs">
+                                <div class="tab-control">
+                                    <ul class="tab-list" role="tablist">
+                                        ${row.periodo.split(',').map((el, i) => (
+                                            `<li class="tab-item">
+                                                <button role="tab" aria-controls="periodo-tab${i}">${el.trim()}</button>
+                                            </li>`
+                                        )).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="tab-group">
+                                ${row.periodo.split(',').map((el, i) => (
+                                    `<div class="tab-content" id="periodo-tab${i}" role="tabpanel">
+                                        <div id="periodo-relations${i}"></div>
+                                        <div id="periodo-load-more${i}"></div>
+                                    </div>`
+                                )).join('')}
+                            </div>
+
                         </div>
                     </td>
                 </tr>
@@ -876,7 +896,26 @@ var item = {
                 <tr style="display:none;" id="TableCollapse03More">
                     <td colspan="3" class="p-0">
                         <div class="has-background-grey-light p-5 mb-5">
-                        //TODO
+                            <div class="tabs">
+                                <div class="tab-control">
+                                    <ul class="tab-list" role="tablist">
+                                        ${row.nombre_bien.split(',').map((el, i) => (
+                                            `<li class="tab-item">
+                                                <button role="tab" aria-controls="nombre_bien-tab${i}">${el.trim()}</button>
+                                            </li>`
+                                        )).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="tab-group">
+                                ${row.nombre_bien.split(',').map((el, i) => (
+                                    `<div class="tab-content" id="nombre_bien-tab${i}" role="tabpanel">
+                                        <div id="nombre_bien-relations${i}"></div>
+                                        <div id="nombre_bien-load-more${i}"></div>
+                                    </div>`
+                                )).join('')}
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -898,7 +937,26 @@ var item = {
                 <tr style="display:none;" id="TableCollapse04More">
                     <td colspan="3" class="p-0">
                         <div class="has-background-grey-light p-5 mb-5">
-                        //TODO
+                            <div class="tabs">
+                                <div class="tab-control">
+                                    <ul class="tab-list" role="tablist">
+                                        ${row.materia.split(',').map((el, i) => (
+                                            `<li class="tab-item">
+                                                <button role="tab" aria-controls="materia-tab${i}">${el.trim()}</button>
+                                            </li>`
+                                        )).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="tab-group">
+                                ${row.materia.split(',').map((el, i) => (
+                                    `<div class="tab-content" id="materia-tab${i}" role="tabpanel">
+                                        <div id="materia-relations${i}"></div>
+                                        <div id="materia-load-more${i}"></div>
+                                    </div>`
+                                )).join('')}
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -920,7 +978,26 @@ var item = {
                 <tr style="display:none;" id="TableCollapse05More">
                     <td colspan="3" class="p-0">
                         <div class="has-background-grey-light p-5 mb-5">
-                        //TODO
+                            <div class="tabs">
+                                <div class="tab-control">
+                                    <ul class="tab-list" role="tablist">
+                                        ${row.tecnica.split(',').map((el, i) => (
+                                            `<li class="tab-item">
+                                                <button role="tab" aria-controls="tecnica-tab${i}">${el.trim()}</button>
+                                            </li>`
+                                        )).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="tab-group">
+                                ${row.tecnica.split(',').map((el, i) => (
+                                    `<div class="tab-content" id="tecnica-tab${i}" role="tabpanel">
+                                        <div id="tecnica-relations${i}"></div>
+                                        <div id="tecnica-load-more${i}"></div>
+                                    </div>`
+                                )).join('')}
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -929,6 +1006,108 @@ var item = {
                 }
             </table>
         `;
+    },
+
+    getRelations: function (row) {
+        const self = this;
+
+        self.relationsData = {}
+
+        const elementsDic = {
+            'objects': 'object',
+            'pictures': 'picture',
+            'immovables': 'immovable',
+            'documents_catalog': 'documents_catalog'
+        }
+
+        function updateCategoryRelations(category, tab) {
+            const tabData = self.relationsData[category][tab];
+            const offset = tabData.loaded;
+            const relationId = tabData.section_id
+            api.getRelatedElements(self.table, category+'_data', relationId, offset).then(({data, total}) => {
+                tabData.result.push(...data)
+                tabData.loaded = tabData.loaded + data.length;
+                setCategoryRelations(category);
+            })
+        }
+
+        function setCategoryRelations(category) {
+            Object.keys(self.relationsData[category]).forEach(tab => {
+
+                const tabData = self.relationsData[category][tab]
+
+                const content = htmlTemplate(`
+                    ${tabData.result.map(item => {
+                        let imageUrl
+                        if (item.imagenes_identificativas.length) {
+                            imageUrl = __WEB_MEDIA_ENGINE_URL__ + item.imagenes_identificativas[0].image;
+                        } else {
+                            imageUrl = '/assets/img/placeholder.png';
+                        }
+                        return `<a href="${page_globals.__WEB_ROOT_WEB__}/${elementsDic[self.table]}/${item.section_id}" target="_blank">
+                            <img src="${imageUrl}" crossorigin="Anonymous" loading="lazy" style="width: 150px; height: 150px">
+                        </a>`
+                    })}`);
+                const button = htmlTemplate(`
+                    <button class="button button--carrega button--icon">
+                        ${tstring.load_more} <small>[${tabData.loaded} / ${tabData.total}]</small>
+                    </button>
+                `)
+                const container = tabData.container;
+                const buttonContainer = tabData.buttonContainer;
+                container.innerHTML = buttonContainer.innerHTML = '';
+
+                appendTemplate(container, content);
+
+                if(tabData.loaded < tabData.total) {
+                    appendTemplate(buttonContainer, button);
+                    const boto = container.parentElement.querySelector('button')
+
+                    boto.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        updateCategoryRelations(category, tab)
+                    })
+                }
+            })
+        }
+
+        function getCategoryRelations(category) {
+            const promises = JSON.parse(row[category+'_data']).map((relationId, i) => {
+                const tab = row[category].split(',')[i].trim();
+
+                return api.getRelatedElements(self.table, category+'_data', relationId).then(({data, total}) => {
+                    self.relationsData[category] = self.relationsData[category] || {};
+                    self.relationsData[category][tab] = self.relationsData[category][tab] || {};
+                    const tabData = self.relationsData[category][tab];
+                    tabData.result = data;
+                    tabData.total = total;
+                    tabData.section_id = relationId;
+                    tabData.loaded = tabData.loaded ? tabData.loaded + data.length : data.length;
+                    tabData.container = document.getElementById(`${category}-relations${i}`);
+                    tabData.buttonContainer = document.getElementById(`${category}-load-more${i}`);
+                    return data;
+                })
+            })
+
+            Promise.all(promises).then(() => {
+                // console.log(`${category} carregada: `, {...self.relationsData});
+                setCategoryRelations(category);
+            })
+
+        }
+
+        if (row.periodo_data) {
+            getCategoryRelations('periodo');
+        }
+        if (row.nombre_bien_data) {
+            getCategoryRelations('nombre_bien')
+        }
+        if (row.materia_data) {
+            getCategoryRelations('materia');
+        }
+        if (row.tecnica_data) {
+            getCategoryRelations('tecnica')
+        }
     },
 
     templateTecnic: function (row) {
@@ -1419,6 +1598,7 @@ var item = {
         //fitxa tecnica
         if (row.tpl !== "immovable") {
             appendTemplate(acordion, this.templateTecnic(row));
+            this.getRelations(row);
         }
 
         //patrimoni relacionat
