@@ -980,6 +980,7 @@ var catalog = {
      */
     form_submit: function (options) {
         const self = this;
+        self.map_legend.innerHTML = '';
 
         return new Promise(function (resolve) {
             // options
