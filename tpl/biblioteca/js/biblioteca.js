@@ -110,6 +110,8 @@ var biblio = {
         // first list
         self.initial_search()
 
+        self.search_literal = null
+
         // subscribe events
         // event_manager.subscribe('pagination_change', pagination_change_action)
         // function pagination_change_action(item) {
@@ -545,6 +547,12 @@ var biblio = {
 
         const self = this
 
+        if (self.form.form_items.global_search.q !== '' || self.form.form_items.transcripcion.q !== '') {
+            self.search_literal = true;
+        } else {
+            self.search_literal = false;
+        }
+
         // options
         const order = options.order || null
         const limit = options.limit || self.pagination.limit
@@ -726,7 +734,26 @@ var biblio = {
                 appendTemplate(self.rows_list_container, content);
                 resolve()
                 return
-            } else {
+            }
+            if (!self.search_literal) {
+                const list_data = self.list_data(ar_rows) // prepares data to use in list
+                self.list = self.list || new list_factory() // creates / get existing instance of list
+                self.list.init({
+                    data: list_data,
+                    fn_row_builder: self.list_row_builder,
+                    pagination: pagination,
+                    container_class: 'pubs-list link-dn',
+                    caller: self
+                })
+                self.list.render_list()
+                    .then(function (list_node) {
+                        resolve(list_node)
+                    })
+                self.default_submit = false
+                self.form_submit_state = 'done';
+                return
+            }
+            if (self.search_literal) {
                 const list_data = self.list_data(ar_rows) // prepares data to use in list
                 self.list = self.list || new list_factory() // creates / get existing instance of list
                 self.list.init({
@@ -741,6 +768,8 @@ var biblio = {
                         resolve(list_node)
                     })
                 self.default_submit = false
+                self.form_submit_state = 'done';
+
             }
         })
     },//end render_data
@@ -844,6 +873,8 @@ var biblio = {
             return result;
         }
 
+        const inputText = this.caller.form.form_items.global_search.q || this.caller.form.form_items.transcripcion.q;
+
         const content = parser.parseFromString(`
             <li class="pb-6">
                 <div class="columns">
@@ -853,7 +884,7 @@ var biblio = {
                                 <h3 class="is-size-6">
                                     <a href=${url}>${row.titulo}</a>
                                 </h3>
-                                <p class="is-size-7">${row.autor}<br> 2004 </p>
+                                <p class="is-size-7">${row.autor}<br>${row.fecha_publicacion}</p>
                             </div>
                             <div class="column is-narrow">
                                 <img loading="lazy" src=${image_url} width="102" height="132" alt="">
@@ -862,7 +893,7 @@ var biblio = {
                     </div>
                     <div class="column flow--xl">
                         ${
-                            getWordContexts(row, this.caller.form.form_items.global_search.q)
+                            getWordContexts(row, inputText)
                                 .map(result => (`
                                     <div class="flow--2xs">
                                         <h4 class="is-size-6">${tstring.item_pag} ${result.page}</h4>
