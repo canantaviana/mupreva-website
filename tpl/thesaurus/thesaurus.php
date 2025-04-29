@@ -33,7 +33,7 @@ $term_id = isset($ar_parts[1])
 
 // thesaurus_options
 $thesaurus_options = (object)[
-    'table'        => ['ts_material', 'ts_technique', 'ts_thematic'/*, 'ts_onomastic'*/, 'ts_chronological'],
-    'root_term'    => ['material1_89', 'technique1_1', 'ts1_1'/*, 'on1_160'*/, 'dc1_83'],
+    'table'        => ['ts_object', 'ts_chronological', 'ts_thematic', 'ts_material', 'ts_technique'],
+    'root_term'    => ['object1_1', 'dc1_83', 'ts1_1', 'material1_89', 'technique1_1'],
     'term_id'    => $term_id // options request term_id add
 ];
