@@ -903,6 +903,17 @@ var page = {
         return template
     },//end section_tipo_to_template
 
+    get_translated_table: function (type) {
+        const typesDictionary = {
+            tch100: tstring.images,
+            tch1: tstring.objetos,
+            tchi1: tstring.immovables_title,
+            tch300: tstring.documents,
+            rsc205: tstring.publications
+        }
+
+        return typesDictionary[type] || type;
+    },
 
 
     /**

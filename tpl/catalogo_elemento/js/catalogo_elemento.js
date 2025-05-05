@@ -1371,23 +1371,49 @@ var item = {
     },
 
     templateRelated: function (row) {
-        //TODO: passar a camp patrimonio_relacionado
         var self = this;
-        if (!this.hasRelated(row)) {
+
+        if (!row.relations) {
             return "";
-        }
+        };
+
+        const relations = JSON.parse(row.relations);
+        const relationsData = {}
+        relations.forEach(rel => {
+            if (!relationsData[rel.section_tipo]) {
+                relationsData[rel.section_tipo] = {type: page.get_translated_table(rel.section_tipo), result: []}
+            }
+            relationsData[rel.section_tipo].result.push(rel)
+        })
+
         return htmlTemplate(`
             <h2 class="accordion-header">
-                <button type="button">${tstring.item_rel_content}</button>
+                <button type="button">${tstring.immovables_relations_title}</button>
             </h2>
             <div class="accordion-content block-dedalo">
-                <ul class="galeria galeria--242x242 link-dn">
-                ${row.children
-                    .map(function (object) {
-                        return self.template_catalog_elem(object);
-                    })
-                    .join("")}
-                </ul>
+                <div class="tabs">
+                    <div class="tab-control">
+                        <ul class="tab-list" role="tablist">
+                            ${Object.keys(relationsData).map((key) => {
+                                return `<li class="tab-item">
+                                    <button role="tab" aria-controls="${key}-tab">${relationsData[key].type}</button>
+                                </li>`
+                            }).join('')}
+                        </ul>
+                    </div>
+                </div>
+                <div class="tab-group">
+                    ${Object.keys(relationsData).map((key) => (
+                        `<div class="tab-content" id="${key}-tab" role="tabpanel">
+                            ${relationsData[key].result.map((item) => {
+                                const image = item.image ? __WEB_MEDIA_ENGINE_URL__ + item.image : '/assets/img/placeholder.png';
+                                return `<a href="${page_globals.__WEB_ROOT_WEB__}/${page.section_tipo_to_template(key)}/${item.section_id}" target="_blank">
+                                    <img src=${image} alt=""  crossorigin="Anonymous" loading="lazy" style="width: 150px; height: 150px"/>
+                                </a>`
+                            })}
+                        </div>`
+                    )).join('')}
+                </div>
             </div>
         `);
     },
