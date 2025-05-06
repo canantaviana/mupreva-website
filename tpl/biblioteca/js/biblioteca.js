@@ -877,21 +877,14 @@ var biblio = {
 
         const content = parser.parseFromString(`
             <li class="pb-6">
-                <div class="columns">
-                    <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen">
-                        <div class="columns is-flex-direction-row-reverse full-link">
-                            <div class="column flow">
-                                <h3 class="is-size-6">
-                                    <a href=${url}>${row.titulo}</a>
-                                </h3>
-                                <p class="is-size-7">${row.autor}<br>${row.fecha_publicacion}</p>
-                            </div>
-                            <div class="column is-narrow">
-                                <img loading="lazy" src=${image_url} width="102" height="132" alt="">
-                            </div>
+                <div class="columns is-flex-direction-row-reverse">
+                    <div class="column flow--m">
+                        <div class="flow">
+                            <h3 class="is-size-6">
+                                <a href=${url}>${row.titulo}</a>
+                            </h3>
+                            <p class="is-size-7">${row.autor}<br>${row.fecha_publicacion}</p>
                         </div>
-                    </div>
-                    <div class="column flow--xl">
                         ${
                             getWordContexts(row, inputText)
                                 .map(result => (`
@@ -901,6 +894,9 @@ var biblio = {
                                     </div>
                                 `)).join('')
                         }
+                    </div>
+                    <div class="column is-narrow">
+                        <img loading="lazy" src=${image_url} width="102" height="132" alt="">
                     </div>
                 </div>
             </li>
