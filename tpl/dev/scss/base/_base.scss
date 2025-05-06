@@ -329,8 +329,7 @@ dl {
     }
 }
 dt {
-    text-transform: uppercase;
-    font-weight: 500;
+    font-weight: 300;
     font-size: var(--step--1);
     @include until($small-breakpoint) {
         &:not(:first-child) {
