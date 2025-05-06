@@ -854,7 +854,7 @@ var item = {
                 <tr style="display:none;" id="TableCollapse01More">
                     <td colspan="3" class="p-0">
                         <div class="has-background-grey-light p-5 mb-5">
-                            <div class="tabs">
+                            <div class="tabs-2 mb-6">
                                 <div class="tab-control">
                                     <ul class="tab-list" role="tablist">
                                         ${row.periodo.split(',').map((el, i) => (
@@ -896,7 +896,7 @@ var item = {
                 <tr style="display:none;" id="TableCollapse03More">
                     <td colspan="3" class="p-0">
                         <div class="has-background-grey-light p-5 mb-5">
-                            <div class="tabs">
+                            <div class="tabs-2 mb-6">
                                 <div class="tab-control">
                                     <ul class="tab-list" role="tablist">
                                         ${row.nombre_bien.split(',').map((el, i) => (
@@ -937,7 +937,7 @@ var item = {
                 <tr style="display:none;" id="TableCollapse04More">
                     <td colspan="3" class="p-0">
                         <div class="has-background-grey-light p-5 mb-5">
-                            <div class="tabs">
+                            <div class="tabs-2 mb-6">
                                 <div class="tab-control">
                                     <ul class="tab-list" role="tablist">
                                         ${row.materia.split(',').map((el, i) => (
@@ -978,7 +978,7 @@ var item = {
                 <tr style="display:none;" id="TableCollapse05More">
                     <td colspan="3" class="p-0">
                         <div class="has-background-grey-light p-5 mb-5">
-                            <div class="tabs">
+                            <div class="tabs-2 mb-6">
                                 <div class="tab-control">
                                     <ul class="tab-list" role="tablist">
                                         ${row.tecnica.split(',').map((el, i) => (
@@ -1391,7 +1391,7 @@ var item = {
                 <button type="button">${tstring.immovables_relations_title}</button>
             </h2>
             <div class="accordion-content block-dedalo">
-                <div class="tabs">
+                <div class="tabs-2 mb-6">
                     <div class="tab-control">
                         <ul class="tab-list" role="tablist">
                             ${Object.keys(relationsData).map((key) => {

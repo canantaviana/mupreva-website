@@ -3,6 +3,13 @@
         display: flex;
         gap: var(--space-xs);
     }
+    .tab-item {
+        padding-left: 0;
+        margin-top: 0;
+        &::before {
+            display: none;
+        }
+    }
     .tab-item > [role="tab"] {
         text-decoration: none;
         border: 2px solid #000;
@@ -24,11 +31,11 @@
             color: #fff;
         }
     }
-    .tab-group {
-        border-width: 0;
-        margin-top: 0;
-    }
     .tab-content {
         padding: var(--space-m) 0 0 0;
+    }
+    + .tab-group {
+        border-width: 0;
+        margin-top: 0;
     }
 }
