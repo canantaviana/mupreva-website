@@ -435,6 +435,34 @@ function swiperExposicionesDestacadas() {
     });
 }
 
+function swiperExpos(arr) {
+    // ---------------------------------
+    // Swiper Exposiciones
+    // ---------------------------------
+    arr.forEach((year) => {
+        var swiperExposicionesDestacadas = new Swiper(`.swiper--expos-${year}`, {
+            // spaceBetween: 10,
+            slideActiveClass: 'active',
+            navigation: {
+                prevEl: `.swiper--expos-${year}__btns .swiper-button-prev`,
+                nextEl: `.swiper--expos-${year}__btns .swiper-button-next`,
+            },
+            slidesPerView: 1,
+            spaceBetween: 33,
+            freeMode: true,
+            watchSlidesProgress: true,
+            breakpoints: {
+                700: {
+                    slidesPerView: 2,
+                },
+                1000: {
+                    slidesPerView: 3,
+                },
+            },
+        });
+    })
+}
+
 function massonryEnable() {
     // -------
     // Masonry

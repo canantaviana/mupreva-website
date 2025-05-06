@@ -696,58 +696,90 @@ var templateModules = {
         });
         return content;
     },
-    bloque_exposiciones_actuales: function(){
-        var content = htmlTemplate(`
-        <div class="swiper-container is-relative">
-            <div class="swiper swiper--expos children_container">
-            </div>
-            <div class="swiper--expos__btns">
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-            </div>
-        </div>
-        `);
-        var children_container = content[0].querySelector('div.children_container');
-        api.getExposicionesActuales().then(function(results){
-            var content = htmlTemplate(`
-                <div class="swiper-wrapper">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
+    bloque_exposiciones_actuales: function(target){
+        const acordion = common.create_dom_element({
+            element_type: "div",
+            class_name: "accordion accordion--primary mt-6",
+        });
+        target.appendChild(acordion);
 
-                    if (row.identifying_image !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
-                    }
-                    var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+        function buildYear (year, expos) {
+            return `
+                <h2 class="accordion-header" id="tab${year}">
+                    <button type="button" aria-controls="panel${year}">${year}</button>
+                </h2>
+                <div class="accordion-content block-dedalo" id="panel${year}" aria-labelledby="tab${year}">
+                    <div class="swiper-container is-relative">
+                        <div class="swiper swiper--expos-${year}">
+                            <div class="swiper-wrapper">
+                                ${
+                                    expos.map(function(row){
+                                        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                                        var image_url = '/assets/img/placeholder.png';
 
-                    return `
-                    <div class="swiper-slide">
-                        <div class="card is-flex is-flex-direction-column full-link">
-                            <div class="pt-7 pb-5 px-6 flow--xl">
-                                <h2 class="is-size-3 has-text-weight-semibold">
-                                    <a href="${url}">${row.title}</a>
-                                </h2>
-                                ${(date)?
-                                `<p class="has-text-weight-medium is-uppercase">${date}</p>`
-                                :''}
-                                <p class="more-link">${tstring.home_activities_more}</p>
+                                        if (row.identifying_image !== null) {
+                                            image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                                        }
+                                        var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                                        return `
+                                            <div class="swiper-slide">
+                                                <div class="card is-flex is-flex-direction-column full-link">
+                                                    <div class="pt-7 pb-5 px-6 flow--xl">
+                                                        <h3 class="is-size-3 has-text-weight-semibold">
+                                                            <a href="${url}">${row.title}</a>
+                                                        </h3>
+                                                        ${(date)?
+                                                        `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                                        :''}
+                                                        <p class="more-link">${tstring.home_activities_more}</p>
+                                                    </div>
+                                                    ${(row.type)?
+                                                    `<p class="has-text-weight-medium mb-3">
+                                                        <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                                    </p>`
+                                                    :''}
+                                                    <img loading="lazy" src="${image_url}" alt="">
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')
+                                }
                             </div>
-                            ${(row.type)?
-                            `<p class="has-text-weight-medium mb-3">
-                                <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
-                            </p>`
-                            :''}
-                            <img loading="lazy" src="${image_url}" alt="">
+                            <div class="swiper--expos-${year}__btns">
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+                            </div>
                         </div>
                     </div>
-                    `;
-                }).join('')}
                 </div>
-            `);
-            appendTemplate(children_container, content);
-            swiperExpos();
+            `;
+        }
+
+        api.getExposiciones().then(function(results){
+            if (!results || results.length == 0) {
+                return '';
+            }
+
+            const groupedByYear = {};
+            results.forEach(expo => {
+                const year = expo.date_start_year;
+                if (year) {
+                    groupedByYear[year] = groupedByYear[year] || [];
+                    groupedByYear[year].push(expo);
+                }
+            })
+            const yearsArray = Object.keys(groupedByYear).sort((a,b) => b-a);
+
+            var content = htmlTemplate(`
+                ${yearsArray.map(function(year, i){
+                    return buildYear(year, groupedByYear[year], i);
+                }).join('')}`);
+            appendTemplate(acordion, content);
+            swiperExpos(yearsArray)
+            let accordionInstance = new TenUp.Accordion('.accordion');
         });
-        return content;
+        return;
     },
 
 
