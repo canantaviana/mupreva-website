@@ -1037,17 +1037,26 @@ var item = {
                 const tabData = self.relationsData[category][tab]
 
                 const content = htmlTemplate(`
-                    ${tabData.result.map(item => {
-                        let imageUrl
-                        if (item.imagenes_identificativas.length) {
-                            imageUrl = __WEB_MEDIA_ENGINE_URL__ + item.imagenes_identificativas[0].image;
-                        } else {
-                            imageUrl = '/assets/img/placeholder.png';
-                        }
-                        return `<a href="${page_globals.__WEB_ROOT_WEB__}/${elementsDic[self.table]}/${item.section_id}" target="_blank">
-                            <img src="${imageUrl}" crossorigin="Anonymous" loading="lazy" style="width: 150px; height: 150px">
-                        </a>`
-                    })}`);
+                    <ul class="galeria galeria--185x185 link-dn">
+                        ${tabData.result.map(item => {
+                            let imageUrl
+                            if (item.imagenes_identificativas.length) {
+                                imageUrl = __WEB_MEDIA_ENGINE_URL__ + item.imagenes_identificativas[0].image;
+                            } else {
+                                imageUrl = '/assets/img/placeholder.png';
+                            }
+                            return `
+                            <li>
+                                <a href="${page_globals.__WEB_ROOT_WEB__}/${elementsDic[self.table]}/${item.section_id}" target="_blank">
+                                    <figure>
+                                        <img src="${imageUrl}" crossorigin="Anonymous" loading="lazy">
+                                        <figcaption>${item.titulo}</figcaption>
+                                    </figure>
+                                </a>
+                            </li>
+                            `
+                        }).join('')}
+                    </ul>`);
                 const button = htmlTemplate(`
                     <button class="button button--carrega button--icon">
                         ${tstring.load_more} <small>[${tabData.loaded} / ${tabData.total}]</small>
@@ -1405,12 +1414,21 @@ var item = {
                 <div class="tab-group">
                     ${Object.keys(relationsData).map((key) => (
                         `<div class="tab-content" id="${key}-tab" role="tabpanel">
-                            ${relationsData[key].result.map((item) => {
-                                const image = item.image ? __WEB_MEDIA_ENGINE_URL__ + item.image : '/assets/img/placeholder.png';
-                                return `<a href="${page_globals.__WEB_ROOT_WEB__}/${page.section_tipo_to_template(key)}/${item.section_id}" target="_blank">
-                                    <img src=${image} alt=""  crossorigin="Anonymous" loading="lazy" style="width: 150px; height: 150px"/>
-                                </a>`
-                            })}
+                            <ul class="galeria galeria--185x185 link-dn">
+                                ${relationsData[key].result.map((item) => {
+                                    const image = item.image ? __WEB_MEDIA_ENGINE_URL__ + item.image : '/assets/img/placeholder.png';
+                                    return `
+                                    <li>
+                                        <a href="${page_globals.__WEB_ROOT_WEB__}/${page.section_tipo_to_template(key)}/${item.section_id}" target="_blank">
+                                            <figure>
+                                                <img src=${image} alt=""  crossorigin="Anonymous" loading="lazy" />
+                                                <figcaption>${item.title}</figcaption>
+                                            </figure>
+                                        </a>
+                                    </li>
+                                    `
+                                }).join('')}
+                            </ul>
                         </div>`
                     )).join('')}
                 </div>
