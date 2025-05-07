@@ -547,14 +547,14 @@ function viewInit() {
         //   console.log( 'onTabChange callback' );
         // }
     });
-    /*let myTabs2 = new TenUp.tabs('.tabs-2', {
+    let myTabs2 = new TenUp.tabs('.tabs-2', {
         // onCreate: function() {
         //   console.log( 'onCreate callback' );
         // },
         // onTabChange: function() {
         //   console.log( 'onTabChange callback' );
         // }
-    });*/
+    });
 
     // ----------------
     // Div com a button (quan no podem posar un element figure dins un button (ja que no valida) posem el div com si fos un button)
