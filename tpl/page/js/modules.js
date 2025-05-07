@@ -708,9 +708,9 @@ var templateModules = {
                 <h2 class="accordion-header" id="tab${year}">
                     <button type="button" aria-controls="panel${year}">${year}</button>
                 </h2>
-                <div class="accordion-content block-dedalo" id="panel${year}" aria-labelledby="tab${year}">
+                <div class="accordion-content" id="panel${year}" aria-labelledby="tab${year}">
                     <div class="swiper-container is-relative">
-                        <div class="swiper swiper--expos-${year}">
+                        <div class="swiper swiper--expos swiper--expos-${year}">
                             <div class="swiper-wrapper">
                                 ${
                                     expos.map(function(row){

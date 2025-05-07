@@ -16,8 +16,9 @@
         }
     }
 }
+
 .swiper--exposiciones-destacadas__btns,
-.swiper--expos__btns {
+[class^="swiper--expos-"][class$="__btns"] {
     .swiper-button-next,
     .swiper-button-prev {
         width: 30px;
@@ -45,5 +46,22 @@
         &::after {
             background-image: url("data:image/svg+xml,%3Csvg width='12' height='22' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m1 21 10-10L1 1' stroke='%23000' stroke-width='2' fill='none' fill-rule='evenodd' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
         }
+    }
+}
+
+[class^="swiper--expos-"][class$="__btns"] {
+    .swiper-button-prev {
+        left: -3rem;
+    }
+    .swiper-button-next {
+        right: -3rem;
+    }
+}
+
+// Ajustos per swipers dins d'accordion
+.accordion-content .swiper--expos {
+    overflow: visible;
+    .swiper-slide:not(.swiper-slide-fully-visible) {
+        opacity: 0;
     }
 }
