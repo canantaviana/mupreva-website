@@ -1151,11 +1151,13 @@ var item = {
 
         const self = this;
         api.getVisitaYacimientoCatalog(row.titulo).then(function(result) {
-            const target = document.querySelector(".visit-jaciment-content");
-            target.innerHTML = common.convertText(result.summary);
+            if(result && result.length > 0 && result[0].summary) {
+                const target = document.querySelector(".visit-jaciment-content");
+                target.innerHTML = common.convertText(result.summary);
 
-            const target2 = document.querySelector(".visit-jaciment");
-            target2.style.display = "block";
+                const target2 = document.querySelector(".visit-jaciment");
+                target2.style.display = "block";
+            }
         })
     },
 
@@ -1380,20 +1382,48 @@ var item = {
     },
 
     templateRelated: function (row) {
+        //TODO: passar a camp patrimonio_relacionado
+        var self = this;
+        if (!this.hasRelated(row)) {
+            return "";
+        };
+
+        return htmlTemplate(`
+            <h2 class="accordion-header">
+                <button type="button">${tstring.item_rel_content}</button>
+            </h2>
+            <div class="accordion-content block-dedalo">
+                <ul class="galeria galeria--242x242 link-dn">
+                ${row.children
+                    .map(function (object) {
+                        return self.template_catalog_elem(object);
+                    })
+                    .join("")}
+                </ul>
+            </div>
+        `);
+    },
+
+    templateRelatedJaciments: function (row) {
         var self = this;
 
         if (!row.relations) {
             return "";
         };
 
-        const relations = JSON.parse(row.relations);
-        const relationsData = {}
-        relations.forEach(rel => {
-            if (!relationsData[rel.section_tipo]) {
-                relationsData[rel.section_tipo] = {type: page.get_translated_table(rel.section_tipo), result: []}
-            }
-            relationsData[rel.section_tipo].result.push(rel)
-        })
+        const relations = JSON.parse(row.relations)
+            .filter((relation) => ['tch1', 'tch100', 'tchi1', 'tch300'].includes(relation.section_tipo))
+
+        const relationsData = relations.reduce((acc, relation) => {
+            const type = relation.section_tipo;
+            acc[type] = acc[type] || {type: page.get_translated_table(type), result: []}
+            acc[type].result.push(relation)
+            return acc;
+        }, {})
+
+        if (Object.keys(relationsData).length === 0) {
+            return '';
+        }
 
         return htmlTemplate(`
             <h2 class="accordion-header">
@@ -1422,7 +1452,9 @@ var item = {
                                         <a href="${page_globals.__WEB_ROOT_WEB__}/${page.section_tipo_to_template(key)}/${item.section_id}" target="_blank">
                                             <figure>
                                                 <img src=${image} alt=""  crossorigin="Anonymous" loading="lazy" />
-                                                <figcaption>${item.title}</figcaption>
+                                                ${item.title
+                                                    ? `<figcaption>${item.title}</figcaption>`
+                                                : ''}
                                             </figure>
                                         </a>
                                     </li>
@@ -1651,6 +1683,7 @@ var item = {
         if (row.tpl === "immovable") {
             //visita al jaciment
             this.templateJacimentVisit(acordion, row);
+            appendTemplate(acordion, this.templateRelatedJaciments(row));
         }
 
         //recursos

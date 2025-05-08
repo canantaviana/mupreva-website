@@ -909,7 +909,6 @@ var page = {
             tch1: tstring.objetos,
             tchi1: tstring.immovables_title,
             tch300: tstring.documents,
-            rsc205: tstring.publications
         }
 
         return typesDictionary[type] || type;
