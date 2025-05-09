@@ -1571,13 +1571,20 @@ var item = {
         return htmlTemplate(`
             <div id="video-modal" class="modal">
                 <div class="modal-content">
+                    <button class="modal-close">
+                        <svg width="44" height="44">
+                            <g fill="none" fill-rule="evenodd">
+                                <path d="M0 0h44v44H0z" />
+                                <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                            </g>
+                        </svg>
+                    </button>
                     <video controls>
                         <source id="video-source" src="" type="video/mp4">
                         <track id="video-track" kind="subtitles" src="">
                     </video>
                     <p id="modal-title"></p>
                 </div>
-                <button class="modal-close"></button>
             </div>`);
     },
 
