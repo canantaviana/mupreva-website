@@ -482,6 +482,9 @@ function massonryEnable() {
 }
 
 function viewInit() {
+    // enable A11y Dialogs
+    enableDialogs(document.getElementById("children_container"));
+
     // -------------------------
     // Swiper (fitxa Col·lecció)
     // -------------------------

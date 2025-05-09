@@ -38,7 +38,23 @@ var templateModules = {
                 </div>
                 <div class="column">
                     ${(info.image.length > 0)?
-                    `<img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">`
+                    `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                        <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
+                        <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
+                            <div class="dialog-overlay" data-a11y-dialog-hide></div>
+                            <div class="dialog-content" role="document">
+                                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                    <svg width="44" height="44">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <path d="M0 0h44v44H0z" />
+                                            <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                        </g>
+                                    </svg>
+                                </button>
+                                <img loading="lazy" src="${info.image[0].image}" alt="">
+                            </div>
+                        </div>
+                    </div>`
                     :''}
                 </div>
             </div>
@@ -61,7 +77,23 @@ var templateModules = {
                 </div>
                 <div class="column">
                     ${(info.image.length > 0)?
-                    `<img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">`
+                    `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                        <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
+                        <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
+                            <div class="dialog-overlay" data-a11y-dialog-hide></div>
+                            <div class="dialog-content" role="document">
+                                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                    <svg width="44" height="44">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <path d="M0 0h44v44H0z" />
+                                            <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                        </g>
+                                    </svg>
+                                </button>
+                                <img loading="lazy" src="${info.image[0].image}" alt="">
+                            </div>
+                        </div>
+                    </div>`
                     :''}
                 </div>
             </div>
@@ -85,7 +117,23 @@ var templateModules = {
                         </div>
                         <div class="column">
                             ${(info.image.length > 0)?
-                            `<img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">`
+                            `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                                <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
+                                <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
+                                    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+                                    <div class="dialog-content" role="document">
+                                        <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                            <svg width="44" height="44">
+                                                <g fill="none" fill-rule="evenodd">
+                                                    <path d="M0 0h44v44H0z" />
+                                                    <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                                </g>
+                                            </svg>
+                                        </button>
+                                        <img loading="lazy" src="${info.image[0].image}" alt="">
+                                    </div>
+                                </div>
+                            </div>`
                             :''}
 
                         </div>
@@ -114,7 +162,23 @@ var templateModules = {
                         </div>
                         <div class="column">
                             ${(info.image.length > 0)?
-                            `<img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">`
+                            `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                                <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
+                                <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
+                                    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+                                    <div class="dialog-content" role="document">
+                                        <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                            <svg width="44" height="44">
+                                                <g fill="none" fill-rule="evenodd">
+                                                    <path d="M0 0h44v44H0z" />
+                                                    <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                                </g>
+                                            </svg>
+                                        </button>
+                                        <img loading="lazy" src="${info.image[0].image}" alt="">
+                                    </div>
+                                </div>
+                            </div>`
                             :''}
                         </div>
                     </div>
@@ -268,7 +332,23 @@ var templateModules = {
                 </h2>`
                 :''}
                 ${(info.image.length > 0)?
-                    `<img src="${info.image[0].image}" alt="${info.image[0].title}">`
+                    `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                        <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
+                        <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
+                            <div class="dialog-overlay" data-a11y-dialog-hide></div>
+                            <div class="dialog-content" role="document">
+                                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                    <svg width="44" height="44">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <path d="M0 0h44v44H0z" />
+                                            <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                        </g>
+                                    </svg>
+                                </button>
+                                <img loading="lazy" src="${info.image[0].image}" alt="">
+                            </div>
+                        </div>
+                    </div>`
                 :''}
                 ${(info.body)?info.body:''}
             </div>
