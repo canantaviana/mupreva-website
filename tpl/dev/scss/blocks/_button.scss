@@ -213,23 +213,11 @@
 button.button {
     cursor: default;
 }
-// a.button {
-// cursor: pointer;
-// }
-// p.button {
-// &:hover,
-// &:focus {
-//     background-color: #fff;
-//     a {
-//         color: $button-background-color;
-//     }
-// }
-// a {
-//     color: $button-color;
-//     text-decoration: none;
-//     &:hover,
-//     &:focus {
-//         color: $button-hover-color;
-//     }
-// }
-// }
+
+// Ajusta posició de botó compartir per guanyar espai en resolucions de pantalla amb poca alçada
+@media screen and (min-width: $tablet) and (max-height: 800px) {
+    div:has(>.simple-tooltip-container) {
+        margin-top: -3.5rem;
+        margin-right: 4rem;
+    }
+}
