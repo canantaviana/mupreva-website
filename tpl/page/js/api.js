@@ -225,16 +225,19 @@ var api = {
     },
 
 
-    getObjectsDefault: function() {
+    getObjectsDefault: function(offset = 0) {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'objects',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: 'RAND()',
+            order: null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
-            resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+            count: true,
+            get_count: true,
+            offset: offset,
         };
         return page.get_records(options);
     },
@@ -244,10 +247,12 @@ var api = {
             table: 'pictures',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: 'RAND()',
+            order: null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
-            resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+            count: true,
+            get_count: true,
         };
         return page.get_records(options);
     },
@@ -257,10 +262,12 @@ var api = {
             table: 'immovables',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: 'RAND()',
+            order: null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
-            resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+            count: true,
+            get_count: true,
         };
         return page.get_records(options);
     },
@@ -270,10 +277,12 @@ var api = {
             table: 'documents_catalog',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: 'RAND()',
+            order: null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
-            resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+            count: true,
+            get_count: true,
         };
         return page.get_records(options);
     },

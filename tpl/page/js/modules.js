@@ -868,7 +868,9 @@ var templateModules = {
 
 
 
-    bloque_catalogo_default: function(){
+    bloque_catalogo_default: function(self){
+        const data = self.loaded_items;
+
         var content = htmlTemplate(`
         <div>
             <div class="default_objects mt-8 flow--xl">
@@ -883,152 +885,108 @@ var templateModules = {
         `);
 
         var children_container_objects = content[0].querySelector('div.default_objects');
-        api.getObjectsDefault().then(function(results){
-            if (!results || results.length == 0) {
-                return;
-            }
-            var content = htmlTemplate(`
-                <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
-                    <h2>${tstring.collection_objects_default}</h2>
-                    <a href="/catalogo/?catalog_tables=objects" class="button button--simple-2">${tstring.collection_see_all}</a>
-                </div>
-                <ul class="galeria galeria--242x242 link-dn">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.imagenes_identificativas.length > 0) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
-                    }
-                    return `
-                    <li class="${row.tpl}">
-                        <a href="${url}" target="_blank">
-                            <figure>
-                                <img loading="lazy" src="${image_url}" alt="">
-                                ${(row.titulo)?`
-                                <figcaption>${row.titulo}</figcaption>
-                                `:''}
-                            </figure>
-                        </a>
-                    </li>`;
-                }).join('')}
-                </ul>
-                <div class="has-text-centered mt-6">
-                    <a href="/catalogo/?catalog_tables=objects"class="button button--icon button--carrega">${tstring.collection_see_more}</a>
-                </div>
-            `);
-            appendTemplate(children_container_objects, content);
-        });
-
         var children_container_pictures = content[0].querySelector('div.default_pictures');
-        api.getPicturesDefault().then(function(results){
-            if (!results || results.length == 0) {
-                return;
-            }
-            var content = htmlTemplate(`
-                <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
-                    <h2>${tstring.collection_pictures_default}</h2>
-                    <a href="/catalogo/?catalog_tables=pictures" class="button button--simple-2">${tstring.collection_see_all}</a>
-                </div>
-                <ul class="galeria galeria--242x242 link-dn">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.imagenes_identificativas.length > 0) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
-                    }
-                    return `
-                    <li class="${row.tpl}">
-                        <a href="${url}" target="_blank">
-                            <figure>
-                                <img loading="lazy" src="${image_url}" alt="">
-                                ${(row.titulo)?`
-                                <figcaption>${row.titulo}</figcaption>
-                                `:''}
-                            </figure>
-                        </a>
-                    </li>`;
-                }).join('')}
-                </ul>
-                <div class="has-text-centered mt-6">
-                    <a href="/catalogo/?catalog_tables=pictures"class="button button--icon button--carrega">${tstring.collection_see_more}</a>
-                </div>
-            `);
-            appendTemplate(children_container_pictures, content);
-        });
-
         var children_container_inmovables = content[0].querySelector('div.default_inmovables');
-        api.getInmovablesDefault().then(function(results){
-            if (!results || results.length == 0) {
-                return;
-            }
-            var content = htmlTemplate(`
-                <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
-                    <h2>${tstring.collection_inmovables_default}</h2>
-                    <a href="/catalogo/?catalog_tables=inmovables" class="button button--simple-2">${tstring.collection_see_all}</a>
-                </div>
-                <ul class="galeria galeria--242x242 link-dn">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.imagenes_identificativas.length > 0) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
-                    }
-                    return `
-                    <li class="${row.tpl}">
-                        <a href="${url}" target="_blank">
-                            <figure>
-                                <img loading="lazy" src="${image_url}" alt="">
-                                ${(row.titulo)?`
-                                <figcaption>${row.titulo}</figcaption>
-                                `:''}
-                            </figure>
-                        </a>
-                    </li>`;
-                }).join('')}
-                </ul>
-                <div class="has-text-centered mt-6">
-                    <a href="/catalogo/?catalog_tables=inmovables"class="button button--icon button--carrega">${tstring.collection_see_more}</a>
-                </div>
-            `);
-            appendTemplate(children_container_inmovables, content);
-        });
-
         var children_container_documents = content[0].querySelector('div.default_documents');
-        api.getDocumentsDefault().then(function(results){
-            if (!results || results.length == 0) {
-                return;
+
+        function load_items(type) {
+            let title;
+            let apiCall;
+            let container;
+            switch(type) {
+                case 'objects':
+                    title = tstring.collection_objects_default;
+                    apiCall = api.getObjectsDefault;
+                    container = children_container_objects;
+                    break;
+                case 'pictures':
+                    title = tstring.collection_pictures_default;
+                    apiCall = api.getPicturesDefault;
+                    container = children_container_pictures;
+                    break;
+                case 'inmovables':
+                    title = tstring.collection_inmovables_default;
+                    apiCall = api.getInmovablesDefault;
+                    container = children_container_inmovables;
+                    break;
+                case 'documents':
+                    title = tstring.collection_documents_default;
+                    apiCall = api.getDocumentsDefault;
+                    container = children_container_documents;
+                    break;
+                default:
+                    return;
             }
-            var content = htmlTemplate(`
-                <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
-                    <h2>${tstring.collection_documents_default}</h2>
-                    <a href="/catalogo/?catalog_tables=documents" class="button button--simple-2">${tstring.collection_see_all}</a>
-                </div>
-                <ul class="galeria galeria--242x242 link-dn">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.imagenes_identificativas.length > 0) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
+            // Si no hi ha cap element carregat, es creen els elements HTML de la galeria i botó de carregar més
+            if (data[type].loaded === 0) {
+                const new_gallery = htmlTemplate(`
+                    <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
+                        <h2>${title}</h2>
+                    </div>
+                    <ul class="galeria galeria--242x242 link-dn"></ul>
+                    <div class="has-text-centered mt-6">
+                        <button type="button" class="button button--icon button--carrega" id="button_load_more_${type}">${tstring.collection_see_more}</button>
+                    </div>
+                `);
+                appendTemplate(container, new_gallery);
+
+                // Afegim l'event listener al botó de carregar més
+                container.querySelector(`#button_load_more_${type}`).addEventListener('click', function(){
+                    if (data[type].loaded < data[type].total) {
+                        load_items(type);
                     }
-                    return `
-                    <li class="${row.tpl}">
-                        <a href="${url}" target="_blank">
-                            <figure>
-                                <img loading="lazy" src="${image_url}" alt="">
-                                ${(row.titulo)?`
-                                <figcaption>${row.titulo}</figcaption>
-                                `:''}
-                            </figure>
-                        </a>
-                    </li>`;
-                }).join('')}
-                </ul>
-                <div class="has-text-centered mt-6">
-                    <a href="/catalogo/?catalog_tables=documents"class="button button--icon button--carrega">${tstring.collection_see_more}</a>
-                </div>
-            `);
-            appendTemplate(children_container_documents, content);
-        });
+                });
+            }
+
+
+            var gallery_children = container.querySelector('.galeria');
+
+            // Crida a la api per carregar més elements
+            apiCall(data[type].loaded).then(function({data: results, total}){
+                if (!results || results.length == 0) {
+                    return;
+                }
+                // Guardem els resultats a l'objecte data
+                data[type].results = data[type].results.concat(results);
+                data[type].total = total;
+                data[type].loaded += results.length;
+
+                // Si ja s'han carregat tots els elements, es treu el botó de carregar més
+                if (data[type].loaded >= data[type].total) {
+                    container.querySelector(`#button_load_more_${type}`).remove();
+                }
+
+                // Es crea el contingut HTML de la galeria
+                var content = htmlTemplate(`
+                    ${data[type].results.map(function(row){
+                        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                        var image_url = '/assets/img/placeholder.png';
+                        if (row.imagenes_identificativas.length > 0) {
+                            image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
+                        }
+                        return `
+                        <li class="${row.tpl}">
+                            <a href="${url}" target="_blank">
+                                <figure>
+                                    <img loading="lazy" src="${image_url}" alt="">
+                                    ${(row.titulo)?`
+                                    <figcaption>${row.titulo}</figcaption>
+                                    `:''}
+                                </figure>
+                            </a>
+                        </li>`;
+                    }).join('')}
+                `);
+
+                // Esborrem el contingut anterior de la galeria i afegim el nou contingut
+                gallery_children.innerHTML = '';
+                appendTemplate(gallery_children, content);
+            });
+        }
+        load_items('objects');
+        load_items('pictures');
+        load_items('immovables');
+        load_items('documents');
 
         return content;
     },
