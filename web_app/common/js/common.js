@@ -1194,6 +1194,7 @@ function formatDateRange(dateRange, iso3) {
         const iso3ToLocale = {
             'lg-spa': 'es-ES',  // Espanyol
             'lg-vlc': 'ca-ES',  // Valencià (utilitza català)
+            'lg-vlca': 'ca-ES',  // Valencià (utilitza català)
             'lg-eng': 'en-US',  // Anglès
             'lg-fra': 'fr-FR',  // Francès
             'lg-cat': 'ca-ES',  // Català
