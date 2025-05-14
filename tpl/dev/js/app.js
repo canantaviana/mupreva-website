@@ -409,6 +409,41 @@ function swiperActividades() {
     });
 }
 
+function swiperExposicionesActuales() {
+    // ----------------------------
+    // Swiper Exposiciones Actuales
+    // ----------------------------
+    var swiperExposicionesActuales = new Swiper(".swiper--exposiciones-actuales", {
+        // spaceBetween: 10,
+        slideActiveClass: 'active',
+        navigation: {
+            nextEl: ".swiper--exposiciones-actuales__btns .swiper-button-next",
+            prevEl: ".swiper--exposiciones-actuales__btns .swiper-button-prev",
+        },
+        slidesPerView: 1,
+        spaceBetween: 24,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            600: {
+                slidesPerView: 2,
+            },
+            850: {
+                slidesPerView: 3,
+            },
+            1100: {
+                slidesPerView: 4,
+            },
+            1400: {
+                slidesPerView: 5,
+            },
+            1700: {
+                slidesPerView: 6,
+            },
+        },
+    });
+}
+
 function swiperExposicionesDestacadas() {
     // ---------------------------------
     // Swiper Exposiciones destacadas

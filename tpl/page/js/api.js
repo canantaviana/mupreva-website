@@ -203,7 +203,7 @@ var api = {
 
     getExposicionesActuales: function() {
         var options = {
-            table: 'activities',
+            table: 'exhibitions',
             sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
             limit: 10,
             order: 'time_frame asc',

@@ -776,7 +776,7 @@ var templateModules = {
         });
         return content;
     },
-    bloque_exposiciones_actuales: function(target){
+    bloque_exposiciones_anuales: function(target){
         const acordion = common.create_dom_element({
             element_type: "div",
             class_name: "accordion accordion--primary mt-6",
@@ -862,7 +862,61 @@ var templateModules = {
         return;
     },
 
+    bloque_exposiciones_actuales: function(){
+        var content = htmlTemplate(`
+        <div class="children_container swiper-container is-relative">
+            <div class="swiper swiper--exposiciones-actuales">
+                <div class="swiper-wrapper">
+                </div>
+            </div>
+            <div class="swiper--exposiciones-actuales__btns">
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </div>
+        `);
 
+        var children_container = content[0].querySelector('.children_container .swiper-wrapper');
+
+        api.getExposicionesActuales().then(function(results){
+            var content = htmlTemplate(`
+                ${results.map(function(row){
+                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                    var image_url = '/assets/img/placeholder.png';
+
+                    if (row.identifying_image !== null) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                    }
+                    var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                    return `
+                    <div class="swiper-slide">
+                        <div class="card is-flex is-flex-direction-column full-link">
+                            <div class="pt-7 pb-5 px-6 flow--xl">
+                                <h3 class="is-size-3 has-text-weight-semibold">
+                                    <a href="${url}">${row.title}</a>
+                                </h3>
+                                ${(date)?
+                                `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                :''}
+                                <p class="more-link">${tstring.home_activities_more}</p>
+                            </div>
+                            ${(row.type)?
+                            `<p class="has-text-weight-medium mb-3">
+                                <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                            </p>`
+                            :''}
+                            <img loading="lazy" src="${image_url}" alt="">
+                        </div>
+                    </div>
+                    `;
+                }).join('')}
+            `);
+            appendTemplate(children_container, content);
+            swiperExposicionesActuales();
+        });
+        return content;
+    },
 
 
 
