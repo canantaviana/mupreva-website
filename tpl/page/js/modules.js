@@ -1243,7 +1243,11 @@ var templateModules = {
                                 <div class="px-6">
                                     <ul class="columns is-multiline is-variable is-7">
                                     ${elem.children_data.map(function(site){
+                                        console.log(site);
                                         var image_url = null;
+                                        if (site.identifying_image !== null && site.identifying_image.length > 0) {
+                                            image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(site.identifying_image)[0];
+                                        }
                                         if (site.images !== null && site.images.length > 0) {
                                             image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(site.images)[0];
                                         }
