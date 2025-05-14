@@ -347,7 +347,7 @@ var item = {
                 row.lugar && lugarData
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/immovable/${lugarData}">${row.lugar}</a></dd>
+            <dd><a href="/immovable/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
             `
                     : ""
             }
@@ -431,7 +431,7 @@ var item = {
                 row.lugar && lugarData
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/immovable/${lugarData}">${row.lugar}</a></dd>
+            <dd><a href="/immovable/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
             `
                     : ""
             }
@@ -441,7 +441,7 @@ var item = {
             <dt>${tstring.item_ubication}</dt>
             <dd>${ubicationName.map(function(value, index){
                 if (typeof ubicationId[index] != 'undefined') {
-                    return `<a href="/salas?termid=${ubicationId[index]}">${value}</a>`
+                    return `<a href="/salas/${ubicationId[index]}">${value}</a>`
                 }
                 return `${value}`
                 }).join(', ')}</dd>
