@@ -398,7 +398,8 @@ var catalog = {
                         <div class="field">
                             <label class="label is-sr-only" for="object">${tstring.collection_object_label}</label>
                             <div class="control">
-                                <input type="search" name="cercaObjecte" id="object" placeholder="${tstring.collection_object_label}" value="" class="input is-small">
+                                <input type="input" name="cercaObjecte" id="object" placeholder="${tstring.collection_object_label}" value="" class="input is-small">
+                                <div class="container_values"></div>
                             </div>
                         </div>
                     </div>
@@ -414,7 +415,8 @@ var catalog = {
                         <div class="field">
                             <label class="label is-sr-only" for="period">${tstring.collection_period_label}</label>
                             <div class="control">
-                                <input type="search" name="cercaPeriode" id="period" placeholder="${tstring.collection_period_label}" value="" class="input is-small">
+                                <input type="input" name="cercaPeriode" id="period" placeholder="${tstring.collection_period_label}" value="" class="input is-small">
+                                <div class="container_values"></div>
                             </div>
                         </div>
                     </div>
@@ -422,7 +424,8 @@ var catalog = {
                         <div class="field">
                             <label class="label is-sr-only" for="material">${tstring.collection_material_label}</label>
                             <div class="control">
-                                <input type="search" name="cercaMaterial" id="material" placeholder="${tstring.collection_material_label}" value="" class="input is-small">
+                                <input type="input" name="cercaMaterial" id="material" placeholder="${tstring.collection_material_label}" value="" class="input is-small">
+                                <div class="container_values"></div>
                             </div>
                         </div>
                     </div>
@@ -430,7 +433,8 @@ var catalog = {
                         <div class="field">
                             <label class="label is-sr-only" for="technique">${tstring.collection_technique_label}</label>
                             <div class="control">
-                                <input type="search" name="cercaTechnique" id="technique" placeholder="${tstring.collection_technique_label}" value="" class="input is-small">
+                                <input type="input" name="cercaTechnique" id="technique" placeholder="${tstring.collection_technique_label}" value="" class="input is-small">
+                                <div class="container_values"></div>
                             </div>
                         </div>
                     </div>
@@ -438,7 +442,8 @@ var catalog = {
                         <div class="field">
                             <label class="label is-sr-only" for="typology">${tstring.collection_typology_label}</label>
                             <div class="control">
-                                <input type="search" name="cercaTipologia" id="typology" placeholder="${tstring.collection_typology_label}" value="" class="input is-small">
+                                <input type="input" name="cercaTipologia" id="typology" placeholder="${tstring.collection_typology_label}" value="" class="input is-small">
+                                <div class="container_values"></div>
                             </div>
                         </div>
                     </div>
@@ -581,10 +586,14 @@ var catalog = {
                 id: "nombre_bien",
                 name: "nombre_bien",
                 q_column: "nombre_bien",
+                q_splittable: true,
+                value_split: ', ',
                 eq: "LIKE",
+                q_selected_eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
                 node_input: currentForm.querySelector("#object"),
+                node_values: currentForm.querySelector('#object').closest('.control').querySelector('.container_values'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
@@ -631,10 +640,14 @@ var catalog = {
                 id: "periodo",
                 name: "periodo",
                 q_column: "periodo",
+                q_splittable: true,
+                value_split: ', ',
                 eq: "LIKE",
+                q_selected_eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
                 node_input: currentForm.querySelector("#period"),
+                node_values: currentForm.querySelector('#period').closest('.control').querySelector('.container_values'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
@@ -656,10 +669,14 @@ var catalog = {
                 id: "materia",
                 name: "materia",
                 q_column: "materia",
+                q_splittable: true,
+                value_split: ', ',
                 eq: "LIKE",
+                q_selected_eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
                 node_input: currentForm.querySelector("#material"),
+                node_values: currentForm.querySelector('#material').closest('.control').querySelector('.container_values'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
@@ -681,10 +698,14 @@ var catalog = {
                 id: "tecnica",
                 name: "tecnica",
                 q_column: "tecnica",
+                q_splittable: true,
+                value_split: ', ',
                 eq: "LIKE",
+                q_selected_eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
                 node_input: currentForm.querySelector("#technique"),
+                node_values: currentForm.querySelector('#technique').closest('.control').querySelector('.container_values'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
@@ -706,10 +727,14 @@ var catalog = {
                 id: "tipologia",
                 name: "tipologia",
                 q_column: "tipologia",
+                q_splittable: true,
+                value_split: ', ',
                 eq: "LIKE",
+                q_selected_eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
                 node_input: currentForm.querySelector("#typology"),
+                node_values: currentForm.querySelector('#typology').closest('.control').querySelector('.container_values'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
