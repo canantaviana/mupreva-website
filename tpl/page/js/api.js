@@ -214,6 +214,16 @@ var api = {
         return page.get_records(options);
     },
 
+    getActivities: function () {
+        var options = {
+            table: 'activities',
+            order: 'time_frame desc',
+            ar_fields: '*',
+            parse: page.parse_list_data
+        };
+        return page.get_records(options);
+    },
+
     getExposiciones: function () {
         var options = {
             table: 'exhibitions',

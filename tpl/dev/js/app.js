@@ -409,6 +409,41 @@ function swiperActividades() {
     });
 }
 
+function swiperActividadesActuales() {
+    // ----------------------------
+    // Swiper Exposiciones Actuales
+    // ----------------------------
+    var swiperActividadesActuales = new Swiper(".swiper--actividades-actuales", {
+        // spaceBetween: 10,
+        slideActiveClass: 'active',
+        navigation: {
+            nextEl: ".swiper--actividades-actuales__btns .swiper-button-next",
+            prevEl: ".swiper--actividades-actuales__btns .swiper-button-prev",
+        },
+        slidesPerView: 1,
+        spaceBetween: 24,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            600: {
+                slidesPerView: 2,
+            },
+            850: {
+                slidesPerView: 3,
+            },
+            1100: {
+                slidesPerView: 4,
+            },
+            1400: {
+                slidesPerView: 5,
+            },
+            1700: {
+                slidesPerView: 6,
+            },
+        },
+    });
+}
+
 function swiperExposicionesActuales() {
     // ----------------------------
     // Swiper Exposiciones Actuales
@@ -468,6 +503,34 @@ function swiperExposicionesDestacadas() {
             },
         },
     });
+}
+
+function swiperActividadesAnuales(arr) {
+    // ---------------------------------
+    // Swiper Exposiciones
+    // ---------------------------------
+    arr.forEach((year) => {
+        var swiperExposicionesDestacadas = new Swiper(`.swiper--activitats-${year}`, {
+            // spaceBetween: 10,
+            slideActiveClass: 'active',
+            navigation: {
+                prevEl: `.swiper--activitats-${year}__btns .swiper-button-prev`,
+                nextEl: `.swiper--activitats-${year}__btns .swiper-button-next`,
+            },
+            slidesPerView: 1,
+            spaceBetween: 33,
+            freeMode: true,
+            watchSlidesProgress: true,
+            breakpoints: {
+                700: {
+                    slidesPerView: 2,
+                },
+                1000: {
+                    slidesPerView: 3,
+                },
+            },
+        });
+    })
 }
 
 function swiperExpos(arr) {

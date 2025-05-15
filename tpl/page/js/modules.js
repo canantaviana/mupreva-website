@@ -731,15 +731,112 @@ var templateModules = {
         return content;
     },
 
+    bloque_actividades_anuales: function(target) {
+        const content = htmlTemplate(`
+            <div class="children_container accordion accordion--primary mt-6">
+                <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${tstring.historical}</h2>
+            </div>
+        `);
+        var children_container = content[0];
+        const spinner = common.spinner(children_container)
+        appendTemplate(target, content);
 
+
+        function buildYear (year, activs) {
+            return `
+                <h2 class="accordion-header" id="tab${year}">
+                    <button type="button" aria-controls="panel${year}">${year}</button>
+                </h2>
+                <div class="accordion-content" id="panel${year}" aria-labelledby="tab${year}">
+                    <div class="swiper-container is-relative">
+                        <div class="swiper swiper--activitats swiper--activitats-${year}">
+                            <div class="swiper-wrapper">
+                                ${
+                                    activs.map(function(row){
+                                        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                                        var image_url = '/assets/img/placeholder.png';
+                                        if (row.identifying_image !== null) {
+                                            image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                                        }
+                                        var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                                        return `
+                                            <div class="swiper-slide">
+                                                <div class="card is-flex is-flex-direction-column full-link">
+                                                    <div class="pt-7 pb-5 px-6 flow--xl">
+                                                        <h3 class="is-size-3 has-text-weight-semibold">
+                                                            <a href="${url}">${row.title}</a>
+                                                        </h3>
+                                                        ${(date)?
+                                                        `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                                        :''}
+                                                        <p class="more-link">${tstring.home_activities_more}</p>
+                                                    </div>
+                                                    ${(row.type)?
+                                                    `<p class="has-text-weight-medium mb-3">
+                                                        <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                                    </p>`
+                                                    :''}
+                                                    <img loading="lazy" src="${image_url}" alt="">
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')
+                                }
+                            </div>
+                            <div class="swiper--activitats-${year}__btns">
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        api.getActivities().then(function(results){
+            if (!results || results.length == 0) {
+                return '';
+            }
+
+            const groupedByYear = {};
+            results.forEach(activ => {
+                const year = activ.date_start_year;
+                if (year) {
+                    groupedByYear[year] = groupedByYear[year] || [];
+                    groupedByYear[year].push(activ);
+                }
+            })
+            const yearsArray = Object.keys(groupedByYear).sort((a,b) => b-a);
+
+            var content = htmlTemplate(`
+                ${yearsArray.map(function(year, i){
+                    return buildYear(year, groupedByYear[year], i);
+                }).join('')}`);
+            children_container.removeChild(children_container.lastChild);
+            appendTemplate(children_container, content);
+            swiperActividadesAnuales(yearsArray);
+            let accordionInstance = new TenUp.Accordion('.accordion');
+        });
+        return;
+    },
 
 
     bloque_actividades_actuales: function(){
         var content = htmlTemplate(`
-        <ul class="galeria galeria--242x342 activitats-list link-dn">
-        </ul>
+        <div class="children_container swiper-container is-relative">
+            <div class="swiper swiper--actividades-actuales">
+                <div class="swiper-wrapper">
+                </div>
+            </div>
+            <div class="swiper--actividades-actuales__btns">
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </div>
         `);
-        var children_container = content[0].querySelector('ul');
+
+        var children_container = content[0].querySelector('.children_container .swiper-wrapper');
+
         api.getActividadesActuales().then(function(results){
             var content = htmlTemplate(`
                 ${results.map(function(row){
@@ -751,37 +848,41 @@ var templateModules = {
                     var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
                     return `
-                    <li>
-                        <div class="is-flex is-flex-direction-column gap-4 full-link ${row.tpl}">
-                            <h3 class="is-size-4">
-                                <a href="${url}">${row.title}</a>
-                            </h3>
+                    <div class="swiper-slide">
+                        <div class="card is-flex is-flex-direction-column full-link">
+                            <div class="pt-7 pb-5 px-6 flow--xl">
+                                <h3 class="is-size-4">
+                                    <a href="${url}">${row.title}</a>
+                                </h3>
+                                ${(date)?
+                                `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                :''}
+                            </div>
                             ${(row.type)?
-                            `<p class="has-text-weight-medium is-size-6">
+                            `<p class="has-text-weight-medium mb-3">
                                 <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
                             </p>`
                             :''}
                             <img loading="lazy" src="${image_url}" alt="">
-                            ${(date)?
-                            `<div class="has-text-primary has-text-weight-semibold is-size-6">
-                                ${date}
-                            </div>`
-                            :''}
                         </div>
-                    </li>
+                    </div>
                     `;
                 }).join('')}
             `);
             appendTemplate(children_container, content);
+            swiperActividadesActuales();
         });
         return content;
     },
     bloque_exposiciones_anuales: function(target){
-        const acordion = common.create_dom_element({
-            element_type: "div",
-            class_name: "accordion accordion--primary mt-6",
-        });
-        target.appendChild(acordion);
+        const content = htmlTemplate(`
+            <div class="children_container accordion accordion--primary mt-6">
+                <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${tstring.historical}</h2>
+            </div>
+        `);
+        var children_container = content[0];
+        const spinner = common.spinner(children_container)
+        appendTemplate(target, content);
 
         function buildYear (year, expos) {
             return `
@@ -855,7 +956,8 @@ var templateModules = {
                 ${yearsArray.map(function(year, i){
                     return buildYear(year, groupedByYear[year], i);
                 }).join('')}`);
-            appendTemplate(acordion, content);
+            children_container.removeChild(children_container.lastChild);
+            appendTemplate(children_container, content);
             swiperExpos(yearsArray)
             let accordionInstance = new TenUp.Accordion('.accordion');
         });
