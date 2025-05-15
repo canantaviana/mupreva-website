@@ -191,7 +191,7 @@ function form_factory() {
                     // assign value
                     form_item.q = e.target.value
                     // show label at top
-                    if (node_input.value.length > 0) {
+                    /*if (node_input.value.length > 0) {
                         label_node = label_node || common.create_dom_element({
                             element_type: 'span',
                             class_name: "form_input_label",
@@ -201,7 +201,7 @@ function form_factory() {
                     } else if (label_node) {
                         label_node.remove()
                         label_node = null
-                    }
+                    }*/
                 })
                 node_input.addEventListener("blur", function (e) {
                     if (label_node && node_input.value.length === 0) {
@@ -372,7 +372,7 @@ function form_factory() {
         // input
         const input = common.create_dom_element({
             element_type: "input",
-            class_name: "input_values input",
+            class_name: "input_values input is-hidden",
             parent: line
         })
         input.value = value

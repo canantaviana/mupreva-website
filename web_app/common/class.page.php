@@ -238,7 +238,6 @@ class page
 
 
     private function defaultTemplateData($value) {
-        //$template_name = str_replace(' ', '_', strtolower(iconv('UTF-8', 'ASCII//TRANSLIT', $value->name)));
         $template_name = $value->name;
         return '{
             "id": "'.$template_name.'",
@@ -766,13 +765,17 @@ class page
         # HTTP request in php to the API
         $data = json_web_data::get_data($options);
 
-        $breadcrumb = array_reverse($data->result);
-        foreach ($breadcrumb as $key => $value) {
+        $breadcrumb = [];
+        foreach (array_reverse($data->result) as $key => $value) {
+            if ($value->web_path === null) {
+                continue;
+            }
             if ($value->web_path == 'main_home') {
                 $value->web_path = '';
-                $breadcrumb[$key] = $value;
             }
+            $breadcrumb[] = $value;
         }
+        $breadcrumb = array_unique($breadcrumb, SORT_REGULAR);
 
         $object = new stdClass();
         foreach ($options->ar_fields as $key => $name) {
@@ -1189,8 +1192,7 @@ class page
             }
             $template_name = $template_map->template;
         }
-        $template_name = str_replace(' ', '_', strtolower(iconv('UTF-8', 'ASCII//TRANSLIT', $template_name)));
-
+        $template_name = str_replace(' ', '_', strtolower($this->remove_accents($template_name)));
         #
         # TEMPLATE CSS / JS
         if ($options->add_template_css === true) {
@@ -1475,6 +1477,23 @@ class page
         return $items;
     } //end get_children
 
+    protected function remove_accents($str) {
+        $accents = [
+            'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A',
+            'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a',
+            'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E',
+            'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e',
+            'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I',
+            'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i',
+            'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O',
+            'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o',
+            'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U',
+            'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u',
+            'Ñ' => 'N', 'ñ' => 'n',
+            'Ç' => 'C', 'ç' => 'c'
+        ];
 
+        return strtr($str, $accents);
+    }
 
 }//end class page

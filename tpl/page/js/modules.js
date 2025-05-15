@@ -38,7 +38,23 @@ var templateModules = {
                 </div>
                 <div class="column">
                     ${(info.image.length > 0)?
-                    `<img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">`
+                    `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                        <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
+                        <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
+                            <div class="dialog-overlay" data-a11y-dialog-hide></div>
+                            <div class="dialog-content" role="document">
+                                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                    <svg width="44" height="44">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <path d="M0 0h44v44H0z" />
+                                            <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                        </g>
+                                    </svg>
+                                </button>
+                                <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                            </div>
+                        </div>
+                    </div>`
                     :''}
                 </div>
             </div>
@@ -61,7 +77,23 @@ var templateModules = {
                 </div>
                 <div class="column">
                     ${(info.image.length > 0)?
-                    `<img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">`
+                    `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                        <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
+                        <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
+                            <div class="dialog-overlay" data-a11y-dialog-hide></div>
+                            <div class="dialog-content" role="document">
+                                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                    <svg width="44" height="44">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <path d="M0 0h44v44H0z" />
+                                            <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                        </g>
+                                    </svg>
+                                </button>
+                                <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                            </div>
+                        </div>
+                    </div>`
                     :''}
                 </div>
             </div>
@@ -85,7 +117,23 @@ var templateModules = {
                         </div>
                         <div class="column">
                             ${(info.image.length > 0)?
-                            `<img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">`
+                            `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                                <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
+                                <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
+                                    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+                                    <div class="dialog-content" role="document">
+                                        <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                            <svg width="44" height="44">
+                                                <g fill="none" fill-rule="evenodd">
+                                                    <path d="M0 0h44v44H0z" />
+                                                    <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                                </g>
+                                            </svg>
+                                        </button>
+                                        <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                                    </div>
+                                </div>
+                            </div>`
                             :''}
 
                         </div>
@@ -114,7 +162,23 @@ var templateModules = {
                         </div>
                         <div class="column">
                             ${(info.image.length > 0)?
-                            `<img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">`
+                            `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                                <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
+                                <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
+                                    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+                                    <div class="dialog-content" role="document">
+                                        <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                            <svg width="44" height="44">
+                                                <g fill="none" fill-rule="evenodd">
+                                                    <path d="M0 0h44v44H0z" />
+                                                    <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                                </g>
+                                            </svg>
+                                        </button>
+                                        <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                                    </div>
+                                </div>
+                            </div>`
                             :''}
                         </div>
                     </div>
@@ -268,7 +332,23 @@ var templateModules = {
                 </h2>`
                 :''}
                 ${(info.image.length > 0)?
-                    `<img src="${info.image[0].image}" alt="${info.image[0].title}">`
+                    `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                        <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
+                        <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
+                            <div class="dialog-overlay" data-a11y-dialog-hide></div>
+                            <div class="dialog-content" role="document">
+                                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                    <svg width="44" height="44">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <path d="M0 0h44v44H0z" />
+                                            <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                        </g>
+                                    </svg>
+                                </button>
+                                <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                            </div>
+                        </div>
+                    </div>`
                 :''}
                 ${(info.body)?info.body:''}
             </div>
@@ -413,7 +493,7 @@ var templateModules = {
     },
     bloque_descubrir_publicaciones: function(info){
         var content = htmlTemplate(`
-        <div class="wrapper py-8">
+        <div class="wrapper">
             <div class="columns is-justify-content-space-between">
                 <div class="column is-half-desktop is-one-third-widescreen flow--m">
                     ${(info.title)?
@@ -439,53 +519,62 @@ var templateModules = {
                 </div>`
                 :''}
             </div>
-            <div class="children_container">
+            <div class="children_container swiper-container is-relative mt-7">
             </div>
         </div>
         `);
         var children_container = content[0].querySelector('div.children_container');
         api.getPublicacionesDestacados().then(function(results){
             var content = htmlTemplate(`
-                <ul class="pubs-list link-dn mt-7">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var info = [];
-                    if (row.autor) {
-                        info.push(row.autor);
-                    }
-                    if (row.fecha_publicacion) {
-                        info.push(row.fecha_publicacion);
-                    }
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.imagen_identificativa !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
-                    }
+                <div class="swiper swiper--publicacions">
+                    <div class="swiper-wrapper link-dn">
+                        ${results.map(function(row){
+                            const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                            var info = [];
+                            if (row.autor) {
+                                info.push(row.autor);
+                            }
+                            if (row.fecha_publicacion) {
+                                info.push(row.fecha_publicacion);
+                            }
+                            var image_url = '/assets/img/placeholder.png';
+                            if (row.imagen_identificativa !== null) {
+                                image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+                            }
 
-                    return `
-                    <li class="is-flex is-flex-direction-column full-link gap-2 ${row.tpl}">
-                        <h3 class="is-size-6">
-                            <a href="${url}" target="_blank">${row.titulo}</a>
-                        </h3>
-                        <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
-                            <img loading="lazy" src="${image_url}" alt="">
-                        </div>
-                        ${(info.length > 0)?`
-                        <p class="is-size-7">
-                            ${info.join('<br>')}
-                        </p>
-                        `:''}
-                    </li>
-                    `;
-                }).join('')}
-                </ul>
+                            return `
+                            <div class="swiper-slide">
+                                <div class="is-flex is-flex-direction-column full-link gap-2">
+                                    <h3 class="is-size-6">
+                                        <a href="${url}" target="_blank">${row.titulo}</a>
+                                    </h3>
+                                    <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
+                                        <img loading="lazy" src="${image_url}" alt="">
+                                    </div>
+                                    ${(info.length > 0)?`
+                                    <p class="is-size-7">
+                                        ${info.join('<br>')}
+                                    </p>
+                                    `:''}
+                                </div>
+                            </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                <div class="swiper--publicacions__btns">
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
             `);
             appendTemplate(children_container, content);
+            swiperPublicaciones();
         });
         return content;
     },
     bloque_proximas_actividades: function(info){
         var content = htmlTemplate(`
-        <div class="wrapper py-8">
+        <div class="wrapper">
             <div class="columns is-justify-content-space-between">
                 <div class="column is-half-desktop is-one-third-widescreen flow--m">
                     ${(info.title)?
@@ -512,52 +601,59 @@ var templateModules = {
                 :''}
             </div>
             <div class="is-flex is-flex-wrap-wrap is-align-items-center gap-8 mb-8"></div>
-            <div class="children_container">
+            <div class="children_container swiper-container is-relative mt-7">
             </div>
         </div>
         `);
         var children_container = content[0].querySelector('div.children_container');
         api.getActividadesDestacados().then(function(results){
             var content = htmlTemplate(`
-                <ul class="galeria galeria--242x342 activitats-list link-dn">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.identifying_image !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
-                    }
-                    var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+                <div class="swiper swiper--activitats">
+                    <div class="swiper-wrapper activitats-list link-dn">
+                        ${results.map(function(row){
+                            const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                            var image_url = '/assets/img/placeholder.png';
+                            if (row.identifying_image !== null) {
+                                image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                            }
+                            var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
-                    return `
-                    <li>
-                        <div class="is-flex is-flex-direction-column gap-4 full-link ${row.tpl}">
-                            <h3 class="is-size-4">
-                                <a href="${url}">${row.title}</a>
-                            </h3>
-                            ${(row.type)?
-                            `<p class="has-text-weight-medium is-size-6">
-                                <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
-                            </p>`
-                            :''}
-                            <img loading="lazy" src="${image_url}" alt="">
-                            ${(date)?
-                            `<div class="has-text-primary has-text-weight-semibold is-size-6">
-                                ${date}
-                            </div>`
-                            :''}
-                        </div>
-                    </li>
-                    `;
-                }).join('')}
-                </ul>
+                            return `
+                            <div class="swiper-slide">
+                                <div class="is-flex is-flex-direction-column gap-4 full-link">
+                                    <h3 class="is-size-4">
+                                        <a href="${url}">${row.title}</a>
+                                    </h3>
+                                    ${(row.type)?
+                                    `<p class="has-text-weight-medium is-size-6">
+                                        <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                    </p>`
+                                    :''}
+                                    <img loading="lazy" src="${image_url}" alt="">
+                                    ${(date)?
+                                    `<div class="has-text-primary has-text-weight-semibold is-size-6">
+                                        ${date}
+                                    </div>`
+                                    :''}
+                                </div>
+                            </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                <div class="swiper--activitats__btns">
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
             `);
             appendTemplate(children_container, content);
+            swiperActividades();
         });
         return content;
     },
     bloque_exposiciones_destacadas: function(info){
         var content = htmlTemplate(`
-        <div class="wrapper py-8">
+        <div class="wrapper">
             <div class="columns is-justify-content-space-between">
                 <div class="column is-half-desktop is-one-third-widescreen flow--m">
                     ${(info.title)?
@@ -583,14 +679,166 @@ var templateModules = {
                 </div>`
                 :''}
             </div>
-            <div class="children_container">
+            <div class="children_container swiper-container is-relative mt-7">
             </div>
         </div>
         `);
         var children_container = content[0].querySelector('div.children_container');
         api.getExposicionesDestacados().then(function(results){
             var content = htmlTemplate(`
-                <ul class="columns is-multiline mt-7">
+                <div class="swiper swiper--exposiciones-destacadas">
+                    <div class="swiper-wrapper">
+                        ${results.map(function(row){
+                            const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                            var image_url = '/assets/img/placeholder.png';
+                            if (row.identifying_image !== null) {
+                                image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                            }
+                            var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                            return `
+                            <div class="swiper-slide">
+                                <div class="card is-flex is-flex-direction-column full-link">
+                                    <div class="pt-7 pb-5 px-6 flow--xl">
+                                        <h3 class="is-size-3 has-text-weight-semibold">
+                                            <a href="${url}">${row.title}</a>
+                                        </h3>
+                                        ${(date)?
+                                        `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                        :''}
+                                        <p class="more-link">${tstring.home_activities_more}</p>
+                                    </div>
+                                    ${(row.type)?
+                                    `<p class="has-text-weight-medium mb-3">
+                                        <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                    </p>`
+                                    :''}
+                                    <img loading="lazy" src="${image_url}" alt="">
+                                </div>
+                            </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                <div class="swiper--exposiciones-destacadas__btns">
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
+            `);
+            appendTemplate(children_container, content);
+            swiperExposicionesDestacadas();
+        });
+        return content;
+    },
+
+    bloque_actividades_anuales: function(target) {
+        const content = htmlTemplate(`
+            <div class="children_container accordion accordion--primary mt-6">
+                <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${tstring.historical}</h2>
+            </div>
+        `);
+        var children_container = content[0];
+        const spinner = common.spinner(children_container)
+        appendTemplate(target, content);
+
+
+        function buildYear (year, activs) {
+            return `
+                <h2 class="accordion-header" id="tab${year}">
+                    <button type="button" aria-controls="panel${year}">${year}</button>
+                </h2>
+                <div class="accordion-content" id="panel${year}" aria-labelledby="tab${year}">
+                    <div class="swiper-container is-relative">
+                        <div class="swiper swiper--activitats swiper--activitats-${year}">
+                            <div class="swiper-wrapper">
+                                ${
+                                    activs.map(function(row){
+                                        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                                        var image_url = '/assets/img/placeholder.png';
+                                        if (row.identifying_image !== null) {
+                                            image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                                        }
+                                        var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                                        return `
+                                            <div class="swiper-slide">
+                                                <div class="card is-flex is-flex-direction-column full-link">
+                                                    <div class="pt-7 pb-5 px-6 flow--xl">
+                                                        <h3 class="is-size-3 has-text-weight-semibold">
+                                                            <a href="${url}">${row.title}</a>
+                                                        </h3>
+                                                        ${(date)?
+                                                        `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                                        :''}
+                                                        <p class="more-link">${tstring.home_activities_more}</p>
+                                                    </div>
+                                                    ${(row.type)?
+                                                    `<p class="has-text-weight-medium mb-3">
+                                                        <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                                    </p>`
+                                                    :''}
+                                                    <img loading="lazy" src="${image_url}" alt="">
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')
+                                }
+                            </div>
+                            <div class="swiper--activitats-${year}__btns">
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        api.getActivities().then(function(results){
+            if (!results || results.length == 0) {
+                return '';
+            }
+
+            const groupedByYear = {};
+            results.forEach(activ => {
+                const year = activ.date_start_year;
+                if (year) {
+                    groupedByYear[year] = groupedByYear[year] || [];
+                    groupedByYear[year].push(activ);
+                }
+            })
+            const yearsArray = Object.keys(groupedByYear).sort((a,b) => b-a);
+
+            var content = htmlTemplate(`
+                ${yearsArray.map(function(year, i){
+                    return buildYear(year, groupedByYear[year], i);
+                }).join('')}`);
+            children_container.removeChild(children_container.lastChild);
+            appendTemplate(children_container, content);
+            swiperActividadesAnuales(yearsArray);
+            let accordionInstance = new TenUp.Accordion('.accordion');
+        });
+        return;
+    },
+
+
+    bloque_actividades_actuales: function(){
+        var content = htmlTemplate(`
+        <div class="children_container swiper-container is-relative">
+            <div class="swiper swiper--actividades-actuales">
+                <div class="swiper-wrapper">
+                </div>
+            </div>
+            <div class="swiper--actividades-actuales__btns">
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </div>
+        `);
+
+        var children_container = content[0].querySelector('.children_container .swiper-wrapper');
+
+        api.getActividadesActuales().then(function(results){
+            var content = htmlTemplate(`
                 ${results.map(function(row){
                     const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
                     var image_url = '/assets/img/placeholder.png';
@@ -600,7 +848,151 @@ var templateModules = {
                     var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
                     return `
-                    <li class="column is-half-tablet is-one-third-desktop ${row.tpl}">
+                    <div class="swiper-slide">
+                        <div class="card is-flex is-flex-direction-column full-link">
+                            <div class="pt-7 pb-5 px-6 flow--xl">
+                                <h3 class="is-size-4">
+                                    <a href="${url}">${row.title}</a>
+                                </h3>
+                                ${(date)?
+                                `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                :''}
+                            </div>
+                            ${(row.type)?
+                            `<p class="has-text-weight-medium mb-3">
+                                <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                            </p>`
+                            :''}
+                            <img loading="lazy" src="${image_url}" alt="">
+                        </div>
+                    </div>
+                    `;
+                }).join('')}
+            `);
+            appendTemplate(children_container, content);
+            swiperActividadesActuales();
+        });
+        return content;
+    },
+    bloque_exposiciones_anuales: function(target){
+        const content = htmlTemplate(`
+            <div class="children_container accordion accordion--primary mt-6">
+                <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${tstring.historical}</h2>
+            </div>
+        `);
+        var children_container = content[0];
+        const spinner = common.spinner(children_container)
+        appendTemplate(target, content);
+
+        function buildYear (year, expos) {
+            return `
+                <h2 class="accordion-header" id="tab${year}">
+                    <button type="button" aria-controls="panel${year}">${year}</button>
+                </h2>
+                <div class="accordion-content" id="panel${year}" aria-labelledby="tab${year}">
+                    <div class="swiper-container is-relative">
+                        <div class="swiper swiper--expos swiper--expos-${year}">
+                            <div class="swiper-wrapper">
+                                ${
+                                    expos.map(function(row){
+                                        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                                        var image_url = '/assets/img/placeholder.png';
+
+                                        if (row.identifying_image !== null) {
+                                            image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                                        }
+                                        var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                                        return `
+                                            <div class="swiper-slide">
+                                                <div class="card is-flex is-flex-direction-column full-link">
+                                                    <div class="pt-7 pb-5 px-6 flow--xl">
+                                                        <h3 class="is-size-3 has-text-weight-semibold">
+                                                            <a href="${url}">${row.title}</a>
+                                                        </h3>
+                                                        ${(date)?
+                                                        `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                                        :''}
+                                                        <p class="more-link">${tstring.home_activities_more}</p>
+                                                    </div>
+                                                    ${(row.type)?
+                                                    `<p class="has-text-weight-medium mb-3">
+                                                        <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                                    </p>`
+                                                    :''}
+                                                    <img loading="lazy" src="${image_url}" alt="">
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')
+                                }
+                            </div>
+                            <div class="swiper--expos-${year}__btns">
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        api.getExposiciones().then(function(results){
+            if (!results || results.length == 0) {
+                return '';
+            }
+
+            const groupedByYear = {};
+            results.forEach(expo => {
+                const year = expo.date_start_year;
+                if (year) {
+                    groupedByYear[year] = groupedByYear[year] || [];
+                    groupedByYear[year].push(expo);
+                }
+            })
+            const yearsArray = Object.keys(groupedByYear).sort((a,b) => b-a);
+
+            var content = htmlTemplate(`
+                ${yearsArray.map(function(year, i){
+                    return buildYear(year, groupedByYear[year], i);
+                }).join('')}`);
+            children_container.removeChild(children_container.lastChild);
+            appendTemplate(children_container, content);
+            swiperExpos(yearsArray)
+            let accordionInstance = new TenUp.Accordion('.accordion');
+        });
+        return;
+    },
+
+    bloque_exposiciones_actuales: function(){
+        var content = htmlTemplate(`
+        <div class="children_container swiper-container is-relative">
+            <div class="swiper swiper--exposiciones-actuales">
+                <div class="swiper-wrapper">
+                </div>
+            </div>
+            <div class="swiper--exposiciones-actuales__btns">
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </div>
+        `);
+
+        var children_container = content[0].querySelector('.children_container .swiper-wrapper');
+
+        api.getExposicionesActuales().then(function(results){
+            var content = htmlTemplate(`
+                ${results.map(function(row){
+                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                    var image_url = '/assets/img/placeholder.png';
+
+                    if (row.identifying_image !== null) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                    }
+                    var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                    return `
+                    <div class="swiper-slide">
                         <div class="card is-flex is-flex-direction-column full-link">
                             <div class="pt-7 pb-5 px-6 flow--xl">
                                 <h3 class="is-size-3 has-text-weight-semibold">
@@ -618,111 +1010,12 @@ var templateModules = {
                             :''}
                             <img loading="lazy" src="${image_url}" alt="">
                         </div>
-                    </li>
-                    `;
-                }).join('')}
-                </ul>
-            `);
-            appendTemplate(children_container, content);
-        });
-        return content;
-    },
-
-
-
-
-    bloque_actividades_actuales: function(){
-        var content = htmlTemplate(`
-        <ul class="galeria galeria--242x342 activitats-list link-dn">
-        </ul>
-        `);
-        var children_container = content[0].querySelector('ul');
-        api.getActividadesActuales().then(function(results){
-            var content = htmlTemplate(`
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.identifying_image !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
-                    }
-                    var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
-
-                    return `
-                    <li>
-                        <div class="is-flex is-flex-direction-column gap-4 full-link ${row.tpl}">
-                            <h3 class="is-size-4">
-                                <a href="${url}">${row.title}</a>
-                            </h3>
-                            ${(row.type)?
-                            `<p class="has-text-weight-medium is-size-6">
-                                <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
-                            </p>`
-                            :''}
-                            <img loading="lazy" src="${image_url}" alt="">
-                            ${(date)?
-                            `<div class="has-text-primary has-text-weight-semibold is-size-6">
-                                ${date}
-                            </div>`
-                            :''}
-                        </div>
-                    </li>
-                    `;
-                }).join('')}
-            `);
-            appendTemplate(children_container, content);
-        });
-        return content;
-    },
-    bloque_exposiciones_actuales: function(){
-        var content = htmlTemplate(`
-        <div class="swiper-container is-relative">
-            <div class="swiper swiper--expos children_container">
-            </div>
-            <div class="swiper--expos__btns">
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-            </div>
-        </div>
-        `);
-        var children_container = content[0].querySelector('div.children_container');
-        api.getExposicionesActuales().then(function(results){
-            var content = htmlTemplate(`
-                <div class="swiper-wrapper">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
-
-                    if (row.identifying_image !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
-                    }
-                    var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
-
-                    return `
-                    <div class="swiper-slide">
-                        <div class="card is-flex is-flex-direction-column full-link">
-                            <div class="pt-7 pb-5 px-6 flow--xl">
-                                <h2 class="is-size-3 has-text-weight-semibold">
-                                    <a href="${url}">${row.title}</a>
-                                </h2>
-                                ${(date)?
-                                `<p class="has-text-weight-medium is-uppercase">${date}</p>`
-                                :''}
-                                <p class="more-link">${tstring.home_activities_more}</p>
-                            </div>
-                            ${(row.type)?
-                            `<p class="has-text-weight-medium mb-3">
-                                <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
-                            </p>`
-                            :''}
-                            <img loading="lazy" src="${image_url}" alt="">
-                        </div>
                     </div>
                     `;
                 }).join('')}
-                </div>
             `);
             appendTemplate(children_container, content);
-            swiperExpos();
+            swiperExposicionesActuales();
         });
         return content;
     },
@@ -731,9 +1024,9 @@ var templateModules = {
 
 
 
+    bloque_catalogo_default: function(self){
+        const data = self.loaded_items;
 
-
-    bloque_catalogo_default: function(){
         var content = htmlTemplate(`
         <div>
             <div class="default_objects mt-8 flow--xl">
@@ -748,152 +1041,108 @@ var templateModules = {
         `);
 
         var children_container_objects = content[0].querySelector('div.default_objects');
-        api.getObjectsDefault().then(function(results){
-            if (!results || results.length == 0) {
-                return;
-            }
-            var content = htmlTemplate(`
-                <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
-                    <h2>${tstring.collection_objects_default}</h2>
-                    <a href="/catalogo/?catalog_tables=objects" class="button button--simple-2">${tstring.collection_see_all}</a>
-                </div>
-                <ul class="galeria galeria--242x242 link-dn">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.imagenes_identificativas.length > 0) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
-                    }
-                    return `
-                    <li class="${row.tpl}">
-                        <a href="${url}" target="_blank">
-                            <figure>
-                                <img loading="lazy" src="${image_url}" alt="">
-                                ${(row.titulo)?`
-                                <figcaption>${row.titulo}</figcaption>
-                                `:''}
-                            </figure>
-                        </a>
-                    </li>`;
-                }).join('')}
-                </ul>
-                <div class="has-text-centered mt-6">
-                    <a href="/catalogo/?catalog_tables=objects"class="button button--icon button--carrega">${tstring.collection_see_more}</a>
-                </div>
-            `);
-            appendTemplate(children_container_objects, content);
-        });
-
         var children_container_pictures = content[0].querySelector('div.default_pictures');
-        api.getPicturesDefault().then(function(results){
-            if (!results || results.length == 0) {
-                return;
-            }
-            var content = htmlTemplate(`
-                <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
-                    <h2>${tstring.collection_pictures_default}</h2>
-                    <a href="/catalogo/?catalog_tables=pictures" class="button button--simple-2">${tstring.collection_see_all}</a>
-                </div>
-                <ul class="galeria galeria--242x242 link-dn">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.imagenes_identificativas.length > 0) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
-                    }
-                    return `
-                    <li class="${row.tpl}">
-                        <a href="${url}" target="_blank">
-                            <figure>
-                                <img loading="lazy" src="${image_url}" alt="">
-                                ${(row.titulo)?`
-                                <figcaption>${row.titulo}</figcaption>
-                                `:''}
-                            </figure>
-                        </a>
-                    </li>`;
-                }).join('')}
-                </ul>
-                <div class="has-text-centered mt-6">
-                    <a href="/catalogo/?catalog_tables=pictures"class="button button--icon button--carrega">${tstring.collection_see_more}</a>
-                </div>
-            `);
-            appendTemplate(children_container_pictures, content);
-        });
-
         var children_container_inmovables = content[0].querySelector('div.default_inmovables');
-        api.getInmovablesDefault().then(function(results){
-            if (!results || results.length == 0) {
-                return;
-            }
-            var content = htmlTemplate(`
-                <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
-                    <h2>${tstring.collection_inmovables_default}</h2>
-                    <a href="/catalogo/?catalog_tables=inmovables" class="button button--simple-2">${tstring.collection_see_all}</a>
-                </div>
-                <ul class="galeria galeria--242x242 link-dn">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.imagenes_identificativas.length > 0) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
-                    }
-                    return `
-                    <li class="${row.tpl}">
-                        <a href="${url}" target="_blank">
-                            <figure>
-                                <img loading="lazy" src="${image_url}" alt="">
-                                ${(row.titulo)?`
-                                <figcaption>${row.titulo}</figcaption>
-                                `:''}
-                            </figure>
-                        </a>
-                    </li>`;
-                }).join('')}
-                </ul>
-                <div class="has-text-centered mt-6">
-                    <a href="/catalogo/?catalog_tables=inmovables"class="button button--icon button--carrega">${tstring.collection_see_more}</a>
-                </div>
-            `);
-            appendTemplate(children_container_inmovables, content);
-        });
-
         var children_container_documents = content[0].querySelector('div.default_documents');
-        api.getDocumentsDefault().then(function(results){
-            if (!results || results.length == 0) {
-                return;
+
+        function load_items(type) {
+            let title;
+            let apiCall;
+            let container;
+            switch(type) {
+                case 'objects':
+                    title = tstring.collection_objects_default;
+                    apiCall = api.getObjectsDefault;
+                    container = children_container_objects;
+                    break;
+                case 'pictures':
+                    title = tstring.collection_pictures_default;
+                    apiCall = api.getPicturesDefault;
+                    container = children_container_pictures;
+                    break;
+                case 'inmovables':
+                    title = tstring.collection_inmovables_default;
+                    apiCall = api.getInmovablesDefault;
+                    container = children_container_inmovables;
+                    break;
+                case 'documents':
+                    title = tstring.collection_documents_default;
+                    apiCall = api.getDocumentsDefault;
+                    container = children_container_documents;
+                    break;
+                default:
+                    return;
             }
-            var content = htmlTemplate(`
-                <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
-                    <h2>${tstring.collection_documents_default}</h2>
-                    <a href="/catalogo/?catalog_tables=documents" class="button button--simple-2">${tstring.collection_see_all}</a>
-                </div>
-                <ul class="galeria galeria--242x242 link-dn">
-                ${results.map(function(row){
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.imagenes_identificativas.length > 0) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
+            // Si no hi ha cap element carregat, es creen els elements HTML de la galeria i botó de carregar més
+            if (data[type].loaded === 0) {
+                const new_gallery = htmlTemplate(`
+                    <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
+                        <h2>${title}</h2>
+                    </div>
+                    <ul class="galeria galeria--242x242 link-dn"></ul>
+                    <div class="has-text-centered mt-6">
+                        <button type="button" class="button button--icon button--carrega" id="button_load_more_${type}">${tstring.collection_see_more}</button>
+                    </div>
+                `);
+                appendTemplate(container, new_gallery);
+
+                // Afegim l'event listener al botó de carregar més
+                container.querySelector(`#button_load_more_${type}`).addEventListener('click', function(){
+                    if (data[type].loaded < data[type].total) {
+                        load_items(type);
                     }
-                    return `
-                    <li class="${row.tpl}">
-                        <a href="${url}" target="_blank">
-                            <figure>
-                                <img loading="lazy" src="${image_url}" alt="">
-                                ${(row.titulo)?`
-                                <figcaption>${row.titulo}</figcaption>
-                                `:''}
-                            </figure>
-                        </a>
-                    </li>`;
-                }).join('')}
-                </ul>
-                <div class="has-text-centered mt-6">
-                    <a href="/catalogo/?catalog_tables=documents"class="button button--icon button--carrega">${tstring.collection_see_more}</a>
-                </div>
-            `);
-            appendTemplate(children_container_documents, content);
-        });
+                });
+            }
+
+
+            var gallery_children = container.querySelector('.galeria');
+
+            // Crida a la api per carregar més elements
+            apiCall(data[type].loaded).then(function({data: results, total}){
+                if (!results || results.length == 0) {
+                    return;
+                }
+                // Guardem els resultats a l'objecte data
+                data[type].results = data[type].results.concat(results);
+                data[type].total = total;
+                data[type].loaded += results.length;
+
+                // Si ja s'han carregat tots els elements, es treu el botó de carregar més
+                if (data[type].loaded >= data[type].total) {
+                    container.querySelector(`#button_load_more_${type}`).remove();
+                }
+
+                // Es crea el contingut HTML de la galeria
+                var content = htmlTemplate(`
+                    ${data[type].results.map(function(row){
+                        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                        var image_url = '/assets/img/placeholder.png';
+                        if (row.imagenes_identificativas.length > 0) {
+                            image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
+                        }
+                        return `
+                        <li class="${row.tpl}">
+                            <a href="${url}" target="_blank">
+                                <figure>
+                                    <img loading="lazy" src="${image_url}" alt="">
+                                    ${(row.titulo)?`
+                                    <figcaption>${row.titulo}</figcaption>
+                                    `:''}
+                                </figure>
+                            </a>
+                        </li>`;
+                    }).join('')}
+                `);
+
+                // Esborrem el contingut anterior de la galeria i afegim el nou contingut
+                gallery_children.innerHTML = '';
+                appendTemplate(gallery_children, content);
+            });
+        }
+        load_items('objects');
+        load_items('pictures');
+        load_items('immovables');
+        load_items('documents');
 
         return content;
     },
@@ -1110,7 +1359,7 @@ var templateModules = {
                     </div>
                 </div>
                 ${(info.description)?`
-                <div class="block-dedalo is-variable is-8 is-multiline">
+                <div class="block-dedalo is-variable is-8 is-multiline flow text-columns-2">
                     ${common.convertText(info.description)}
                 </div>
                 `:''}
@@ -1147,10 +1396,14 @@ var templateModules = {
                             </div>
                             ${(elem.children_data.length > 0)?`
                             <div class="has-background-grey-light pt-7">
-                                <div class="wrapper">
+                                <div class="px-6">
                                     <ul class="columns is-multiline is-variable is-7">
                                     ${elem.children_data.map(function(site){
+                                        console.log(site);
                                         var image_url = null;
+                                        if (site.identifying_image !== null && site.identifying_image.length > 0) {
+                                            image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(site.identifying_image)[0];
+                                        }
                                         if (site.images !== null && site.images.length > 0) {
                                             image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(site.images)[0];
                                         }
@@ -1194,7 +1447,11 @@ var templateModules = {
                                                 <div class="column">
                                                     <img loading="lazy" src="${image_url}" width="380" height="250" alt="" class="is-block">
                                                 </div>
-                                                `:''}
+                                                `:`
+                                                <div class="column">
+                                                    <img loading="lazy" src="/assets/img/placeholder2.png" width="380" height="250" alt="" class="is-block">
+                                                </div>
+                                                `}
                                             </div>
                                             <div class="dialog-container" data-a11y-dialog="dialog-route-${site.section_id}" aria-hidden="true" aria-labelledby="dialog-route-${site.section_id}-title">
                                                 <div class="dialog-overlay" data-a11y-dialog-hide></div>
@@ -1207,13 +1464,13 @@ var templateModules = {
                                                             </g>
                                                         </svg>
                                                     </button>
-                                                    <div class="columns is-widescreen is-variable is-8">
+                                                    <div class="columns is-fullhd is-variable is-8">
                                                         ${(image_url)?`
                                                         <div class="column">
                                                             <img loading="lazy" src="${image_url}" alt="">
                                                         </div>
                                                         `:''}
-                                                        <div class="column text-base flow--m">
+                                                        <div class="column text-base flow--2xs">
                                                             <div class="flow--xs">
                                                                 <h1 id="dialog-01-title">${site.title}</h1>
                                                                 ${(elem.place)?`
@@ -1224,7 +1481,7 @@ var templateModules = {
                                                                 <img src="/assets/img/ico-localitzacio-small.svg" alt="" width="20" height="20">
                                                                 ${tstring.site_how_arrive}
                                                             </h2>
-                                                            ${common.convertText(elem.description)}
+                                                            ${common.convertText(site.summary)}
                                                         </div>
                                                     </div>
                                                 </div>

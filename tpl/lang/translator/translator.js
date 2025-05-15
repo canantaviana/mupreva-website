@@ -22,12 +22,39 @@ const build_list = (options) => {
 
     const main = document.getElementById("main")
 
-    const base_lang_data = options.data[options.base_lang]
     const langs = Object.keys(options.data)
+
+    for (let i = 0; i < langs.length; i++) {
+        //order langs
+        console.log("langs[i]:", langs[i]);
+        console.log(options.data[langs[i]]);
+        //options.data[langs[i]] = options.data[langs[i]].sort();
+        const ordered = Object.keys(options.data[langs[i]]).sort().reduce(
+            (obj, key) => {
+                obj[key] = options.data[langs[i]][key];
+                return obj;
+            },
+            {}
+        );
+        options.data[langs[i]] = ordered;
+    }
+
+    const base_lang_data = options.data[options.base_lang]
+
+
 
     // sort langs with base_lang on top
     const first = options.base_lang;
     langs.sort(function (x, y) { return x == first ? -1 : y == first ? 1 : 0; });
+
+    const input = document.createElement("input")
+    input.type = "text"
+    input.setAttribute('value', '')
+    input.setAttribute('readonly', true)
+    input.classList.add("header")
+
+    main.appendChild(input)
+
 
     // headers
     for (let i = 0; i < langs.length; i++) {
@@ -87,6 +114,18 @@ const build_line = (label, ar_values) => {
     //const label_node = document.createElement("span")
     //		label_node.innerText = label
     //		line.appendChild(label_node)
+
+    const input = document.createElement("input")
+    input.type = "text"
+    input.setAttribute('value', label);
+    input.setAttribute('readonly', true)
+
+    input.addEventListener("change", function (e) {
+        save_lang_file(e.target, lang)
+    })
+
+    line.appendChild(input)
+
 
     // input
     for (let i = 0; i < ar_values.length; i++) {

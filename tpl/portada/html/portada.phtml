@@ -8,41 +8,10 @@ require($base_path . '/' . $cwd . '.php');
 ?>
 <main class="main-content" id="main">
 
-        <!-- Slider -->
-        <div class="swiper swiper--home is-relative">
-            <!-- Additional required wrapper -->
-            <div class="swiper-wrapper">
-                <!-- Slides -->
-                <?php foreach ($images as $image) : ?>
-                <div class="swiper-slide">
-                    <?php if ($image->title) : ?>
-                    <div class="wrapper is-relative">
-                    <?php if ($image->description) : ?>
-                    <h2 class="has-text-white has-text-weight-semibold is-size-2 link-dn">
-                        <a href="<?php echo $image->description ?>">
-                            <?php echo $image->title ?>
-                        </a>
-                    </h2>
-                    <?php else : ?>
-                        <h2 class="has-text-white has-text-weight-semibold is-size-2">
-                            <?php echo $image->title ?>
-                        </h2>
-                    <?php endif ?>
-                    </div>
-                    <?php endif ?>
-                    <img src="<?php echo __WEB_MEDIA_ENGINE_URL__.$image->image ?>" alt="">
-                </div>
-                <?php endforeach ?>
-            </div>
-            <div class="wrapper is-relative">
-                <div class="swiper-controls is-flex gap-3 is-align-items-flex-end">
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-pagination is-flex"></div>
-                    <div class="swiper-button-next"></div>
-                </div>
-            </div>
+        <div id="carrousel-portada" class="swiper swiper--home is-relative">
         </div>
-        <div id="children_container" class="wrapper flow--2xl">
+
+        <div id="children_container" class="flow--l">
         </div>
 </main>
 <?php include dirname(dirname(dirname(__FILE__))) . '/page/html/footer.phtml'; ?>
@@ -53,7 +22,8 @@ require($base_path . '/' . $cwd . '.php');
     dom_ready(function() {
         portada.set_up({
             row: <?php echo json_encode($this->row) ?>,
-            children_container: document.getElementById('children_container')
+            children_container: document.getElementById('children_container'),
+            swiper_container: document.getElementById('carrousel-portada')
         })
     })
 </script>

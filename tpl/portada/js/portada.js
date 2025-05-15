@@ -43,6 +43,55 @@ var portada = {
         event_manager.publish('template_render_end', {})
 
 
+
+        api.getSliderPortada()
+            .then(function (rows) {
+
+                const salas = rows[0].result.map(sala => {
+                    const img = sala.imagenes.find(img => img.image !== '')?.image || sala.illustration;
+
+                    return `<div class="swiper-slide">
+                        <div class="wrapper is-relative">
+                            <h2 class="has-text-white has-text-weight-semibold is-size-2 link-dn">
+                                <a href="/salas/${sala.section_id}">${sala.term}</a>
+                            </h2>
+                        </div>
+                        <img src="${__WEB_MEDIA_ENGINE_URL__}/${img}" alt=""></img>
+                    </div>`
+                })
+
+                const exposiciones = rows[1].result.map(expo => {
+                    const img = JSON.parse(expo.identifying_image)[0]
+
+                    return `<div class="swiper-slide">
+                        <div class="wrapper is-relative">
+                            <h2 class="has-text-white has-text-weight-semibold is-size-2 link-dn">
+                                <a href="/exposicion/${expo.section_id}">${expo.title}</a>
+                            </h2>
+                        </div>
+                        <img src="${__WEB_MEDIA_ENGINE_URL__}/${img}" alt=""></img>
+                    </div>`
+                })
+
+                const elementosPortada = [...salas, ...exposiciones]
+                elementosPortada.sort(() => Math.random() - 0.5);
+
+                var content = htmlTemplate(`
+                    <div class="swiper-wrapper">
+                        ${elementosPortada.join('')}
+                    </div>
+                    <div class="wrapper is-relative">
+                        <div class="swiper-controls is-flex gap-3 is-align-items-flex-end">
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-pagination is-flex"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
+                    </div>
+                `);
+                appendTemplate(options.swiper_container, content);
+                swiperHome();
+            })
+
         return true
     },//end set_up
 

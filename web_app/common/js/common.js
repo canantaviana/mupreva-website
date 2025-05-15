@@ -1089,6 +1089,8 @@ var common = {
         output = output.replace(/<br>\s*/g, '<br>');
         output = output.replace(/<br>/g, '</p><p>');
         output = `<p>${output}</p>`;
+        output = output.replaceAll('<p>\u00A0</p>', '');
+        output = output.replaceAll('<li>\u00A0</li>', '');
         //treure br a l'inici del blockquote
         output = output.replace(/<blockquote>\s*<br>/g, '<blockquote>');
 
@@ -1192,6 +1194,7 @@ function formatDateRange(dateRange, iso3) {
         const iso3ToLocale = {
             'lg-spa': 'es-ES',  // Espanyol
             'lg-vlc': 'ca-ES',  // Valencià (utilitza català)
+            'lg-vlca': 'ca-ES',  // Valencià (utilitza català)
             'lg-eng': 'en-US',  // Anglès
             'lg-fra': 'fr-FR',  // Francès
             'lg-cat': 'ca-ES',  // Català

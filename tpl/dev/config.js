@@ -70,6 +70,9 @@ module.exports = function () {
         '700',
         '800',
         '900',
+      ],
+      'Noto Serif': [
+        '400'
       ]
     },
 

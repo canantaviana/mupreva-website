@@ -13,6 +13,12 @@ var catalog = {
     // rows_list_container
     rows_list_container: null,
 
+    // map_results_list_container
+    map_results_list_container: null,
+    map_legend: null,
+    map_marker_results: null,
+    reset_map_results: null,
+
     // export_data_container
     export_data_container: null,
 
@@ -75,7 +81,12 @@ var catalog = {
         "datacion_fin",
         "periodo_data",
         "periodo",
+        "geolocalizacion",
+        "geolocalizacion_produccion"
     ],
+
+    // catalog loaded items
+    loaded_items: null,
 
     /**
      * SET_UP
@@ -86,6 +97,9 @@ var catalog = {
         // options
         const row = options.row;
         const rows_list_container = options.rows_list_container;
+        const map_legend = options.map_legend;
+        const map_results_list_container = options.map_results_list_container;
+        let map_marker_results = [];
         const export_data_container = options.export_data_container;
         const area_name = options.area_name; // catalog
         const q = options.q;
@@ -93,6 +107,9 @@ var catalog = {
         // fix vars
         self.row = row;
         self.rows_list_container = rows_list_container;
+        self.map_legend = map_legend;
+        self.map_results_list_container = map_results_list_container;
+        self.map_marker_results = map_marker_results;
         self.export_data_container = export_data_container;
         self.area_name = area_name;
         self.q = q;
@@ -181,6 +198,8 @@ var catalog = {
         event_manager.subscribe("map_selected_marker", selected_marker);
         function selected_marker(data) {
             console.log(" selected_marker data:", data);
+            self.map_marker_results = data.item.group;
+            self.reset_map_results();
         }
         // event map_popup_selected_item
         event_manager.subscribe(
@@ -379,7 +398,8 @@ var catalog = {
                         <div class="field">
                             <label class="label is-sr-only" for="object">${tstring.collection_object_label}</label>
                             <div class="control">
-                                <input type="search" name="cercaObjecte" id="object" placeholder="${tstring.collection_object_label}" value="" class="input is-small">
+                                <input type="input" name="cercaObjecte" id="object" placeholder="${tstring.collection_object_label}" value="" class="input is-small">
+                                <div class="container_values"></div>
                             </div>
                         </div>
                     </div>
@@ -395,7 +415,8 @@ var catalog = {
                         <div class="field">
                             <label class="label is-sr-only" for="period">${tstring.collection_period_label}</label>
                             <div class="control">
-                                <input type="search" name="cercaPeriode" id="period" placeholder="${tstring.collection_period_label}" value="" class="input is-small">
+                                <input type="input" name="cercaPeriode" id="period" placeholder="${tstring.collection_period_label}" value="" class="input is-small">
+                                <div class="container_values"></div>
                             </div>
                         </div>
                     </div>
@@ -403,7 +424,8 @@ var catalog = {
                         <div class="field">
                             <label class="label is-sr-only" for="material">${tstring.collection_material_label}</label>
                             <div class="control">
-                                <input type="search" name="cercaMaterial" id="material" placeholder="${tstring.collection_material_label}" value="" class="input is-small">
+                                <input type="input" name="cercaMaterial" id="material" placeholder="${tstring.collection_material_label}" value="" class="input is-small">
+                                <div class="container_values"></div>
                             </div>
                         </div>
                     </div>
@@ -411,7 +433,8 @@ var catalog = {
                         <div class="field">
                             <label class="label is-sr-only" for="technique">${tstring.collection_technique_label}</label>
                             <div class="control">
-                                <input type="search" name="cercaTechnique" id="technique" placeholder="${tstring.collection_technique_label}" value="" class="input is-small">
+                                <input type="input" name="cercaTechnique" id="technique" placeholder="${tstring.collection_technique_label}" value="" class="input is-small">
+                                <div class="container_values"></div>
                             </div>
                         </div>
                     </div>
@@ -419,7 +442,8 @@ var catalog = {
                         <div class="field">
                             <label class="label is-sr-only" for="typology">${tstring.collection_typology_label}</label>
                             <div class="control">
-                                <input type="search" name="cercaTipologia" id="typology" placeholder="${tstring.collection_typology_label}" value="" class="input is-small">
+                                <input type="input" name="cercaTipologia" id="typology" placeholder="${tstring.collection_typology_label}" value="" class="input is-small">
+                                <div class="container_values"></div>
                             </div>
                         </div>
                     </div>
@@ -562,10 +586,14 @@ var catalog = {
                 id: "nombre_bien",
                 name: "nombre_bien",
                 q_column: "nombre_bien",
+                q_splittable: true,
+                value_split: ', ',
                 eq: "LIKE",
+                q_selected_eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
                 node_input: currentForm.querySelector("#object"),
+                node_values: currentForm.querySelector('#object').closest('.control').querySelector('.container_values'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
@@ -612,10 +640,14 @@ var catalog = {
                 id: "periodo",
                 name: "periodo",
                 q_column: "periodo",
+                q_splittable: true,
+                value_split: ', ',
                 eq: "LIKE",
+                q_selected_eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
                 node_input: currentForm.querySelector("#period"),
+                node_values: currentForm.querySelector('#period').closest('.control').querySelector('.container_values'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
@@ -637,10 +669,14 @@ var catalog = {
                 id: "materia",
                 name: "materia",
                 q_column: "materia",
+                q_splittable: true,
+                value_split: ', ',
                 eq: "LIKE",
+                q_selected_eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
                 node_input: currentForm.querySelector("#material"),
+                node_values: currentForm.querySelector('#material').closest('.control').querySelector('.container_values'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
@@ -662,10 +698,14 @@ var catalog = {
                 id: "tecnica",
                 name: "tecnica",
                 q_column: "tecnica",
+                q_splittable: true,
+                value_split: ', ',
                 eq: "LIKE",
+                q_selected_eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
                 node_input: currentForm.querySelector("#technique"),
+                node_values: currentForm.querySelector('#technique').closest('.control').querySelector('.container_values'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
@@ -687,10 +727,14 @@ var catalog = {
                 id: "tipologia",
                 name: "tipologia",
                 q_column: "tipologia",
+                q_splittable: true,
+                value_split: ', ',
                 eq: "LIKE",
+                q_selected_eq: "LIKE",
                 eq_in: "%",
                 eq_out: "%",
                 node_input: currentForm.querySelector("#typology"),
+                node_values: currentForm.querySelector('#typology').closest('.control').querySelector('.container_values'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
@@ -964,6 +1008,7 @@ var catalog = {
      */
     form_submit: function (options) {
         const self = this;
+        self.map_legend.innerHTML = '';
 
         return new Promise(function (resolve) {
             // options
@@ -1100,6 +1145,13 @@ var catalog = {
             count = false;
         }
 
+        // map case
+        if (self.view_mode === "map") {
+            sql_filter = sql_filter
+                ? sql_filter + " AND (geolocalizacion IS NOT NULL OR geolocalizacion_produccion IS NOT NULL)"
+                : "geolocalizacion IS NOT NULL OR geolocalizacion_produccion IS NOT NULL";
+        }
+
         // tables
         const ar_tables = self.get_tables();
 
@@ -1204,7 +1256,13 @@ var catalog = {
                     }
 
                     if (self.default_submit) {
-                        var content = templateModules.bloque_catalogo_default();
+                        self.loaded_items = {
+                            objects: { results: [], loaded: 0 },
+                            pictures: { results: [], loaded: 0 },
+                            immovables: { results: [], loaded: 0 },
+                            documents: { results: [], loaded: 0 },
+                        }
+                        var content = templateModules.bloque_catalogo_default(self);
                         appendTemplate(self.rows_list_container, content);
                         self.default_submit = false;
                         resolve();
@@ -1243,7 +1301,9 @@ var catalog = {
                     break;
                 case "map":
                     const map_data = page.parse_map_data(ar_rows); // prepares data to use in map
-                    self.map = self.map || new map_factory(); // creates / get existing instance of map
+                    //TODO: millorar mantenint el mapa anterior si ja n'hi ha, per evitar instanciar multiples mapes sense esborrar els anteriors event listeners i evitar memory leak
+                    // self.map = self.map || new map_factory(); // creates / get existing instance of map
+                    self.map = new map_factory(); // creates / get existing instance of map
                     self.map
                         .init({
                             source_maps: page.maps_config.source_maps,
@@ -1260,6 +1320,55 @@ var catalog = {
                                     resolve(true);
                                 });
                         });
+
+                    var legendContent = htmlTemplate(`
+                        <p>
+                            <img src="${page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/point_orange.png"}" style="width: 27px; height: 23px;">
+                            ${tstring.location_discovery}
+                            <img src="${page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/point_blue.png"}" style="width: 27px; height: 23px;">
+                            ${tstring.location_production}
+                        </p>`)
+                    self.map_legend.innerHTML = '';
+                    appendTemplate(self.map_legend, legendContent);
+
+                    var content = htmlTemplate(`
+                        <ul class="galeria galeria--242x242 link-dn" id="map_gallery">
+                        </ul>
+                    `)
+                    appendTemplate(self.map_results_list_container, content);
+
+                    const map_gallery = document.getElementById('map_gallery');
+
+                    function reset_map_results() {
+                        map_gallery.innerHTML = '';
+                        appendTemplate(map_gallery, loadResults())
+                    }
+
+                    self.reset_map_results = reset_map_results;
+
+                    function loadResults() {
+                        return htmlTemplate(`
+                            ${self.map_marker_results.map(function(data){
+                                const url = page_globals.__WEB_ROOT_WEB__ + '/' + data.tpl + '/' + data.section_id;
+                                var image_url = '/assets/img/placeholder.png';
+                                if (data.identifying_images !== null && data.identifying_images !== '') {
+                                    image_url = data.identifying_images;
+                                }
+                                return `
+                                <li class="${data.tpl}">
+                                    <a href="${url}" target="_blank">
+                                        <figure>
+                                            <img loading="lazy" src="${image_url}" alt="">
+                                            ${(data.title)?`
+                                            <figcaption>${data.title}</figcaption>
+                                            `:''}
+                                        </figure>
+                                    </a>
+                                </li>`;
+                            }).join('')}
+                        `)
+                    }
+
                     break;
 
                 case "timeline":

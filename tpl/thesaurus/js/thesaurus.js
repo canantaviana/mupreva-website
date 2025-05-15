@@ -65,10 +65,11 @@ var thesaurus = {
         self.view_mode = 'tree'
 
         // spinner
-        const spinner = common.create_dom_element({
-            element_type: "div",
-            class_name: "spinner"
-        })
+        // const spinner = common.create_dom_element({
+        //     element_type: "div",
+        //     class_name: "spinner"
+        // })
+        const spinner = common.spinner(rows_list);
 
         // abstract
         const abstract_icon = document.getElementById("abstract_icon")

@@ -18,6 +18,8 @@ require($base_path . '/' . $cwd . '.php');
 
     <!-- Result -->
     <div class="wrapper mt-8 flow--xl" id="rows_list"></div>
+    <div class="wrapper mt-4 flow--xl" id="map_legend"></div>
+    <div class="wrapper mt-8 flow--xl" id="map_results_list"></div>
 
     <!-- div id="export_data" class="export_data_container"></!-->
 </main>
@@ -30,6 +32,8 @@ require($base_path . '/' . $cwd . '.php');
         catalog.set_up({
             row: <?php echo json_encode($this->row) ?>,
             rows_list_container: document.getElementById('rows_list'),
+            map_legend: document.getElementById('map_legend'),
+            map_results_list_container: document.getElementById('map_results_list'),
             //export_data_container: document.getElementById('export_data'),
             area_name: <?php echo json_encode($area_name) ?>,
             q: <?php echo json_encode($q) ?>

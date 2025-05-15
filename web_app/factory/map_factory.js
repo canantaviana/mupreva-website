@@ -300,15 +300,6 @@ function map_factory() {
 
                 } else {
 
-                    // marker. Set popup and click event
-                    // const marker = L.marker([element.lat, element.lon], {icon: marker_icon}).bindPopup(popup) //.openPopup();
-                    // 	  marker.on('click', function(e) {
-                    // 		// event publish map_selected_marker
-                    // 		event_manager.publish('map_selected_marker', {
-                    // 			item	: element,
-                    // 			event	: e
-                    // 		})
-                    // 	  })
                     const marker = create_marker(element, [element.lat, element.lon], marker_icon, popup)
                     ar_markers.push(marker)
                 }

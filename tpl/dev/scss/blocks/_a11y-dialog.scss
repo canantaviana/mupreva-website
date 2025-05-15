@@ -100,9 +100,15 @@ html:has(.dialog-container:not([aria-hidden])) {
     overflow: auto;
     color: #fff;
     background-color: #000;
-    padding: var(--space-2xl-3xl);
-    @include tablet {
-        max-width: 80vw;
+    padding: var(--space-xl);
+    @include desktop {
+        max-width: 30vw;
+        &:has(.column>img) {
+            max-width: 50vw;
+        }
+        &:has(>img) {
+            max-width: 80vw;
+        }
     }
     h1 {
         color: #fff;
@@ -126,6 +132,6 @@ html:has(.dialog-container:not([aria-hidden])) {
     height: 44px;
     border: 0;
     position: absolute;
-    top: var(--space-l-xl);
-    right: var(--space-l-xl);
+    top: .25rem;
+    right: .25rem;
 }

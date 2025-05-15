@@ -2,6 +2,7 @@
 // GLOBAL
 // ------
 @import "base/_googleFonts_Archivo-swap.scss";
+@import "base/_googleFonts_Noto Serif-swap.scss";
 @import "base/utopia";
 
 // Bulma cusotmize
@@ -103,6 +104,7 @@
 @import "blocks/main-header";
 @import "blocks/main-nav";
 @import "blocks/mfp";
+@import "blocks/modal-audiovisuals";
 @import "blocks/navigation";
 @import "blocks/news-form";
 @import "blocks/pagination";
@@ -118,7 +120,6 @@
 @import "blocks/tabs-2";
 // @import "blocks/toggle";
 @import "blocks/video-container";
-@import "blocks/map";
 
 // Blocks específics del projecte
 // ------------------------------
@@ -131,17 +132,21 @@
 @import "blocks/desplegables";
 @import "blocks/dl-list";
 @import "blocks/dl-minimal";
+@import "blocks/fitxa-intro";
 @import "blocks/galeria";
 @import "blocks/header-search";
 @import "blocks/home-grid";
+@import "blocks/map";
 @import "blocks/masonry-grid";
 @import "blocks/more-link";
 @import "blocks/navigation-sub";
 @import "blocks/pubs-list";
 @import "blocks/pub-text-results";
+@import "blocks/swiper-activitats";
 @import "blocks/swiper-expos";
 @import "blocks/swiper-fitxa";
 @import "blocks/swiper-home";
+@import "blocks/swiper-publicacions";
 @import "blocks/table-collapsibles";
 @import "blocks/thesaurus";
 @import "blocks/timeline";

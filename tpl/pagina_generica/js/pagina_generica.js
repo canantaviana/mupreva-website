@@ -35,6 +35,8 @@ var generic = {
                     });
                     viewInit();
                 })
+        } else {
+            viewInit();
         }
 
         // event publish template_render_end

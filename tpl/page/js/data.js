@@ -27,39 +27,51 @@ page.parse_map_data = function (rows) {
             ? JSON.parse(row.map)
             : row.map
 
-        const geolocation_data_geojson = (typeof row.geolocation_data_geojson === 'string' || row.geolocation_data_geojson instanceof String)
-            ? JSON.parse(row.geolocation_data_geojson)
-            : row.geolocation_data_geojson
+        let geolocation_data_geojson
+
+        if (row.geolocalizacion !== null) {
+            geolocation_data_geojson = (typeof row.geolocalizacion === 'string' || row.geolocalizacion instanceof String)
+            ? JSON.parse(row.geolocalizacion)
+            : row.geolocalizacion
+        }
+        if (row.geolocalizacion_produccion !== null) {
+            geolocation_data_geojson = (typeof row.geolocalizacion_produccion === 'string' || row.geolocalizacion_produccion instanceof String)
+            ? JSON.parse(row.geolocalizacion_produccion)
+            : row.geolocalizacion_produccion
+        }
 
         if (geolocation_data_geojson && geolocation_data_geojson.length > 0) {
 
             // const identifying_images = row.identifying_images ? row.identifying_images.split(' | ') : []
-            const identifying_images = row.identifying_images
-                ? (typeof row.identifying_images === 'string' ? row.identifying_images.split(' | ') : row.identifying_images)
+            const identifying_images = row.imagenes_identificativas
+                ? (typeof row.imagenes_identificativas === 'string' ? row.imagenes_identificativas.split(' | ') : row.imagenes_identificativas)
                 : []
 
             const thumb_url = typeof identifying_images[0] !== "undefined"
-                ? common.get_media_engine_url(identifying_images[0], 'image', 'thumb')
-                : __WEB_TEMPLATE_WEB__ + '/assets/images/default_thumb.jpg'
+                ? common.get_media_engine_url(identifying_images[0].image)
+                : __WEB_TEMPLATE_WEB__ + '/assets/img/placeholder.png'
 
             const tpl = page.section_tipo_to_template(row.section_tipo)
 
             const item_data = {
                 section_id: row.section_id,
                 tpl: tpl,
-                title: row.title,
-                name: row.name,
-                description: row.description,
+                title: row.titulo,
+                // name: 'name',
+                // description: 'description',
                 identifying_images: thumb_url
             }
 
             const marker_icon = (function (section_tipo) {
                 let name
-                switch (section_tipo) {
-                    case 'qdp1': name = 'objects'; break;
-                    case 'qdp100': name = 'pictures'; break;
-                    case 'qdp336': name = 'immovable'; break;
-                }
+                // switch (section_tipo) {
+                //     case 'tch1': name = 'objects'; break;
+                //     case 'tch100': name = 'pictures'; break;
+                //     case 'tchi1': name = 'immovable'; break;
+                //     case 'tch300': name = 'document'; break;
+                // }
+                if (row.geolocalizacion !== null) name = 'hallazgo'
+                if (row.geolocalizacion_produccion !== null) name = 'produccion'
                 return page.maps_config.markers[name]
             })(row.section_tipo);
 
@@ -203,7 +215,7 @@ page.parse_tree_data = function (rows, hilite_terms) {
                 }
             }
             // set to remove
-            term_id_to_remove.push(row.term_id)
+            // term_id_to_remove.push(row.term_id)
         }
 
         return true
@@ -1658,7 +1670,7 @@ page.get_records = function (options) {
     const limit = options.limit || 0
     const count = options.count || false
     const offset = options.offset || 0
-    const order = options.order || 'norder ASC'
+    const order = options.order || 'section_id ASC'
     const ar_fields = options.ar_fields || '*'
     const parse = options.parse || page.parse_ts_web
     const resolve_portals_custom = options.resolve_portals_custom || ''
@@ -1690,7 +1702,11 @@ page.get_records = function (options) {
                     ? parse(response.result)
                     : response.result
 
-                resolve(data)
+                if(options.get_count) {
+                    resolve({data, total: response.total})
+                } else {
+                    resolve(data)
+                }
             })
     })
 }//end get_records

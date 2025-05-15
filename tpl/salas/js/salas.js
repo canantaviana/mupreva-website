@@ -160,7 +160,7 @@ var salas = {
             'space',
             'time',
             'tld',
-            //'relations'
+            'relations'
         ]
 
         // options

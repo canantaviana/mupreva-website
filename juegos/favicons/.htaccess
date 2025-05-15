@@ -1,0 +1,6 @@
+<ifDefine !testserver>
+	<IfModule mod_expires.c>
+		ExpiresActive On
+		ExpiresDefault "access plus 1 month"
+	</IfModule>
+</ifDefine>

@@ -110,6 +110,8 @@ var biblio = {
         // first list
         self.initial_search()
 
+        self.search_literal = null
+
         // subscribe events
         // event_manager.subscribe('pagination_change', pagination_change_action)
         // function pagination_change_action(item) {
@@ -274,7 +276,7 @@ var biblio = {
                     </details>
                 </div>
                 <div class="column is-3-tablet is-2-desktop has-text-centered">
-                    <span class="simple-tooltip-container"><button type="button" class="js-tooltip button button--arse" data-tooltip-prefix-class="simple-tooltip" data-tooltip-content-id="arse" data-tooltip-title="ArSe" data-tooltip-close-text="${tstring.close}" id="label_tooltiph7actu5160">
+                    <span class="simple-tooltip-container simple-tooltip-container--lg"><button type="button" class="js-tooltip button button--arse" data-tooltip-prefix-class="simple-tooltip" data-tooltip-content-id="arse" data-tooltip-title="ArSe" data-tooltip-close-text="${tstring.close}" id="label_tooltiph7actu5160">
                         ${tstring.documents_popup_title}
                     </button></span>
                     <div id="arse" class="is-hidden">
@@ -545,6 +547,12 @@ var biblio = {
 
         const self = this
 
+        if (self.form.form_items.global_search.q !== '' || self.form.form_items.transcripcion.q !== '') {
+            self.search_literal = true;
+        } else {
+            self.search_literal = false;
+        }
+
         // options
         const order = options.order || null
         const limit = options.limit || self.pagination.limit
@@ -726,7 +734,8 @@ var biblio = {
                 appendTemplate(self.rows_list_container, content);
                 resolve()
                 return
-            } else {
+            }
+            if (!self.search_literal) {
                 const list_data = self.list_data(ar_rows) // prepares data to use in list
                 self.list = self.list || new list_factory() // creates / get existing instance of list
                 self.list.init({
@@ -741,6 +750,26 @@ var biblio = {
                         resolve(list_node)
                     })
                 self.default_submit = false
+                self.form_submit_state = 'done';
+                return
+            }
+            if (self.search_literal) {
+                const list_data = self.list_data(ar_rows) // prepares data to use in list
+                self.list = self.list || new list_factory() // creates / get existing instance of list
+                self.list.init({
+                    data: list_data,
+                    fn_row_builder: self.literal_search_results,
+                    pagination: pagination,
+                    container_class: 'pub-text-results flow--l link-dn',
+                    caller: self
+                })
+                self.list.render_list()
+                    .then(function (list_node) {
+                        resolve(list_node)
+                    })
+                self.default_submit = false
+                self.form_submit_state = 'done';
+
             }
         })
     },//end render_data
@@ -765,6 +794,116 @@ var biblio = {
 
         return data
     },// end list_data
+
+    /**
+     * LITERAL SEARCH RESULTS
+     */
+
+    literal_search_results: function (row) {
+        row.tpl = page.section_tipo_to_template(row.section_tipo);
+
+        const parser = new DOMParser();
+        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+        var info = [];
+        if (row.autor) {
+            info.push(row.autor);
+        }
+        if (row.fecha_publicacion) {
+            info.push(row.fecha_publicacion);
+        }
+
+        var image_url = '/assets/img/placeholder.png';
+        if (row.imagen_identificativa !== null) {
+            image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+        }
+        const year = row.fecha_publicacion;
+
+        function getWordContexts(row, searchWord, contextSize = 30) {
+            const normalizeWord = (w) => w.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+            const regex = new RegExp(normalizeWord(searchWord), 'i');
+
+            // find first page
+            let firstPage = 1;
+            if (row.num_paginas) {
+                const pageRange = row.num_paginas.match(/\d+/g);
+                if (pageRange.length > 1) {
+                    firstPage = parseInt(pageRange[0])
+                }
+            }
+
+            let result = [];
+
+            if (row.global_search && row.transcripcion) {
+
+                // find all word instances and extract text context
+                const words = row.global_search.split(/\s+/);
+                const finalText = Array.from(words);
+                const contexts = [];
+                words.forEach((word, index) => {
+                    const itsTheWord = regex.test(normalizeWord(word))
+                    if (itsTheWord) {
+                        const start = Math.max(0, index - contextSize/2);
+                        const end = Math.min(words.length, index + contextSize/2 + 1);
+                        finalText[index] = `<span class="has-background-primary has-text-white px-1">${word}</span>`
+                        const context = finalText.slice(start, end).join(' ');
+                        contexts.push(context+'...');
+                    }
+                })
+
+                // split transcript by pages
+                const splitPattern = /\[page-n-\d+]/;
+                const pages = row.transcripcion.split(splitPattern).filter(el => el !== '');
+
+                // store page of each word instance
+                let pageOfEachContext = [];
+                pages.forEach((page, pageIndex) => {
+                    const words = page.split(/\s+/);
+                    words.forEach((word, i) => {
+                        const itsTheWord = regex.test(normalizeWord(word));
+                        if (itsTheWord) {
+                            pageOfEachContext.push(firstPage + pageIndex);
+                        }
+                    })
+                })
+
+                result = contexts.map((context, i) => ({context, page: pageOfEachContext[i]}));
+            }
+
+            return result;
+        }
+
+        const inputText = this.caller.form.form_items.global_search.q || this.caller.form.form_items.transcripcion.q;
+
+        const content = parser.parseFromString(`
+            <li class="pb-6">
+                <div class="columns is-flex-direction-row-reverse">
+                    <div class="column flow--m">
+                        <div class="flow">
+                            <h3 class="is-size-6">
+                                <a href=${url}>${row.titulo}</a>
+                            </h3>
+                            <p class="is-size-7">${row.autor}<br>${row.fecha_publicacion}</p>
+                        </div>
+                        ${
+                            getWordContexts(row, inputText)
+                                .map(result => (`
+                                    <div class="flow--2xs">
+                                        <h4 class="is-size-6">${tstring.item_pag} ${result.page}</h4>
+                                        <p class="is-size-6">${result.context}</p>
+                                    </div>
+                                `)).join('')
+                        }
+                    </div>
+                    <div class="column is-narrow">
+                        <img loading="lazy" src=${image_url} width="102" height="132" alt="">
+                    </div>
+                </div>
+            </li>
+        `, "text/html");
+        return content.body.firstChild;
+
+    },
 
     /**
     * LIST_ROW_BUILDER

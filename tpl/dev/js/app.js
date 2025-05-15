@@ -20,18 +20,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // ----------
     // scroll top
     // ----------
-    // $(window).on("scroll", function () {
-    //     if ($(this).scrollTop() > 400) {
-    //         $(".scrolltop").addClass("visible");
-    //         const footerHeight = $("footer").outerHeight();
-    //         $(".scrolltop").css("bottom", footerHeight + "px");
-    //     } else {
-    //         $(".scrolltop").removeClass("visible");
-    //     }
-    // });
     $(window).on("scroll", function () {
-        const footerHeight = $("footer").outerHeight();
-        $(".scrolltop").css("bottom", footerHeight + 50 + "px");
+        if ($(this).scrollTop() > 300) {
+            $(".scrolltop").addClass("visible");
+        } else {
+            $(".scrolltop").removeClass("visible");
+        }
     });
 
     // ------------------
@@ -325,10 +319,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }, 3000);
         }
     });
+});
 
-    // -----------
-    // Swiper home
-    // -----------
+// -----------
+// Swiper home
+// -----------
+function swiperHome() {
     const swiperHome = new Swiper(".swiper--home", {
         cssMode: true,
         navigation: {
@@ -341,18 +337,158 @@ document.addEventListener("DOMContentLoaded", function () {
         mousewheel: true,
         keyboard: true,
     });
-});
+};
 
-function swiperExpos() {
+function swiperPublicaciones() {
     // ---------------------------------
-    // Swiper (Exposicions i activitats)
+    // Swiper Ultimas publicaciones
     // ---------------------------------
-    var swiperExpos = new Swiper(".swiper--expos", {
+    var swiperPublicacions = new Swiper(".swiper--publicacions", {
         // spaceBetween: 10,
-        slideActiveClass: "active",
+        slideActiveClass: 'active',
         navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
+            nextEl: ".swiper--publicacions__btns .swiper-button-next",
+            prevEl: ".swiper--publicacions__btns .swiper-button-prev",
+        },
+        slidesPerView: 1,
+        spaceBetween: 24,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            600: {
+                slidesPerView: 2,
+            },
+            850: {
+                slidesPerView: 3,
+            },
+            1100: {
+                slidesPerView: 4,
+            },
+            1400: {
+                slidesPerView: 5,
+            },
+            1700: {
+                slidesPerView: 6,
+            },
+        },
+    });
+}
+
+function swiperActividades() {
+    // ---------------------------------
+    // Swiper Proximas Actividades
+    // ---------------------------------
+    var swiperActivitats = new Swiper(".swiper--activitats", {
+        // spaceBetween: 10,
+        slideActiveClass: 'active',
+        navigation: {
+            nextEl: ".swiper--activitats__btns .swiper-button-next",
+            prevEl: ".swiper--activitats__btns .swiper-button-prev",
+        },
+        slidesPerView: 1,
+        spaceBetween: 24,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            600: {
+                slidesPerView: 2,
+            },
+            850: {
+                slidesPerView: 3,
+            },
+            1100: {
+                slidesPerView: 4,
+            },
+            1400: {
+                slidesPerView: 5,
+            },
+            1700: {
+                slidesPerView: 6,
+            },
+        },
+    });
+}
+
+function swiperActividadesActuales() {
+    // ----------------------------
+    // Swiper Exposiciones Actuales
+    // ----------------------------
+    var swiperActividadesActuales = new Swiper(".swiper--actividades-actuales", {
+        // spaceBetween: 10,
+        slideActiveClass: 'active',
+        navigation: {
+            nextEl: ".swiper--actividades-actuales__btns .swiper-button-next",
+            prevEl: ".swiper--actividades-actuales__btns .swiper-button-prev",
+        },
+        slidesPerView: 1,
+        spaceBetween: 24,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            600: {
+                slidesPerView: 2,
+            },
+            850: {
+                slidesPerView: 3,
+            },
+            1100: {
+                slidesPerView: 4,
+            },
+            1400: {
+                slidesPerView: 5,
+            },
+            1700: {
+                slidesPerView: 6,
+            },
+        },
+    });
+}
+
+function swiperExposicionesActuales() {
+    // ----------------------------
+    // Swiper Exposiciones Actuales
+    // ----------------------------
+    var swiperExposicionesActuales = new Swiper(".swiper--exposiciones-actuales", {
+        // spaceBetween: 10,
+        slideActiveClass: 'active',
+        navigation: {
+            nextEl: ".swiper--exposiciones-actuales__btns .swiper-button-next",
+            prevEl: ".swiper--exposiciones-actuales__btns .swiper-button-prev",
+        },
+        slidesPerView: 1,
+        spaceBetween: 24,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            600: {
+                slidesPerView: 2,
+            },
+            850: {
+                slidesPerView: 3,
+            },
+            1100: {
+                slidesPerView: 4,
+            },
+            1400: {
+                slidesPerView: 5,
+            },
+            1700: {
+                slidesPerView: 6,
+            },
+        },
+    });
+}
+
+function swiperExposicionesDestacadas() {
+    // ---------------------------------
+    // Swiper Exposiciones destacadas
+    // ---------------------------------
+    var swiperExposicionesDestacadas = new Swiper(".swiper--exposiciones-destacadas", {
+        // spaceBetween: 10,
+        slideActiveClass: 'active',
+        navigation: {
+            nextEl: ".swiper--exposiciones-destacadas__btns .swiper-button-next",
+            prevEl: ".swiper--exposiciones-destacadas__btns .swiper-button-prev",
         },
         slidesPerView: 1,
         spaceBetween: 33,
@@ -367,6 +503,62 @@ function swiperExpos() {
             },
         },
     });
+}
+
+function swiperActividadesAnuales(arr) {
+    // ---------------------------------
+    // Swiper Exposiciones
+    // ---------------------------------
+    arr.forEach((year) => {
+        var swiperExposicionesDestacadas = new Swiper(`.swiper--activitats-${year}`, {
+            // spaceBetween: 10,
+            slideActiveClass: 'active',
+            navigation: {
+                prevEl: `.swiper--activitats-${year}__btns .swiper-button-prev`,
+                nextEl: `.swiper--activitats-${year}__btns .swiper-button-next`,
+            },
+            slidesPerView: 1,
+            spaceBetween: 33,
+            freeMode: true,
+            watchSlidesProgress: true,
+            breakpoints: {
+                700: {
+                    slidesPerView: 2,
+                },
+                1000: {
+                    slidesPerView: 3,
+                },
+            },
+        });
+    })
+}
+
+function swiperExpos(arr) {
+    // ---------------------------------
+    // Swiper Exposiciones
+    // ---------------------------------
+    arr.forEach((year) => {
+        var swiperExposicionesDestacadas = new Swiper(`.swiper--expos-${year}`, {
+            // spaceBetween: 10,
+            slideActiveClass: 'active',
+            navigation: {
+                prevEl: `.swiper--expos-${year}__btns .swiper-button-prev`,
+                nextEl: `.swiper--expos-${year}__btns .swiper-button-next`,
+            },
+            slidesPerView: 1,
+            spaceBetween: 33,
+            freeMode: true,
+            watchSlidesProgress: true,
+            breakpoints: {
+                700: {
+                    slidesPerView: 2,
+                },
+                1000: {
+                    slidesPerView: 3,
+                },
+            },
+        });
+    })
 }
 
 function massonryEnable() {
@@ -388,6 +580,9 @@ function massonryEnable() {
 }
 
 function viewInit() {
+    // enable A11y Dialogs
+    enableDialogs(document.getElementById("children_container"));
+
     // -------------------------
     // Swiper (fitxa Col·lecció)
     // -------------------------
@@ -453,14 +648,14 @@ function viewInit() {
         //   console.log( 'onTabChange callback' );
         // }
     });
-    /*let myTabs2 = new TenUp.tabs('.tabs-2', {
+    let myTabs2 = new TenUp.tabs('.tabs-2', {
         // onCreate: function() {
         //   console.log( 'onCreate callback' );
         // },
         // onTabChange: function() {
         //   console.log( 'onTabChange callback' );
         // }
-    });*/
+    });
 
     // ----------------
     // Div com a button (quan no podem posar un element figure dins un button (ja que no valida) posem el div com si fos un button)

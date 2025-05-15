@@ -53,9 +53,9 @@
             position: absolute;
             z-index: 10;
             width: 100%;
-            &:has(.main-nav > ul > li.has-submenu:hover) {
-                background-color: $primary;
-            }
+            // &:has(.main-nav > ul > li.has-submenu:hover) {
+            //     background-color: $primary;
+            // }
         }
     }
     .wrapper {

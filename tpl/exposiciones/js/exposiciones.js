@@ -776,7 +776,10 @@ var actividades = {
                         var content =
                             templateModules.bloque_exposiciones_actuales();
                         appendTemplate(self.rows_list_container, content);
+                        templateModules.bloque_exposiciones_anuales(self.rows_list_container);
                         self.default_submit = false;
+                        var subtitle = document.getElementById("subtitle");
+                        subtitle.innerHTML = tstring.expositions_title_current;
                         resolve();
                         return;
                     } else {
@@ -813,6 +816,7 @@ var actividades = {
                             resolve(list_node);
                         });
                     }
+
                     break;
 
                 case "timeline":
@@ -834,6 +838,8 @@ var actividades = {
                                     resolve(timeline_node);
                                 });
                         });
+                    var subtitle = document.getElementById("subtitle");
+                    subtitle.innerHTML = tstring.expositions_results;
                     break;
             }
         });

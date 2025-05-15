@@ -88,7 +88,7 @@ function tree_factory() {
             // Crear el contenidor principal de l'arbre
             const tree_wrapper = common.create_dom_element({
                 element_type: "div",
-                class_name: "tree_wrapper",
+                class_name: "tree_wrapper mx-auto",
                 parent: fragment
             })
 
@@ -180,7 +180,7 @@ function tree_factory() {
                 parent: tree_node
             })
         }
-        
+
         // --- Creació dels botons i elements especials ---
         // Creació del p.definition (ara guardat a definitionEl)
         let definitionEl = null;
@@ -299,6 +299,91 @@ function tree_factory() {
             })
         }
 
+        // relations wrapper
+        let relations_container
+        if (row.relations && row.relations.length>0) {
+
+            // relations_container
+                relations_container = common.create_dom_element({
+                    element_type	: "div",
+                    class_name		: "relations_container hide galeria galeria--92x92",
+                    parent			: tree_node
+                })
+
+                // Callback function to execute when mutations are observed
+                const callback = function(mutationsList, observer) {
+                    // Use traditional 'for loops' for IE 11
+                    for(let mutation of mutationsList) {
+                        if (mutation.type==='attributes' && mutation.attributeName==='class') {
+                            if (!mutationsList[0].target.classList.contains("hide")) {
+
+                                // draw nodes
+                                self.render_relation_nodes(row, relations_container, self, false)
+
+                                // Stop observing
+                                observer.disconnect();
+                            }
+                        }
+                    }
+                };
+
+                // Create an observer instance linked to the callback function
+                const observer = new MutationObserver(callback);
+
+                // Start observing the target node for configured mutations
+                observer.observe(relations_container, { attributes: true, childList: false, subtree: false });
+
+                if (row.hilite===true && self.hilite_relations_showed<self.hilite_relations_limit) {
+                    relations_container.classList.remove("hide")
+                    btn_relations.classList.add("open")
+                    // increment hilite_relations_showed until reach self.hilite_relations_limit
+                    self.hilite_relations_showed++
+                }
+        }
+
+        // indexation wrapper
+        let indexation_container
+        if (row.indexation && row.indexation.length>0) {
+
+            // indexation_container
+                indexation_container = common.create_dom_element({
+                    element_type	: "div",
+                    class_name		: "indexation_container hide",
+                    parent			: tree_node
+                })
+
+                // Callback function to execute when mutations are observed
+                const callback = function(mutationsList, observer) {
+                    // Use traditional 'for loops' for IE 11
+                    for(let mutation of mutationsList) {
+                        if (mutation.type==='attributes' && mutation.attributeName==='class') {
+                            if (!mutationsList[0].target.classList.contains("hide")) {
+
+                                // draw nodes
+                                self.render_indexation_nodes(row, indexation_container, self)
+
+                                // Stop observing
+                                observer.disconnect();
+                            }
+                        }
+                    }
+                };
+
+                // Create an observer instance linked to the callback function
+                const observer = new MutationObserver(callback);
+
+                // Start observing the target node for configured mutations
+                observer.observe(indexation_container, { attributes: true, childList: false, subtree: false });
+
+                if (row.hilite===true && self.hilite_indexation_showed<self.hilite_indexation_limit) {
+                    indexation_container.classList.remove("hide")
+                    btn_indexation.classList.add("open")
+
+                    // increment hilite_indexation_showed until reach self.hilite_indexation_limit
+                    self.hilite_indexation_showed++
+                }
+        }
+
         // --- Manipulació dels elements img i p.definition ---
         // Si hi ha illustration (img) i/o definition, els movem al contenidor branch.
         if (illustrationEl || definitionEl) {
@@ -405,7 +490,7 @@ function tree_factory() {
                         vieved = vieved + (to - from)
                         const more_node = common.create_dom_element({
                             element_type: "div",
-                            class_name: "more_node btn btn-light btn-block primary relation_item",
+                            class_name: "more_node relation_item",
                             parent: fragment
                         })
                         more_node.offset = to
@@ -417,7 +502,8 @@ function tree_factory() {
                         })
                         const label = (tstring['load_more'] || "Load more..") + " <small>[" + vieved + " " + tstring.of + " " + relations_length + "]</small>"
                         const more_label = common.create_dom_element({
-                            element_type: "span",
+                            element_type: "button",
+                            class_name: "button button--carrega button--icon",
                             inner_html: label,
                             parent: more_node
                         })
@@ -446,7 +532,7 @@ function tree_factory() {
             const path = data.path || data.table
             const title_text = title ? title : ''
             const relation_item = common.create_dom_element({
-                element_type: "div",
+                element_type: "button",
                 class_name: "relation_item",
                 title: title_text + (SHOW_DEBUG ? (" [" + path + " " + options.data.section_tipo + " " + options.data.section_id + "]") : '')
             })

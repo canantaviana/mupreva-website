@@ -1,9 +1,11 @@
-.swiper-container {
-    @media screen and (max-width: 111em) {
+.swiper-container:has(.swiper--exposiciones-destacadas),
+.swiper-container:has(.swiper--expos) {
+    @include touch {
         padding-left: 3rem;
         padding-right: 3rem;
     }
 }
+.swiper--exposiciones-destacadas,
 .swiper--expos {
     .swiper-slide {
         img {
@@ -14,7 +16,9 @@
         }
     }
 }
-.swiper--expos__btns {
+
+.swiper--exposiciones-destacadas__btns,
+[class^="swiper--expos-"][class$="__btns"] {
     .swiper-button-next,
     .swiper-button-prev {
         width: 30px;
@@ -28,7 +32,7 @@
         }
     }
     .swiper-button-prev {
-        @media screen and (min-width: calc(111em + 1px)) {
+        @include desktop {
             left: -3rem;
         }
         &::after {
@@ -36,11 +40,28 @@
         }
     }
     .swiper-button-next {
-        @media screen and (min-width: calc(111em + 1px)) {
+        @include desktop {
             right: -3rem;
         }
         &::after {
             background-image: url("data:image/svg+xml,%3Csvg width='12' height='22' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m1 21 10-10L1 1' stroke='%23000' stroke-width='2' fill='none' fill-rule='evenodd' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
         }
+    }
+}
+
+[class^="swiper--expos-"][class$="__btns"] {
+    .swiper-button-prev {
+        left: -3rem;
+    }
+    .swiper-button-next {
+        right: -3rem;
+    }
+}
+
+// Ajustos per swipers dins d'accordion
+.accordion-content .swiper--expos {
+    overflow: visible;
+    .swiper-slide:not(.swiper-slide-fully-visible) {
+        opacity: 0;
     }
 }

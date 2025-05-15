@@ -325,12 +325,11 @@ dl {
         display: grid;
         grid-template-columns: max-content auto;
         column-gap: var(--space-2xl);
-        row-gap: var(--space-xs);
+        row-gap: var(--space-2xs);
     }
 }
 dt {
-    text-transform: uppercase;
-    font-weight: 500;
+    font-weight: 300;
     font-size: var(--step--1);
     @include until($small-breakpoint) {
         &:not(:first-child) {
@@ -343,7 +342,6 @@ dt {
     }
 }
 dd {
-    font-weight: 600;
     @include from($small-breakpoint) {
         grid-column: 2;
     }
