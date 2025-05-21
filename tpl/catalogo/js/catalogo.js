@@ -1138,8 +1138,8 @@ var catalog = {
         // timeline case
         if (self.view_mode === "timeline") {
             sql_filter = sql_filter
-                ? sql_filter + " AND datacion_ini is not null"
-                : "datacion_ini is not null";
+                ? sql_filter + " AND datacion_ini is not null and destacado = 'Sí'"
+                : "datacion_ini is not null and destacado = 'Sí'";
             limit = 0;
             offset = 0;
             count = false;
