@@ -291,7 +291,7 @@ legend {
     font-weight: 600;
 }
 ::placeholder {
-    color: #000 !important;
+    color: #666 !important;
 }
 
 // input,
@@ -309,7 +309,14 @@ input[type="date"] {
         transform: translateY(-50%);
         cursor: pointer;
     }
+    &::-webkit-datetime-edit-day-field,
+    &::-webkit-datetime-edit-month-field,
+    &::-webkit-datetime-edit-year-field,
+    &::-webkit-datetime-edit-text {
+        color: #666;
+    }
 }
+
 // https://medium.com/@yo7chen/adjustable-styles-for-the-native-input-type-date-926a13af41bb
 // ::-webkit-datetime-edit-day-field,
 // ::-webkit-datetime-edit-month-field,
