@@ -764,7 +764,7 @@ var templateModules = {
                                                 <div class="card is-flex is-flex-direction-column full-link">
                                                     <div class="pt-7 pb-5 px-6 flow--xl">
                                                         <h3 class="is-size-3 has-text-weight-semibold">
-                                                            <a href="${url}">${row.title}</a>
+                                                            <a href="${url}" target="_blank">${row.title}</a>
                                                         </h3>
                                                         ${(date)?
                                                         `<p class="has-text-weight-medium is-uppercase">${date}</p>`
@@ -851,7 +851,7 @@ var templateModules = {
                         <div class="card is-flex is-flex-direction-column full-link">
                             <div class="pt-7 pb-5 px-6 flow--xl">
                                 <h3 class="is-size-4">
-                                    <a href="${url}">${row.title}</a>
+                                    <a href="${url}" target="_blank">${row.title}</a>
                                 </h3>
                                 ${(date)?
                                 `<p class="has-text-weight-medium is-uppercase">${date}</p>`
@@ -907,7 +907,7 @@ var templateModules = {
                                                 <div class="card is-flex is-flex-direction-column full-link">
                                                     <div class="pt-7 pb-5 px-6 flow--xl">
                                                         <h3 class="is-size-3 has-text-weight-semibold">
-                                                            <a href="${url}">${row.title}</a>
+                                                            <a href="${url}" target="_blank">${row.title}</a>
                                                         </h3>
                                                         ${(date)?
                                                         `<p class="has-text-weight-medium is-uppercase">${date}</p>`
@@ -995,7 +995,7 @@ var templateModules = {
                         <div class="card is-flex is-flex-direction-column full-link">
                             <div class="pt-7 pb-5 px-6 flow--xl">
                                 <h3 class="is-size-3 has-text-weight-semibold">
-                                    <a href="${url}">${row.title}</a>
+                                    <a href="${url}" target="_blank">${row.title}</a>
                                 </h3>
                                 ${(date)?
                                 `<p class="has-text-weight-medium is-uppercase">${date}</p>`
