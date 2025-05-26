@@ -221,8 +221,8 @@ var biblio = {
                             <button type="submit" class="button">${tstring.search_button}</button>
                         </div>
                     </div>
-                    <details>
-                        <summary>${tstring.advanced_search}</summary>
+                    <!-- details>
+                        <summary>${tstring.advanced_search}</summary-->
                         <div class="columns is-multiline">
                             <div class="column is-half-tablet is-one-third-desktop">
                                 <div class="field">
@@ -273,7 +273,7 @@ var biblio = {
                                 </div>
                             </div>
                         </div>
-                    </details>
+                    <!--/details-->
                 </div>
                 <div class="column is-3-tablet is-2-desktop has-text-centered">
                     <span class="simple-tooltip-container simple-tooltip-container--lg"><button type="button" class="js-tooltip button button--arse" data-tooltip-prefix-class="simple-tooltip" data-tooltip-content-id="arse" data-tooltip-title="ArSe" data-tooltip-close-text="${tstring.close}" id="label_tooltiph7actu5160">
