@@ -262,6 +262,9 @@ details {
             margin-right: 4px;
             background-image: url("data:image/svg+xml,%3Csvg width='13' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.204 1 6.102 6.102 1 1' stroke='%23000' stroke-width='2' fill='none' fill-rule='evenodd' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
         }
+        &::-webkit-details-marker {
+            display: none;
+        }
     }
     > div {
         box-sizing: border-box;
