@@ -491,15 +491,24 @@ function swiperExposicionesDestacadas() {
             prevEl: ".swiper--exposiciones-destacadas__btns .swiper-button-prev",
         },
         slidesPerView: 1,
-        spaceBetween: 33,
+        spaceBetween: 24,
         freeMode: true,
         watchSlidesProgress: true,
         breakpoints: {
-            700: {
+            600: {
                 slidesPerView: 2,
             },
-            1000: {
+            850: {
                 slidesPerView: 3,
+            },
+            1100: {
+                slidesPerView: 4,
+            },
+            1400: {
+                slidesPerView: 5,
+            },
+            1700: {
+                slidesPerView: 6,
             },
         },
     });
