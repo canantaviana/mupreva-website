@@ -31,7 +31,7 @@ $section_id = isset($ar_parts[1])
     : null;
 
 
-$table = 'activities';
+$table = 'exhibitions';
 
 
 // page basic vars
