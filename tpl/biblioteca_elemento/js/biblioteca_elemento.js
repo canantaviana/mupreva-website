@@ -84,7 +84,7 @@ var item = {
         const ar_fields = options.ar_fields || default_fields || ["*"];
         const lang = options.lang || page_globals.WEB_CURRENT_LANG_CODE;
         const sql_filter =
-            options.filter || "section_id=" + parseInt(section_id);
+            options.filter || "pertenencia_data like '%\"1\"%' and section_id=" + parseInt(section_id);
 
         return new Promise(function (resolve) {
             // request
