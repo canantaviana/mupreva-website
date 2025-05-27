@@ -122,6 +122,23 @@ var catalog = {
             ? self.catalog_config.view_mode
             : "list";
 
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('view')) {
+            switch(params.get('view')) {
+                case 'list':
+                    self.view_mode = "list";
+                    break;
+                case 'timeline':
+                    self.view_mode = "timeline";
+                    break;
+                case 'map':
+                    self.view_mode = "map";
+                    break;
+                default:
+                    self.view_mode = "list";
+            }
+        }
+
         // limit (read cookie 'catalog_config' for possible previous values)
         const limit =
             self.catalog_config.pagination &&
@@ -470,19 +487,19 @@ var catalog = {
             <div class="checkbox-group">
                 <ul id="table_selector" class="is-flex is-flex-wrap-wrap gap-4">
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_objects" name="col" value="objectes" checked>
+                        <input class="is-checkradio" type="checkbox" id="checkbox_objects" name="col" value="objectes" >
                         <label for="checkbox_objects">${tstring.collection_filter_objects}</label>
                     </li>
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_pictures" name="col" value="pictures" checked>
+                        <input class="is-checkradio" type="checkbox" id="checkbox_pictures" name="col" value="pictures" >
                         <label for="checkbox_pictures">${tstring.collection_filter_pictures}</label>
                     </li>
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_immovable" name="col" value="immovables" checked>
+                        <input class="is-checkradio" type="checkbox" id="checkbox_immovable" name="col" value="immovables" >
                         <label for="checkbox_immovable">${tstring.collection_filter_fields}</label>
                     </li>
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_documents" name="col" value="documents_catalog" checked>
+                        <input class="is-checkradio" type="checkbox" id="checkbox_documents" name="col" value="documents_catalog" >
                         <label for="checkbox_documents">${tstring.collection_filter_documents}</label>
                     </li>
                 </ul>
@@ -531,6 +548,7 @@ var catalog = {
      */
     render_form: function (options) {
         const self = this;
+        const params = new URLSearchParams(window.location.search);
 
         return new Promise(function (resolve) {
             const form = self.form_template();
@@ -825,10 +843,12 @@ var catalog = {
                     currentForm.querySelector("#checkbox_objects");
                 checkbox_objects.setAttribute("name", "catalog_tables");
                 checkbox_objects.setAttribute("value", "objects");
-                const checked = self.catalog_config.ar_tables
-                    ? self.catalog_config.ar_tables.indexOf("objects") !== -1
-                    : true;
-                if (checked) checkbox_objects.setAttribute("checked", checked);
+                if (!params.has('filter') || params.get('filter').includes("objects")) {
+                    const checked = self.catalog_config.ar_tables
+                        ? self.catalog_config.ar_tables.indexOf("objects") !== -1
+                        : true;
+                    if (checked) checkbox_objects.setAttribute("checked", checked);
+                }
                 checkbox_objects.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
                 });
@@ -840,10 +860,12 @@ var catalog = {
                     currentForm.querySelector("#checkbox_pictures");
                 checkbox_pictures.setAttribute("name", "catalog_tables");
                 checkbox_pictures.setAttribute("value", "pictures");
-                const checked = self.catalog_config.ar_tables
-                    ? self.catalog_config.ar_tables.indexOf("pictures") !== -1
-                    : true;
-                if (checked) checkbox_pictures.setAttribute("checked", checked);
+                if (!params.has('filter') || params.get('filter').includes("pictures")) {
+                    const checked = self.catalog_config.ar_tables
+                        ? self.catalog_config.ar_tables.indexOf("pictures") !== -1
+                        : true;
+                    if (checked) checkbox_pictures.setAttribute("checked", checked);
+                }
                 checkbox_pictures.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
                 });
@@ -856,30 +878,32 @@ var catalog = {
                 );
                 checkbox_immovable.setAttribute("name", "catalog_tables");
                 checkbox_immovable.setAttribute("value", "immovables");
-                const checked = self.catalog_config.ar_tables
-                    ? self.catalog_config.ar_tables.indexOf("immovables") !== -1
-                    : true;
-                if (checked)
-                    checkbox_immovable.setAttribute("checked", checked);
+                if (!params.has('filter') || params.get('filter').includes("immovables")) {
+                    const checked = self.catalog_config.ar_tables
+                        ? self.catalog_config.ar_tables.indexOf("immovables") !== -1
+                        : true;
+                    if (checked)
+                        checkbox_immovable.setAttribute("checked", checked);
+                }
                 checkbox_immovable.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
                 });
             }
 
-            // checkbox_immovable
+            // checkbox_documents
             if (table_selector_container) {
                 const checkbox_documents = currentForm.querySelector(
                     "#checkbox_documents"
                 );
                 checkbox_documents.setAttribute("name", "catalog_tables");
                 checkbox_documents.setAttribute("value", "documents_catalog");
-                const checked = self.catalog_config.ar_tables
-                    ? self.catalog_config.ar_tables.indexOf(
-                          "documents_catalog"
-                      ) !== -1
-                    : true;
-                if (checked)
-                    checkbox_documents.setAttribute("checked", checked);
+                if (!params.has('filter') || params.get('filter').includes("documents_catalog")) {
+                    const checked = self.catalog_config.ar_tables
+                        ? self.catalog_config.ar_tables.indexOf("documents_catalog") !== -1
+                        : true;
+                    if (checked)
+                        checkbox_documents.setAttribute("checked", checked);
+                }
                 checkbox_documents.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
                 });
