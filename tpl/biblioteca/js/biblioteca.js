@@ -747,7 +747,7 @@ var biblio = {
                     data: list_data,
                     fn_row_builder: self.literal_search_results,
                     pagination: pagination,
-                    container_class: 'pub-text-results flow--l link-dn',
+                    container_class: 'pub-text-results flow--l',
                     caller: self
                 })
                 self.list.render_list()
@@ -765,7 +765,7 @@ var biblio = {
                     data: list_data,
                     fn_row_builder: self.literal_search_results,
                     pagination: pagination,
-                    container_class: 'pub-text-results flow--l link-dn',
+                    container_class: 'pub-text-results flow--l',
                     caller: self
                 })
                 self.list.render_list()
@@ -912,12 +912,12 @@ var biblio = {
         const content = parser.parseFromString(`
             <li class="pb-6">
                 <div class="columns is-flex-direction-row-reverse">
-                    <div class="column flow--m">
-                        <div class="flow">
-                            <h3 class="is-size-6">
+                    <div class="column flow--2xs">
+                        <div class="flow--2xs">
+                            <h3 class="is-size-3 has-text-weight-normal">
                                 ${title}
                             </h3>
-                            <p class="is-size-7">
+                            <p class="is-size-5 has-text-weight-medium">
                             ${infoHead}<br>
                             ${row.autor}<br>
                             ${infoSerie}
@@ -926,8 +926,8 @@ var biblio = {
                         ${(inputText)?
                             getWordContexts(row, inputText)
                                 .map(result => (`
-                                    <div class="flow--2xs">
-                                        <h4 class="is-size-6">${tstring.item_pag} ${result.page}</h4>
+                                    <div class="flow--3xs">
+                                        <h4 class="is-size-6 has-text-weight-medium">${tstring.item_pag} ${result.page}</h4>
                                         <p class="is-size-6">${result.context}</p>
                                     </div>
                                 `)).join('')
