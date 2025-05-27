@@ -1335,6 +1335,7 @@ var templateModules = {
         if (info.images !== null && info.images.length > 0) {
             image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(info.images)[0];
         }
+        logo_url = logo_url.replace('.jpg', '.png');
         return htmlTemplate(`
             <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${info.title}</h2>
                 <!-- block-text-img-dreta-fons-negre -->
