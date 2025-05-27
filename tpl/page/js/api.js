@@ -115,6 +115,7 @@ var api = {
         var options = {
             table: 'publications',
             //sql_filter: 'imagen_identificativa is not null',
+            sql_filter: `pertenencia_data like '%\"1\"%'`,
             limit: 24,
             order: 'fecha_publicacion desc',
             //ar_fields: '*',
