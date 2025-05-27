@@ -958,7 +958,7 @@ var templateModules = {
             children_container.removeChild(children_container.lastChild);
             appendTemplate(children_container, content);
             swiperExpos(yearsArray)
-            let accordionInstance = new TenUp.Accordion('.accordion');
+            let accordionInstance = new TenUp.Accordion('.accordion', {open: true});
         });
         return;
     },

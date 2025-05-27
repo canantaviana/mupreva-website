@@ -13,7 +13,7 @@
             }),
             t&&"string"==typeof t?(this.$accordions=document.querySelectorAll(t),
             this.$accordions?(document.documentElement.classList.add("js"),
-            this.settings=e({},{onCreate:null,onOpen:null,onClose:null,onToggle:null},n),
+            this.settings=e({},{onCreate:null,onOpen:null,onClose:null,onToggle:null, open:false},n),
             this.$accordions.forEach(function(t,e){o.setupAccordion(t,e)}),
             this.settings.onCreate&&"function"==typeof this.settings.onCreate&&this.settings.onCreate.call()):
             console.error("10up Accordion: Target not found. A valid target (accordion area) must be used.")):
@@ -33,11 +33,25 @@
                 this.addEventListener(t,"keydown",function(e){var o=e.target,r=e.which;o.classList.contains("accordion-header")&&o.parentNode===t&&n.accessKeyBindings(i,o,r,e)}),
                 i.forEach(function(t,o){
                     var parentHeader = t.closest('.accordion-header');
-                    parentHeader.setAttribute("id","tab"+e+"-"+o),
-                    t.setAttribute("aria-expanded","false"),
+                    parentHeader.setAttribute("id","tab"+e+"-"+o);
+                    if (n.settings.open) {
+                        t.setAttribute("aria-expanded", "true");
+                        t.classList.add("is-active");
+                    } else {
+                        t.setAttribute("aria-expanded","false");
+                    };
                     t.setAttribute("aria-controls","panel"+e+"-"+o),
                     n.addEventListener(t,"click",function(t){t.preventDefault(),n.toggleAccordionItem(t)})}),
-                    r.forEach(function(t,n){t.setAttribute("id","panel"+e+"-"+n),t.setAttribute("aria-hidden","true"),t.setAttribute("aria-labelledby","tab"+e+"-"+n)})},
+                    r.forEach(function(t,ni){
+                        if (n.settings.open) {
+                            t.setAttribute("aria-hidden","false");
+                            t.classList.add("is-active");
+                        } else {
+                            t.setAttribute("aria-hidden","true");
+                        }
+                        t.setAttribute("id","panel"+e+"-"+ni);
+                        t.setAttribute("aria-labelledby","tab"+e+"-"+ni)
+                    })},
             n.openAccordionItem=function(t){var e=t.content;t.link.setAttribute("aria-expanded","true"),e.setAttribute("aria-hidden","false"),this.settings.onOpen&&"function"==typeof this.settings.onOpen&&this.settings.onOpen.call(t)},
             n.closeAccordionItem=function(t){var e=t.content;t.link.setAttribute("aria-expanded","false"),e.setAttribute("aria-hidden","true"),this.settings.onClose&&"function"==typeof this.settings.onClose&&this.settings.onClose.call(t)},
             n.toggleAccordionItem=function(t){
