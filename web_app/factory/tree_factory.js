@@ -245,8 +245,7 @@ function tree_factory() {
             element_type: "a",
             class_name: "btn_chain",
             href: page_globals.__WEB_ROOT_WEB__ + '/' + page.tld_to_table(row.tld) + '/' + row.section_id,
-            parent: tree_node,
-            inner_html: '🔗'
+            parent: tree_node
         })
 
         // Botó per a indexation
