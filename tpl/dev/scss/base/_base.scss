@@ -64,6 +64,12 @@ ol {
     list-style: initial;
     list-style-type: "" !important; /*https://www.matuzo.at/blog/2023/removing-list-styles-without-affecting-semantics*/
 }
+
+u,
+s {
+    text-decoration: none;
+}
+
 .text-base {
     // font-weight: 300;
     // p {

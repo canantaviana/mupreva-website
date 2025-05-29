@@ -16,31 +16,47 @@
 
 .date-slider-container input[type="range"]::-webkit-slider-thumb {
     pointer-events: all;
-    width: 16px;
-    height: 16px;
-    background: #870D01;
+    width: 14px;
+    height: 14px;
+    background: $grey;
     border-radius: 0;
     cursor: pointer;
     -webkit-appearance: none;
+    border: 0;
+}
+// Firefox
+.date-slider-container input[type="range"]::-moz-range-thumb {
+    pointer-events: all;
+    width: 14px;
+    height: 14px;
+    background: $grey;
+    border-radius: 0;
+    cursor: pointer;
+    border: 0;
 }
 
-.date-slider-track {
+.date-slider-track,
+.date-slider-range {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 4px;
+    top: 6px;
+    height: 2px;
     width: 100%;
+}
+.date-slider-track {
     background-color: #ddd;
     z-index: 1;
 }
-
 .date-slider-range {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 4px;
-    background-color: #870D01;
+    background-color: $grey;
     z-index: 2;
+}
+
+// Firefox
+@-moz-document url-prefix() {
+    .date-slider-track,
+    .date-slider-range {
+        top: 10px;
+    }
 }
 
 .date-slider-labels {
@@ -48,9 +64,21 @@
     display: flex;
     gap: 1rem;
     justify-content: space-between;
-
+    align-items: center;
     input {
-        text-align: center;
         width: 50%;
+        background: none;
+        border: 0;
+        -moz-appearance: textfield;
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        &:first-child {
+            text-align: left;
+        }
+        &:last-child {
+            text-align: right;
+        }
     }
 }

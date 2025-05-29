@@ -487,15 +487,16 @@ var catalog = {
                         </div>
                     </div>
                     <div  class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
+                        <div class="date-slider-labels mb-2">
+                            <input type="number" id="date-slider-min" />
+                            <span class="is-size-6 has-text-weight-medium">Periodo</span>
+                            <input type="number" id="date-slider-max" />
+                        </div>
                         <div class="date-slider-container">
                             <input type="range" id="date-slider-left" />
                             <input type="range" id="date-slider-right" />
                             <div class="date-slider-track"></div>
                             <div class="date-slider-range" id="date-slider-range"></div>
-                        </div>
-                        <div class="date-slider-labels">
-                            <input type="number" id="date-slider-min" />
-                            <input type="number" id="date-slider-max" />
                         </div>
                     </div>
                 </div>
