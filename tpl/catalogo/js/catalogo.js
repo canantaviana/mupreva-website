@@ -489,7 +489,7 @@ var catalog = {
                     <div  class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
                         <div class="date-slider-labels mb-2">
                             <input type="number" id="date-slider-min" />
-                            <span class="is-size-6 has-text-weight-medium">Periodo</span>
+                            <span class="is-size-6 has-text-weight-medium">${tstring.collection_period_label}</span>
                             <input type="number" id="date-slider-max" />
                         </div>
                         <div class="date-slider-container">
