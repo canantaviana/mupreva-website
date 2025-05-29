@@ -321,6 +321,104 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// ----------------
+// Date-slider-setup
+// ----------------
+
+async function dateSliderSetup(form_dates_range) {
+    api.getRangeDates().then(function(results) {
+        const [MIN_DATE, MAX_DATE] = results;
+
+        const leftSlider = document.getElementById("date-slider-left");
+        const rightSlider = document.getElementById("date-slider-right");
+        const sliderRange = document.getElementById("date-slider-range");
+        const minLabel = document.getElementById("date-slider-min");
+        const maxLabel = document.getElementById("date-slider-max");
+
+        leftSlider.min = MIN_DATE;
+        leftSlider.max = MAX_DATE;
+        leftSlider.value = MIN_DATE;
+
+        rightSlider.min = MIN_DATE;
+        rightSlider.max = MAX_DATE;
+        rightSlider.value = MAX_DATE;
+
+        minLabel.textContent = MIN_DATE;
+        maxLabel.textContent = MAX_DATE;
+
+        function clamp(val, min, max) {
+            return Math.max(min, Math.min(max, val));
+        }
+
+        function updateDateSlider(e) {
+            let minVal = parseInt(leftSlider.value);
+            let maxVal = parseInt(rightSlider.value);
+
+            if (e && e.target === leftSlider && minVal > maxVal) {
+                leftSlider.value = maxVal;
+                minVal = maxVal;
+            }
+            if (e && e.target === rightSlider && maxVal < minVal) {
+                rightSlider.value = minVal;
+                maxVal = minVal;
+            }
+
+            // Update the range fill
+            const rangeWidth = leftSlider.max - leftSlider.min;
+            const left = ((minVal - leftSlider.min) / rangeWidth) * 100;
+            const right = ((maxVal - leftSlider.min) / rangeWidth) * 100;
+            sliderRange.style.left = left + "%";
+            sliderRange.style.width = right - left + "%";
+
+            // Update displayed values
+            minLabel.value = minVal;
+            maxLabel.value = maxVal;
+
+            form_dates_range.min = minVal;
+            form_dates_range.max = maxVal;
+        }
+
+        leftSlider.addEventListener("input", updateDateSlider);
+        rightSlider.addEventListener("input", updateDateSlider);
+
+        // Add listeners for label inputs
+        function handleMinLabelInput() {
+            let val = clamp(parseInt(minLabel.value) || MIN_DATE, MIN_DATE, MAX_DATE);
+            let maxVal = parseInt(rightSlider.value);
+            if (val > maxVal) val = maxVal;
+            leftSlider.value = val;
+            updateDateSlider();
+        }
+
+        function handleMaxLabelInput() {
+            let val = clamp(parseInt(maxLabel.value) || MAX_DATE, MIN_DATE, MAX_DATE);
+            let minVal = parseInt(leftSlider.value);
+            if (val < minVal) val = minVal;
+            rightSlider.value = val;
+            updateDateSlider();
+        }
+
+        minLabel.addEventListener("change", handleMinLabelInput);
+            minLabel.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                handleMinLabelInput();
+                minLabel.blur(); // Optionally remove focus
+            }
+        });
+
+        maxLabel.addEventListener("change", handleMaxLabelInput);
+            maxLabel.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                handleMaxLabelInput();
+                maxLabel.blur(); // Optionally remove focus
+            }
+        });
+
+        // Initialize slider
+        updateDateSlider();
+    })
+}
+
 // -----------
 // Swiper home
 // -----------

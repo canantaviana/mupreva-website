@@ -235,6 +235,38 @@ var api = {
         return page.get_records(options);
     },
 
+    getOldestDate: function() {
+        var options = {
+            table: "objects,pictures,immovables,documents_catalog",
+            ar_fields: "datacion_ini",
+            sql_filter: "datacion_ini IS NOT NULL",
+            order: "datacion_ini ASC",
+            limit: 1
+        }
+        return page.get_records(options);
+    },
+
+    getNewestDate: function() {
+        var options = {
+            table: "objects,pictures,immovables,documents_catalog",
+            ar_fields: "datacion_fin",
+            sql_filter: "datacion_fin IS NOT NULL",
+            order: "datacion_fin DESC",
+            limit: 1
+        }
+        return page.get_records(options);
+    },
+
+    getRangeDates: function() {
+        return Promise.all([
+            this.getOldestDate(),
+            this.getNewestDate()
+        ]).then(function(results) {
+            var oldest = results[0][0].datacion_ini;
+            var newest = results[1][0].datacion_fin;
+            return [oldest, newest];
+        });
+    },
 
     getObjectsDefault: function(offset = 0) {
         var options = {

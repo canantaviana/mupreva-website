@@ -62,6 +62,12 @@ var catalog = {
     // form_submit_state
     form_submit_state: null,
 
+    // form_dates_range
+    form_dates_range: {
+        min: null,
+        max: null,
+    },
+
     // catalog_config. Object stored in browser local storage
     catalog_config: null,
 
@@ -480,6 +486,18 @@ var catalog = {
                             </div>
                         </div>
                     </div>
+                    <div  class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
+                        <div class="date-slider-container">
+                            <input type="range" id="date-slider-left" />
+                            <input type="range" id="date-slider-right" />
+                            <div class="date-slider-track"></div>
+                            <div class="date-slider-range" id="date-slider-range"></div>
+                        </div>
+                        <div class="date-slider-labels">
+                            <input type="number" id="date-slider-min" />
+                            <input type="number" id="date-slider-max" />
+                        </div>
+                    </div>
                 </div>
             </details>
         </div>
@@ -554,6 +572,7 @@ var catalog = {
             const form = self.form_template();
             const currentForm = form[0];
             appendTemplate(options.container, form);
+            dateSliderSetup(self.form_dates_range);
 
             const fragment = new DocumentFragment();
 
@@ -1152,6 +1171,10 @@ var catalog = {
         // const parsed_filter	= page.parse_sql_filter(filter, group)
         const parsed_filter = self.form.parse_sql_filter(filter, group);
         let sql_filter = parsed_filter ? "(" + parsed_filter + ")" : null;
+        if (self.form_dates_range.min && self.form_dates_range.max) {
+            const dates_range_filter = `(datacion_ini IS NOT NULL OR datacion_fin IS NOT NULL) AND ((datacion_ini >= ${self.form_dates_range.min} AND datacion_ini <= ${self.form_dates_range.max}) OR (datacion_fin >= ${self.form_dates_range.min} AND datacion_fin <= ${self.form_dates_range.max}) OR (datacion_ini <= ${self.form_dates_range.min} AND datacion_fin >= ${self.form_dates_range.max}))`
+            sql_filter = sql_filter ? `${sql_filter} AND ${dates_range_filter}` : dates_range_filter;
+        }
 
         // prev_filter fix
         self.prev_filter = sql_filter;
