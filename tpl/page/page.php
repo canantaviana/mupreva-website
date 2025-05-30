@@ -51,6 +51,8 @@ $menu_tree = $this->get_menu_tree_plain(WEB_MENU_PARENT, []);
 
 $web_root = $this->get_page(WEB_MENU_PARENT);
 
+$this->web_foot = $this->get_web_term(WEB_FOOT_PARENT);
+
 // ul drawer
 $ul_drawer = function ($term_id, $html) {
     if ($term_id === WEB_MENU_PARENT) {
