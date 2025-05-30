@@ -915,13 +915,10 @@ var page = {
             case 'ts1':
                 template = 'ts_thematic';
                 break;
-            case 'ts2':
-                template = 'ts_onomastic';
-                break;
-            case 'ts3':
+            case 'dc1':
                 template = 'ts_chronological';
                 break;
-            case 'ts4':
+            case 'material1':
                 template = 'ts_material';
                 break;
         }
