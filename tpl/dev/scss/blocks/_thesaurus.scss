@@ -70,7 +70,8 @@ html {
             cursor: pointer;
         }
         > .btn_scope_note,
-        > .btn_relations {
+        > .btn_relations,
+        > .btn_chain {
             background-repeat: no-repeat;
             background-size: 100%;
             background-position: center center;
@@ -90,6 +91,9 @@ html {
         }
         > .btn_relations {
             background-image: url("img/icon_eye_color.svg");
+        }
+        > .btn_chain {
+            background-image: url("img/icon_link.svg");
         }
     }
     .scope_note {
@@ -164,6 +168,9 @@ html {
             &:has(+ img + .branch:not(.hide)) {
                 color: #fff;
                 background-color: $primary;
+                .btn_chain {
+                    filter: invert(1);
+                }
             }
             &:hover {
                 background-color: $primary-light;
