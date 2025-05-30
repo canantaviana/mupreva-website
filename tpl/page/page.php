@@ -49,6 +49,8 @@ $this->breadcrumb = $this->get_breadcrumb();
 // menu tree
 $menu_tree = $this->get_menu_tree_plain(WEB_MENU_PARENT, []);
 
+$web_root = $this->get_page(WEB_MENU_PARENT);
+
 // ul drawer
 $ul_drawer = function ($term_id, $html) {
     if ($term_id === WEB_MENU_PARENT) {

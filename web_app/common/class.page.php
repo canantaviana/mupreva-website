@@ -618,7 +618,14 @@ class page
         return $ar_data;
     } //end get_menu_tree_plain
 
-
+    public function get_page($id) {
+        foreach ($this->data_combi[1]->result as $value) {
+            if ($value->term_id === $id) {
+                return $value;
+            }
+        }
+        return null;
+    }
 
     /**
      * RENDER_MENU_TREE_PLAIN
