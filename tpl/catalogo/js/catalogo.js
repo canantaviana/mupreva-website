@@ -184,6 +184,10 @@ var catalog = {
             container: document.getElementById("items_container"),
         });
 
+        const export_data_buttons = page.render_export_data_buttons()
+        self.export_data_container.appendChild(export_data_buttons)
+
+
         // order
         const order = (function () {
             switch (self.view_mode) {
@@ -214,6 +218,11 @@ var catalog = {
                 order: order,
                 limit: limit,
             });
+        }
+        if (self.default_submit) {
+            self.export_data_container.classList.add("is-hidden");
+        } else {
+            self.export_data_container.classList.remove("is-hidden");
         }
 
         // subscribe events
@@ -1301,6 +1310,12 @@ var catalog = {
                         });
                         resolve();
                         return;
+                    }
+
+                    if (self.default_submit) {
+                        self.export_data_container.classList.add("is-hidden");
+                    } else {
+                        self.export_data_container.classList.remove("is-hidden");
                     }
 
                     if (self.default_submit) {
