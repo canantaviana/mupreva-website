@@ -91,6 +91,9 @@ class page
     # foot
     public $web_foot = null;
 
+    # root
+    public $web_root = null;
+
     /**
      * __CONSTRUCT
      * @param object $reference_page
