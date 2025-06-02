@@ -219,7 +219,7 @@ var catalog = {
                 limit: limit,
             });
         }
-        if (self.default_submit) {
+        if (self.default_submit || self.view_mode !== "list") {
             self.export_data_container.classList.add("is-hidden");
         } else {
             self.export_data_container.classList.remove("is-hidden");
