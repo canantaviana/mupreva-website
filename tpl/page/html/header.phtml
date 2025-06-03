@@ -17,7 +17,7 @@ if (is_array($images) && count($images) > 0) {
             <h1 class="site-logo is-size-7">
                 <span class="is-flex gap-3 is-align-items-flex-end">
                     <img loading="lazy" src="<?php echo $image ?>" alt="" width="26" height="40" class="is-block">
-                    <span class="has-text-white has-text-weight-semibold is-size-4"><?php echo WEB_ENTITY_LABEL ?></span>
+                    <span class="has-text-white has-text-weight-semibold is-size-4"><?php echo $this->web_root->title ?></span>
                 </span>
             </h1>
             <?php else : ?>
@@ -25,7 +25,7 @@ if (is_array($images) && count($images) > 0) {
                 <a href="<?php echo __WEB_ROOT_WEB__ ?>/" class="has-text-white link-dn is-block">
                     <span class="is-flex gap-3 is-align-items-flex-end">
                         <img loading="lazy" src="<?php echo $image ?>" alt="" width="26" height="40" class="is-block">
-                        <span class="has-text-white has-text-weight-semibold is-size-4"><?php echo WEB_ENTITY_LABEL ?></span>
+                        <span class="has-text-white has-text-weight-semibold is-size-4"><?php echo $this->web_root->title ?></span>
                     </span>
                 </a>
             </p>

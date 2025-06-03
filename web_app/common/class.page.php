@@ -475,7 +475,7 @@ class page
         if (!is_null($title)) {
             $page_title = $title;
         } else {
-            $page_title = $this->page_title . ' | ' . WEB_ENTITY_LABEL;
+            $page_title = $this->page_title . ' | ' . $this->web_root->title;
         }
 
         return $page_title;
