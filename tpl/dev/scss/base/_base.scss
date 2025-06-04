@@ -82,6 +82,9 @@ s {
         font-weight: 500;
         > li {
             position: relative;
+            > br {
+                display: none;
+            }    
         }
         ul,
         ol {
