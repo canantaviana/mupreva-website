@@ -400,6 +400,8 @@ var catalog = {
     }, //end switch_view
 
     form_template: function () {
+        const params = new URLSearchParams(window.location.search);
+
         return htmlTemplate(`
 <form action="#" class="search-form search-form--col">
     <fieldset>
@@ -518,19 +520,19 @@ var catalog = {
             <div class="checkbox-group">
                 <ul id="table_selector" class="is-flex is-flex-wrap-wrap gap-4">
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_objects" name="col" value="objectes" >
+                        <input class="is-checkradio" type="checkbox" id="checkbox_objects" name="col" value="objectes" ${!(params.has('filter')) && "checked"}>
                         <label for="checkbox_objects">${tstring.collection_filter_objects}</label>
                     </li>
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_pictures" name="col" value="pictures" >
+                        <input class="is-checkradio" type="checkbox" id="checkbox_pictures" name="col" value="pictures" ${!(params.has('filter')) && "checked"}>
                         <label for="checkbox_pictures">${tstring.collection_filter_pictures}</label>
                     </li>
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_immovable" name="col" value="immovables" >
+                        <input class="is-checkradio" type="checkbox" id="checkbox_immovable" name="col" value="immovables" ${!(params.has('filter')) && "checked"}>
                         <label for="checkbox_immovable">${tstring.collection_filter_fields}</label>
                     </li>
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_documents" name="col" value="documents_catalog" >
+                        <input class="is-checkradio" type="checkbox" id="checkbox_documents" name="col" value="documents_catalog" ${!(params.has('filter')) && "checked"}>
                         <label for="checkbox_documents">${tstring.collection_filter_documents}</label>
                     </li>
                 </ul>
