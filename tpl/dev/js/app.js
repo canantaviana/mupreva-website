@@ -6,6 +6,12 @@ const onListener = function (element, type, selector, handler) {
     });
 };
 
+function removeParam(param) {
+    const params = new URLSearchParams(window.location.search);
+    params.delete(param);
+    window.history.replaceState({}, document.title, window.location.pathname + (params.toString() ? '?' + params.toString() : ''));
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     // --------------
     // Tancar pàgina

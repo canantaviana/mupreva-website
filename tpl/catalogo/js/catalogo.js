@@ -880,6 +880,7 @@ var catalog = {
                 if (checked) checkbox_objects.setAttribute("checked", checked);
                 checkbox_objects.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
+                    removeParam('filter');
                 });
             }
 
@@ -895,6 +896,7 @@ var catalog = {
                 if (checked) checkbox_pictures.setAttribute("checked", checked);
                 checkbox_pictures.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
+                    removeParam('filter');
                 });
             }
 
@@ -912,6 +914,7 @@ var catalog = {
                     checkbox_immovable.setAttribute("checked", checked);
                 checkbox_immovable.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
+                    removeParam('filter');
                 });
             }
 
@@ -929,6 +932,7 @@ var catalog = {
                     checkbox_documents.setAttribute("checked", checked);
                 checkbox_documents.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
+                    removeParam('filter');
                 });
             }
 
@@ -944,6 +948,7 @@ var catalog = {
             button_list_mode.addEventListener("click", function (e) {
                 e.preventDefault();
                 self.switch_view("list", list_mode_group, this);
+                removeParam('view');
             });
             // button_view_map_mode
             const button_view_map_mode =
@@ -956,6 +961,7 @@ var catalog = {
             button_view_map_mode.addEventListener("click", function (e) {
                 e.preventDefault();
                 self.switch_view("map", list_mode_group, this);
+                removeParam('view');
             });
             // button_view_timeline_mode
             const button_view_timeline_mode =
@@ -969,6 +975,7 @@ var catalog = {
             button_view_timeline_mode.addEventListener("click", function (e) {
                 e.preventDefault();
                 self.switch_view("timeline", list_mode_group, this);
+                removeParam('view');
             });
 
             // add node
