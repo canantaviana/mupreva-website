@@ -144,6 +144,9 @@ var catalog = {
                     self.view_mode = "list";
             }
         }
+        if (params.has('filter')) {
+            self.catalog_config.ar_tables = params.get('filter').split(',');
+        }
 
         // limit (read cookie 'catalog_config' for possible previous values)
         const limit =
@@ -576,7 +579,6 @@ var catalog = {
      */
     render_form: function (options) {
         const self = this;
-        const params = new URLSearchParams(window.location.search);
 
         return new Promise(function (resolve) {
             const form = self.form_template();
@@ -872,12 +874,10 @@ var catalog = {
                     currentForm.querySelector("#checkbox_objects");
                 checkbox_objects.setAttribute("name", "catalog_tables");
                 checkbox_objects.setAttribute("value", "objects");
-                if (!params.has('filter') || params.get('filter').includes("objects")) {
-                    const checked = self.catalog_config.ar_tables
-                        ? self.catalog_config.ar_tables.indexOf("objects") !== -1
-                        : true;
-                    if (checked) checkbox_objects.setAttribute("checked", checked);
-                }
+                const checked = self.catalog_config.ar_tables
+                    ? self.catalog_config.ar_tables.indexOf("objects") !== -1
+                    : true;
+                if (checked) checkbox_objects.setAttribute("checked", checked);
                 checkbox_objects.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
                 });
@@ -889,12 +889,10 @@ var catalog = {
                     currentForm.querySelector("#checkbox_pictures");
                 checkbox_pictures.setAttribute("name", "catalog_tables");
                 checkbox_pictures.setAttribute("value", "pictures");
-                if (!params.has('filter') || params.get('filter').includes("pictures")) {
-                    const checked = self.catalog_config.ar_tables
-                        ? self.catalog_config.ar_tables.indexOf("pictures") !== -1
-                        : true;
-                    if (checked) checkbox_pictures.setAttribute("checked", checked);
-                }
+                const checked = self.catalog_config.ar_tables
+                    ? self.catalog_config.ar_tables.indexOf("pictures") !== -1
+                    : true;
+                if (checked) checkbox_pictures.setAttribute("checked", checked);
                 checkbox_pictures.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
                 });
@@ -907,13 +905,11 @@ var catalog = {
                 );
                 checkbox_immovable.setAttribute("name", "catalog_tables");
                 checkbox_immovable.setAttribute("value", "immovables");
-                if (!params.has('filter') || params.get('filter').includes("immovables")) {
-                    const checked = self.catalog_config.ar_tables
-                        ? self.catalog_config.ar_tables.indexOf("immovables") !== -1
-                        : true;
-                    if (checked)
-                        checkbox_immovable.setAttribute("checked", checked);
-                }
+                const checked = self.catalog_config.ar_tables
+                    ? self.catalog_config.ar_tables.indexOf("immovables") !== -1
+                    : true;
+                if (checked)
+                    checkbox_immovable.setAttribute("checked", checked);
                 checkbox_immovable.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
                 });
@@ -926,13 +922,11 @@ var catalog = {
                 );
                 checkbox_documents.setAttribute("name", "catalog_tables");
                 checkbox_documents.setAttribute("value", "documents_catalog");
-                if (!params.has('filter') || params.get('filter').includes("documents_catalog")) {
-                    const checked = self.catalog_config.ar_tables
-                        ? self.catalog_config.ar_tables.indexOf("documents_catalog") !== -1
-                        : true;
-                    if (checked)
-                        checkbox_documents.setAttribute("checked", checked);
-                }
+                const checked = self.catalog_config.ar_tables
+                    ? self.catalog_config.ar_tables.indexOf("documents_catalog") !== -1
+                    : true;
+                if (checked)
+                    checkbox_documents.setAttribute("checked", checked);
                 checkbox_documents.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
                 });
