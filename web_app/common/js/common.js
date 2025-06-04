@@ -1227,3 +1227,12 @@ const formatDate = (dateString) => {
         return null;
     }
 };
+
+function normalitzaText(text) {
+  return text
+    .toLowerCase()
+    .normalize('NFD') // separa lletres i accents
+    .replace(/[\u0300-\u036f]/g, '') // elimina els accents
+    .replace(/[^a-z0-9\s]/g, '') // elimina caràcters especials (excepte lletres, números i espais)
+    .replace(/\s+/g, '_'); // substitueix espais per "_"
+}

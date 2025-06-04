@@ -668,7 +668,7 @@ var biblio = {
         const table = options.table || self.biblio_table
         const filter = options.filter || null
         const ar_fields = options.ar_fields || ["*"]
-        // const order			= options.order || "COALESCE(authors_surname, 'zz') ASC, publication_date ASC"
+        // const order = options.order || "COALESCE(authors_surname, 'zz') ASC, publication_date ASC"
         const order = options.order || "ISNULL(autor), autor ASC, fecha_publicacion ASC"
         const limit = options.limit || self.pagination.limit
         const offset = options.offset || self.pagination.offset;
@@ -821,6 +821,7 @@ var biblio = {
         if (row.imagen_identificativa !== null) {
             image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
         }
+
 
         function getWordContexts(row, searchWord, contextSize = 30) {
             const normalizeWord = (w) => w.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
