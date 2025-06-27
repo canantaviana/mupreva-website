@@ -47,20 +47,10 @@ var portada = {
         api.getSliderPortada()
             .then(function (rows) {
 
-                const salas = rows[0].result.map(sala => {
-                    const img = sala.imagenes.find(img => img.image !== '')?.image || sala.illustration;
+                const results = [...rows[0].result, ...rows[1].result];
+                results.sort(() => Math.random() - 0.5);
 
-                    return `<div class="swiper-slide">
-                        <div class="wrapper is-relative">
-                            <h2 class="has-text-white has-text-weight-semibold is-size-2 link-dn">
-                                <a href="/salas/${sala.section_id}">${sala.term}</a>
-                            </h2>
-                        </div>
-                        <img src="${__WEB_MEDIA_ENGINE_URL__}/${img}" alt=""></img>
-                    </div>`
-                })
-
-                const exposiciones = rows[1].result.map(expo => {
+                const sliderItems = results.map(expo => {
                     const img = JSON.parse(expo.identifying_image)[0]
 
                     return `<div class="swiper-slide">
@@ -73,12 +63,9 @@ var portada = {
                     </div>`
                 })
 
-                const elementosPortada = [...salas, ...exposiciones]
-                elementosPortada.sort(() => Math.random() - 0.5);
-
                 var content = htmlTemplate(`
                     <div class="swiper-wrapper">
-                        ${elementosPortada.join('')}
+                        ${sliderItems.join('')}
                     </div>
                     <div class="wrapper is-relative">
                         <div class="swiper-controls is-flex gap-3 is-align-items-flex-end">
