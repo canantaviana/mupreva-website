@@ -53,14 +53,16 @@ var portada = {
                 const sliderItems = results.map(expo => {
                     const img = JSON.parse(expo.identifying_image)[0]
 
-                    return `<div class="swiper-slide">
-                        <div class="wrapper is-relative">
-                            <h2 class="has-text-white has-text-weight-semibold is-size-2 link-dn">
-                                <a href="/exposicion/${expo.section_id}">${expo.title}</a>
-                            </h2>
-                        </div>
-                        <img src="${__WEB_MEDIA_ENGINE_URL__}/${img}" alt=""></img>
-                    </div>`
+                    return `
+                        <a href="/exposicion/${expo.section_id}" class="swiper-slide">
+                            <div class="wrapper is-relative">
+                                <h2 class="has-text-white has-text-weight-semibold is-size-2 link-dn">
+                                    <p class="link-text">${expo.title}</p>
+                                </h2>
+                            </div>
+                            <img src="${__WEB_MEDIA_ENGINE_URL__}/${img}" alt=""></img>
+                        </a>
+                    `
                 })
 
                 var content = htmlTemplate(`
