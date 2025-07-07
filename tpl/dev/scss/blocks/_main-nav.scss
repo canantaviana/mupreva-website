@@ -87,8 +87,11 @@
                 background-color: #691008;
                 padding: var(--space-xl) 0;
                 display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
                 top: 100%;
                 left: 50%;
+                width: 100%;
                 transform: translateX(-50%);
                 gap: var(--space-xl);
                 z-index: 1;
@@ -113,8 +116,8 @@
                 }
                 a {
                     display: block;
-                    padding-right: 2rem;
-                    width: 25ch;
+                    padding-right: 2.5rem;
+                    width: max-content;
                     background: url("img/fletxa-dreta-submenu.svg")
                         calc(100% - 3px) 50% no-repeat;
                     &:hover {

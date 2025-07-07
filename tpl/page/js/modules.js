@@ -687,7 +687,7 @@ var templateModules = {
         api.getExposicionesDestacados().then(function(results){
             var content = htmlTemplate(`
                 <div class="swiper swiper--exposiciones-destacadas">
-                    <div class="swiper-wrapper">
+                    <div class="swiper-wrapper expos-list link-dn">
                         ${results.map(function(row){
                             const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
                             var image_url = '/assets/img/placeholder.png';
@@ -698,22 +698,21 @@ var templateModules = {
 
                             return `
                             <div class="swiper-slide">
-                                <div class="card is-flex is-flex-direction-column full-link">
-                                    <div class="pt-7 pb-5 px-6 flow--xl">
-                                        <h3 class="is-size-3 has-text-weight-semibold">
-                                            <a href="${url}">${row.title}</a>
-                                        </h3>
-                                        ${(date)?
-                                        `<p class="has-text-weight-medium is-uppercase">${date}</p>`
-                                        :''}
-                                        <p class="more-link">${tstring.home_activities_more}</p>
-                                    </div>
+                                <div class="is-flex is-flex-direction-column gap-4 full-link">
+                                    <h3 class="is-size-4">
+                                        <a href="${url}">${row.title}</a>
+                                    </h3>
                                     ${(row.type)?
-                                    `<p class="has-text-weight-medium mb-3">
+                                    `<p class="has-text-weight-medium is-size-6">
                                         <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
                                     </p>`
                                     :''}
                                     <img loading="lazy" src="${image_url}" alt="">
+                                    ${(date)?
+                                    `<div class="has-text-primary has-text-weight-semibold is-size-6">
+                                        ${date}
+                                    </div>`
+                                    :''}
                                 </div>
                             </div>
                             `;
@@ -765,7 +764,7 @@ var templateModules = {
                                                 <div class="card is-flex is-flex-direction-column full-link">
                                                     <div class="pt-7 pb-5 px-6 flow--xl">
                                                         <h3 class="is-size-3 has-text-weight-semibold">
-                                                            <a href="${url}">${row.title}</a>
+                                                            <a href="${url}" target="_blank">${row.title}</a>
                                                         </h3>
                                                         ${(date)?
                                                         `<p class="has-text-weight-medium is-uppercase">${date}</p>`
@@ -852,7 +851,7 @@ var templateModules = {
                         <div class="card is-flex is-flex-direction-column full-link">
                             <div class="pt-7 pb-5 px-6 flow--xl">
                                 <h3 class="is-size-4">
-                                    <a href="${url}">${row.title}</a>
+                                    <a href="${url}" target="_blank">${row.title}</a>
                                 </h3>
                                 ${(date)?
                                 `<p class="has-text-weight-medium is-uppercase">${date}</p>`
@@ -908,7 +907,7 @@ var templateModules = {
                                                 <div class="card is-flex is-flex-direction-column full-link">
                                                     <div class="pt-7 pb-5 px-6 flow--xl">
                                                         <h3 class="is-size-3 has-text-weight-semibold">
-                                                            <a href="${url}">${row.title}</a>
+                                                            <a href="${url}" target="_blank">${row.title}</a>
                                                         </h3>
                                                         ${(date)?
                                                         `<p class="has-text-weight-medium is-uppercase">${date}</p>`
@@ -959,7 +958,7 @@ var templateModules = {
             children_container.removeChild(children_container.lastChild);
             appendTemplate(children_container, content);
             swiperExpos(yearsArray)
-            let accordionInstance = new TenUp.Accordion('.accordion');
+            let accordionInstance = new TenUp.Accordion('.accordion', {open: true});
         });
         return;
     },
@@ -996,7 +995,7 @@ var templateModules = {
                         <div class="card is-flex is-flex-direction-column full-link">
                             <div class="pt-7 pb-5 px-6 flow--xl">
                                 <h3 class="is-size-3 has-text-weight-semibold">
-                                    <a href="${url}">${row.title}</a>
+                                    <a href="${url}" target="_blank">${row.title}</a>
                                 </h3>
                                 ${(date)?
                                 `<p class="has-text-weight-medium is-uppercase">${date}</p>`
@@ -1213,7 +1212,7 @@ var templateModules = {
                 <div class="default_last mt-8 flow--xl">
                     <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
                     <h2>${elem.name}</h2>
-                    <a href="/publicaciones/?cercaSerie=${elem.name}" class="button button--simple-2">${tstring.collection_see_all}</a>
+                    <a href="/pub/${normalitzaText(elem.name)}" class="button button--simple-2">${tstring.collection_see_all}</a>
                 </div>
 
                     <ul class="pubs-list link-dn mt-7">
@@ -1336,6 +1335,7 @@ var templateModules = {
         if (info.images !== null && info.images.length > 0) {
             image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(info.images)[0];
         }
+        logo_url = logo_url.replace('.jpg', '.png');
         return htmlTemplate(`
             <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${info.title}</h2>
                 <!-- block-text-img-dreta-fons-negre -->

@@ -585,7 +585,11 @@ var actividades = {
         // count
         let count = true
 
-console.log(sql_filter);
+
+        var customFilter = '(tipologia_data is not null and tipologia_data like \'%"2"%\')';
+        sql_filter = sql_filter
+            ? sql_filter + " AND " + customFilter
+            : customFilter;
 
         // request
         const request_body = {

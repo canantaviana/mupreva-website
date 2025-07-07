@@ -36,6 +36,10 @@
             height: 100%;
             object-fit: cover;
         }
+        &:hover .link-text {
+            text-decoration: underline .085em;
+            text-underline-offset: .3em;
+        }
     }
     .wrapper:has(h2) {
         position: absolute;

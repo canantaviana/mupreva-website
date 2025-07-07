@@ -62,6 +62,12 @@ var catalog = {
     // form_submit_state
     form_submit_state: null,
 
+    // form_dates_range
+    form_dates_range: {
+        min: null,
+        max: null,
+    },
+
     // catalog_config. Object stored in browser local storage
     catalog_config: null,
 
@@ -122,6 +128,26 @@ var catalog = {
             ? self.catalog_config.view_mode
             : "list";
 
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('view')) {
+            switch(params.get('view')) {
+                case 'list':
+                    self.view_mode = "list";
+                    break;
+                case 'timeline':
+                    self.view_mode = "timeline";
+                    break;
+                case 'map':
+                    self.view_mode = "map";
+                    break;
+                default:
+                    self.view_mode = "list";
+            }
+        }
+        if (params.has('filter')) {
+            self.catalog_config.ar_tables = params.get('filter').split(',');
+        }
+
         // limit (read cookie 'catalog_config' for possible previous values)
         const limit =
             self.catalog_config.pagination &&
@@ -161,6 +187,10 @@ var catalog = {
             container: document.getElementById("items_container"),
         });
 
+        const export_data_buttons = page.render_export_data_buttons()
+        self.export_data_container.appendChild(export_data_buttons)
+
+
         // order
         const order = (function () {
             switch (self.view_mode) {
@@ -191,6 +221,11 @@ var catalog = {
                 order: order,
                 limit: limit,
             });
+        }
+        if (self.default_submit || self.view_mode !== "list") {
+            self.export_data_container.classList.add("is-hidden");
+        } else {
+            self.export_data_container.classList.remove("is-hidden");
         }
 
         // subscribe events
@@ -365,6 +400,8 @@ var catalog = {
     }, //end switch_view
 
     form_template: function () {
+        const params = new URLSearchParams(window.location.search);
+
         return htmlTemplate(`
 <form action="#" class="search-form search-form--col">
     <fieldset>
@@ -463,6 +500,19 @@ var catalog = {
                             </div>
                         </div>
                     </div>
+                    <div  class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
+                        <div class="date-slider-labels mb-2">
+                            <input type="number" id="date-slider-min" />
+                            <span class="is-size-6 has-text-weight-medium">${tstring.collection_period_label}</span>
+                            <input type="number" id="date-slider-max" />
+                        </div>
+                        <div class="date-slider-container">
+                            <input type="range" id="date-slider-left" />
+                            <input type="range" id="date-slider-right" />
+                            <div class="date-slider-track"></div>
+                            <div class="date-slider-range" id="date-slider-range"></div>
+                        </div>
+                    </div>
                 </div>
             </details>
         </div>
@@ -470,19 +520,19 @@ var catalog = {
             <div class="checkbox-group">
                 <ul id="table_selector" class="is-flex is-flex-wrap-wrap gap-4">
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_objects" name="col" value="objectes" checked>
+                        <input class="is-checkradio" type="checkbox" id="checkbox_objects" name="col" value="objectes" ${!(params.has('filter')) && "checked"}>
                         <label for="checkbox_objects">${tstring.collection_filter_objects}</label>
                     </li>
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_pictures" name="col" value="pictures" checked>
+                        <input class="is-checkradio" type="checkbox" id="checkbox_pictures" name="col" value="pictures" ${!(params.has('filter')) && "checked"}>
                         <label for="checkbox_pictures">${tstring.collection_filter_pictures}</label>
                     </li>
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_immovable" name="col" value="immovables" checked>
+                        <input class="is-checkradio" type="checkbox" id="checkbox_immovable" name="col" value="immovables" ${!(params.has('filter')) && "checked"}>
                         <label for="checkbox_immovable">${tstring.collection_filter_fields}</label>
                     </li>
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_documents" name="col" value="documents_catalog" checked>
+                        <input class="is-checkradio" type="checkbox" id="checkbox_documents" name="col" value="documents_catalog" ${!(params.has('filter')) && "checked"}>
                         <label for="checkbox_documents">${tstring.collection_filter_documents}</label>
                     </li>
                 </ul>
@@ -536,6 +586,7 @@ var catalog = {
             const form = self.form_template();
             const currentForm = form[0];
             appendTemplate(options.container, form);
+            dateSliderSetup(self.form_dates_range);
 
             const fragment = new DocumentFragment();
 
@@ -831,6 +882,7 @@ var catalog = {
                 if (checked) checkbox_objects.setAttribute("checked", checked);
                 checkbox_objects.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
+                    removeParam('filter');
                 });
             }
 
@@ -846,6 +898,7 @@ var catalog = {
                 if (checked) checkbox_pictures.setAttribute("checked", checked);
                 checkbox_pictures.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
+                    removeParam('filter');
                 });
             }
 
@@ -863,10 +916,11 @@ var catalog = {
                     checkbox_immovable.setAttribute("checked", checked);
                 checkbox_immovable.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
+                    removeParam('filter');
                 });
             }
 
-            // checkbox_immovable
+            // checkbox_documents
             if (table_selector_container) {
                 const checkbox_documents = currentForm.querySelector(
                     "#checkbox_documents"
@@ -874,14 +928,13 @@ var catalog = {
                 checkbox_documents.setAttribute("name", "catalog_tables");
                 checkbox_documents.setAttribute("value", "documents_catalog");
                 const checked = self.catalog_config.ar_tables
-                    ? self.catalog_config.ar_tables.indexOf(
-                          "documents_catalog"
-                      ) !== -1
+                    ? self.catalog_config.ar_tables.indexOf("documents_catalog") !== -1
                     : true;
                 if (checked)
                     checkbox_documents.setAttribute("checked", checked);
                 checkbox_documents.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
+                    removeParam('filter');
                 });
             }
 
@@ -897,6 +950,7 @@ var catalog = {
             button_list_mode.addEventListener("click", function (e) {
                 e.preventDefault();
                 self.switch_view("list", list_mode_group, this);
+                removeParam('view');
             });
             // button_view_map_mode
             const button_view_map_mode =
@@ -909,6 +963,7 @@ var catalog = {
             button_view_map_mode.addEventListener("click", function (e) {
                 e.preventDefault();
                 self.switch_view("map", list_mode_group, this);
+                removeParam('view');
             });
             // button_view_timeline_mode
             const button_view_timeline_mode =
@@ -922,6 +977,7 @@ var catalog = {
             button_view_timeline_mode.addEventListener("click", function (e) {
                 e.preventDefault();
                 self.switch_view("timeline", list_mode_group, this);
+                removeParam('view');
             });
 
             // add node
@@ -1128,6 +1184,10 @@ var catalog = {
         // const parsed_filter	= page.parse_sql_filter(filter, group)
         const parsed_filter = self.form.parse_sql_filter(filter, group);
         let sql_filter = parsed_filter ? "(" + parsed_filter + ")" : null;
+        if (self.form_dates_range.min && self.form_dates_range.max) {
+            const dates_range_filter = `(datacion_ini IS NOT NULL OR datacion_fin IS NOT NULL) AND ((datacion_ini >= ${self.form_dates_range.min} AND datacion_ini <= ${self.form_dates_range.max}) OR (datacion_fin >= ${self.form_dates_range.min} AND datacion_fin <= ${self.form_dates_range.max}) OR (datacion_ini <= ${self.form_dates_range.min} AND datacion_fin >= ${self.form_dates_range.max}))`
+            sql_filter = sql_filter ? `${sql_filter} AND ${dates_range_filter}` : dates_range_filter;
+        }
 
         // prev_filter fix
         self.prev_filter = sql_filter;
@@ -1138,8 +1198,8 @@ var catalog = {
         // timeline case
         if (self.view_mode === "timeline") {
             sql_filter = sql_filter
-                ? sql_filter + " AND datacion_ini is not null"
-                : "datacion_ini is not null";
+                ? sql_filter + " AND datacion_ini is not null and destacado = 'Sí'"
+                : "datacion_ini is not null and destacado = 'Sí'";
             limit = 0;
             offset = 0;
             count = false;
@@ -1253,6 +1313,12 @@ var catalog = {
                         });
                         resolve();
                         return;
+                    }
+
+                    if (self.default_submit) {
+                        self.export_data_container.classList.add("is-hidden");
+                    } else {
+                        self.export_data_container.classList.remove("is-hidden");
                     }
 
                     if (self.default_submit) {

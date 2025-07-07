@@ -903,6 +903,28 @@ var page = {
         return template
     },//end section_tipo_to_template
 
+    /**
+    * TLD_TO_TABLE
+    */
+    tld_to_table: function (tld) {
+        let template
+        switch (tld) {
+            case 'technique1':
+                template = 'ts_technique';
+                break;
+            case 'ts1':
+                template = 'ts_thematic';
+                break;
+            case 'dc1':
+                template = 'ts_chronological';
+                break;
+            case 'material1':
+                template = 'ts_material';
+                break;
+        }
+        return template
+    },//end tld_to_table
+
     get_translated_table: function (type) {
         const typesDictionary = {
             tch100: tstring.images,

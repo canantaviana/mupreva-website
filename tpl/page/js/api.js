@@ -51,15 +51,15 @@ var api = {
     getSliderPortada: function() {
         const portada_ar_calls = [
             {
-                id: "salas",
+                id: "actividades",
                 options: {
                     dedalo_get: "records",
-                    table: "ts_ubication",
-                    sql_filter: `parents LIKE '%\"ubication1_18\"%' AND model_name IN ("Sala", "Sala general museo")`,
+                    table: "activities",
+                    sql_filter: "(YEAR(NOW()) BETWEEN date_start_year AND date_end_year) AND identifying_image IS NOT NULL", // TODO filtrar per destacados quan la api torni camp "destacado"
                     order: "RAND()",
-                    ar_fields: ["term", "illustration", "imagenes", "section_id"],
-                    limit: 4,
-                    resolve_portals_custom: `{"imagenes":"image"}`,
+                    ar_fields: ["identifying_image", "section_id", "title"],
+                    parse: page.parse_list_data,
+                    limit: 3,
                     lang: page_globals.WEB_CURRENT_LANG_CODE,
                 }
             },
@@ -68,11 +68,11 @@ var api = {
                 options: {
                     dedalo_get: "records",
                     table: "exhibitions",
-                    sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
+                    sql_filter: "((YEAR(NOW()) BETWEEN date_start_year AND date_end_year) OR (type = 'Sala general museo')) AND identifying_image IS NOT NULL", // TODO filtrar per destacados quan la api torni camp "destacado"
                     order: "RAND()",
                     ar_fields: ["identifying_image", "section_id", "title"],
                     parse: page.parse_list_data,
-                    limit: 4,
+                    limit: 3,
                     lang: page_globals.WEB_CURRENT_LANG_CODE,
                 }
             }
@@ -115,7 +115,8 @@ var api = {
         var options = {
             table: 'publications',
             //sql_filter: 'imagen_identificativa is not null',
-            limit: 24,
+            sql_filter: `pertenencia_data like '%\"1\"%'`,
+            limit: 6,
             order: 'fecha_publicacion desc',
             //ar_fields: '*',
             parse: page.parse_list_data,
@@ -234,6 +235,38 @@ var api = {
         return page.get_records(options);
     },
 
+    getOldestDate: function() {
+        var options = {
+            table: "objects,pictures,immovables,documents_catalog",
+            ar_fields: "datacion_ini",
+            sql_filter: "datacion_ini IS NOT NULL",
+            order: "datacion_ini ASC",
+            limit: 1
+        }
+        return page.get_records(options);
+    },
+
+    getNewestDate: function() {
+        var options = {
+            table: "objects,pictures,immovables,documents_catalog",
+            ar_fields: "datacion_fin",
+            sql_filter: "datacion_fin IS NOT NULL",
+            order: "datacion_fin DESC",
+            limit: 1
+        }
+        return page.get_records(options);
+    },
+
+    getRangeDates: function() {
+        return Promise.all([
+            this.getOldestDate(),
+            this.getNewestDate()
+        ]).then(function(results) {
+            var oldest = results[0][0].datacion_ini;
+            var newest = results[1][0].datacion_fin;
+            return [oldest, newest];
+        });
+    },
 
     getObjectsDefault: function(offset = 0) {
         var options = {

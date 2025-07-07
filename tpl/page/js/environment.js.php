@@ -19,8 +19,7 @@ $page_globals = array(
     'WEB_ENTITY'                            => WEB_ENTITY,
     '__WEB_MEDIA_BASE_URL__'    => __WEB_MEDIA_BASE_URL__,
     'WEB_DB'                                    => WEB_DB,
-    'API_WEB_USER_CODE'                => API_WEB_USER_CODE,
-    'WEB_ENTITY_LABEL'                => WEB_ENTITY_LABEL
+    'API_WEB_USER_CODE'                => API_WEB_USER_CODE
 );
 
 $base_links = common::get_base_links();

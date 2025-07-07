@@ -6,8 +6,12 @@
                 <?php
                 $breadCount = 0;
                 foreach ($this->breadcrumb as $entry) :
+                    $class = '';
+                    if (count($this->breadcrumb) == $breadCount + 1) {
+                        $class = 'is-hidden';
+                    }
                 ?>
-                <li itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem">
+                <li itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem" class="<?php echo $class ?>">
                     <a itemprop="item" href="/<?php echo $entry->web_path ?>">
                         <span itemprop="name"><?php echo $entry->term ?></span>
                     </a>

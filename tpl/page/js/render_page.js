@@ -155,7 +155,6 @@ page.render_export_data_buttons = function () {
     function get_data() {
 
         const data_object = {
-            source_org: page_globals.WEB_ENTITY_LABEL,
             source_url: page_globals.__WEB_BASE_URL__,
             lang: page_globals.WEB_CURRENT_LANG_CODE,
             date: common.get_today_date()

@@ -1,8 +1,18 @@
+<?php
+$images = json_decode($this->web_foot->identify_image, true);
+if (is_array($images) && count($images) > 0) {
+    $image = __WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.png', $images[0]));
+} else {
+    $image = __WEB_ROOT_WEB__.'/assets/img/logo-mupreva.png';
+}
+$abstract = $this->web_foot->abstract;
+$abstract = explode('<hr>', $abstract);
+?>
     <footer class="pt-8 pb-5 mt-9 has-background-primary has-text-white link-dn is-relative">
         <div class="wrapper">
             <div class="columns is-multiline is-size-6">
                 <div class="column is-full-tablet is-one-fifth-widescreen is-2-fullhd has-text-centered-tablet has-text-left-widescreen">
-                    <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-mupreva-footer.png" srcset="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-mupreva-footer@2x.png 2x" alt="<?php echo WEB_ENTITY_LABEL ?>" width="321" height="110">
+                    <img src="<?php echo $image ?>" alt="<?php echo $this->web_root->title ?>" width="321" height="110">
                 </div>
                 <div class="column is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only"></div>
                 <div class="column is-one-third-tablet is-one-fifth-widescreen is-2-fullhd">
@@ -18,7 +28,7 @@
                         <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-correu.svg" alt="" width="30" height="30">
                     </div>
                     <div class="flow--m">
-                        <div>
+                        <?php /* <div>
                             <p><?php echo tstring('footer_visits') ?></p>
                             <p>
                                 <a href="tel:<?php echo str_replace(' ', '', tstring('footer_visits_telephone')) ?>" class="has-text-weight-semibold"><?php echo tstring('footer_visits_telephone') ?></a> · Fax <?php echo tstring('footer_visits_fax') ?> <br>
@@ -28,6 +38,9 @@
                         <div>
                             <p><?php echo tstring('footer_general') ?></p>
                             <a href="tel:<?php echo str_replace(' ', '', tstring('footer_general_telephone')) ?>" class="has-text-weight-semibold"><?php echo tstring('footer_general_telephone') ?></a>
+                        </div> */ ?>
+                        <div>
+                            <?php echo $abstract[0] ?>
                         </div>
                     </div>
                 </div>
@@ -35,10 +48,14 @@
                 <div class="column is-one-third-tablet is-one-fifth-widescreen is-2-fullhd">
                     <img src="/tpl/assets/img/ico-horari.svg" alt="" width="30" height="30" class="mb-4 is-block">
                     <div class="flow--m">
+                        <?php /*
                         <p><?php echo tstring('footer_visits_hours') ?></p>
                         <div>
                             <p><?php echo tstring('footer_visits_arranged') ?></p>
                             <p><?php echo tstring('footer_visits_arranged_hours') ?></p>
+                        </div> */ ?>
+                        <div>
+                            <?php echo $abstract[1] ?>
                         </div>
                     </div>
                 </div>
@@ -71,7 +88,8 @@
                 </div>
             </div>
             <div class="is-flex is-flex-wrap-wrap gap-4 is-align-items-flex-end is-justify-content-center">
-                <a href="https://www.dival.es/areadecultura/content/area-de-cultura" class="is-block"><img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-diva.jpg" srcset="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-diva@2x.jpg 2x" width="129" height="65"></a>
+                <?php /*<a href="https://www.dival.es/areadecultura/content/area-de-cultura" class="is-block"><img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-diva.jpg" srcset="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-diva@2x.jpg 2x" width="129" height="65"></a> */ ?>
+                <?php echo $this->web_foot->body; ?>
                 <ul class="is-flex is-flex-wrap-wrap gap-6 is-justify-content-center mx-auto is-size-6 has-text-weight-medium">
                 <?php foreach ($this->menu_footer as $entry) : ?>
                     <li>

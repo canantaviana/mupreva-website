@@ -546,3 +546,27 @@ function array_find($xs, $f)
 
     return null;
 }//end find
+
+function parseAreaName($area_name) {
+    $param = null;
+    $url = $area_name;
+
+    // Divideix per /
+    $parts = explode('/', $area_name);
+
+    if (count($parts) > 1) {
+        $last_part = end($parts);
+
+        // Si l’últim element és numèric o té format del tipus "ubication1_145"
+        if (preg_match('/^\d+$/', $last_part) || preg_match('/^[a-zA-Z]+\d+_\d+$/', $last_part)) {
+            $param = $last_part;
+            array_pop($parts); // Elimina l’últim element
+            $url = implode('/', $parts);
+        }
+    }
+
+    return [
+        'url' => $url,
+        'param' => $param
+    ];
+}

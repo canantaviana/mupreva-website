@@ -38,9 +38,11 @@ if (common::validate_area_name($area_name) === false) {
     http_response_code(404);
     die("Ops.. Invalid area!");
 }
+
+/*
 $ar_parts 	= explode('/', $area_name);
 $ar_len 	= count($ar_parts);
-
+var_dump($ar_parts, $ar_len);
 switch (true) {
     case $ar_len === 3:
         if (isset($lang_from_path)) {
@@ -62,8 +64,12 @@ switch (true) {
         $area_table 	 = WEB_MENU_TABLE;
         break;
 }
+*/
 
-
+$area_table = WEB_MENU_TABLE;
+$result = parseAreaName($area_name);
+$area_name = $result['url'];
+//$area_section_id = $result['param'];
 
 // map area name
 if (defined('WEB_PATH_MAP') && isset(WEB_PATH_MAP[$area_name])) {

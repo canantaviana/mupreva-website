@@ -221,8 +221,8 @@ var biblio = {
                             <button type="submit" class="button">${tstring.search_button}</button>
                         </div>
                     </div>
-                    <details>
-                        <summary>${tstring.advanced_search}</summary>
+                    <!-- details>
+                        <summary>${tstring.advanced_search}</summary-->
                         <div class="columns is-multiline">
                             <div class="column is-half-tablet is-one-third-desktop">
                                 <div class="field">
@@ -273,7 +273,7 @@ var biblio = {
                                 </div>
                             </div>
                         </div>
-                    </details>
+                    <!--/details-->
                 </div>
                 <div class="column is-3-tablet is-2-desktop has-text-centered">
                     <span class="simple-tooltip-container simple-tooltip-container--lg"><button type="button" class="js-tooltip button button--arse" data-tooltip-prefix-class="simple-tooltip" data-tooltip-content-id="arse" data-tooltip-title="ArSe" data-tooltip-close-text="${tstring.close}" id="label_tooltiph7actu5160">
@@ -668,8 +668,8 @@ var biblio = {
         const table = options.table || self.biblio_table
         const filter = options.filter || null
         const ar_fields = options.ar_fields || ["*"]
-        // const order			= options.order || "COALESCE(authors_surname, 'zz') ASC, publication_date ASC"
-        const order = options.order || "ISNULL(autor), autor ASC, fecha_publicacion ASC"
+        // const order = options.order || "COALESCE(authors_surname, 'zz') ASC, publication_date ASC"
+        const order = options.order || "pertenencia_data ASC, ISNULL(autor), autor ASC, fecha_publicacion ASC"
         const limit = options.limit || self.pagination.limit
         const offset = options.offset || self.pagination.offset;
         const count = typeof options.count !== "undefined" ? options.count : true
@@ -739,10 +739,15 @@ var biblio = {
                 const list_data = self.list_data(ar_rows) // prepares data to use in list
                 self.list = self.list || new list_factory() // creates / get existing instance of list
                 self.list.init({
-                    data: list_data,
+                    /*data: list_data,
                     fn_row_builder: self.list_row_builder,
                     pagination: pagination,
                     container_class: 'pubs-list link-dn',
+                    caller: self*/
+                    data: list_data,
+                    fn_row_builder: self.literal_search_results,
+                    pagination: pagination,
+                    container_class: 'pub-text-results flow--l',
                     caller: self
                 })
                 self.list.render_list()
@@ -760,7 +765,7 @@ var biblio = {
                     data: list_data,
                     fn_row_builder: self.literal_search_results,
                     pagination: pagination,
-                    container_class: 'pub-text-results flow--l link-dn',
+                    container_class: 'pub-text-results flow--l',
                     caller: self
                 })
                 self.list.render_list()
@@ -816,7 +821,7 @@ var biblio = {
         if (row.imagen_identificativa !== null) {
             image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
         }
-        const year = row.fecha_publicacion;
+
 
         function getWordContexts(row, searchWord, contextSize = 30) {
             const normalizeWord = (w) => w.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -875,25 +880,59 @@ var biblio = {
 
         const inputText = this.caller.form.form_items.global_search.q || this.caller.form.form_items.transcripcion.q;
 
+        let infoSerie = [];
+        if (row.serie) {
+            infoSerie.push(row.serie);
+        }
+        if (row.num_serie) {
+            infoSerie.push(row.num_serie);
+        }
+        if (row.fecha_publicacion) {
+            infoSerie.push(row.fecha_publicacion);
+        }
+        if (row.num_paginas) {
+            infoSerie.push(row.num_paginas);
+        }
+        infoSerie = infoSerie.length > 0 ? infoSerie.join(', ') : '';
+
+        let infoHead = [];
+        if (row.pertenencia) {
+            infoHead.push(row.pertenencia);
+        }
+        if (row.tipologia_bibliografica) {
+            infoHead.push(row.tipologia_bibliografica);
+        }
+        infoHead = infoHead.length > 0 ? infoHead.join(' | ') : '';
+
+        let title = `${row.titulo}`;
+        if (row.pertenencia_data && JSON.parse(row.pertenencia_data) && JSON.parse(row.pertenencia_data).includes('1')) {
+            title = `<a href=${url} target="_blank">${row.titulo}</a>`;
+        }
+
+
         const content = parser.parseFromString(`
             <li class="pb-6">
                 <div class="columns is-flex-direction-row-reverse">
-                    <div class="column flow--m">
-                        <div class="flow">
-                            <h3 class="is-size-6">
-                                <a href=${url}>${row.titulo}</a>
+                    <div class="column flow--2xs">
+                        <div class="flow--2xs">
+                            <h3 class="is-size-3 has-text-weight-normal">
+                                ${title}
                             </h3>
-                            <p class="is-size-7">${row.autor}<br>${row.fecha_publicacion}</p>
+                            <p class="is-size-5 has-text-weight-medium">
+                            ${infoHead}<br>
+                            ${row.autor}<br>
+                            ${infoSerie}
+                            </p>
                         </div>
-                        ${
+                        ${(inputText)?
                             getWordContexts(row, inputText)
                                 .map(result => (`
-                                    <div class="flow--2xs">
-                                        <h4 class="is-size-6">${tstring.item_pag} ${result.page}</h4>
+                                    <div class="flow--3xs">
+                                        <h4 class="is-size-6 has-text-weight-medium">${tstring.item_pag} ${result.page}</h4>
                                         <p class="is-size-6">${result.context}</p>
                                     </div>
                                 `)).join('')
-                        }
+                        :''}
                     </div>
                     <div class="column is-narrow">
                         <img loading="lazy" src=${image_url} width="102" height="132" alt="">

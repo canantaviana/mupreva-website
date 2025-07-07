@@ -88,6 +88,12 @@ class page
     // menu_tree
     public $menu_tree;
 
+    # foot
+    public $web_foot = null;
+
+    # root
+    public $web_root = null;
+
     /**
      * __CONSTRUCT
      * @param object $reference_page
@@ -469,7 +475,7 @@ class page
         if (!is_null($title)) {
             $page_title = $title;
         } else {
-            $page_title = $this->page_title . ' | ' . WEB_ENTITY_LABEL;
+            $page_title = $this->page_title . ' | ' . $this->web_root->title;
         }
 
         return $page_title;
@@ -583,6 +589,25 @@ class page
         return $ar_data;
     } //end get_menu_tree
 
+    public static function get_web_term($term_id)
+    {
+        # Sometimes parent is term_id. Unify search format here
+        $term_id_search = $term_id;
+
+        $options = new stdClass();
+        $options->dedalo_get     = 'records';
+        $options->lang             = WEB_CURRENT_LANG_CODE;
+        $options->table         = WEB_MENU_TABLE;
+        $options->sql_filter     = "term_id = '{$term_id_search}'"; // such as ["mupreva2564_1"]
+
+        # HTTP request in php to the API
+        $data = json_web_data::get_data($options);
+
+        if (count($data->result) > 0) {
+            return $data->result[0];
+        }
+        return null;
+    }
 
 
     /**
@@ -618,7 +643,14 @@ class page
         return $ar_data;
     } //end get_menu_tree_plain
 
-
+    public function get_page($id) {
+        foreach ($this->data_combi[1]->result as $value) {
+            if ($value->term_id === $id) {
+                return $value;
+            }
+        }
+        return null;
+    }
 
     /**
      * RENDER_MENU_TREE_PLAIN
