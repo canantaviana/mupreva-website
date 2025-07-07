@@ -361,6 +361,16 @@ var api = {
         return page.get_records(options);
     },
 
+    getPeriodYears: function(ids) {
+        var options = {
+            table: 'ts_chronological',
+            ar_fields: 'term, time, section_id',
+            section_id: ids.join(','),
+        };
+
+        return page.get_records(options);
+    },
+
     getDirectorio: function() {
         var options = {
             table: 'entities',
