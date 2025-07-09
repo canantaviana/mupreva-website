@@ -51,7 +51,7 @@ var templateModules = {
                                         </g>
                                     </svg>
                                 </button>
-                                <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                                <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
                             </div>
                         </div>
                     </div>`
@@ -90,7 +90,7 @@ var templateModules = {
                                         </g>
                                     </svg>
                                 </button>
-                                <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                                <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
                             </div>
                         </div>
                     </div>`
@@ -130,7 +130,7 @@ var templateModules = {
                                                 </g>
                                             </svg>
                                         </button>
-                                        <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                                        <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
                                     </div>
                                 </div>
                             </div>`
@@ -175,7 +175,7 @@ var templateModules = {
                                                 </g>
                                             </svg>
                                         </button>
-                                        <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                                        <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
                                     </div>
                                 </div>
                             </div>`
@@ -345,7 +345,7 @@ var templateModules = {
                                         </g>
                                     </svg>
                                 </button>
-                                <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                                <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
                             </div>
                         </div>
                     </div>`
