@@ -52,7 +52,7 @@ var templateModules = {
                                     </svg>
                                 </button>
                                 <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
-                                <p>${info.image[0].footprint}</p>
+                                <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
                             </div>
                         </div>
                     </div>`
@@ -133,7 +133,7 @@ var templateModules = {
                                             </svg>
                                         </button>
                                         <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
-                                        <p>${info.image[0].footprint}</p>
+                                        <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
                                     </div>
                                 </div>
                             </div>`
@@ -179,7 +179,7 @@ var templateModules = {
                                             </svg>
                                         </button>
                                         <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
-                                        <p>${info.image[0].footprint}</p>
+                                        <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
                                     </div>
                                 </div>
                             </div>`
@@ -350,7 +350,7 @@ var templateModules = {
                                     </svg>
                                 </button>
                                 <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
-                                <p>${info.image[0].footprint}</p>
+                                <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
                             </div>
                         </div>
                     </div>`
