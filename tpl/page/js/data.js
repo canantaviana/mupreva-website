@@ -362,10 +362,10 @@ page.parse_list_data = function (rows) {
         // tpl
         row.tpl = page.section_tipo_to_template(row.section_tipo)
         if (row.table == 'activities') {
-            row.tpl = 'actividad';
+            row.tpl = 'act';
         }
         if (row.table == 'exhibitions') {
-            row.tpl = 'exposicion';
+            row.tpl = 'exp';
         }
 
         /*

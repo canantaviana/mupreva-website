@@ -1031,7 +1031,7 @@ var actividades = {
                 const date = item.data_group[i].date;
 
                 const url =
-                    page_globals.__WEB_ROOT_WEB__ + "/actividad/" + section_id;
+                    page_globals.__WEB_ROOT_WEB__ + "/act/" + section_id;
                 var content = htmlTemplate(`
                     <li>
                         <a href="${url}" target="_blank">

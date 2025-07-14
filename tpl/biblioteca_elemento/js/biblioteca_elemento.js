@@ -130,7 +130,7 @@ var item = {
     absUrl: function (row) {
         return (
             page_globals.__WEB_MEDIA_BASE_URL__ +
-            "/publication/" +
+            "/pub/" +
             row.section_id
         );
     },
@@ -195,7 +195,7 @@ var item = {
                 row.autor
                     ? `
             <dt>${tstring.item_author}</dt>
-            <dd><a href="/biblio/">${row.autor}</a></dd>
+            <dd><a href="/publicaciones/">${row.autor}</a></dd>
             `
                     : ""
             }
@@ -211,7 +211,7 @@ var item = {
                 row.serie
                     ? `
             <dt>${tstring.item_serie}</dt>
-            <dd><a href="/pub/${normalitzaText(row.serie)}">${row.serie}</a>
+            <dd><a href="/publicaciones/${normalitzaText(row.serie)}">${row.serie}</a>
             ${
                 row.num_serie
                     ? `
@@ -298,7 +298,7 @@ ${
             .map(function (value) {
                 const url =
                     page_globals.__WEB_ROOT_WEB__ +
-                    "/publication/" +
+                    "/pub/" +
                     value.section_id;
                 return `<li class="mb-3">
                 <div class="columns is-mobile is-flex-direction-row-reverse">

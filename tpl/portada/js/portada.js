@@ -54,7 +54,7 @@ var portada = {
                     const img = JSON.parse(expo.identifying_image)[0]
 
                     return `
-                        <a href="/exposicion/${expo.section_id}" class="swiper-slide">
+                        <a href="/exp/${expo.section_id}" class="swiper-slide">
                             <div class="wrapper is-relative">
                                 <h2 class="has-text-white has-text-weight-semibold is-size-2 link-dn">
                                     <p class="link-text">${expo.title}</p>

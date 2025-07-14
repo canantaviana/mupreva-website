@@ -347,7 +347,7 @@ var item = {
                 row.lugar && lugarData
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/immovable/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
+            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
             `
                     : ""
             }
@@ -431,7 +431,7 @@ var item = {
                 row.lugar && lugarData
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/immovable/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
+            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
             `
                     : ""
             }
@@ -453,9 +453,9 @@ var item = {
 
     templateFields: function (row) {
         switch (row.tpl) {
-            case "picture":
+            case "img":
                 return this.templateFieldsPicture(row);
-            case "immovable":
+            case "imm":
                 return this.templateFieldsImmovable(row);
             default:
                 return this.templateFieldsDefault(row);
@@ -567,7 +567,7 @@ var item = {
                 ${this.renderExport()}
             </div>
             `;
-        } else if (row.tpl == "picture" && images.length === 1) {
+        } else if (row.tpl == "img" && images.length === 1) {
             const image = images[0];
             // una imatge
             return `
@@ -1131,7 +1131,7 @@ var item = {
             <div class="accordion accordion--secondary">
                 <div class="table-responsive">
                 ${
-                    row.tpl === "picture"
+                    row.tpl === "img"
                         ? this.templateTecnicPicture(row)
                         : this.templateTecnicDefault(row)
                 }
@@ -1681,7 +1681,7 @@ var item = {
         target.appendChild(acordion);
 
         //fitxa tecnica
-        if (row.tpl !== "immovable") {
+        if (row.tpl !== "imm") {
             appendTemplate(acordion, this.templateTecnic(row));
             this.getRelations(row);
         }
@@ -1689,7 +1689,7 @@ var item = {
         //patrimoni relacionat
         appendTemplate(acordion, this.templateRelated(row));
 
-        if (row.tpl === "immovable") {
+        if (row.tpl === "imm") {
             //visita al jaciment
             this.templateJacimentVisit(acordion, row);
             appendTemplate(acordion, this.templateRelatedJaciments(row));

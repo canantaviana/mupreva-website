@@ -31,21 +31,22 @@ $section_id = isset($ar_parts[1])
 
 // table (from url path)
 switch ($ar_parts[0]) {
-    case 'picture':
+    case 'img':
         $table = 'pictures';
         break;
-    case 'object':
+    case 'cat':
         $table = 'objects';
         break;
-    case 'immovable':
+    case 'imm':
         $table = 'immovables';
         break;
-    case 'documents_catalog':
+    case 'doc':
         $table = 'documents_catalog';
         break;
-    case 'publication':
+    case 'pub':
         $table = 'publications';
         break;
+
 }
 
 // page basic vars

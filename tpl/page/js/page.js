@@ -885,19 +885,19 @@ var page = {
         let template
         switch (section_tipo) {
             case 'tch100':
-                template = 'picture';
+                template = 'img';
                 break;
             case 'tch1':
-                template = 'object';
+                template = 'cat';
                 break;
             case 'tchi1':
-                template = 'immovable';
+                template = 'imm';
                 break;
             case 'tch300':
-                template = 'documents_catalog';
+                template = 'doc';
                 break;
             case 'rsc205':
-                template = 'publication';
+                template = 'pub';
                 break;
         }
         return template

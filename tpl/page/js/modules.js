@@ -1217,7 +1217,7 @@ var templateModules = {
                 <div class="default_last mt-8 flow--xl">
                     <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
                     <h2>${elem.name}</h2>
-                    <a href="/pub/${normalitzaText(elem.name)}" class="button button--simple-2">${tstring.collection_see_all}</a>
+                    <a href="/publicaciones/${normalitzaText(elem.name)}" class="button button--simple-2">${tstring.collection_see_all}</a>
                 </div>
 
                     <ul class="pubs-list link-dn mt-7">
