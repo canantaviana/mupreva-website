@@ -244,7 +244,7 @@ function tree_factory() {
         let link_to_page = common.create_dom_element({
             element_type: "a",
             class_name: "btn_chain",
-            href: page_globals.__WEB_ROOT_WEB__ + '/' + page.tld_to_table(row.tld) + '/' + row.section_id,
+            href: page_globals.__WEB_ROOT_WEB__ + '/' + page.tld_to_template(row.tld) + '/' + row.section_id,
             parent: tree_node
         })
 
