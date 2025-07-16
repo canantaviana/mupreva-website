@@ -32,20 +32,23 @@ $section_id = isset($ar_parts[1])
 
 // table (from url path)
 switch ($ar_parts[0]) {
-    case 'picture':
-        $table = 'pictures';
+    case 'tec':
+        $table = 'ts_technique';
         break;
-    case 'object':
-        $table = 'objects';
+    case 'tem':
+        $table = 'ts_thematic';
         break;
-    case 'immovable':
-        $table = 'immovables';
+    case 'cro':
+        $table = 'ts_chronological';
         break;
-    case 'documents_catalog':
-        $table = 'documents_catalog';
+    case 'mat':
+        $table = 'ts_material';
         break;
-    case 'publication':
-        $table = 'publications';
+    case 'obj':
+        $table = 'ts_object';
+        break;
+    case 'top':
+        $table = 'ts_ubication';
         break;
 }
 

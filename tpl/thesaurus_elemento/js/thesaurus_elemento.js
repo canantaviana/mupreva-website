@@ -28,9 +28,6 @@ var item = {
         self.section_id = options.section_id; // int
         self.target = options.target; // DOM node
 
-        // export_data_buttons (define before load_data to prepare the event subscribe)
-        const export_data_buttons = page.render_export_data_buttons();
-
         // load and render
         self.load_data({}).then(function (response) {
             if (!response.result || response.result.length < 1) {
@@ -45,10 +42,6 @@ var item = {
                 row: row,
                 target: self.target,
             });
-            // append export data buttons
-            document
-                .getElementById("export_data_container")
-                .appendChild(export_data_buttons);
 
             viewInit();
         });
@@ -164,7 +157,7 @@ var item = {
     load_data: function (options) {
         const self = this;
 
-        const default_fields = ["*"];
+        const default_fields = ["term", "definition", "relations", "dd_relations", "children", "tld", "section_id"];
 
         // options
         const table = options.table || self.table;
@@ -191,19 +184,7 @@ var item = {
             };
             //if (table === 'sets') {
             request_body.resolve_portals_custom = {
-                imagenes_identificativas: "image",
-                imagenes: "image",
-                medidas: "measures",
-                bibliografia_propia: "bibliographic_references",
-                bibliografia: "bibliographic_references",
-                //bibliografia_relacionada: 'bibliographic_references'
-                documentos: "documents",
-                intervenciones: "intervention",
-                "intervenciones.imagen_inicial": "image",
-                "intervenciones.imagen_final": "image",
-                audiovisuales: "audiovisual",
-                children: "objects",
-                "children.imagenes_identificativas": "image",
+                // ...
             };
             //}
             data_manager
@@ -235,7 +216,7 @@ var item = {
         return (
             page_globals.__WEB_MEDIA_BASE_URL__ +
             "/" +
-            row.tpl +
+            page.tld_to_template(row.tld) +
             "/" +
             row.section_id
         );
@@ -291,217 +272,27 @@ var item = {
         `);
     },
 
-    datacion(row) {
-        const datacion = [];
-        if (row.datacion_ini) {
-            datacion.push(row.datacion_ini);
-        }
-        if (row.datacion_fin) {
-            datacion.push(row.datacion_fin);
-        }
-        return datacion;
-    },
-
-    templateFieldsPicture: function (row) {
-        var lugarData = null;
-        if (row.lugar_data) {
-            try {
-                lugarData = JSON.parse(row.lugar_data)[0];
-            } catch (e) {}
-        }
-
-        return `
-            ${
-                row.section_id
-                    ? `
-            <dt><dt>${tstring.item_id}</dt></dt>
-            <dd>${row.section_id}</dd>
-            `
-                    : ""
-            }
-            ${
-                row.autor
-                    ? `
-            <dt>${tstring.item_fotographer}</dt>
-            <dd>${row.autor.split(" | ").join(" ")}</dd>
-            `
-                    : ""
-            }
-            ${
-                row.nombre_bien
-                    ? `
-            <dt>${tstring.item_object}</dt>
-            <dd>${row.nombre_bien}</dd>
-            `
-                    : ""
-            }
-            ${
-                row.datacion_ini
-                    ? `
-            <dt>${tstring.item_data}</dt>
-            <dd>${row.datacion_ini}</dd>
-            `
-                    : ""
-            }
-            ${
-                row.lugar && lugarData
-                    ? `
-            <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/immovable/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
-            `
-                    : ""
-            }
-        `;
-    },
-
-    templateFieldsImmovable: function (row) {
-        const datacion = this.datacion(row);
-        return `
-            ${
-                row.municipio
-                    ? `
-            <dt>${tstring.item_ubication}</dt>
-            <dd>${row.municipio}</dd>
-            `
-                    : ""
-            }
-            ${
-                row.periodo
-                    ? `
-            <dt>${tstring.item_periodo}</dt>
-            <dd>${row.periodo}</dd>
-            `
-                    : ""
-            }
-            ${
-                datacion.length > 0
-                    ? `
-            <dt>${tstring.item_datacion}</dt>
-            <dd>${datacion.join(" , ")}</dd>
-            `
-                    : ""
-            }
-        `;
-    },
-
-    templateFieldsDefault: function (row) {
-        var lugarData = null;
-        if (row.lugar_data) {
-            try {
-                lugarData = JSON.parse(row.lugar_data)[0];
-            } catch (e) {}
-        }
-
-        var ubicationName = null;
-        var ubicationId = null;
-        if (row.ubicacion && row.ubicacion_data) {
-            try {
-                ubicationName = row.ubicacion.split(' - ');
-                ubicationId = JSON.parse(row.ubicacion_data);
-            } catch (e) {}
-        }
-
-        const datacion = this.datacion(row);
-        return `
-            ${
-                row.section_id
-                    ? `
-            <dt><dt>${tstring.item_id}</dt></dt>
-            <dd>${row.section_id}</dd>
-            `
-                    : ""
-            }
-            ${
-                row.nombre_bien
-                    ? `
-            <dt>${tstring.item_object}</dt>
-            <dd>${row.nombre_bien}</dd>
-            `
-                    : ""
-            }
-            ${
-                datacion.length > 0
-                    ? `
-            <dt>${tstring.item_datacion}</dt>
-            <dd>${datacion.join(" , ")}</dd>
-            `
-                    : ""
-            }
-            ${
-                row.lugar && lugarData
-                    ? `
-            <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/immovable/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
-            `
-                    : ""
-            }
-            ${
-                ubicationName
-                    ? `
-            <dt>${tstring.item_ubication}</dt>
-            <dd>${ubicationName.map(function(value, index){
-                if (typeof ubicationId[index] != 'undefined') {
-                    return `<a href="/salas/${ubicationId[index]}">${value}</a>`
-                }
-                return `${value}`
-                }).join(', ')}</dd>
-            `
-                    : ""
-            }
-        `;
-    },
-
-    templateFields: function (row) {
-        switch (row.tpl) {
-            case "picture":
-                return this.templateFieldsPicture(row);
-            case "immovable":
-                return this.templateFieldsImmovable(row);
-            default:
-                return this.templateFieldsDefault(row);
-        }
-    },
 
     template: function (row) {
         const url = this.absUrl(row);
         return htmlTemplate(`
-<div class="fitxa-intro columns is-variable is-8">
-    <div class="column flow--l">
-        ${
-            row.titulo
-                ? `
-        <h1>${row.titulo}</h1>
-        `
-                : ""
-        }
-        <dl>
-            ${this.templateFields(row)}
-        </dl>
-        ${
-            row.descripcion_relevante
-                ? `
-        <div class="flow">
-            ${row.descripcion_relevante}
-        </div>
-        `
-                : ""
-        }
-        ${
-            row.informacion_publica
-                ? `
-        <div class="flow">
-            ${row.informacion_publica}
-        </div>
-        `
-                : ""
-        }
-        <p> ${tstring.item_url_perm} <br>
-            <a href="${url}">${url}</a>
-        </p>
-    </div>
-    <div class="column is-1 is-hidden-touch is-hidden-desktop-only"></div>
-    ${this.renderImages(row)}
-</div>
+            <div class="fitxa-intro columns is-variable is-8">
+                <div class="column flow--l">
+                    ${row.term
+                        ? `<h1>${row.term}</h1>`
+                        : ""
+                    }
+                    ${row.definition
+                        ? `<div class="flow">${row.definition}</div>`
+                        : ""
+                    }
+                    <p>
+                        ${tstring.item_url_perm}
+                        <br>
+                        <a href="${url}">${url}</a>
+                    </p>
+                </div>
+            </div>
         `);
     },
 
@@ -672,957 +463,34 @@ var item = {
         }
     },
 
-    templateTecnicPicture: function (row) {
-        return `
-            <table class="table-collapsibles">
-                ${
-                    row.tipologia
-                        ? `
-                <tr>
-                    <td></td>
-                    <th>${tstring.item_tipology}</th>
-                    <td>${row.tipologia}</td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    row.datacion_ini
-                        ? `
-                <tr>
-                    <td></td>
-                    <th>${tstring.item_data}</th>
-                    <td>${row.datacion_ini}</td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    row.materia
-                        ? `
-                <tr>
-                    <td></td>
-                    <th>${tstring.item_material}</th>
-                    <td>${row.materia}</td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    row.tecnica
-                        ? `
-                <tr>
-                    <td></td>
-                    <th>${tstring.item_tecnica}</th>
-                    <td>${row.tecnica}</td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    row.medidas && row.medidas.length > 0
-                        ? `
-                <tr>
-                    <td></td>
-                    <th>${tstring.item_sizes}</th>
-                    <td>
-                        <table>
-                            ${row.medidas
-                                .map(function (medida) {
-                                    return `
-                                <tr>
-                                    <th>${medida.tipo}</th>
-                                    <td>${medida.tamanyo}${medida.unidad}</td>
-                                </tr>
-                                `;
-                                })
-                                .join("")}
-                        </table>
-                    </td>
-                </tr>
-                `
-                        : ""
-                }
-            </table>
-        `;
-    },
-
-    templateTecnicDefault: function (row) {
-        const datacion = this.datacion(row);
-        return `
-            <table class="table-collapsibles">
-                ${
-                    row.section_id
-                        ? `
-                <tr>
-                    <td></td>
-                    <th>${tstring.item_num_cat}</th>
-                    <td>${row.section_id}</td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    row.titulo
-                        ? `
-                <tr>
-                    <td></td>
-                    <th>${tstring.item_title}</th>
-                    <td>${row.titulo}</td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    datacion.length
-                        ? `
-                <tr>
-                    <td></td>
-                    <th>${tstring.item_datacion}</th>
-                    <td>${datacion}</td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    row.medidas && row.medidas.length > 0
-                        ? `
-                <tr>
-                    <td></td>
-                    <th>${tstring.item_sizes}</th>
-                    <td>
-                        <table>
-                            ${row.medidas
-                                .map(function (medida) {
-                                    return `
-                                <tr>
-                                    <th>${medida.tipo}</th>
-                                    <td>${medida.tamanyo}${medida.unidad}</td>
-                                </tr>
-                                `;
-                                })
-                                .join("")}
-                        </table>
-                    </td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    row.fecha_ingreso && row.fuente_ingreso && row.forma_ingreso && row.tipo_recuperacion
-                        ? `
-                <tr>
-                    <td></td>
-                    <th>${tstring.item_adquisicion}</th>
-                    <td>${common.timestamp_to_fecha(row.fecha_ingreso)} | ${row.fuente_ingreso} | ${row.forma_ingreso} | ${row.tipo_recuperacion}</td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    row.lugar_produccion
-                        ? `
-                <tr>
-                    <td></td>
-                    <th>${tstring.item_production}</th>
-                    <td>${row.lugar_produccion}</td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    row.tipologia
-                        ? `
-                <tr>
-                    <td></td>
-                    <th>${tstring.item_tipology}</th>
-                    <td>${row.tipologia}</td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    row.periodo
-                        ? `
-                <tr>
-                    <td>
-                        <button type="button" class="button button--icon" id="btnTableCollapse01" aria-controls="TableCollapse01More" aria-expanded="false" onclick="toggle(this.id,'TableCollapse01More');">
-                            <img src="/assets/img/ico-mes.svg" width="17" height="17">
-                        </button>
-                    </td>
-                    <th>${tstring.item_periodo}</th>
-                    <td>${row.periodo}</td>
-                </tr>
-                <tr style="display:none;" id="TableCollapse01More">
-                    <td colspan="3" class="p-0">
-                        <div class="has-background-grey-light p-5 mb-5">
-                            <div class="tabs-2 mb-6">
-                                <div class="tab-control">
-                                    <ul class="tab-list" role="tablist">
-                                        ${row.periodo.split(',').map((el, i) => (
-                                            `<li class="tab-item">
-                                                <button role="tab" aria-controls="periodo-tab${i}">${el.trim()}</button>
-                                            </li>`
-                                        )).join('')}
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="tab-group">
-                                ${row.periodo.split(',').map((el, i) => (
-                                    `<div class="tab-content" id="periodo-tab${i}" role="tabpanel">
-                                        <div id="periodo-relations${i}"></div>
-                                        <div id="periodo-load-more${i}"></div>
-                                    </div>`
-                                )).join('')}
-                            </div>
-
-                        </div>
-                    </td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    row.nombre_bien
-                        ? `
-                <tr>
-                    <td>
-                        <button type="button" class="button button--icon" id="btnTableCollapse03" aria-controls="TableCollapse03More" aria-expanded="false" onclick="toggle(this.id,'TableCollapse03More');">
-                            <img src="/assets/img/ico-mes.svg" title="${tstring.item_show_more_info}" width="17" height="17">
-                        </button>
-                    </td>
-                    <th>${tstring.item_object}</th>
-                    <td>${row.nombre_bien}</td>
-                </tr>
-                <tr style="display:none;" id="TableCollapse03More">
-                    <td colspan="3" class="p-0">
-                        <div class="has-background-grey-light p-5 mb-5">
-                            <div class="tabs-2 mb-6">
-                                <div class="tab-control">
-                                    <ul class="tab-list" role="tablist">
-                                        ${row.nombre_bien.split(',').map((el, i) => (
-                                            `<li class="tab-item">
-                                                <button role="tab" aria-controls="nombre_bien-tab${i}">${el.trim()}</button>
-                                            </li>`
-                                        )).join('')}
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="tab-group">
-                                ${row.nombre_bien.split(',').map((el, i) => (
-                                    `<div class="tab-content" id="nombre_bien-tab${i}" role="tabpanel">
-                                        <div id="nombre_bien-relations${i}"></div>
-                                        <div id="nombre_bien-load-more${i}"></div>
-                                    </div>`
-                                )).join('')}
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    row.materia
-                        ? `
-                <tr>
-                    <td>
-                        <button type="button" class="button button--icon" id="btnTableCollapse04" aria-controls="TableCollapse04More" aria-expanded="false" onclick="toggle(this.id,'TableCollapse04More');">
-                            <img src="/assets/img/ico-mes.svg" title="${tstring.item_show_more_info}" width="17" height="17">
-                        </button>
-                    </td>
-                    <th>${tstring.item_material}</th>
-                    <td>${row.materia}</td>
-                </tr>
-                <tr style="display:none;" id="TableCollapse04More">
-                    <td colspan="3" class="p-0">
-                        <div class="has-background-grey-light p-5 mb-5">
-                            <div class="tabs-2 mb-6">
-                                <div class="tab-control">
-                                    <ul class="tab-list" role="tablist">
-                                        ${row.materia.split(',').map((el, i) => (
-                                            `<li class="tab-item">
-                                                <button role="tab" aria-controls="materia-tab${i}">${el.trim()}</button>
-                                            </li>`
-                                        )).join('')}
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="tab-group">
-                                ${row.materia.split(',').map((el, i) => (
-                                    `<div class="tab-content" id="materia-tab${i}" role="tabpanel">
-                                        <div id="materia-relations${i}"></div>
-                                        <div id="materia-load-more${i}"></div>
-                                    </div>`
-                                )).join('')}
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                `
-                        : ""
-                }
-                ${
-                    row.tecnica
-                        ? `
-                <tr>
-                    <td>
-                        <button type="button" class="button button--icon" id="btnTableCollapse05" aria-controls="TableCollapse05More" aria-expanded="false" onclick="toggle(this.id,'TableCollapse05More');">
-                            <img src="/assets/img/ico-mes.svg" title="${tstring.item_show_more_info}" width="17" height="17">
-                        </button>
-                    </td>
-                    <th>${tstring.item_tecnica}</th>
-                    <td>${row.tecnica}</td>
-                </tr>
-                <tr style="display:none;" id="TableCollapse05More">
-                    <td colspan="3" class="p-0">
-                        <div class="has-background-grey-light p-5 mb-5">
-                            <div class="tabs-2 mb-6">
-                                <div class="tab-control">
-                                    <ul class="tab-list" role="tablist">
-                                        ${row.tecnica.split(',').map((el, i) => (
-                                            `<li class="tab-item">
-                                                <button role="tab" aria-controls="tecnica-tab${i}">${el.trim()}</button>
-                                            </li>`
-                                        )).join('')}
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="tab-group">
-                                ${row.tecnica.split(',').map((el, i) => (
-                                    `<div class="tab-content" id="tecnica-tab${i}" role="tabpanel">
-                                        <div id="tecnica-relations${i}"></div>
-                                        <div id="tecnica-load-more${i}"></div>
-                                    </div>`
-                                )).join('')}
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                `
-                        : ""
-                }
-            </table>
-        `;
-    },
-
-    getRelations: function (row) {
-        const self = this;
-
-        self.relationsData = {}
-
-        const elementsDic = {
-            'objects': 'object',
-            'pictures': 'picture',
-            'immovables': 'immovable',
-            'documents_catalog': 'documents_catalog'
-        }
-
-        function updateCategoryRelations(category, tab) {
-            const tabData = self.relationsData[category][tab];
-            const offset = tabData.loaded;
-            const relationId = tabData.section_id
-            api.getRelatedElements(self.table, category+'_data', relationId, offset).then(({data, total}) => {
-                tabData.result.push(...data)
-                tabData.loaded = tabData.loaded + data.length;
-                setCategoryRelations(category);
-            })
-        }
-
-        function setCategoryRelations(category) {
-            Object.keys(self.relationsData[category]).forEach(tab => {
-
-                const tabData = self.relationsData[category][tab]
-
-                const content = htmlTemplate(`
-                    <ul class="galeria galeria--185x185 link-dn">
-                        ${tabData.result.map(item => {
-                            let imageUrl
-                            if (item.imagenes_identificativas.length) {
-                                imageUrl = __WEB_MEDIA_ENGINE_URL__ + item.imagenes_identificativas[0].image;
-                            } else {
-                                imageUrl = '/assets/img/placeholder.png';
-                            }
-                            return `
-                            <li>
-                                <a href="${page_globals.__WEB_ROOT_WEB__}/${elementsDic[self.table]}/${item.section_id}" target="_blank">
-                                    <figure>
-                                        <img src="${imageUrl}" crossorigin="Anonymous" loading="lazy">
-                                        <figcaption>${item.titulo}</figcaption>
-                                    </figure>
-                                </a>
-                            </li>
-                            `
-                        }).join('')}
-                    </ul>`);
-                const button = htmlTemplate(`
-                    <button class="button button--carrega button--icon">
-                        ${tstring.load_more} <small>[${tabData.loaded} / ${tabData.total}]</small>
-                    </button>
-                `)
-                const container = tabData.container;
-                const buttonContainer = tabData.buttonContainer;
-                container.innerHTML = buttonContainer.innerHTML = '';
-
-                appendTemplate(container, content);
-
-                if(tabData.loaded < tabData.total) {
-                    appendTemplate(buttonContainer, button);
-                    const boto = container.parentElement.querySelector('button')
-
-                    boto.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        updateCategoryRelations(category, tab)
-                    })
-                }
-            })
-        }
-
-        function getCategoryRelations(category) {
-            const promises = JSON.parse(row[category+'_data']).map((relationId, i) => {
-                const tab = row[category].split(',')[i].trim();
-
-                return api.getRelatedElements(self.table, category+'_data', relationId).then(({data, total}) => {
-                    self.relationsData[category] = self.relationsData[category] || {};
-                    self.relationsData[category][tab] = self.relationsData[category][tab] || {};
-                    const tabData = self.relationsData[category][tab];
-                    tabData.result = data;
-                    tabData.total = total;
-                    tabData.section_id = relationId;
-                    tabData.loaded = tabData.loaded ? tabData.loaded + data.length : data.length;
-                    tabData.container = document.getElementById(`${category}-relations${i}`);
-                    tabData.buttonContainer = document.getElementById(`${category}-load-more${i}`);
-                    return data;
-                })
-            })
-
-            Promise.all(promises).then(() => {
-                // console.log(`${category} carregada: `, {...self.relationsData});
-                setCategoryRelations(category);
-            })
-
-        }
-
-        if (row.periodo_data) {
-            getCategoryRelations('periodo');
-        }
-        if (row.nombre_bien_data) {
-            getCategoryRelations('nombre_bien')
-        }
-        if (row.materia_data) {
-            getCategoryRelations('materia');
-        }
-        if (row.tecnica_data) {
-            getCategoryRelations('tecnica')
-        }
-    },
-
-    templateTecnic: function (row) {
-        return htmlTemplate(`
-        <!-- Fitxa tècnica -->
-        <h2 class="accordion-header">
-            <button type="button">${tstring.item_tecnic_sheet}</button>
-        </h2>
-        <div class="accordion-content block-dedalo">
-            <div class="accordion accordion--secondary">
-                <div class="table-responsive">
-                ${
-                    row.tpl === "picture"
-                        ? this.templateTecnicPicture(row)
-                        : this.templateTecnicDefault(row)
-                }
-                </div>
-            </div>
-        </div>
-        `);
-    },
-
-    templateJacimentVisit: function (target, row) {
-        const template = htmlTemplate(`
-            <h2 class="accordion-header visit-jaciment" style="display:none">
-                <button type="button">${tstring.item_jaciment_visit}</button>
-            </h2>
-            <div class="accordion-content block-dedalo visit-jaciment-content">
-            </div>
-        `);
-        appendTemplate(target, template);
-
-        const self = this;
-        api.getVisitaYacimientoCatalog(row.titulo).then(function(result) {
-            if(result && result.length > 0 && result[0].summary) {
-                const target = document.querySelector(".visit-jaciment-content");
-                target.innerHTML = common.convertText(result.summary);
-
-                const target2 = document.querySelector(".visit-jaciment");
-                target2.style.display = "block";
-            }
-        })
-    },
-
-    templateResources: function (row) {
-        if (typeof row.documentos === "undefined") {
-            row.documentos = [];
-        }
-        if (typeof row.audiovisuales === "undefined") {
-            row.audiovisuales = [];
-        }
-        if (row.documentos.length === 0 && row.audiovisuales.length === 0) {
-            return null;
-        }
-        return htmlTemplate(`
-            <h2 class="accordion-header">
-                <button type="button">${tstring.item_resources}</button>
-            </h2>
-            <div class="accordion-content block-dedalo">
-                <div class="accordion accordion--secondary">
-                ${
-                    row.audiovisuales.length > 0
-                        ? `
-                    <h3 class="accordion-header">
-                        <button type="button">${
-                            tstring.item_audiovisual
-                        }</button>
-                    </h3>
-                    <div class="accordion-content block-dedalo">
-                        <ul class="galeria galeria--180x150 link-dn">
-                            ${row.audiovisuales
-                                .map(function (entry) {
-                                    return `
-                                <li>
-                                    <button
-                                        type="button"
-                                        class="video-button"
-                                        data-video-title="${entry.title}"
-                                        data-video-url="${__WEB_MEDIA_ENGINE_URL__ + entry.video}"
-                                        data-subtitles-url="${__WEB_MEDIA_ENGINE_URL__ + entry.subtitles}">
-                                        <figure>
-                                            <img src="${getPosterframe(__WEB_MEDIA_ENGINE_URL__ + entry.video)}" alt="">
-                                            <figcaption>${entry.title}</figcaption>
-                                        </figure>
-                                    </button>
-                                </li>
-                                `;
-                                })
-                                .join("")}
-                        </ul>
-
-                    </div>
-                `
-                        : ""
-                }
-                ${
-                    row.documentos.length > 0
-                        ? `
-                    <h3 class="accordion-header">
-                        <button type="button">${tstring.item_documents}</button>
-                    </h3>
-                    <div class="accordion-content block-dedalo">
-                        <div class="text-base">
-                            <ul>
-                                ${row.documentos
-                                    .map(function (entry) {
-                                        return `
-                                    <li><a target="_blank" href="${
-                                        __WEB_MEDIA_ENGINE_URL__ +
-                                        entry.document
-                                    }">${entry.title}</a></li>
-                                    `;
-                                    })
-                                    .join("")}
-                            </ul>
-                        </div>
-                    </div>
-                `
-                        : ""
-                }
-                </div>
-            </div>
-        `);
-    },
-
-    templateRestoration: function (row) {
-        if (!row.intervenciones || row.intervenciones.length < 1) {
-            return "";
-        }
-        return htmlTemplate(`
-            <h2 class="accordion-header">
-                <button type="button">${tstring.item_restoration}</button>
-            </h2>
-            <div class="accordion-content block-dedalo">
-            ${row.intervenciones
-                .map(function (elem) {
-                    return `<div class="table-collapsibles">
-                    <table>
-                        <tbody>
-                        ${
-                            elem.titulo
-                                ? `<tr>
-                            <th>${tstring.item_restoration_title}</th>
-                            <td>${elem.titulo}</td>
-                        </tr>`
-                                : ""
-                        }
-                        ${
-                            elem.fecha_inicio && elem.fecha_fin
-                                ? `<tr>
-                            <th>${tstring.item_restoration_date}</th>
-                            <td>
-                                ${
-                                    elem.fecha_inicio
-                                        ? `<time datetime="${
-                                              elem.fecha_inicio
-                                          }">${formatDate(
-                                              elem.fecha_inicio
-                                          )}</time>`
-                                        : ""
-                                }
-                                ${
-                                    elem.fecha_fin
-                                        ? ` - <time datetime="${
-                                              elem.fecha_fin
-                                          }">${formatDate(
-                                              elem.fecha_fin
-                                          )}</time>`
-                                        : ""
-                                }
-                            </td>
-                        </tr>`
-                                : ""
-                        }
-                        ${
-                            elem.estado_conservacion
-                                ? `<tr>
-                            <th>${tstring.item_restoration}</th>
-                            <td>${elem.estado_conservacion}</td>
-                        </tr>`
-                                : ""
-                        }
-                    </tbody>
-                    </table>
-                    ${
-                        elem.imagen_inicial && elem.imagen_inicial.length > 0
-                            ? `<ul class="galeria galeria--variable link-dn">
-                        ${elem.imagen_inicial
-                            .map(function (entry) {
-                                var image_url = "/assets/img/placeholder.png";
-                                if (entry.image !== null) {
-                                    image_url =
-                                        __WEB_MEDIA_ENGINE_URL__ + entry.image;
-                                }
-                                return `<li>
-                                <img loading="lazy" src="${image_url}" alt="${entry.description}">
-                        </li>`;
-                            })
-                            .join("")}
-                    </ul>`
-                            : ""
-                    }
-                    ${
-                        elem.imagen_final && elem.imagen_final.length > 0
-                            ? `<ul class="galeria galeria--variable link-dn">
-                        ${elem.imagen_final
-                            .map(function (entry) {
-                                var image_url = "/assets/img/placeholder.png";
-                                if (entry.image !== null) {
-                                    image_url =
-                                        __WEB_MEDIA_ENGINE_URL__ + entry.image;
-                                }
-                                return `<li>
-                                <img loading="lazy" src="${image_url}" alt="${entry.description}">
-                        </li>`;
-                            })
-                            .join("")}
-                    </ul>`
-                            : ""
-                    }
-                </div>`;
-                })
-                .join("")}
-            </div>
-        `);
-    },
-
-    isGroup: function (row) {
-        return (
-            typeof row.tipo_registro !== "undefined" &&
-            row.tipo_registro === "Conjunto" &&
-            row.children.length > 0
-        );
-    },
-
-    templateGroup: function (row) {
-        var self = this;
-        if (!this.isGroup(row)) {
-            return "";
-        }
-        return htmlTemplate(`
-            <h2 class="accordion-header">
-                <button type="button">${tstring.item_group}</button>
-            </h2>
-            <div class="accordion-content block-dedalo">
-                <ul class="galeria galeria--242x242 link-dn">
-                ${row.children
-                    .map(function (object) {
-                        return self.template_catalog_elem(object);
-                    })
-                    .join("")}
-                </ul>
-            </div>
-        `);
-    },
 
     hasRelated: function (row) {
-        return (
-            typeof row.tipo_registro !== "undefined" &&
-            row.tipo_registro !== "Conjunto" &&
-            row.children.length > 0
-        );
+        return row.relations !== null && JSON.parse(row.relations).length > 0;
     },
 
     templateRelated: function (row) {
-        //TODO: passar a camp patrimonio_relacionado
+        var relations = JSON.parse(row.relations);
         var self = this;
         if (!this.hasRelated(row)) {
             return "";
         };
 
         return htmlTemplate(`
-            <h2 class="accordion-header">
-                <button type="button">${tstring.item_rel_content}</button>
-            </h2>
+            <h3 class="accordion-header">
+                ${tstring.item_rel_content}
+            </h3>
             <div class="accordion-content block-dedalo">
                 <ul class="galeria galeria--242x242 link-dn">
-                ${row.children
+                ${
+                    relations
                     .map(function (object) {
                         return self.template_catalog_elem(object);
                     })
-                    .join("")}
+                    .join("")
+                }
                 </ul>
             </div>
         `);
-    },
-
-    templateRelatedJaciments: function (row) {
-        var self = this;
-
-        if (!row.relations) {
-            return "";
-        };
-
-        const relations = JSON.parse(row.relations)
-            .filter((relation) => ['tch1', 'tch100', 'tchi1', 'tch300'].includes(relation.section_tipo))
-
-        const relationsData = relations.reduce((acc, relation) => {
-            const type = relation.section_tipo;
-            acc[type] = acc[type] || {type: page.get_translated_table(type), result: []}
-            acc[type].result.push(relation)
-            return acc;
-        }, {})
-
-        if (Object.keys(relationsData).length === 0) {
-            return '';
-        }
-
-        return htmlTemplate(`
-            <h2 class="accordion-header">
-                <button type="button">${tstring.immovables_relations_title}</button>
-            </h2>
-            <div class="accordion-content block-dedalo">
-                <div class="tabs-2 mb-6">
-                    <div class="tab-control">
-                        <ul class="tab-list" role="tablist">
-                            ${Object.keys(relationsData).map((key) => {
-                                return `<li class="tab-item">
-                                    <button role="tab" aria-controls="${key}-tab">${relationsData[key].type}</button>
-                                </li>`
-                            }).join('')}
-                        </ul>
-                    </div>
-                </div>
-                <div class="tab-group">
-                    ${Object.keys(relationsData).map((key) => (
-                        `<div class="tab-content" id="${key}-tab" role="tabpanel">
-                            <ul class="galeria galeria--185x185 link-dn">
-                                ${relationsData[key].result.map((item) => {
-                                    const image = item.image ? __WEB_MEDIA_ENGINE_URL__ + item.image : '/assets/img/placeholder.png';
-                                    return `
-                                    <li>
-                                        <a href="${page_globals.__WEB_ROOT_WEB__}/${page.section_tipo_to_template(key)}/${item.section_id}" target="_blank">
-                                            <figure>
-                                                <img src=${image} alt=""  crossorigin="Anonymous" loading="lazy" />
-                                                ${item.title
-                                                    ? `<figcaption>${item.title}</figcaption>`
-                                                : ''}
-                                            </figure>
-                                        </a>
-                                    </li>
-                                    `
-                                }).join('')}
-                            </ul>
-                        </div>`
-                    )).join('')}
-                </div>
-            </div>
-        `);
-    },
-
-    templateBibliografyEntry: function (entry) {
-        return biblio_row_fields.render_row_bibliography(entry);
-    },
-
-    templateBiblio: function (target, row) {
-        const self = this;
-
-        if (!row.bibliografia_propia || row.bibliografia_propia.length == 0) {
-            return null;
-        }
-        const template = htmlTemplate(`
-        <h2 class="accordion-header">
-            <button type="button">${tstring.item_bibliografy}</button>
-        </h2>
-        <div class="accordion-content block-dedalo">
-            <div class="text-base flow">
-                <ul>
-                </ul>
-            </div>
-        </div>
-        `);
-        const ul = template[2].querySelector("ul");
-        row.bibliografia_propia.forEach(function (entry) {
-            ul.appendChild(self.templateBibliografyEntry(entry));
-        });
-        appendTemplate(target, template);
-    },
-
-    templateExcavations: function (target, row) {
-        const self = this;
-
-        if (!row.relations) {
-            return null;
-        }
-        const relations = JSON.parse(row.relations).filter(function(value){
-            return value.section_tipo == 'excavation1';
-        }).map(function(value){
-            return value.section_id;
-        });
-        const template = htmlTemplate(`
-            <h2 class="accordion-header">
-                <button type="button">${tstring.item_excavations}</button>
-            </h2>
-            <div class="accordion-content">
-                <ul class="galeria galeria--185x185 link-dn">
-                </ul>
-            </div>
-        `);
-        const ul = template[2].querySelector("ul");
-        api.getExcavaciones(relations).then(function(results){
-            var content = htmlTemplate(`
-                ${results.map(function(row, index){
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.identifying_image !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
-                    }
-
-                    return `
-                        <li>
-                            <div class="button-like" data-a11y-dialog-show="dialog-${index}" role="button" tabindex="0">
-                                <figure>
-                                    <img loading="lazy" src="${image_url}" width="400" height="400" alt="">
-                                    <figcaption>${row.title}</figcaption>
-                                </figure>
-                            </div>
-        <div class="dialog-container" data-a11y-dialog="dialog-${index}" aria-hidden="true" aria-labelledby="dialog-${index}-title">
-            <div class="dialog-overlay" data-a11y-dialog-hide></div>
-            <div class="dialog-content" role="document">
-                <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close}">
-                    <svg width="44" height="44">
-                        <g fill="none" fill-rule="evenodd">
-                            <path d="M0 0h44v44H0z" />
-                            <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
-                        </g>
-                    </svg>
-                </button>
-                <div class="columns is-widescreen is-variable is-8">
-                    <div class="column">
-                        <img loading="lazy" src="${image_url}" width="600" height="600" alt="">
-                    </div>
-                    <div class="column text-base flow--m">
-                        <h1 id="dialog-${index}-title">
-                            ${row.title}
-                        </h1>
-                        ${row.description}
-                    </div>
-                </div>
-            </div>
-        </div>
-                        </li>
-                    `;
-                }).join('')}
-            `);
-            appendTemplate(ul, content);
-            enableDialogs(ul);
-        })
-        appendTemplate(target, template);
-    },
-
-    template_modal: function () {
-        return htmlTemplate(`
-            <div id="video-modal" class="modal">
-                <div class="modal-content">
-                    <button class="modal-close">
-                        <svg width="44" height="44">
-                            <g fill="none" fill-rule="evenodd">
-                                <path d="M0 0h44v44H0z" />
-                                <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
-                            </g>
-                        </svg>
-                    </button>
-                    <video controls>
-                        <source id="video-source" src="" type="video/mp4">
-                        <track id="video-track" kind="subtitles" src="">
-                    </video>
-                    <p id="modal-title"></p>
-                </div>
-            </div>`);
-    },
-
-    load_modal: function () {
-        const modal = document.getElementById('video-modal');
-        const title = modal.querySelector('#modal-title');
-        const video = modal.querySelector('video');
-        const videoSource = modal.querySelector('#video-source');
-        const videoTrack = modal.querySelector('#video-track');
-
-        document.querySelectorAll('.video-button').forEach((button) => {
-            button.addEventListener('click', function() {
-                // afegir titol, src, subtitols
-                title.textContent = this.dataset.videoTitle;
-                videoSource.src = this.dataset.videoUrl;
-                videoTrack.src = this.dataset.subtitlesUrl;
-
-                video.load();
-
-                modal.classList.add('is-active');
-            });
-        });
-
-        modal.querySelectorAll('.modal-close').forEach((element) => {
-            element.addEventListener('click', function(e) {
-                video.pause();
-                modal.classList.remove('is-active');
-            });
-        });
-
-        modal.addEventListener('click', (e) => {
-            if(e.target === modal) {
-                video.pause();
-                modal.classList.remove('is-active');
-            }
-        })
     },
 
     /**
@@ -1630,6 +498,7 @@ var item = {
      * Build DOM nodes to insert into list pop-up
      */
     template_catalog_elem: function (row) {
+
         row.tpl = page.section_tipo_to_template(row.section_tipo);
         const url =
             page_globals.__WEB_ROOT_WEB__ +
@@ -1638,10 +507,10 @@ var item = {
             "/" +
             row.section_id;
         var image_url = "/assets/img/placeholder.png";
-        if (row.imagenes_identificativas.length > 0) {
+        if (row.image !== null && row.image !== "") {
             image_url =
                 __WEB_MEDIA_ENGINE_URL__ +
-                row.imagenes_identificativas[0].image;
+                row.image;
         }
         return `
         <li class="${row.tpl}">
@@ -1649,9 +518,9 @@ var item = {
                 <figure>
                     <img loading="lazy" src="${image_url}" alt="">
                     ${
-                        row.titulo
+                        row.title
                             ? `
-                    <figcaption>${row.titulo}</figcaption>
+                    <figcaption>${row.title}</figcaption>
                     `
                             : ""
                     }
@@ -1673,6 +542,7 @@ var item = {
 
         appendTemplate(target, this.templateShare(row));
         appendTemplate(target, this.template(row));
+        appendTemplate(target, this.templateRelated(row));
 
         const acordion = common.create_dom_element({
             element_type: "div",
@@ -1680,53 +550,6 @@ var item = {
         });
         target.appendChild(acordion);
 
-        //fitxa tecnica
-        if (row.tpl !== "immovable") {
-            appendTemplate(acordion, this.templateTecnic(row));
-            this.getRelations(row);
-        }
-
-        //patrimoni relacionat
-        appendTemplate(acordion, this.templateRelated(row));
-
-        if (row.tpl === "immovable") {
-            //visita al jaciment
-            this.templateJacimentVisit(acordion, row);
-            appendTemplate(acordion, this.templateRelatedJaciments(row));
-        }
-
-        //recursos
-        appendTemplate(acordion, this.templateResources(row));
-        appendTemplate(acordion, this.template_modal());
-        this.load_modal();
-
-        //restauració
-        appendTemplate(acordion, this.templateRestoration(row));
-
-        //conjunto
-        appendTemplate(acordion, this.templateGroup(row));
-
-        //bibliografia
-        this.templateBiblio(acordion, row);
-
-        //excavacions
-        this.templateExcavations(acordion, row);
-
-        /*return new Promise(function (resolve) {
-
-            page.build_image_with_background_color(thumb_url)
-                .then(function (response) {
-
-                    const format = response.format
-
-                    const fragment = item_row.draw_item(row, format, self)
-
-                    // append finished fragment to target DOM
-                    target.appendChild(fragment)
-
-                    resolve(fragment)
-                })
-        })*/
     }, //end render
 
     /**

@@ -161,15 +161,21 @@ function tree_factory() {
         tree_node.parent = row.parent
 
         // Element per al terme
+        // TODO aqui
         const term_value = row.term
         const to_hilite = (row.hilite && row.hilite === true)
         const term_css = to_hilite === true ? " hilite" : ""
-        common.create_dom_element({
+        const term_span = common.create_dom_element({
             element_type: "span",
             class_name: "term" + term_css,
-            inner_html: term_value,
             parent: tree_node
         })
+        common.create_dom_element({
+            element_type: "a",
+            href: page_globals.__WEB_ROOT_WEB__ + '/' + page.tld_to_template(row.tld) + '/' + row.section_id,
+            inner_html: term_value,
+            parent: term_span
+        });
 
         // Element per al nd
         if (row.nd && row.nd.length > 0) {
@@ -241,6 +247,7 @@ function tree_factory() {
         }
 
         // botó a la fitxa
+        // TODO boto ja hi es
         let link_to_page = common.create_dom_element({
             element_type: "a",
             class_name: "btn_chain",
