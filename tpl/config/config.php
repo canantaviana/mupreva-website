@@ -155,6 +155,7 @@ define('WEB_MENU_SECTION_TIPO', 'www1');
 define('WEB_MENU_PARENT', 'www1_106');
 define('WEB_FOOT_MENU', 'www1_217');
 define('WEB_FOOT_PARENT', 'www1_196');
+define('WEB_FOOT_COLUMNS', 'www1_218');
 
 /*define('WEB_MENU_FOOTER', [
     'contact',
