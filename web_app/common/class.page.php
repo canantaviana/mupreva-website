@@ -90,9 +90,8 @@ class page
 
     # foot
     public $web_foot = null;
-
-    # foot
     public $web_foot_columns = null;
+    public $web_foot_logos = null;
 
     # root
     public $web_root = null;

@@ -5,8 +5,6 @@ if (is_array($images) && count($images) > 0) {
 } else {
     $image = __WEB_ROOT_WEB__.'/assets/img/logo-mupreva.png';
 }
-$abstract = $this->web_foot->abstract;
-$abstract = explode('<hr>', $abstract);
 ?>
     <footer class="pt-8 pb-5 mt-9 has-background-primary has-text-white link-dn is-relative">
         <div class="wrapper">
@@ -69,8 +67,26 @@ $abstract = explode('<hr>', $abstract);
                 <?php endforeach ?>
             </div>
             <div class="is-flex is-flex-wrap-wrap gap-4 is-align-items-flex-end is-justify-content-center">
-                <?php /*<a href="https://www.dival.es/areadecultura/content/area-de-cultura" class="is-block"><img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-diva.jpg" srcset="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-diva@2x.jpg 2x" width="129" height="65"></a> */ ?>
-                <?php echo $this->web_foot->body; ?>
+                <?php
+                $links = [];
+                foreach ($this->web_foot_logos as $logo) :
+                    $img = '';
+                    if (!empty($logo->identify_image)) {
+                        $images = json_decode($logo->identify_image, true);
+                        if (is_array($images) && count($images) > 0) {
+                            $img = '<img src="'.__WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', $images[0]).'" alt="'.$subcolumn->title.'" class="mr-2">';
+                        }
+                    }
+                    $links[] = '<a href="'.__WEB_ROOT_WEB__.'/'.$logo->web_path.'">'.$img.$logo->title.'</a>';
+                endforeach ?>
+                <?php
+                if (count($links) > 0) : ?>
+                    <?php foreach ($links as $link) : ?>
+                        <?php echo $link ?>
+                    <?php endforeach ?>
+                <?php endif ?>
+
+
                 <ul class="is-flex is-flex-wrap-wrap gap-6 is-justify-content-center mx-auto is-size-6 has-text-weight-medium">
                 <?php foreach ($this->menu_footer as $entry) : ?>
                     <li>
