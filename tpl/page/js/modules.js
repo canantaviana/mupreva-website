@@ -13,6 +13,17 @@ var templateModules = {
         })
         return elems.map(function(elem){
             var template = self.fix_names(elem.template_name);
+            var templates = template.split('+');
+            if (templates.length > 1) {
+                template = templates.shift();
+                var copy = structuredClone(elem)
+                copy.template_name = templates.join('+');
+                copy.parent = elem.term_id;
+                copy.term_id = elem.term_id+'_v2';
+                rows.push(copy);
+
+                return self[template](elem, rows);
+            }
             if (!self.hasOwnProperty(template)) {
                 return null;
             }
