@@ -153,6 +153,7 @@ define('SHOW_DEBUG', $SHOW_DEBUG);
 define('WEB_MENU_TABLE', 'ts_web_mupreva');
 define('WEB_MENU_SECTION_TIPO', 'www1');
 define('WEB_MENU_PARENT', 'www1_106');
+define('WEB_FOOT_MENU', 'www1_217');
 define('WEB_FOOT_PARENT', 'www1_196');
 
 /*define('WEB_MENU_FOOTER', [

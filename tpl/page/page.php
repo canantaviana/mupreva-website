@@ -101,7 +101,7 @@ $this->menu_tree_html = page::render_menu_tree_plain(WEB_MENU_PARENT, $menu_tree
 
 $this->menu_footer = array_filter($menu_tree, function($item){
     //return in_array($item->web_path, WEB_MENU_FOOTER);
-    return ($item->web_path != null && in_array(WEB_FOOT_PARENT, json_decode($item->parents)));
+    return ($item->web_path != null && in_array(WEB_FOOT_MENU, json_decode($item->parents)));
 });
 
 //menu apartat
