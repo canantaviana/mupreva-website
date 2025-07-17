@@ -157,7 +157,16 @@ var item = {
     load_data: function (options) {
         const self = this;
 
-        const default_fields = ["term", "definition", "relations", "dd_relations", "children", "tld", "section_id"];
+        let default_fields;
+
+        switch (self.table) {
+            case "ts_ubication":
+                default_fields = ["term", "definition", "relations", "dd_relations", "children", "tld", "section_id", "imagenes"];
+                break;
+            default:
+                default_fields = ["term", "definition", "relations", "dd_relations", "children", "tld", "section_id"];
+                break;
+        }
 
         // options
         const table = options.table || self.table;
@@ -182,11 +191,11 @@ var item = {
                 // 	audiovisual :"audiovisual"
                 // }
             };
-            //if (table === 'sets') {
+            if (self.table === 'ts_ubication') {
             request_body.resolve_portals_custom = {
-                // ...
+                imagenes: "image"
             };
-            //}
+            }
             data_manager
                 .request({
                     body: request_body,
@@ -275,6 +284,7 @@ var item = {
 
     template: function (row) {
         const url = this.absUrl(row);
+        const self = this;
         return htmlTemplate(`
             <div class="fitxa-intro columns is-variable is-8">
                 <div class="column flow--l">
@@ -291,7 +301,11 @@ var item = {
                         <br>
                         <a href="${url}">${url}</a>
                     </p>
-                </div>
+                    </div>
+                    ${self.table === "ts_ubication"
+                        ? this.renderImages(row)
+                        : ""
+                    }
             </div>
         `);
     },
@@ -324,72 +338,9 @@ var item = {
     },
 
     renderImages: function (row) {
-        const images = row.imagenes_identificativas.concat(row.imagenes);
-        console.log(row.imagenes_identificativas);
-        //if (this.isMoneda(row) && images.length > 1) {
-        if (row.imagenes_identificativas.length > 1) {
-            //imatges moneda, dos columens
-            const image1 = images[0];
-            const image2 = images[1];
-            return `
-            <div class="fullscreen__fullheight column is-7-tablet is-half-desktop">
-                <div class="columns">
-                    <div class="images-group column fullscreen__content fullscreen__content--2">
-                        <img loading="lazy" class="active image-zoom" src="${
-                            __WEB_MEDIA_ENGINE_URL__ + image1.image
-                        }" data-original="${
-                __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image1.image)
-            }" alt="${image1.title}">
-                        <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
-                            ${this.renderImageButtons()}
-                        </div>
-                    </div>
-                    <div class="images-group column fullscreen__content fullscreen__content--2">
-                        <img loading="lazy" class="active image-zoom" src="${
-                            __WEB_MEDIA_ENGINE_URL__ + image2.image
-                        }" data-original="${
-                __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image2.image)
-            }" alt="${image2.title}">
-                        <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
-                            ${this.renderImageButtons()}
-                        </div>
-                    </div>
-                </div>
-                ${this.renderExport()}
-            </div>
-            `;
-        } else if (row.tpl == "picture" && images.length === 1) {
-            const image = images[0];
-            // una imatge
-            return `
-            <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
-                <figure class="fullscreen__content fullscreen__content--3 has-text-left">
-                    <img loading="lazy" class="active image-zoom" src="${
-                        __WEB_MEDIA_ENGINE_URL__ + image.image
-                    }" data-original="${
-                __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
-            }" alt="${image.title}">
-                    ${
-                        image.footprint
-                            ? `<figcaption>
-                        <div class="columns">
-                            <div class="column has-text-left has-text-weight-semibold is-size-4">
-                                ${image.footprint}
-                            </div>
-                            <div class="column is-narrow is-flex gap-5">
-                                ${this.renderImageButtons()}
-                            </div>
-                        </div>
-                    </figcaption>`
-                            : `<div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
-                        ${this.renderImageButtons()}
-                    </div>`
-                    }
-                </figure>
-                ${this.renderExport()}
-            </div>
-            `;
-        } else if (images.length === 1) {
+        const images = row.imagenes;
+
+        if (images.length === 1) {
             const image = images[0];
             // una imatge
             return `
