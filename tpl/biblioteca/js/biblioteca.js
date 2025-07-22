@@ -547,7 +547,7 @@ var biblio = {
 
         const self = this
 
-        if (self.form.form_items.global_search.q !== '' || self.form.form_items.transcripcion.q !== '') {
+        if (self.form.form_items.transcripcion.q !== '') {
             self.search_literal = true;
         } else {
             self.search_literal = false;
@@ -821,12 +821,59 @@ var biblio = {
         if (row.imagen_identificativa !== null) {
             image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
         }
+        const normalize = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
+        function highlightNormalized(text, search) {
+            const normSearch = normalize(search).toLowerCase();
+            let result = '';
+            let i = 0;
+            while (i <= text.length - search.length) {
+                const candidate = text.substr(i, search.length);
+                if (normalize(candidate).toLowerCase() === normSearch) {
+                    result += `<span class="has-background-primary has-text-white px-1">${candidate}</span>`;
+                    i += search.length;
+                } else {
+                    result += text[i];
+                    i++;
+                }
+            }
+            result += text.slice(i);
+            return result;
+        }
+
+        function findInText(text, search, chunkSize = 300) {
+            const normText = normalize(text).toLowerCase();
+            const normSearch = normalize(search).toLowerCase();
+
+            let results = [];
+            let startIndex = 0;
+
+            while (startIndex < normText.length) {
+                const matchIndex = normText.indexOf(normSearch, startIndex);
+                if (matchIndex === -1) break;
+
+                const searchLen = normSearch.length;
+                let contextStart = Math.max(0, matchIndex - Math.floor((chunkSize - searchLen) / 2));
+                let contextEnd = contextStart + chunkSize;
+
+                if (contextEnd > text.length) {
+                    contextEnd = text.length;
+                    contextStart = Math.max(0, contextEnd - chunkSize);
+                }
+
+                const chunk = text.slice(contextStart, contextEnd);
+                const chunkHighlighted = highlightNormalized(chunk, search);
+
+                results.push(`...${chunkHighlighted}...`);
+
+                startIndex = matchIndex + searchLen;
+            }
+
+            return results;
+        }
 
         function getWordContexts(row, searchWord, contextSize = 30) {
-            const normalizeWord = (w) => w.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-            const regex = new RegExp(normalizeWord(searchWord), 'i');
+            const regex = new RegExp(normalize(searchWord), 'i');
 
             // find first page
             let firstPage = 1;
@@ -839,37 +886,23 @@ var biblio = {
 
             let result = [];
 
-            if (row.global_search && row.transcripcion) {
+            if (row.transcripcion) {
+                const transcription = row.transcripcion.replace(/(<br\s*\/?>)+/gi, ' ');
 
                 // find all word instances and extract text context
-                const words = row.global_search.split(/\s+/);
-                const finalText = Array.from(words);
-                const contexts = [];
-                words.forEach((word, index) => {
-                    const itsTheWord = regex.test(normalizeWord(word))
-                    if (itsTheWord) {
-                        const start = Math.max(0, index - contextSize/2);
-                        const end = Math.min(words.length, index + contextSize/2 + 1);
-                        finalText[index] = `<span class="has-background-primary has-text-white px-1">${word}</span>`
-                        const context = finalText.slice(start, end).join(' ');
-                        contexts.push(context+'...');
-                    }
-                })
+                const contexts = findInText(transcription, searchWord);
 
                 // split transcript by pages
                 const splitPattern = /\[page-n-\d+]/;
-                const pages = row.transcripcion.split(splitPattern).filter(el => el !== '');
+                const pages = transcription.split(splitPattern).filter(el => el !== '');
 
                 // store page of each word instance
                 let pageOfEachContext = [];
                 pages.forEach((page, pageIndex) => {
-                    const words = page.split(/\s+/);
-                    words.forEach((word, i) => {
-                        const itsTheWord = regex.test(normalizeWord(word));
-                        if (itsTheWord) {
-                            pageOfEachContext.push(firstPage + pageIndex);
-                        }
-                    })
+                    const pageContexts = findInText(page, searchWord);
+                    if (pageContexts.length) {
+                        pageOfEachContext.push(firstPage + pageIndex);
+                    }
                 })
 
                 result = contexts.map((context, i) => ({context, page: pageOfEachContext[i]}));
@@ -878,7 +911,7 @@ var biblio = {
             return result;
         }
 
-        const inputText = this.caller.form.form_items.global_search.q || this.caller.form.form_items.transcripcion.q;
+        const inputText = this.caller.form.form_items.transcripcion.q;
 
         let infoSerie = [];
         if (row.serie) {
