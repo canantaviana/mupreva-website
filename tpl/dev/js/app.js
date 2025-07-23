@@ -756,20 +756,21 @@ function viewInit() {
     // ---------
     // Accordion (https://github.com/10up/component-library/tree/develop/packages/accordion)
     // ---------
-    let accordionInstance = new TenUp.accordion(".accordion", {
-        // onCreate: function() {
-        //   console.log( 'onCreate callback' );
-        // },
-        // onOpen: function( { link, content, heading } ) {
-        //   console.log( 'onOpen callback' );
-        // },
-        // onClose: function( { link, content, heading } ) {
-        //   console.log( 'onClose callback' );
-        // },
-        // onToggle: function( { link, content, heading } ) {
-        //   console.log( 'onToggle callback' );
-        // }
-    });
+    let accordionInstance = new TenUp.Accordion('.accordion', {open: true});
+    // let accordionInstance = new TenUp.accordion(".accordion", {
+    //     // onCreate: function() {
+    //     //   console.log( 'onCreate callback' );
+    //     // },
+    //     // onOpen: function( { link, content, heading } ) {
+    //     //   console.log( 'onOpen callback' );
+    //     // },
+    //     // onClose: function( { link, content, heading } ) {
+    //     //   console.log( 'onClose callback' );
+    //     // },
+    //     // onToggle: function( { link, content, heading } ) {
+    //     //   console.log( 'onToggle callback' );
+    //     // }
+    // });
 
     // ----
     // Tabs (https://github.com/10up/component-library/tree/develop/packages/tabs)
