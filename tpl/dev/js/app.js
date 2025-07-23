@@ -478,6 +478,27 @@ function swiperPublicaciones() {
     });
 }
 
+function swiperPublications(str) {
+    new Swiper(`.swiper--publications-${str}`, {
+        slideActiveClass: 'active',
+        navigation: {
+            nextEl: `.swiper--publications-${str}__btns .swiper-button-next`,
+            prevEl: `.swiper--publications-${str}__btns .swiper-button-prev`,
+        },
+        slidesPerView: 1,
+        spaceBetween: 24,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            600:  { slidesPerView: 2 },
+            850:  { slidesPerView: 3 },
+            1100: { slidesPerView: 4 },
+            1400: { slidesPerView: 5 },
+            1700: { slidesPerView: 6 },
+        },
+    });
+}
+
 function swiperActividades() {
     // ---------------------------------
     // Swiper Proximas Actividades

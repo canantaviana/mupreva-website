@@ -1178,16 +1178,27 @@ var templateModules = {
     bloque_publicaciones_default: function(){
         var contentBase = htmlTemplate(`<div>
             <div class="default_last mt-8 flow--xl">
+                <h2>${tstring.documents_default_last}</h2>
+                <div class="swiper-container is-relative">
+                    <div class="swiper swiper--publications swiper--publications-ultimes">
+                        <div class="swiper-wrapper">
+                        </div>
+                    </div>
+                    <div class="swiper--publications-ultimes__btns">
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div>
+                </div>
             </div>
             <div class="default_cats mt-8 flow--xl">
             </div>
         </div>`);
-        var children_container = contentBase[0].querySelector('div.default_last');
+        var children_container = contentBase[0].querySelector('.swiper-container .swiper-wrapper');
+
         var children_container_cats = contentBase[0].querySelector('div.default_cats');
+
         api.getPublicacionesDestacados().then(function(results){
             var content = htmlTemplate(`
-                <h2>${tstring.documents_default_last}</h2>
-                <ul class="pubs-list link-dn mt-7">
                 ${results.map(function(row){
                     const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
                     var info = [];
@@ -1203,7 +1214,7 @@ var templateModules = {
                     }
 
                     return `
-                    <li class="is-flex is-flex-direction-column full-link gap-2 ${row.tpl}">
+                    <div class="swiper-slide">
                         <h3 class="is-size-6">
                             <a href="${url}" target="_blank">${row.titulo}</a>
                         </h3>
@@ -1215,27 +1226,34 @@ var templateModules = {
                             ${info.join('<br>')}
                         </p>
                         `:''}
-                    </li>
+                    </div>
                     `;
                 }).join('')}
-                </ul>
             `);
             appendTemplate(children_container, content);
+            swiperPublications('ultimes');
         });
         api.getPublicacionesSeries().then(function(results){
             results.forEach(function(elem){
                 var content = htmlTemplate(`
                 <div class="default_last mt-8 flow--xl">
                     <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
-                    <h2>${elem.name}</h2>
-                    <a href="/publicaciones/${normalitzaText(elem.name)}" class="button button--simple-2">${tstring.collection_see_all}</a>
-                </div>
-
-                    <ul class="pubs-list link-dn mt-7">
-                    </ul>
+                        <h2>${elem.name}</h2>
+                        <a href="/publicaciones/${normalitzaText(elem.name)}" class="button button--simple-2">${tstring.collection_see_all}</a>
+                    </div>
+                    <div class="swiper-container is-relative">
+                        <div class="swiper swiper--publications swiper--publications-${elem.id}">
+                            <div class="swiper-wrapper">
+                            </div>
+                        </div>
+                        <div class="swiper--publications-${elem.id}__btns">
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
+                    </div>
                 </div>
                 `);
-                var children_container = content[0].querySelector('ul');
+                var children_container = content[0].querySelector('.swiper-container .swiper-wrapper');
                 api.getPublicacionesDestacados(elem.id).then(function(results){
                     var content = htmlTemplate(`
                         ${results.map(function(row){
@@ -1253,7 +1271,7 @@ var templateModules = {
                             }
 
                             return `
-                            <li class="is-flex is-flex-direction-column full-link gap-2 ${row.tpl}">
+                            <div class="swiper-slide">
                                 <h3 class="is-size-6">
                                     <a href="${url}" target="_blank">${row.titulo}</a>
                                 </h3>
@@ -1265,13 +1283,14 @@ var templateModules = {
                                     ${info.join('<br>')}
                                 </p>
                                 `:''}
-                            </li>
+                            </div>
                             `;
                         }).join('')}
                     `);
                     appendTemplate(children_container, content);
                 });
                 appendTemplate(children_container_cats, content);
+                swiperPublications(elem.id);
             });
         });
         return contentBase;

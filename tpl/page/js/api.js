@@ -141,7 +141,7 @@ var api = {
             table: 'publications',
             ar_fields: "serie,serie_data",
             sql_filter: 'serie_data is not null and serie_data in (\'["3"]\', \'["9"]\', \'["4"]\', \'["8"]\', \'["7"]\', \'["6"]\', \'["13"]\')',
-            limit: 6,
+            limit: 0,
             order: 'fecha_publicacion ASC',
             //ar_fields: '*',
             group: 'serie_data',
