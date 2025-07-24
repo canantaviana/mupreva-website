@@ -1180,11 +1180,11 @@ var templateModules = {
             <div class="default_last mt-8 flow--xl">
                 <h2>${tstring.documents_default_last}</h2>
                 <div class="swiper-container is-relative">
-                    <div class="swiper swiper--publications swiper--publications-ultimes">
-                        <div class="swiper-wrapper">
+                    <div class="swiper swiper--publicacions swiper--publications-ultimes">
+                        <div class="swiper-wrapper link-dn">
                         </div>
                     </div>
-                    <div class="swiper--publications-ultimes__btns">
+                    <div class="swiper--publicacions__btns swiper--publications-ultimes__btns">
                         <div class="swiper-button-prev"></div>
                         <div class="swiper-button-next"></div>
                     </div>
@@ -1215,16 +1215,18 @@ var templateModules = {
 
                     return `
                     <div class="swiper-slide">
-                        <h3 class="is-size-6">
-                            <a href="${url}" target="_blank">${row.titulo}</a>
-                        </h3>
-                        <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
-                            <img loading="lazy" src="${image_url}" alt="">
+                        <div class="is-flex is-flex-direction-column full-link gap-2">
+                            <h3 class="is-size-6">
+                                <a href="${url}" target="_blank">${row.titulo}</a>
+                            </h3>
+                            <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
+                                <img loading="lazy" src="${image_url}" alt="">
+                            </div>
+                            ${(info.length > 0)?`
+                            <p class="is-size-7">
+                                ${info.join('<br>')}
+                            </p>
                         </div>
-                        ${(info.length > 0)?`
-                        <p class="is-size-7">
-                            ${info.join('<br>')}
-                        </p>
                         `:''}
                     </div>
                     `;
