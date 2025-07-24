@@ -195,7 +195,12 @@ var item = {
                 row.autor
                     ? `
             <dt>${tstring.item_author}</dt>
-            <dd><a href="/publicaciones/">${row.autor}</a></dd>
+            <dd>
+            ${row.autor.split('|').map(autor => {
+                return `<a href="/publicaciones/?autor=${encodeURIComponent(autor)}">${autor.trim()}</a>`
+            }).join(' | ')
+            }
+            </dd>
             `
                     : ""
             }

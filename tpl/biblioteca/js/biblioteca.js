@@ -192,6 +192,24 @@ var biblio = {
 
         self.filters = {}
 
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('autor')) {
+            const autor = params.get('autor');
+
+            if (self.form && self.form.form_items && self.form.form_items.autor) {
+                self.form.form_items.autor.q = autor;
+                if (self.form.form_items.autor.node_input) {
+                    self.form.form_items.autor.node_input.value = autor;
+                }
+
+                self.form_submit(null, {
+                    filter: self.form.build_filter()
+                });
+                self.default_submit = false;
+                return true;
+            }
+        }
+
         self.form_submit(null, {
             filter: false
         })
@@ -348,6 +366,7 @@ var biblio = {
 
             submit_button.addEventListener("click", function (e) {
                 e.preventDefault()
+                removeParam('autor');
                 self.pagination.offset = 0
                 self.form_submit(null, {
                     filter: self.form.build_filter()
