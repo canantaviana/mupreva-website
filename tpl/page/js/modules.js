@@ -1093,6 +1093,7 @@ var templateModules = {
                 const new_gallery = htmlTemplate(`
                     <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
                         <h2>${title}</h2>
+                        <p class="result-count"></p>
                     </div>
                     <ul class="galeria galeria--242x242 link-dn"></ul>
                     <div class="has-text-centered mt-6">
@@ -1100,6 +1101,7 @@ var templateModules = {
                     </div>
                 `);
                 appendTemplate(container, new_gallery);
+                data[type].resultCount = container.querySelector('.result-count');
 
                 // Afegim l'event listener al botó de carregar més
                 container.querySelector(`#button_load_more_${type}`).addEventListener('click', function(){
@@ -1121,6 +1123,7 @@ var templateModules = {
                 data[type].results = data[type].results.concat(results);
                 data[type].total = total;
                 data[type].loaded += results.length;
+                data[type].resultCount.innerHTML = `${total} ${(tstring.entries_found).toLowerCase()}`;
 
                 // Si ja s'han carregat tots els elements, es treu el botó de carregar més
                 if (data[type].loaded >= data[type].total) {

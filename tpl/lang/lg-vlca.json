@@ -89,6 +89,7 @@
     "elemento": "Element",
     "en": "en",
     "entrada_al_sistema_catalogacion": "Entrada al sistema de catalogació",
+    "entries_found": "Entrades trobades",
     "error_send_mail": "Ho sentim. S'ha produït un error en l'enviament de correu. Si us plau, torneu-ho a provar més tard o contacteu amb l'administrador a:",
     "exclude_the_word": "Exclou la paraula",
     "export_csv": "Exportar CSV",
