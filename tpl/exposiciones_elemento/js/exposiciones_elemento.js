@@ -786,6 +786,21 @@ var item = {
         const target = options.target;
         const row = options.row;
 
+        const dedalo_logged = typeof document!=='undefined' && document.cookie.indexOf('dedalo_logged')!==-1 ? true : false;
+
+        if (dedalo_logged === true) {
+            const dedalo_link = common.create_dom_element({
+                element_type : "a",
+                class_name : "section_id dedalo-link",
+                text_content : `${row.section_id} (exhibition1)`,
+                href : `https://pre-dedalo.mupreva.org/dedalo6-pre/core/page/?tipo=exhibition1&id=${row.section_id}`,
+                parent : target
+            })
+
+            dedalo_link.setAttribute('target', '_blank');
+            // target.appendChild(dedalo_link);
+        }
+
         appendTemplate(target, this.templateShare(row));
         appendTemplate(target, this.template(row));
 
