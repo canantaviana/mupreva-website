@@ -778,12 +778,12 @@ var templateModules = {
                                         return `
                                             <div class="swiper-slide">
                                                 <div class="card is-flex is-flex-direction-column full-link">
-                                                    <div class="pt-7 pb-5 px-6 flow--xl">
+                                                    <div class="pt-5 pb-5 px-6 flow">
                                                         <h3 class="is-size-3 has-text-weight-semibold">
                                                             <a href="${url}" target="_blank">${row.title}</a>
                                                         </h3>
                                                         ${(date)?
-                                                        `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                                        `<p class="has-text-weight-medium">${date}</p>`
                                                         :''}
                                                         <p class="more-link">${tstring.home_activities_more}</p>
                                                     </div>
@@ -865,12 +865,12 @@ var templateModules = {
                     return `
                     <div class="swiper-slide">
                         <div class="card is-flex is-flex-direction-column full-link">
-                            <div class="pt-7 pb-5 px-6 flow--xl">
+                            <div class="pt-5 pb-5 px-6 flow">
                                 <h3 class="is-size-4">
                                     <a href="${url}" target="_blank">${row.title}</a>
                                 </h3>
                                 ${(date)?
-                                `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                `<p class="has-text-weight-medium">${date}</p>`
                                 :''}
                             </div>
                             ${(row.type)?
@@ -921,12 +921,12 @@ var templateModules = {
                                         return `
                                             <div class="swiper-slide">
                                                 <div class="card is-flex is-flex-direction-column full-link">
-                                                    <div class="pt-7 pb-5 px-6 flow--xl">
+                                                    <div class="pt-5 pb-5 px-6 flow">
                                                         <h3 class="is-size-3 has-text-weight-semibold">
                                                             <a href="${url}" target="_blank">${row.title}</a>
                                                         </h3>
                                                         ${(date)?
-                                                        `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                                        `<p class="has-text-weight-medium">${date}</p>`
                                                         :''}
                                                         <p class="more-link">${tstring.home_activities_more}</p>
                                                     </div>
@@ -1009,12 +1009,12 @@ var templateModules = {
                     return `
                     <div class="swiper-slide">
                         <div class="card is-flex is-flex-direction-column full-link">
-                            <div class="pt-7 pb-5 px-6 flow--xl">
+                            <div class="pt-5 pb-5 px-6 flow">
                                 <h3 class="is-size-3 has-text-weight-semibold">
                                     <a href="${url}" target="_blank">${row.title}</a>
                                 </h3>
                                 ${(date)?
-                                `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                `<p class="has-text-weight-medium">${date}</p>`
                                 :''}
                                 <p class="more-link">${tstring.home_activities_more}</p>
                             </div>
