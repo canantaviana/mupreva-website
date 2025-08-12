@@ -441,7 +441,7 @@ var item = {
             <dt>${tstring.item_ubication}</dt>
             <dd>${ubicationName.map(function(value, index){
                 if (typeof ubicationId[index] != 'undefined') {
-                    return `<a href="/salas/${ubicationId[index]}">${value}</a>`
+                    return `<a href="/top/${ubicationId[index].replace('ubication1_', '')}">${value}</a>`
                 }
                 return `${value}`
                 }).join(', ')}</dd>
