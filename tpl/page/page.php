@@ -52,6 +52,8 @@ $menu_tree = $this->get_menu_tree_plain(WEB_MENU_PARENT, []);
 $this->web_root = $this->get_page(WEB_MENU_PARENT);
 
 $this->web_foot = $this->get_web_term(WEB_FOOT_PARENT);
+$this->web_foot_columns = $this->get_web_content(WEB_FOOT_COLUMNS);
+$this->web_foot_logos = $this->get_web_content(WEB_FOOT_LOGOS);
 
 // ul drawer
 $ul_drawer = function ($term_id, $html) {
@@ -101,7 +103,7 @@ $this->menu_tree_html = page::render_menu_tree_plain(WEB_MENU_PARENT, $menu_tree
 
 $this->menu_footer = array_filter($menu_tree, function($item){
     //return in_array($item->web_path, WEB_MENU_FOOTER);
-    return ($item->web_path != null && in_array(WEB_FOOT_PARENT, json_decode($item->parents)));
+    return ($item->web_path != null && in_array(WEB_FOOT_MENU, json_decode($item->parents)));
 });
 
 //menu apartat

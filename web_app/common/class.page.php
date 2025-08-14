@@ -90,6 +90,8 @@ class page
 
     # foot
     public $web_foot = null;
+    public $web_foot_columns = null;
+    public $web_foot_logos = null;
 
     # root
     public $web_root = null;
@@ -605,6 +607,24 @@ class page
 
         if (count($data->result) > 0) {
             return $data->result[0];
+        }
+        return null;
+    }
+
+    public static function get_web_content($term_id)
+    {
+        //$term_id_search = str_replace($term_id, 'www1_', '');
+        $term_id_search = $term_id;
+        $options = new stdClass();
+        $options->dedalo_get     = 'records';
+        $options->lang             = WEB_CURRENT_LANG_CODE;
+        $options->table         = WEB_MENU_TABLE;
+        $options->sql_filter     = "parents like '%{$term_id_search}%'";
+
+        # HTTP request in php to the API
+        $data = json_web_data::get_data($options);
+        if (count($data->result) > 0) {
+            return $data->result;
         }
         return null;
     }
@@ -1224,7 +1244,7 @@ class page
             }
             $template_name = $template_map->template;
         }
-        $template_name = str_replace(' ', '_', strtolower($this->remove_accents($template_name)));
+        $template_name = str_replace(' ', '_', strtolower($this->remove_accents(trim($template_name))));
         #
         # TEMPLATE CSS / JS
         if ($options->add_template_css === true) {

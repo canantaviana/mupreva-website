@@ -1108,6 +1108,14 @@ var catalog = {
                 //order: (self.view_mode === 'map') ? null : order
                 order: order,
             }).then((response) => {
+                if(!self.default_submit) {
+                    const total = response.total || response.result.length;
+                    const resultsCountNode = document.createElement('p');
+                    resultsCountNode.className = 'has-text-right';
+                    resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
+                    rows_list_container.appendChild(resultsCountNode);
+                }
+
                 // fix response in each call
                 self.ar_rows = response.result;
 
@@ -1183,11 +1191,25 @@ var catalog = {
         const group = [];
         // const parsed_filter	= page.parse_sql_filter(filter, group)
         const parsed_filter = self.form.parse_sql_filter(filter, group);
-        let sql_filter = parsed_filter ? "(" + parsed_filter + ")" : null;
-        if (self.form_dates_range.min && self.form_dates_range.max) {
-            const dates_range_filter = `(datacion_ini IS NOT NULL OR datacion_fin IS NOT NULL) AND ((datacion_ini >= ${self.form_dates_range.min} AND datacion_ini <= ${self.form_dates_range.max}) OR (datacion_fin >= ${self.form_dates_range.min} AND datacion_fin <= ${self.form_dates_range.max}) OR (datacion_ini <= ${self.form_dates_range.min} AND datacion_fin >= ${self.form_dates_range.max}))`
-            sql_filter = sql_filter ? `${sql_filter} AND ${dates_range_filter}` : dates_range_filter;
+        const has_date = '(datacion_ini IS NOT NULL)';
+        const is_immovable = '(section_tipo = "tchi1")';
+        const has_periodo_data = '(periodo_data IS NOT NULL)';
+        const is_destacado = '(destacado = "Sí" OR section_tipo = "tchi1")';
+
+        let dates_filter = null;
+        const d = self.form_dates_range;
+
+        if(d.min && d.max) {
+            const ini_in_range = `(datacion_ini >= ${d.min} AND datacion_ini <= ${d.max})`;
+            const fin_in_range = `(datacion_fin >= ${d.min} AND datacion_fin <= ${d.max})`;
+            const both_contain_range = `(datacion_ini <= ${d.min} AND datacion_fin >= ${d.max})`;
+            dates_filter = `((${has_date} AND (${ini_in_range} OR ${fin_in_range} OR ${both_contain_range})) OR ${is_immovable})`;
         }
+
+        const filters = [];
+        if (parsed_filter) filters.push(`(${parsed_filter})`);
+        if (dates_filter) filters.push(dates_filter);
+        let sql_filter = filters.join(' AND ');
 
         // prev_filter fix
         self.prev_filter = sql_filter;
@@ -1198,8 +1220,8 @@ var catalog = {
         // timeline case
         if (self.view_mode === "timeline") {
             sql_filter = sql_filter
-                ? sql_filter + " AND datacion_ini is not null and destacado = 'Sí'"
-                : "datacion_ini is not null and destacado = 'Sí'";
+                ? `${sql_filter} AND ${is_destacado} AND ${has_periodo_data}`
+                : `${is_destacado} AND ${has_periodo_data}`;
             limit = 0;
             offset = 0;
             count = false;
@@ -1438,24 +1460,55 @@ var catalog = {
                     break;
 
                 case "timeline":
-                    const timeline_data =
+                    const unordered_timeline_data =
                         page.parse_timeline_data_catalog(ar_rows); // prepares data to use in timeline
-                    self.timeline = self.timeline || new timeline_factory(); // creates / get existing instance of timeline
-                    self.timeline
-                        .init({
-                            target: target,
-                            block_builder: self.timelime_block_builder,
-                            max_group_nodes: 5, // max nodes rendered by group (year)
-                        })
-                        .then(function () {
-                            self.timeline
-                                .render_timeline({
-                                    data: timeline_data,
-                                })
-                                .then(function (timeline_node) {
-                                    resolve(timeline_node);
-                                });
-                        });
+
+                    const periodIds = unordered_timeline_data.map(el => Number(el.date))
+
+                    api.getPeriodYears(periodIds).then(function (periods) {
+                        const periodsObj = periods.reduce(function (acc, el) {
+                            let year = null;
+                            if (el.time) {
+                                const firstDate = el.time.split(',')[0].trim();
+                                year = firstDate.startsWith('-')
+                                    ? `-${firstDate.split('-')[1]}`
+                                    : firstDate.split('-')[0];
+                            }
+                            acc[el.section_id] = {year, term: el.term}
+                            return acc;
+                        }, {});
+
+                        const timeline_data = unordered_timeline_data
+                            .map(item => {
+                                return {
+                                    ...item,
+                                    year: periodsObj[item.date] ? periodsObj[item.date].year : null,
+                                    date: periodsObj[item.date] ? periodsObj[item.date].term : null
+                                }
+                            })
+                            .sort((a, b) => {
+                                if (a.year === null) return 1; // move null years to the end
+                                if (b.year === null) return -1; // move null years to the end
+                                return a.year - b.year; // sort by year ascending
+                            })
+
+                        self.timeline = self.timeline || new timeline_factory(); // creates / get existing instance of timeline
+                        self.timeline
+                            .init({
+                                target: target,
+                                block_builder: self.timelime_block_builder,
+                                max_group_nodes: 5, // max nodes rendered by group (year)
+                            })
+                            .then(function () {
+                                self.timeline
+                                    .render_timeline({
+                                        data: timeline_data,
+                                    })
+                                    .then(function (timeline_node) {
+                                        resolve(timeline_node);
+                                    });
+                            });
+                    });
                     break;
             }
         });

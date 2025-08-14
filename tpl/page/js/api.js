@@ -55,7 +55,7 @@ var api = {
                 options: {
                     dedalo_get: "records",
                     table: "activities",
-                    sql_filter: "(YEAR(NOW()) BETWEEN date_start_year AND date_end_year) AND identifying_image IS NOT NULL", // TODO filtrar per destacados quan la api torni camp "destacado"
+                    sql_filter: "(YEAR(NOW()) BETWEEN date_start_year AND date_end_year) AND identifying_image IS NOT NULL AND outstanding=\"1\"",
                     order: "RAND()",
                     ar_fields: ["identifying_image", "section_id", "title"],
                     parse: page.parse_list_data,
@@ -68,7 +68,7 @@ var api = {
                 options: {
                     dedalo_get: "records",
                     table: "exhibitions",
-                    sql_filter: "((YEAR(NOW()) BETWEEN date_start_year AND date_end_year) OR (type = 'Sala general museo')) AND identifying_image IS NOT NULL", // TODO filtrar per destacados quan la api torni camp "destacado"
+                    sql_filter: "((YEAR(NOW()) BETWEEN date_start_year AND date_end_year) OR (type = 'Sala general museo')) AND identifying_image IS NOT NULL AND outstanding=\"1\"",
                     order: "RAND()",
                     ar_fields: ["identifying_image", "section_id", "title"],
                     parse: page.parse_list_data,
@@ -141,7 +141,7 @@ var api = {
             table: 'publications',
             ar_fields: "serie,serie_data",
             sql_filter: 'serie_data is not null and serie_data in (\'["3"]\', \'["9"]\', \'["4"]\', \'["8"]\', \'["7"]\', \'["6"]\', \'["13"]\')',
-            limit: 6,
+            limit: 0,
             order: 'fecha_publicacion ASC',
             //ar_fields: '*',
             group: 'serie_data',
@@ -357,6 +357,16 @@ var api = {
             offset: offset,
             get_count: true,
         }
+
+        return page.get_records(options);
+    },
+
+    getPeriodYears: function(ids) {
+        var options = {
+            table: 'ts_chronological',
+            ar_fields: 'term, time, section_id',
+            section_id: ids.join(','),
+        };
 
         return page.get_records(options);
     },

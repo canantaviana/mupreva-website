@@ -9,7 +9,7 @@ define('__WEB_BASE_PATH__', dirname(dirname(dirname(__FILE__))));
 
 
 // dedalo 4 private conf file
-$source_data_api = 'local'; // remote , local
+$environment = 'pre'; // pre , prod
 
 
 
@@ -17,16 +17,9 @@ $source_data_api = 'local'; // remote , local
 define('WEB_ENTITY', 'mupreva');
 define('WEB_ENTITY_LABEL', 'Museu de Prehistòria de València');
 
-// db . force use this db instead of default (useful for multiple publications)
-/*define(
-    'WEB_DB',
-    ($source_data_api === 'remote') //mupreva
-        ? 'web_tangible_heritage'
-        : 'web_tangible_heritage'
-);*/
 define(
     'WEB_DB',
-    ($source_data_api==='remote')//quart
+    ($environment ==='prod')
     ? 'web_tangible_heritage'
     : 'web_tangible_heritage'
 );
@@ -36,17 +29,17 @@ define(
 // __web_base_url__ . absolute url base to target web. Used to build absolute calls to elements
 define(
     '__WEB_BASE_URL__',
-    ($source_data_api === 'remote')
-        ? 'https://web2024.mupreva.antaviana.net'
-        : 'https://mupreva.localhost'
+    ($environment === 'prod')
+        ? 'https://test01.mupreva.org'
+        : 'https://web2024.mupreva.antaviana.net'
 );
 
 // media base url
 define(
     '__WEB_MEDIA_BASE_URL__',
-    ($source_data_api === 'remote')
-        ? 'https://web2024.mupreva.antaviana.net'
-        : 'https://mupreva.localhost'
+    ($environment === 'prod')
+        ? 'https://test01.mupreva.org'
+        : 'https://web2024.mupreva.antaviana.net'
 );
 
 // __WEB_ROOT_WEB__
@@ -64,21 +57,10 @@ define('__WEB_TEMPLATE_PATH__',    __WEB_BASE_PATH__ . '/tpl');
 define('__WEB_TEMPLATE_WEB__',    __WEB_ROOT_WEB__  . '/tpl');
 define('__WEB_HOME_URL__',    __WEB_ROOT_WEB__);
 
-// safe_image url
-// define('__WEB_SAFE_IMAGE_URL__', ($source_data_api==='remote')
-// 	? __WEB_MEDIA_BASE_URL__ .'/web_1.0/tpl/img/'
-// 	: __WEB_TEMPLATE_WEB__ .'/img/'
-// );
-
-// __WEB_MEDIA_ENGINE_URL__ . Safe media files are called here, not directly to Dédalo
-/*define('__WEB_MEDIA_ENGINE_URL__', ($source_data_api==='remote') //mupreva
-			? __WEB_MEDIA_BASE_URL__ .'/media'
-			: __WEB_TEMPLATE_WEB__ .'/media_engine'
-		);*/
 define(
     '__WEB_MEDIA_ENGINE_URL__',
-    ($source_data_api === 'remote') //quart
-        ? 'https://pre-dedalo.mupreva.org'
+    ($environment === 'prod')
+        ? 'https://dedalo.mupreva.org'
         : 'https://pre-dedalo.mupreva.org'
 );
 
@@ -89,12 +71,8 @@ include(__WEB_TEMPLATE_PATH__ . '/version.inc');
 // api config
 
 // json_trigger_url data source url
-/*define('JSON_TRIGGER_URL',	($source_data_api==='remote') //mupreva
-			? 'https://pre-dedalo.mupreva.org/dedalo6-pre/publication/server_api/v1/json/'
-			: 'https://pre-dedalo.mupreva.org/dedalo6-pre/publication/server_api/v1/json/');
-		*/
-define('JSON_TRIGGER_URL', ($source_data_api === 'remote') //quart
-    ? 'https://pre-dedalo.mupreva.org/dedalo6-pre/publication/server_api/v1/json/'
+define('JSON_TRIGGER_URL', ($environment === 'prod') //quart
+    ? 'https://dedalo.mupreva.org/dedalo6/publication/server_api/v1/json/'
     : 'https://pre-dedalo.mupreva.org/dedalo6-pre/publication/server_api/v1/json/');
 
 
@@ -153,7 +131,10 @@ define('SHOW_DEBUG', $SHOW_DEBUG);
 define('WEB_MENU_TABLE', 'ts_web_mupreva');
 define('WEB_MENU_SECTION_TIPO', 'www1');
 define('WEB_MENU_PARENT', 'www1_106');
+define('WEB_FOOT_MENU', 'www1_217');
 define('WEB_FOOT_PARENT', 'www1_196');
+define('WEB_FOOT_COLUMNS', 'www1_218');
+define('WEB_FOOT_LOGOS', 'www1_227');
 
 /*define('WEB_MENU_FOOTER', [
     'contact',

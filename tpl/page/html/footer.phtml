@@ -5,8 +5,6 @@ if (is_array($images) && count($images) > 0) {
 } else {
     $image = __WEB_ROOT_WEB__.'/assets/img/logo-mupreva.png';
 }
-$abstract = $this->web_foot->abstract;
-$abstract = explode('<hr>', $abstract);
 ?>
     <footer class="pt-8 pb-5 mt-9 has-background-primary has-text-white link-dn is-relative">
         <div class="wrapper">
@@ -15,81 +13,80 @@ $abstract = explode('<hr>', $abstract);
                     <img src="<?php echo $image ?>" alt="<?php echo $this->web_root->title ?>" width="321" height="110">
                 </div>
                 <div class="column is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only"></div>
-                <div class="column is-one-third-tablet is-one-fifth-widescreen is-2-fullhd">
-                    <address>
-                        <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-ubicacio.svg" alt="" width="30" height="30" class="is-block mb-4">
-                        <?php echo tstring('footer_address'); ?>
-                    </address>
-                </div>
 
+                <?php foreach ($this->web_foot_columns as $column) :
+                    if ($column->parent != WEB_FOOT_COLUMNS) {
+                        continue;
+                    }
+                ?>
+                    <?php //var_dump($column); ?>
                 <div class="column is-one-third-tablet is-one-fifth-widescreen is-2-fullhd">
+                    <?php if (!empty($column->identify_image)) : ?>
                     <div class="is-flex gap-2 mb-4">
-                        <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-telefon.svg" alt="" width="30" height="30">
-                        <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-correu.svg" alt="" width="30" height="30">
+                        <?php foreach (json_decode($column->identify_image) as $image) : ?>
+                        <img src="<?php echo __WEB_MEDIA_ENGINE_URL__.'/'.str_replace('.jpg', '.svg', str_replace('1.5MB', 'original', $image)) ?>" alt="">
+                        <?php endforeach ?>
                     </div>
+                    <?php endif ?>
+                    <?php if (!empty($column->title)) : ?>
+                    <p class="is-size-5 mb-4"><?php echo $column->title ?></p>
+                    <?php endif ?>
+                    <?php if (!empty($column->abstract)) : ?>
                     <div class="flow--m">
-                        <?php /* <div>
-                            <p><?php echo tstring('footer_visits') ?></p>
-                            <p>
-                                <a href="tel:<?php echo str_replace(' ', '', tstring('footer_visits_telephone')) ?>" class="has-text-weight-semibold"><?php echo tstring('footer_visits_telephone') ?></a> · Fax <?php echo tstring('footer_visits_fax') ?> <br>
-                                <a href="mailto:<?php echo tstring('footer_visits_email') ?>"><?php echo tstring('footer_visits_email') ?></a>
-                            </p>
-                        </div>
                         <div>
-                            <p><?php echo tstring('footer_general') ?></p>
-                            <a href="tel:<?php echo str_replace(' ', '', tstring('footer_general_telephone')) ?>" class="has-text-weight-semibold"><?php echo tstring('footer_general_telephone') ?></a>
-                        </div> */ ?>
-                        <div>
-                            <?php echo $abstract[0] ?>
+                            <?php echo $column->abstract ?>
                         </div>
                     </div>
-                </div>
-
-                <div class="column is-one-third-tablet is-one-fifth-widescreen is-2-fullhd">
-                    <img src="/tpl/assets/img/ico-horari.svg" alt="" width="30" height="30" class="mb-4 is-block">
-                    <div class="flow--m">
-                        <?php /*
-                        <p><?php echo tstring('footer_visits_hours') ?></p>
-                        <div>
-                            <p><?php echo tstring('footer_visits_arranged') ?></p>
-                            <p><?php echo tstring('footer_visits_arranged_hours') ?></p>
-                        </div> */ ?>
-                        <div>
-                            <?php echo $abstract[1] ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only"></div>
-                <div class="column is-full-tablet is-one-fifth-widescreen is-1-fullhd has-text-centered has-text-centered-desktop">
-                    <p class="is-size-5 mb-4"><?php echo tstring('footer_found_in') ?>:</p>
+                    <?php endif ?>
+                    <?php
+                    $links = [];
+                    foreach ($this->web_foot_columns as $subcolumn) :
+                        if ($subcolumn->parent != $column->term_id) {
+                            continue;
+                        }
+                        $img = '';
+                        if (!empty($subcolumn->identify_image)) {
+                            $images = json_decode($subcolumn->identify_image, true);
+                            if (is_array($images) && count($images) > 0) {
+                                $img = '<img src="'.__WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.svg', $images[0])).'" alt="'.$subcolumn->title.'" class="mr-2">';
+                            }
+                        }
+                        $links[] = '<a href="'.__WEB_ROOT_WEB__.'/'.$subcolumn->web_path.'">'.$img.$subcolumn->title.'</a>';
+                    endforeach ?>
+                    <?php
+                    if (count($links) > 0) : ?>
                     <ul class="is-flex is-flex-wrap-wrap gap-3 is-justify-content-center">
+                        <?php foreach ($links as $link) : ?>
                         <li>
-                            <a href="https://twitter.com/muprevalencia">
-                                <img src="/tpl/assets/img/ico-twitter.svg" alt="X" width="40" height="40" class="is-block">
-                            </a>
+                            <?php echo $link ?>
                         </li>
-                        <li>
-                            <a href="https://www.instagram.com/mupreva/">
-                                <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-instagram.svg" alt="Instagram" width="44" height="44" class="is-block">
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://www.youtube.com/user/museuprehistoria">
-                                <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-youtube.svg" alt="YouTube" width="44" height="44" class="is-block">
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://www.facebook.com/mupreva/">
-                                <img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/ico-facebook.svg" alt="Facebook" width="40" height="40" class="is-block">
-                            </a>
-                        </li>
+                        <?php endforeach ?>
                     </ul>
+                    <?php endif ?>
                 </div>
+                <?php endforeach ?>
             </div>
             <div class="is-flex is-flex-wrap-wrap gap-4 is-align-items-flex-end is-justify-content-center">
-                <?php /*<a href="https://www.dival.es/areadecultura/content/area-de-cultura" class="is-block"><img src="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-diva.jpg" srcset="<?php echo __WEB_ROOT_WEB__ ?>/assets/img/logo-diva@2x.jpg 2x" width="129" height="65"></a> */ ?>
-                <?php echo $this->web_foot->body; ?>
+                <?php
+                $links = [];
+                foreach ($this->web_foot_logos as $logo) :
+                    $img = '';
+                    if (!empty($logo->identify_image)) {
+                        $images = json_decode($logo->identify_image, true);
+                        if (is_array($images) && count($images) > 0) {
+                            $img = '<img src="'.__WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', $images[0]).'" alt="'.$subcolumn->title.'" class="mr-2">';
+                        }
+                    }
+                    $links[] = '<a href="'.__WEB_ROOT_WEB__.'/'.$logo->web_path.'">'.$img.$logo->title.'</a>';
+                endforeach ?>
+                <?php
+                if (count($links) > 0) : ?>
+                    <?php foreach ($links as $link) : ?>
+                        <?php echo $link ?>
+                    <?php endforeach ?>
+                <?php endif ?>
+
+
                 <ul class="is-flex is-flex-wrap-wrap gap-6 is-justify-content-center mx-auto is-size-6 has-text-weight-medium">
                 <?php foreach ($this->menu_footer as $entry) : ?>
                     <li>

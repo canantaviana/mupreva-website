@@ -323,7 +323,7 @@ var actividades = {
             </div>
         </div>
 
-        <div class="is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap gap-3">
+        <div class="is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap gap-3 mt-7">
             <h2 id="subtitle"></h2>
 
 
@@ -613,6 +613,14 @@ var actividades = {
                 offset: offset,
                 order: order,
             }).then((response) => {
+                if(!self.default_submit) {
+                    const total = response.total || response.result.length;
+                    const resultsCountNode = document.createElement('p');
+                    resultsCountNode.className = 'has-text-right';
+                    resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
+                    rows_list_container.appendChild(resultsCountNode);
+                }
+
                 // fix response in each call
                 self.ar_rows = response.result;
 
@@ -1024,7 +1032,7 @@ var actividades = {
                 const date = item.data_group[i].date;
 
                 const url =
-                    page_globals.__WEB_ROOT_WEB__ + "/exposicion/" + section_id;
+                    page_globals.__WEB_ROOT_WEB__ + "/exp/" + section_id;
                 var content = htmlTemplate(`
                     <li>
                         <a href="${url}" target="_blank">

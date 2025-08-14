@@ -13,6 +13,17 @@ var templateModules = {
         })
         return elems.map(function(elem){
             var template = self.fix_names(elem.template_name);
+            var templates = template.split('+');
+            if (templates.length > 1) {
+                template = templates.shift();
+                var copy = structuredClone(elem)
+                copy.template_name = templates.join('+');
+                copy.parent = elem.term_id;
+                copy.term_id = elem.term_id+'_v2';
+                rows.push(copy);
+
+                return self[template](elem, rows);
+            }
             if (!self.hasOwnProperty(template)) {
                 return null;
             }
@@ -51,7 +62,8 @@ var templateModules = {
                                         </g>
                                     </svg>
                                 </button>
-                                <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                                <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
+                                <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
                             </div>
                         </div>
                     </div>`
@@ -90,7 +102,8 @@ var templateModules = {
                                         </g>
                                     </svg>
                                 </button>
-                                <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                                <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
+                                <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
                             </div>
                         </div>
                     </div>`
@@ -130,7 +143,8 @@ var templateModules = {
                                                 </g>
                                             </svg>
                                         </button>
-                                        <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                                        <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
+                                        <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
                                     </div>
                                 </div>
                             </div>`
@@ -175,7 +189,8 @@ var templateModules = {
                                                 </g>
                                             </svg>
                                         </button>
-                                        <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                                        <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
+                                        <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
                                     </div>
                                 </div>
                             </div>`
@@ -345,7 +360,8 @@ var templateModules = {
                                         </g>
                                     </svg>
                                 </button>
-                                <img loading="lazy" src="${info.image[0].image}" alt="" class="is-block">
+                                <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
+                                <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
                             </div>
                         </div>
                     </div>`
@@ -762,12 +778,12 @@ var templateModules = {
                                         return `
                                             <div class="swiper-slide">
                                                 <div class="card is-flex is-flex-direction-column full-link">
-                                                    <div class="pt-7 pb-5 px-6 flow--xl">
+                                                    <div class="pt-5 pb-5 px-6 flow">
                                                         <h3 class="is-size-3 has-text-weight-semibold">
                                                             <a href="${url}" target="_blank">${row.title}</a>
                                                         </h3>
                                                         ${(date)?
-                                                        `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                                        `<p class="has-text-weight-medium">${date}</p>`
                                                         :''}
                                                         <p class="more-link">${tstring.home_activities_more}</p>
                                                     </div>
@@ -849,12 +865,12 @@ var templateModules = {
                     return `
                     <div class="swiper-slide">
                         <div class="card is-flex is-flex-direction-column full-link">
-                            <div class="pt-7 pb-5 px-6 flow--xl">
+                            <div class="pt-5 pb-5 px-6 flow">
                                 <h3 class="is-size-4">
                                     <a href="${url}" target="_blank">${row.title}</a>
                                 </h3>
                                 ${(date)?
-                                `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                `<p class="has-text-weight-medium">${date}</p>`
                                 :''}
                             </div>
                             ${(row.type)?
@@ -905,12 +921,12 @@ var templateModules = {
                                         return `
                                             <div class="swiper-slide">
                                                 <div class="card is-flex is-flex-direction-column full-link">
-                                                    <div class="pt-7 pb-5 px-6 flow--xl">
+                                                    <div class="pt-5 pb-5 px-6 flow">
                                                         <h3 class="is-size-3 has-text-weight-semibold">
                                                             <a href="${url}" target="_blank">${row.title}</a>
                                                         </h3>
                                                         ${(date)?
-                                                        `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                                        `<p class="has-text-weight-medium">${date}</p>`
                                                         :''}
                                                         <p class="more-link">${tstring.home_activities_more}</p>
                                                     </div>
@@ -993,12 +1009,12 @@ var templateModules = {
                     return `
                     <div class="swiper-slide">
                         <div class="card is-flex is-flex-direction-column full-link">
-                            <div class="pt-7 pb-5 px-6 flow--xl">
+                            <div class="pt-5 pb-5 px-6 flow">
                                 <h3 class="is-size-3 has-text-weight-semibold">
                                     <a href="${url}" target="_blank">${row.title}</a>
                                 </h3>
                                 ${(date)?
-                                `<p class="has-text-weight-medium is-uppercase">${date}</p>`
+                                `<p class="has-text-weight-medium">${date}</p>`
                                 :''}
                                 <p class="more-link">${tstring.home_activities_more}</p>
                             </div>
@@ -1077,6 +1093,7 @@ var templateModules = {
                 const new_gallery = htmlTemplate(`
                     <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
                         <h2>${title}</h2>
+                        <p class="result-count"></p>
                     </div>
                     <ul class="galeria galeria--242x242 link-dn"></ul>
                     <div class="has-text-centered mt-6">
@@ -1084,6 +1101,7 @@ var templateModules = {
                     </div>
                 `);
                 appendTemplate(container, new_gallery);
+                data[type].resultCount = container.querySelector('.result-count');
 
                 // Afegim l'event listener al botó de carregar més
                 container.querySelector(`#button_load_more_${type}`).addEventListener('click', function(){
@@ -1105,6 +1123,7 @@ var templateModules = {
                 data[type].results = data[type].results.concat(results);
                 data[type].total = total;
                 data[type].loaded += results.length;
+                data[type].resultCount.innerHTML = `${total} ${(tstring.entries_found).toLowerCase()}`;
 
                 // Si ja s'han carregat tots els elements, es treu el botó de carregar més
                 if (data[type].loaded >= data[type].total) {
@@ -1162,16 +1181,27 @@ var templateModules = {
     bloque_publicaciones_default: function(){
         var contentBase = htmlTemplate(`<div>
             <div class="default_last mt-8 flow--xl">
+                <h2>${tstring.documents_default_last}</h2>
+                <div class="swiper-container is-relative">
+                    <div class="swiper swiper--publicacions swiper--publications-ultimes">
+                        <div class="swiper-wrapper link-dn">
+                        </div>
+                    </div>
+                    <div class="swiper--publicacions__btns swiper--publications-ultimes__btns">
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div>
+                </div>
             </div>
             <div class="default_cats mt-8 flow--xl">
             </div>
         </div>`);
-        var children_container = contentBase[0].querySelector('div.default_last');
+        var children_container = contentBase[0].querySelector('.swiper-container .swiper-wrapper');
+
         var children_container_cats = contentBase[0].querySelector('div.default_cats');
+
         api.getPublicacionesDestacados().then(function(results){
             var content = htmlTemplate(`
-                <h2>${tstring.documents_default_last}</h2>
-                <ul class="pubs-list link-dn mt-7">
                 ${results.map(function(row){
                     const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
                     var info = [];
@@ -1187,39 +1217,48 @@ var templateModules = {
                     }
 
                     return `
-                    <li class="is-flex is-flex-direction-column full-link gap-2 ${row.tpl}">
-                        <h3 class="is-size-6">
-                            <a href="${url}" target="_blank">${row.titulo}</a>
-                        </h3>
-                        <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
-                            <img loading="lazy" src="${image_url}" alt="">
+                    <div class="swiper-slide">
+                        <div class="is-flex is-flex-direction-column full-link gap-2">
+                            <h3 class="is-size-6">
+                                <a href="${url}" target="_blank">${row.titulo}</a>
+                            </h3>
+                            <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
+                                <img loading="lazy" src="${image_url}" alt="">
+                            </div>
+                            ${(info.length > 0)?`
+                            <p class="is-size-7">
+                                ${info.join('<br>')}
+                            </p>
                         </div>
-                        ${(info.length > 0)?`
-                        <p class="is-size-7">
-                            ${info.join('<br>')}
-                        </p>
                         `:''}
-                    </li>
+                    </div>
                     `;
                 }).join('')}
-                </ul>
             `);
             appendTemplate(children_container, content);
+            swiperPublications('ultimes');
         });
         api.getPublicacionesSeries().then(function(results){
             results.forEach(function(elem){
                 var content = htmlTemplate(`
                 <div class="default_last mt-8 flow--xl">
                     <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
-                    <h2>${elem.name}</h2>
-                    <a href="/pub/${normalitzaText(elem.name)}" class="button button--simple-2">${tstring.collection_see_all}</a>
-                </div>
-
-                    <ul class="pubs-list link-dn mt-7">
-                    </ul>
+                        <h2>${elem.name}</h2>
+                        <a href="/publicaciones/${normalitzaText(elem.name)}" class="button button--simple-2">${tstring.collection_see_all}</a>
+                    </div>
+                    <div class="swiper-container is-relative">
+                        <div class="swiper swiper--publications swiper--publications-${elem.id}">
+                            <div class="swiper-wrapper">
+                            </div>
+                        </div>
+                        <div class="swiper--publications-${elem.id}__btns">
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
+                    </div>
                 </div>
                 `);
-                var children_container = content[0].querySelector('ul');
+                var children_container = content[0].querySelector('.swiper-container .swiper-wrapper');
                 api.getPublicacionesDestacados(elem.id).then(function(results){
                     var content = htmlTemplate(`
                         ${results.map(function(row){
@@ -1237,7 +1276,7 @@ var templateModules = {
                             }
 
                             return `
-                            <li class="is-flex is-flex-direction-column full-link gap-2 ${row.tpl}">
+                            <div class="swiper-slide">
                                 <h3 class="is-size-6">
                                     <a href="${url}" target="_blank">${row.titulo}</a>
                                 </h3>
@@ -1249,13 +1288,14 @@ var templateModules = {
                                     ${info.join('<br>')}
                                 </p>
                                 `:''}
-                            </li>
+                            </div>
                             `;
                         }).join('')}
                     `);
                     appendTemplate(children_container, content);
                 });
                 appendTemplate(children_container_cats, content);
+                swiperPublications(elem.id);
             });
         });
         return contentBase;

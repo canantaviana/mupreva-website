@@ -130,7 +130,7 @@ var item = {
     absUrl: function (row) {
         return (
             page_globals.__WEB_MEDIA_BASE_URL__ +
-            "/publication/" +
+            "/pub/" +
             row.section_id
         );
     },
@@ -195,7 +195,12 @@ var item = {
                 row.autor
                     ? `
             <dt>${tstring.item_author}</dt>
-            <dd><a href="/biblio/">${row.autor}</a></dd>
+            <dd>
+            ${row.autor.split('|').map(autor => {
+                return `<a href="/publicaciones/?autor=${encodeURIComponent(autor)}">${autor.trim()}</a>`
+            }).join(' | ')
+            }
+            </dd>
             `
                     : ""
             }
@@ -211,7 +216,7 @@ var item = {
                 row.serie
                     ? `
             <dt>${tstring.item_serie}</dt>
-            <dd><a href="/pub/${normalitzaText(row.serie)}">${row.serie}</a>
+            <dd><a href="/publicaciones/${normalitzaText(row.serie)}">${row.serie}</a>
             ${
                 row.num_serie
                     ? `
@@ -298,7 +303,7 @@ ${
             .map(function (value) {
                 const url =
                     page_globals.__WEB_ROOT_WEB__ +
-                    "/publication/" +
+                    "/pub/" +
                     value.section_id;
                 return `<li class="mb-3">
                 <div class="columns is-mobile is-flex-direction-row-reverse">
@@ -382,6 +387,21 @@ ${
 
         const target = options.target;
         const row = options.row;
+
+        const dedalo_logged = typeof document!=='undefined' && document.cookie.indexOf('dedalo_logged')!==-1 ? true : false;
+
+        if (dedalo_logged === true) {
+            const dedalo_link = common.create_dom_element({
+                element_type : "a",
+                class_name : "section_id dedalo-link",
+                text_content : `${row.section_id} (${row.section_tipo})`,
+                href : `https://pre-dedalo.mupreva.org/dedalo6-pre/core/page/?tipo=${row.section_tipo}&id=${row.section_id}`,
+                parent : target
+            })
+
+            dedalo_link.setAttribute('target', '_blank');
+            // target.appendChild(dedalo_link);
+        }
 
         appendTemplate(target, this.templateShare(row));
         appendTemplate(target, this.template(row));

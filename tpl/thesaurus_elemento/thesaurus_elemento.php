@@ -12,6 +12,7 @@ page::$css_ar_url[] = __WEB_TEMPLATE_WEB__ . '/assets/lib/leaflet/markercluster/
 page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/assets/lib/leaflet/leaflet.js';
 page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/assets/lib/leaflet/markercluster/leaflet.markercluster.js';
 page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/assets/lib/browser-report/browser-report-min.js';
+page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/' . $cwd . '/js/biblio_row_fields' . JS_SUFFIX . '.js';
 page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/' . $cwd . '/js/item_row' . JS_SUFFIX . '.js';
 
 
@@ -31,22 +32,24 @@ $section_id = isset($ar_parts[1])
 
 // table (from url path)
 switch ($ar_parts[0]) {
-    case 'img':
-        $table = 'pictures';
+    case 'tec':
+        $table = 'ts_technique';
         break;
-    case 'cat':
-        $table = 'objects';
+    case 'tem':
+        $table = 'ts_thematic';
         break;
-    case 'imm':
-        $table = 'immovables';
+    case 'cro':
+        $table = 'ts_chronological';
         break;
-    case 'doc':
-        $table = 'documents_catalog';
+    case 'mat':
+        $table = 'ts_material';
         break;
-    case 'pub':
-        $table = 'publications';
+    case 'obj':
+        $table = 'ts_object';
         break;
-
+    case 'top':
+        $table = 'ts_ubication';
+        break;
 }
 
 // page basic vars

@@ -362,10 +362,10 @@ page.parse_list_data = function (rows) {
         // tpl
         row.tpl = page.section_tipo_to_template(row.section_tipo)
         if (row.table == 'activities') {
-            row.tpl = 'actividad';
+            row.tpl = 'act';
         }
         if (row.table == 'exhibitions') {
-            row.tpl = 'exposicion';
+            row.tpl = 'exp';
         }
 
         /*
@@ -599,8 +599,8 @@ page.parse_timeline_data_catalog = function (rows) {
         // clone row object to preserve it as immutable
         const row = Object.assign({}, rows[i]);
 
-        if (row.periodo) {
-            var periodos = row.periodo.split('|');
+        if (row.periodo_data) {
+            var periodos = JSON.parse(row.periodo_data);
             for (var group_date of periodos) {
                 if (group_date) {
                     var image_url = '/assets/img/placeholder.png';
@@ -634,7 +634,7 @@ page.parse_timeline_data_catalog = function (rows) {
     }
 
     // sort by property date asc
-    data.sort((a, b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0));
+    // data.sort((a, b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0));
 
 
     return data

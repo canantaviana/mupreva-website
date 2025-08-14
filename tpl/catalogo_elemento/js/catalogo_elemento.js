@@ -347,7 +347,7 @@ var item = {
                 row.lugar && lugarData
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/immovable/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
+            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
             `
                     : ""
             }
@@ -431,7 +431,7 @@ var item = {
                 row.lugar && lugarData
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/immovable/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
+            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
             `
                     : ""
             }
@@ -441,7 +441,7 @@ var item = {
             <dt>${tstring.item_ubication}</dt>
             <dd>${ubicationName.map(function(value, index){
                 if (typeof ubicationId[index] != 'undefined') {
-                    return `<a href="/salas/${ubicationId[index]}">${value}</a>`
+                    return `<a href="/top/${ubicationId[index].replace('ubication1_', '')}">${value}</a>`
                 }
                 return `${value}`
                 }).join(', ')}</dd>
@@ -453,9 +453,9 @@ var item = {
 
     templateFields: function (row) {
         switch (row.tpl) {
-            case "picture":
+            case "img":
                 return this.templateFieldsPicture(row);
-            case "immovable":
+            case "imm":
                 return this.templateFieldsImmovable(row);
             default:
                 return this.templateFieldsDefault(row);
@@ -567,7 +567,7 @@ var item = {
                 ${this.renderExport()}
             </div>
             `;
-        } else if (row.tpl == "picture" && images.length === 1) {
+        } else if (row.tpl == "img" && images.length === 1) {
             const image = images[0];
             // una imatge
             return `
@@ -1131,7 +1131,7 @@ var item = {
             <div class="accordion accordion--secondary">
                 <div class="table-responsive">
                 ${
-                    row.tpl === "picture"
+                    row.tpl === "img"
                         ? this.templateTecnicPicture(row)
                         : this.templateTecnicDefault(row)
                 }
@@ -1671,6 +1671,21 @@ var item = {
         const target = options.target;
         const row = options.row;
 
+        const dedalo_logged = typeof document!=='undefined' && document.cookie.indexOf('dedalo_logged')!==-1 ? true : false;
+
+        if (dedalo_logged === true) {
+            const dedalo_link = common.create_dom_element({
+                element_type : "a",
+                class_name : "section_id dedalo-link",
+                text_content : `${row.section_id} (${row.section_tipo})`,
+                href : `https://pre-dedalo.mupreva.org/dedalo6-pre/core/page/?tipo=${row.section_tipo}&id=${row.section_id}`,
+                parent : target
+            })
+
+            dedalo_link.setAttribute('target', '_blank');
+            // target.appendChild(dedalo_link);
+        }
+
         appendTemplate(target, this.templateShare(row));
         appendTemplate(target, this.template(row));
 
@@ -1681,7 +1696,7 @@ var item = {
         target.appendChild(acordion);
 
         //fitxa tecnica
-        if (row.tpl !== "immovable") {
+        if (row.tpl !== "imm") {
             appendTemplate(acordion, this.templateTecnic(row));
             this.getRelations(row);
         }
@@ -1689,7 +1704,7 @@ var item = {
         //patrimoni relacionat
         appendTemplate(acordion, this.templateRelated(row));
 
-        if (row.tpl === "immovable") {
+        if (row.tpl === "imm") {
             //visita al jaciment
             this.templateJacimentVisit(acordion, row);
             appendTemplate(acordion, this.templateRelatedJaciments(row));

@@ -560,7 +560,7 @@ var biblio = {
      */
     list_row_builder: function (row) {
         const url =
-            page_globals.__WEB_ROOT_WEB__ + "/actividad/" + row.section_id;
+            page_globals.__WEB_ROOT_WEB__ + "/act/" + row.section_id;
         var image_url = "/assets/img/placeholder.png";
         if (row.identifying_image_data.length > 0) {
             image_url =

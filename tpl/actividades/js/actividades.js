@@ -615,6 +615,14 @@ var actividades = {
                 offset: offset,
                 order: order,
             }).then((response) => {
+                if(!self.default_submit) {
+                    const total = response.total || response.result.length;
+                    const resultsCountNode = document.createElement('p');
+                    resultsCountNode.className = 'has-text-right';
+                    resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
+                    rows_list_container.appendChild(resultsCountNode);
+                }
+
                 // fix response in each call
                 self.ar_rows = response.result;
 
@@ -1031,7 +1039,7 @@ var actividades = {
                 const date = item.data_group[i].date;
 
                 const url =
-                    page_globals.__WEB_ROOT_WEB__ + "/actividad/" + section_id;
+                    page_globals.__WEB_ROOT_WEB__ + "/act/" + section_id;
                 var content = htmlTemplate(`
                     <li>
                         <a href="${url}" target="_blank">

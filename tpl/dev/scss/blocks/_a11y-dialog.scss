@@ -134,4 +134,8 @@ html:has(.dialog-container:not([aria-hidden])) {
     position: absolute;
     top: .25rem;
     right: .25rem;
+    + img {
+        max-height: 75vh;
+        opacity: 1 !important;
+    }
 }

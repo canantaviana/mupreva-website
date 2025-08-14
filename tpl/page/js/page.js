@@ -885,23 +885,51 @@ var page = {
         let template
         switch (section_tipo) {
             case 'tch100':
-                template = 'picture';
+                template = 'img';
                 break;
             case 'tch1':
-                template = 'object';
+                template = 'cat';
                 break;
             case 'tchi1':
-                template = 'immovable';
+                template = 'imm';
                 break;
             case 'tch300':
-                template = 'documents_catalog';
+                template = 'doc';
                 break;
             case 'rsc205':
-                template = 'publication';
+                template = 'pub';
                 break;
         }
         return template
     },//end section_tipo_to_template
+
+    /**
+    * TLD_TO_TEMPLATE
+    */
+    tld_to_template: function (tld) {
+        let template
+        switch (tld) {
+            case 'technique1':
+                template = 'tec';
+                break;
+            case 'ts1':
+                template = 'tem';
+                break;
+            case 'dc1':
+                template = 'cro';
+                break;
+            case 'material1':
+                template = 'mat';
+                break;
+            case 'object1':
+                template = 'obj';
+                break;
+            case 'ubication1':
+                template = 'top';
+                break;
+        }
+        return template
+    },//end tld_to_table
 
     /**
     * TLD_TO_TABLE
@@ -920,6 +948,12 @@ var page = {
                 break;
             case 'material1':
                 template = 'ts_material';
+                break;
+            case 'object1':
+                template = 'ts_object';
+                break;
+            case 'ubication1':
+                template = 'ts_ubication';
                 break;
         }
         return template

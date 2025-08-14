@@ -28,9 +28,6 @@ var item = {
         self.section_id = options.section_id; // int
         self.target = options.target; // DOM node
 
-        // export_data_buttons (define before load_data to prepare the event subscribe)
-        const export_data_buttons = page.render_export_data_buttons();
-
         // load and render
         self.load_data({}).then(function (response) {
             if (!response.result || response.result.length < 1) {
@@ -45,10 +42,6 @@ var item = {
                 row: row,
                 target: self.target,
             });
-            // append export data buttons
-            document
-                .getElementById("export_data_container")
-                .appendChild(export_data_buttons);
 
             viewInit();
         });
@@ -164,7 +157,16 @@ var item = {
     load_data: function (options) {
         const self = this;
 
-        const default_fields = ["*"];
+        let default_fields;
+
+        switch (self.table) {
+            case "ts_ubication":
+                default_fields = ["term", "definition", "relations", "dd_relations", "children", "tld", "section_id", "imagenes"];
+                break;
+            default:
+                default_fields = ["term", "definition", "relations", "dd_relations", "children", "tld", "section_id"];
+                break;
+        }
 
         // options
         const table = options.table || self.table;
@@ -189,21 +191,11 @@ var item = {
                 // 	audiovisual :"audiovisual"
                 // }
             };
-            //if (table === 'sets') {
+            if (self.table === 'ts_ubication') {
             request_body.resolve_portals_custom = {
-                identifying_image_data: "image",
-                audiovisuals_data: "audiovisual",
-                images_data: "image",
-                bibliografia: "bibliographic_references",
-                documents_data: "documents",
-                children_data: "activities",
-                "children_data.identifying_image": "image",
-                people_data: "people",
-
-                //people_data: '',
-                //related_data: 'activities',
+                imagenes: "image"
             };
-            //}
+            }
             data_manager
                 .request({
                     body: request_body,
@@ -211,6 +203,12 @@ var item = {
                 .then((response) => {
                     //correccions de dades
                     const result = response.result.map(function (item) {
+                        if (
+                            typeof item.bibliografia_propia === "undefined" &&
+                            typeof item.bibliografia !== "undefined"
+                        ) {
+                            item.bibliografia_propia = item.bibliografia;
+                        }
                         return item;
                     });
                     event_manager.publish("data_request_done", {
@@ -227,7 +225,7 @@ var item = {
         return (
             page_globals.__WEB_MEDIA_BASE_URL__ +
             "/" +
-            row.tpl +
+            page.tld_to_template(row.tld) +
             "/" +
             row.section_id
         );
@@ -235,7 +233,7 @@ var item = {
 
     templateShare: function (row) {
         const url = this.absUrl(row);
-        const title = row.title;
+        const title = row.titulo;
         return htmlTemplate(`
 <div class="has-text-right-tablet mb-3">
     <span class="simple-tooltip-container"><button type="button" class="js-tooltip button button--icon button--compartir" data-tooltip-prefix-class="simple-tooltip" data-tooltip-content-id="compartir" data-tooltip-title="Compartir URL" data-tooltip-close-text="${
@@ -283,97 +281,32 @@ var item = {
         `);
     },
 
-    datacion(row) {
-        const datacion = [];
-        if (row.datacion_ini) {
-            datacion.push(row.datacion_ini);
-        }
-        if (row.datacion_fin) {
-            datacion.push(row.datacion_fin);
-        }
-        return datacion;
-    },
-
-    templateFields: function (row) {
-        var date = formatDateRange(
-            row.time_frame,
-            page_globals.WEB_CURRENT_LANG_CODE
-        );
-        return `
-            ${
-                row.type
-                    ? `
-            <dt><dt>${tstring.item_tipology}</dt></dt>
-            <dd>${row.type}</dd>
-            `
-                    : ""
-            }
-            ${
-                row.place
-                    ? `
-            <dt>${tstring.item_sala}</dt>
-            <dd>${row.place}</dd>
-            `
-                    : ""
-            }
-            ${
-                date
-                    ? `
-            <dt>${tstring.item_data}</dt>
-            <dd>${date}</dd>
-            `
-                    : ""
-            }
-            ${
-                row.time_start
-                    ? `
-            <dt>${tstring.item_hour}</dt>
-            <dd>${row.time_start}</dd>
-            `
-                    : ""
-            }
-            ${
-                row.thematic_indexation
-                    ? `
-            <dt>${tstring.item_to_public}</dt>
-            <dd>${row.thematic_indexation.split(", ").join("<br>")}</dd>
-            `
-                    : ""
-            }
-        `;
-    },
 
     template: function (row) {
         const url = this.absUrl(row);
+        const self = this;
         return htmlTemplate(`
-<div class="fitxa-intro columns is-variable is-8">
-    <div class="column flow--l">
-        ${
-            row.title
-                ? `
-        <h1>${row.title}</h1>
-        `
-                : ""
-        }
-        <dl>
-            ${this.templateFields(row)}
-        </dl>
-        ${
-            row.summary
-                ? `
-        <div class="flow">
-            ${row.summary}
-        </div>
-        `
-                : ""
-        }
-        <p> ${tstring.item_url_perm} <br>
-            <a href="${url}">${url}</a>
-        </p>
-    </div>
-    <div class="column is-1 is-hidden-touch is-hidden-desktop-only"></div>
-    ${this.renderImages(row)}
-</div>
+            <div class="fitxa-intro columns is-variable is-8">
+                <div class="column flow--l">
+                    ${row.term
+                        ? `<h1>${row.term}</h1>`
+                        : ""
+                    }
+                    ${row.definition
+                        ? `<div class="flow">${row.definition}</div>`
+                        : ""
+                    }
+                    <p>
+                        ${tstring.item_url_perm}
+                        <br>
+                        <a href="${url}">${url}</a>
+                    </p>
+                    </div>
+                    ${self.table === "ts_ubication"
+                        ? this.renderImages(row)
+                        : ""
+                    }
+            </div>
         `);
     },
 
@@ -405,7 +338,8 @@ var item = {
     },
 
     renderImages: function (row) {
-        const images = row.identifying_image_data;
+        const images = row.imagenes;
+
         if (images.length === 1) {
             const image = images[0];
             // una imatge
@@ -480,251 +414,43 @@ var item = {
         }
     },
 
-    templateInfo: function (row) {
-        if (!row.description || row.description == "") {
-            return null;
-        }
-        return htmlTemplate(`
-            <h2 class="accordion-header">
-                <button type="button">${tstring.item_general_info}</button>
-            </h2>
-            <div class="accordion-content block-dedalo">
-                <div class="accordion accordion--secondary">
-                ${row.description}
-                </div>
-            </div>
-        `);
+
+    hasRelated: function (row) {
+        return row.relations !== null && JSON.parse(row.relations).length > 0;
     },
-
-    templateResources: function (row) {
-        if (typeof row.documents_data === "undefined") {
-            row.documents_data = [];
-        }
-        if (typeof row.audiovisuals_data === "undefined") {
-            row.audiovisuals_data = [];
-        }
-        if (
-            row.documents_data.length === 0 &&
-            row.audiovisuals_data.length === 0
-        ) {
-            return null;
-        }
-        return htmlTemplate(`
-            <h2 class="accordion-header">
-                <button type="button">${tstring.item_resources}</button>
-            </h2>
-            <div class="accordion-content block-dedalo">
-                <div class="accordion accordion--secondary">
-                ${
-                    row.audiovisuals_data.length > 0
-                        ? `
-                    <h3 class="accordion-header">
-                        <button type="button">${
-                            tstring.item_audiovisual
-                        }</button>
-                    </h3>
-                    <div class="accordion-content block-dedalo">
-                        <ul class="galeria galeria--180x150 link-dn">
-                            ${row.audiovisuals_data
-                                .map(function (entry) {
-                                    return `
-                                <li>
-                                    <a href="${
-                                        __WEB_MEDIA_ENGINE_URL__ + entry.video
-                                    }" data-subtitles="${__WEB_MEDIA_ENGINE_URL__ + entry.subtitles}" class="video-popup">
-                                        <figure>
-                                            <img src="${getPosterframe(
-                                                __WEB_MEDIA_ENGINE_URL__ +
-                                                    entry.video
-                                            )}" alt="">
-                                            <figcaption>${
-                                                entry.title
-                                            }</figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                `;
-                                })
-                                .join("")}
-                        </ul>
-
-                    </div>
-                `
-                        : ""
-                }
-                ${
-                    row.documents_data.length > 0
-                        ? `
-                    <h3 class="accordion-header">
-                        <button type="button">${tstring.item_documents}</button>
-                    </h3>
-                    <div class="accordion-content block-dedalo">
-                        <div class="text-base">
-                            <ul>
-                                ${row.documents_data
-                                    .map(function (entry) {
-                                        return `
-                                    <li><a target="_blank" href="${
-                                        __WEB_MEDIA_ENGINE_URL__ +
-                                        entry.document
-                                    }">${entry.title}</a></li>
-                                    `;
-                                    })
-                                    .join("")}
-                            </ul>
-                        </div>
-                    </div>
-                `
-                        : ""
-                }
-                </div>
-            </div>
-        `);
-    },
-
-    templateGaleria: function (row) {
-        var self = this;
-        if (!row.images_data || row.images_data.length == 0) {
-            return "";
-        }
-        return htmlTemplate(`
-            <h2 class="accordion-header">
-                <button type="button">${tstring.item_galery}</button>
-            </h2>
-            <div class="accordion-content block-dedalo">
-                <ul class="galeria galeria--242x242 link-dn">
-                ${row.images_data
-                    .map(function (object) {
-                        return self.templateGaleryElem(object);
-                    })
-                    .join("")}
-                </ul>
-            </div>
-        `);
-    },
-
-    templateGaleryElem: function (row) {
-        var image_url = "/assets/img/placeholder.png";
-        if (row.image) {
-            image_url = __WEB_MEDIA_ENGINE_URL__ + row.image;
-        }
-        return `
-        <li>
-            <a href="${image_url}" target="_blank">
-                <figure>
-                    <img loading="lazy" src="${image_url}" alt="">
-                    ${
-                        row.footprint
-                            ? `
-                    <figcaption>${row.footprint}</figcaption>
-                    `
-                            : ""
-                    }
-                </figure>
-            </a>
-        </li>
-        `;
-    }, //end list_row_builder
 
     templateRelated: function (row) {
-        //TODO: passar a camp patrimonio_relacionado
+        var relations = JSON.parse(row.relations);
         var self = this;
-        return "";
+        if (!this.hasRelated(row)) {
+            return "";
+        };
+
         return htmlTemplate(`
-            <h2 class="accordion-header">
-                <button type="button">${tstring.item_rel_content}</button>
-            </h2>
+            <h3 class="accordion-header">
+                ${tstring.item_rel_content}
+            </h3>
             <div class="accordion-content block-dedalo">
                 <ul class="galeria galeria--242x242 link-dn">
-                ${row.children
+                ${
+                    relations
                     .map(function (object) {
                         return self.template_catalog_elem(object);
                     })
-                    .join("")}
+                    .join("")
+                }
                 </ul>
             </div>
         `);
     },
 
-    templateActivitiesRelated: function (row) {
-        if (!row.children_data || row.children_data.length == 0) {
-            return "";
-        }
-        var self = this;
-        return htmlTemplate(`
-            <h2 class="accordion-header">
-                <button type="button">${tstring.item_rel_activities}</button>
-            </h2>
-            <div class="accordion-content block-dedalo">
-                <ul class="galeria galeria--242x242 link-dn">
-                ${row.children_data
-                    .map(function (object) {
-                        return self.template_catalog_elem(object);
-                    })
-                    .join("")}
-                </ul>
-            </div>
-        `);
-    },
-
-    templateCredits: function (row) {
-        if (!row.people || !row.people_role) {
-            return "";
-        }
-        var people = JSON.parse(row.people);
-        var rols = JSON.parse(row.people_role);
-        return htmlTemplate(`
-            <h2 class="accordion-header">
-                <button type="button">${tstring.item_credits}</button>
-            </h2>
-            <div class="accordion-content block-dedalo flow">
-                <div class="table">
-                    <table>
-                        <tbody>
-                        ${people
-                            .map(function (object, index) {
-                                return `
-                            <tr>
-                                <th>${rols[index]}</th>
-                                <td>${object}</td>
-                            </tr>`;
-                            })
-                            .join("")}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        `);
-    },
-
-    templateBibliografyEntry: function (entry) {
-        return biblio_row_fields.render_row_bibliography(entry);
-    },
-
-    templateBiblio: function (target, row) {
-        const self = this;
-        if (!row.bibliografia || row.bibliografia.length == 0) {
-            return null;
-        }
-        const template = htmlTemplate(`
-        <h2 class="accordion-header">
-            <button type="button">${tstring.item_bibliografy}</button>
-        </h2>
-        <div class="accordion-content block-dedalo">
-            <div class="text-base flow">
-                <ul>
-                </ul>
-            </div>
-        </div>
-        `);
-        const ul = template[2].querySelector("ul");
-        row.bibliografia.forEach(function (entry) {
-            ul.appendChild(self.templateBibliografyEntry(entry));
-        });
-        appendTemplate(target, template);
-    },
-
+    /**
+     * LIST_ROW_BUILDER
+     * Build DOM nodes to insert into list pop-up
+     */
     template_catalog_elem: function (row) {
+
+        row.tpl = page.section_tipo_to_template(row.section_tipo);
         const url =
             page_globals.__WEB_ROOT_WEB__ +
             "/" +
@@ -732,46 +458,25 @@ var item = {
             "/" +
             row.section_id;
         var image_url = "/assets/img/placeholder.png";
-        if (row.identifying_image.length > 0) {
+        if (row.image !== null && row.image !== "") {
             image_url =
-                __WEB_MEDIA_ENGINE_URL__ + row.identifying_image[0].image;
-        }
-        var date = null;
-        if (row.time_frame) {
-            var date = formatDateRange(
-                row.time_frame,
-                page_globals.WEB_CURRENT_LANG_CODE
-            );
+                __WEB_MEDIA_ENGINE_URL__ +
+                row.image;
         }
         return `
         <li class="${row.tpl}">
-            <div class="is-flex is-flex-direction-column gap-4 full-link">
-                ${
-                    row.type
-                        ? `<p class="has-text-weight-medium is-size-6">
-                    <a href="/activitats/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
-                </p>`
-                        : ""
-                }
-                <img loading="lazy" src="${image_url}" alt="">
-                ${
-                    date
-                        ? `<p class="has-text-primary has-text-weight-semibold is-size-6">
-                    ${date}
-                </p>`
-                        : ""
-                }
-                ${
-                    row.time_start
-                        ? `<p class="has-text-primary has-text-weight-semibold is-size-6">
-                    ${row.time_start}
-                </p>`
-                        : ""
-                }
-                <h3 class="is-size-6 has-text-weight-semibold">
-                    <a href="${url}">${row.title}</a>
-                </h3>
-            </div>
+            <a href="${url}" target="_blank">
+                <figure>
+                    <img loading="lazy" src="${image_url}" alt="">
+                    ${
+                        row.title
+                            ? `
+                    <figcaption>${row.title}</figcaption>
+                    `
+                            : ""
+                    }
+                </figure>
+            </a>
         </li>
         `;
     }, //end list_row_builder
@@ -792,8 +497,8 @@ var item = {
             const dedalo_link = common.create_dom_element({
                 element_type : "a",
                 class_name : "section_id dedalo-link",
-                text_content : `${row.section_id} (exhibition1)`,
-                href : `https://pre-dedalo.mupreva.org/dedalo6-pre/core/page/?tipo=exhibition1&id=${row.section_id}`,
+                text_content : `${row.section_id} (${row.tld})`,
+                href : `https://pre-dedalo.mupreva.org/dedalo6-pre/core/page/?tipo=${row.tld}&id=${row.section_id}`,
                 parent : target
             })
 
@@ -803,6 +508,7 @@ var item = {
 
         appendTemplate(target, this.templateShare(row));
         appendTemplate(target, this.template(row));
+        appendTemplate(target, this.templateRelated(row));
 
         const acordion = common.create_dom_element({
             element_type: "div",
@@ -810,26 +516,6 @@ var item = {
         });
         target.appendChild(acordion);
 
-        //info
-        appendTemplate(acordion, this.templateInfo(row));
-
-        //audiovisual
-        appendTemplate(acordion, this.templateResources(row));
-
-        //galeria
-        appendTemplate(acordion, this.templateGaleria(row));
-
-        //activitas relacionat
-        appendTemplate(acordion, this.templateActivitiesRelated(row));
-
-        //contigut relacionat
-        appendTemplate(acordion, this.templateRelated(row));
-
-        //credits
-        appendTemplate(acordion, this.templateCredits(row));
-
-        //bibliografia
-        //this.templateBiblio(acordion, row);
     }, //end render
 
     /**

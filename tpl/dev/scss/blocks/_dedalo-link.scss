@@ -1,0 +1,15 @@
+.dedalo-link {
+    color: #FF8E05;
+
+    &::after {
+        content: "";
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        margin-left: 0.5rem;
+        background-image: url('../img/logotip-dedalo.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        vertical-align: middle;
+    }
+}

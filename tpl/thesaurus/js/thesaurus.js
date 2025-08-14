@@ -147,7 +147,7 @@ var thesaurus = {
             'section_id',
             'term_id',
             'term',
-            'childrens AS children',
+            'children',
             'code',
             'descriptor',
             'illustration',
