@@ -1,5 +1,8 @@
 <?php
-$images = json_decode($this->web_foot->identify_image, true);
+$images = null;
+if ($this->web_foot->identify_image != null) {
+    $images = json_decode($this->web_foot->identify_image, true);
+}
 if (is_array($images) && count($images) > 0) {
     $image = __WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.png', $images[0]));
 } else {

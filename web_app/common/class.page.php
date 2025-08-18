@@ -818,8 +818,10 @@ class page
         $data = json_web_data::get_data($options);
 
         $breadcrumb = [];
+
         foreach (array_reverse($data->result) as $key => $value) {
-            if ($value->web_path === null) {
+
+            if ($value == false || $value->web_path === null) {
                 continue;
             }
             if ($value->web_path == 'main_home') {
