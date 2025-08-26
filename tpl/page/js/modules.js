@@ -1123,7 +1123,7 @@ var templateModules = {
                 data[type].results = data[type].results.concat(results);
                 data[type].total = total;
                 data[type].loaded += results.length;
-                data[type].resultCount.innerHTML = `${total} ${(tstring.entries_found).toLowerCase()}`;
+                data[type].resultCount.innerHTML = `${total ? total : 0} ${(tstring.entries_found).toLowerCase()}`;
 
                 // Si ja s'han carregat tots els elements, es treu el botó de carregar més
                 if (data[type].loaded >= data[type].total) {

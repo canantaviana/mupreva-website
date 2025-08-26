@@ -1109,7 +1109,7 @@ var catalog = {
                 order: order,
             }).then((response) => {
                 if(!self.default_submit) {
-                    const total = response.total || response.result.length;
+                    const total = response.total || response.result.length || 0;
                     const resultsCountNode = document.createElement('p');
                     resultsCountNode.className = 'has-text-right';
                     resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;

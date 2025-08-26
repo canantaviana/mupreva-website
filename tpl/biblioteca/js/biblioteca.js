@@ -651,7 +651,7 @@ var biblio = {
                             ar_rows: response.result
                         })
                             .then(function (list_node) {
-                                const total = response.total || response.result.length;
+                                const total = response.total || response.result.length || 0;
                                 const resultsCountNode = document.createElement('p');
                                 resultsCountNode.className = 'has-text-right';
                                 resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
