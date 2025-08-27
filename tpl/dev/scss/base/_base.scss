@@ -249,8 +249,8 @@ figure {
     }
 }
 figcaption {
-    font-size: var(--step--2);
-    margin-top: var(--space-3xs);
+    font-size: var(--step--2) !important;
+    margin-top: var(--space-3xs) !important;
 }
 
 details {
