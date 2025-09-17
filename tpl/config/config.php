@@ -9,7 +9,7 @@ define('__WEB_BASE_PATH__', dirname(dirname(dirname(__FILE__))));
 
 
 // dedalo 4 private conf file
-$environment = 'pro'; // pre , prod
+$environment = 'prod'; // pre , prod
 
 
 
