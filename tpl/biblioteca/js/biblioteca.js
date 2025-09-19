@@ -347,9 +347,9 @@ var biblio = {
 
             // input global search
             self.form.item_factory({
-                id: "global_search",
-                name: "global_search",
-                q_column: "global_search",
+                id: "search_data",
+                name: "search_data",
+                q_column: "search_data",
                 eq: "MATCH",
                 eq_in: "",
                 eq_out: "",
@@ -515,7 +515,7 @@ var biblio = {
                             var sql_filter = [];
                             checked.forEach(function(checkbox){
                                 value.push(checkbox.value);
-                                sql_filter.push('pertenencia_data = \'[\"'+checkbox.value+'\"]\'');
+                                sql_filter.push('pertenencia_data = '+checkbox.value);
                             })
                             form_item.sql_filter = '';
                             if (sql_filter.length > 0) {
@@ -963,7 +963,7 @@ var biblio = {
         infoHead = infoHead.length > 0 ? infoHead.join(' | ') : '';
 
         let title = `${row.titulo}`;
-        if (row.pertenencia_data && JSON.parse(row.pertenencia_data) && JSON.parse(row.pertenencia_data).includes('1')) {
+        if (row.pertenencia_data  && row.pertenencia_data === 1) {
             title = `<a href=${url} target="_blank">${row.titulo}</a>`;
         }
 
