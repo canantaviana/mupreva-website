@@ -394,10 +394,13 @@ var item = {
 
         var ubicationName = null;
         var ubicationId = null;
-        if (row.ubicacion && row.ubicacion_data) {
+        if (row.ubicacion && row.ubicacion_data && row.ubicacion_data.includes('ubication1_18')) {
             try {
                 ubicationName = row.ubicacion.split(' - ');
                 ubicationId = JSON.parse(row.ubicacion_data);
+                const ubicationCut = ubicationId.indexOf('ubication1_18');
+                ubicationName = ubicationName.slice(0, ubicationCut);
+                ubicationId = ubicationId.slice(0, ubicationCut);
             } catch (e) {}
         }
 
