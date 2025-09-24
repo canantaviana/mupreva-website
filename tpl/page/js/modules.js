@@ -1348,7 +1348,9 @@ var templateModules = {
                                             `<tr>
                                                 <th>${tstring.directory_tel}</th>
                                                 <td>
-                                                    <a href="tel:${persona.telefono}">${persona.telefono}</a>
+                                                    ${persona.telefono.split(' | ').map(function(tel){
+                                                        return `<a href="tel:${tel}">${tel}</a>`;
+                                                    }).join(', ')}
                                                 </td>
                                             </tr>`
                                             :''}
