@@ -232,7 +232,7 @@ var catalog = {
         // event map_selected_marker
         event_manager.subscribe("map_selected_marker", selected_marker);
         function selected_marker(data) {
-            console.log(" selected_marker data:", data);
+            //console.log(" selected_marker data:", data);
             self.map_marker_results = data.item.group;
             self.reset_map_results();
         }

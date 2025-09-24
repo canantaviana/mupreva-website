@@ -355,7 +355,7 @@ var search = {
 
         // options
         const ar_rows = options.ar_rows
-        console.log({ar_rows})
+        //console.log({ar_rows})
 
         return new Promise(function (resolve) {
 

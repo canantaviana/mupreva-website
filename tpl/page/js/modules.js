@@ -1372,12 +1372,12 @@ var templateModules = {
         var logo_url = null;
         if (info.identifying_image !== null && info.identifying_image.length > 0) {
             logo_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(info.identifying_image)[0];
+            logo_url = logo_url.replace('.jpg', '.png');
         }
         var image_url = null;
         if (info.images !== null && info.images.length > 0) {
             image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(info.images)[0];
         }
-        logo_url = logo_url.replace('.jpg', '.png');
         return htmlTemplate(`
             <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${info.title}</h2>
                 <!-- block-text-img-dreta-fons-negre -->
@@ -1441,7 +1441,7 @@ var templateModules = {
                                 <div class="px-6">
                                     <ul class="columns is-multiline is-variable is-7">
                                     ${elem.children_data.map(function(site){
-                                        console.log(site);
+                                        //console.log(site);
                                         var image_url = null;
                                         if (site.identifying_image !== null && site.identifying_image.length > 0) {
                                             image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(site.identifying_image)[0];

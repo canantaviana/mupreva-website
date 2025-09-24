@@ -101,7 +101,7 @@ var item = {
                     children: "publications",
                 },
             };
-            console.log(request_body);
+            //console.log(request_body);
             //if (table === 'sets') {
             /*request_body.resolve_portals_custom = {
                     imagenes_identificativas: 'image',
@@ -116,7 +116,7 @@ var item = {
                     body: request_body,
                 })
                 .then((response) => {
-                    console.log(response);
+                    //console.log(response);
                     event_manager.publish("data_request_done", {
                         request_body: request_body,
                         result: response.result,
