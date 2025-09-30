@@ -55,7 +55,7 @@ var api = {
                 options: {
                     dedalo_get: "records",
                     table: "activities",
-                    sql_filter: "(YEAR(NOW()) BETWEEN date_start_year AND date_end_year) AND identifying_image IS NOT NULL AND outstanding=\"1\"",
+                    sql_filter: "identifying_image IS NOT NULL AND outstanding=\"1\"",
                     order: "RAND()",
                     ar_fields: ["identifying_image", "section_id", "title"],
                     parse: page.parse_list_data,
@@ -68,7 +68,7 @@ var api = {
                 options: {
                     dedalo_get: "records",
                     table: "exhibitions",
-                    sql_filter: "((YEAR(NOW()) BETWEEN date_start_year AND date_end_year) OR (type = 'Sala general museo')) AND identifying_image IS NOT NULL AND outstanding=\"1\"",
+                    sql_filter: "identifying_image IS NOT NULL AND outstanding=\"1\"",
                     order: "RAND()",
                     ar_fields: ["identifying_image", "section_id", "title"],
                     parse: page.parse_list_data,
