@@ -115,7 +115,7 @@ var api = {
         var options = {
             table: 'publications',
             //sql_filter: 'imagen_identificativa is not null',
-            sql_filter: `pertenencia_data like 1`,
+            sql_filter: `pertenencia_data like 1 AND destacado = 1`,
             limit: 6,
             order: 'fecha_publicacion desc',
             //ar_fields: '*',
@@ -124,7 +124,7 @@ var api = {
         };
         if (serie !== null) {
             //options.sql_filter = options.sql_filter+' and serie_data = \'["'+serie+'"]\''
-            options.sql_filter = 'serie_data = \'["'+serie+'"]\''
+            options.sql_filter = 'serie_data = \'["'+serie+'"]\' AND destacado = 1'
         }
         return page.get_records(options);
     },

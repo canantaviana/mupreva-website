@@ -107,6 +107,8 @@ var biblio = {
             container: document.getElementById("items_container")
         })
         self.default_submit = true
+        self.used_form = false
+
         // first list
         self.initial_search()
 
@@ -566,6 +568,10 @@ var biblio = {
 
         const self = this
 
+        if (!self.default_submit) {
+            self.used_form = true;
+        }
+
         if (self.form.form_items.transcripcion.q !== '') {
             self.search_literal = true;
         } else {
@@ -651,12 +657,13 @@ var biblio = {
                             ar_rows: response.result
                         })
                             .then(function (list_node) {
-                                const total = response.total || response.result.length || 0;
-                                const resultsCountNode = document.createElement('p');
-                                resultsCountNode.className = 'has-text-right';
-                                resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
-                                rows_list_container.appendChild(resultsCountNode);
-
+                                if (self.used_form) {
+                                    const total_found = response.total || response.result.length || 0;
+                                    const resultsCountNode = document.createElement('p');
+                                    resultsCountNode.className = 'has-text-right';
+                                    resultsCountNode.textContent = `${total_found} ${(tstring.entries_found).toLowerCase()}`;
+                                    self.rows_list_container.appendChild(resultsCountNode);
+                                }
                                 if (common.is_node(list_node)) {
                                     rows_list_container.appendChild(list_node)
                                 }
