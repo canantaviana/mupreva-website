@@ -1158,6 +1158,10 @@ function imgOriginal(url) {
     return url;
 }
 
+function imgPdf(url) {
+    return url.replace('.pdf', '.jpg');
+}
+
 
 function getPosterframe(video_url){
     let posterframe_url = video_url

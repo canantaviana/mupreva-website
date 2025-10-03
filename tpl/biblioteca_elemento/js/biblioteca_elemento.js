@@ -253,14 +253,14 @@ var item = {
     <div class="column is-1 is-hidden-touch is-hidden-desktop-only"></div>
     <div class="fullscreen__fullheight images-group column is-7-tablet is-half-desktop">
     ${
-        row.imagen_identificativa
+        row.pdf
             ? `
         <figure class="fullscreen__content fullscreen__content--3 has-text-left">
             <img loading="lazy" class="active" src="${
-                __WEB_MEDIA_ENGINE_URL__ + row.imagen_identificativa
+                __WEB_MEDIA_ENGINE_URL__ + imgPdf(row.pdf)
             }" data-original="${
                   __WEB_MEDIA_ENGINE_URL__ +
-                  imgOriginal(row.imagen_identificativa)
+                  imgPdf(row.pdf)
               }" alt="${row.titulo}">
             <!-- Eines -->
             <div class="is-flex gap-5 mt-2">

@@ -426,8 +426,8 @@ var biblio = {
         var info = [];
 
         var image_url = '/assets/img/placeholder.png';
-        if (row.imagen_identificativa !== null) {
-            image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+        if (row.pdf !== null) {
+            image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(row.pdf);
         }
 
         let infoHead = [];

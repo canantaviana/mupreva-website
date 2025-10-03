@@ -554,8 +554,8 @@ var templateModules = {
                                 info.push(row.fecha_publicacion);
                             }
                             var image_url = '/assets/img/placeholder.png';
-                            if (row.imagen_identificativa !== null) {
-                                image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+                            if (row.pdf !== null) {
+                                image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(row.pdf);
                             }
 
                             return `
@@ -1212,8 +1212,8 @@ var templateModules = {
                         info.push(row.fecha_publicacion);
                     }
                     var image_url = '/assets/img/placeholder.png';
-                    if (row.imagen_identificativa !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+                    if (row.pdf !== null) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(row.pdf);
                     }
 
                     return `
@@ -1271,8 +1271,8 @@ var templateModules = {
                                 info.push(row.fecha_publicacion);
                             }
                             var image_url = '/assets/img/placeholder.png';
-                            if (row.imagen_identificativa !== null) {
-                                image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+                            if (row.pdf !== null) {
+                                image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(row.pdf);
                             }
 
                             return `

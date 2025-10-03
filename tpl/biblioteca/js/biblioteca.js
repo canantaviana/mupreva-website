@@ -850,8 +850,8 @@ var biblio = {
         }
 
         var image_url = '/assets/img/placeholder.png';
-        if (row.imagen_identificativa !== null) {
-            image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+        if (row.pdf !== null) {
+            image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(row.pdf);
         }
         const normalize = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
@@ -1027,8 +1027,8 @@ var biblio = {
         }
 
         var image_url = '/assets/img/placeholder.png';
-        if (row.imagen_identificativa !== null) {
-            image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+        if (row.pdf !== null) {
+            image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(row.pdf);
         }
         const year = row.fecha_publicacion;
         const content = parser.parseFromString(`
