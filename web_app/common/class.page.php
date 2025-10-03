@@ -620,6 +620,7 @@ class page
         $options->lang             = WEB_CURRENT_LANG_CODE;
         $options->table         = WEB_MENU_TABLE;
         $options->sql_filter     = "parents like '%{$term_id_search}%'";
+        $options->order         = 'norder ASC';
 
         # HTTP request in php to the API
         $data = json_web_data::get_data($options);
