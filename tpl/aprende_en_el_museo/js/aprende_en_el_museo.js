@@ -286,7 +286,7 @@ var biblio = {
                 });
             })
             .then(function (result) {
-                console.log(result);
+                //console.log(result);
                 var select = currentForm.querySelector("#thematic");
                 result.forEach((element) => {
                     var option = htmlTemplate(`

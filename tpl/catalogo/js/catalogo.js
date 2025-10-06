@@ -232,7 +232,7 @@ var catalog = {
         // event map_selected_marker
         event_manager.subscribe("map_selected_marker", selected_marker);
         function selected_marker(data) {
-            console.log(" selected_marker data:", data);
+            //console.log(" selected_marker data:", data);
             self.map_marker_results = data.item.group;
             self.reset_map_results();
         }
@@ -1109,7 +1109,7 @@ var catalog = {
                 order: order,
             }).then((response) => {
                 if(!self.default_submit) {
-                    const total = response.total || response.result.length;
+                    const total = response.total || response.result.length || 0;
                     const resultsCountNode = document.createElement('p');
                     resultsCountNode.className = 'has-text-right';
                     resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;

@@ -55,7 +55,7 @@ var api = {
                 options: {
                     dedalo_get: "records",
                     table: "activities",
-                    sql_filter: "(YEAR(NOW()) BETWEEN date_start_year AND date_end_year) AND identifying_image IS NOT NULL AND outstanding=\"1\"",
+                    sql_filter: "identifying_image IS NOT NULL AND outstanding=\"1\"",
                     order: "RAND()",
                     ar_fields: ["identifying_image", "section_id", "title"],
                     parse: page.parse_list_data,
@@ -68,7 +68,7 @@ var api = {
                 options: {
                     dedalo_get: "records",
                     table: "exhibitions",
-                    sql_filter: "((YEAR(NOW()) BETWEEN date_start_year AND date_end_year) OR (type = 'Sala general museo')) AND identifying_image IS NOT NULL AND outstanding=\"1\"",
+                    sql_filter: "identifying_image IS NOT NULL AND outstanding=\"1\"",
                     order: "RAND()",
                     ar_fields: ["identifying_image", "section_id", "title"],
                     parse: page.parse_list_data,
@@ -115,7 +115,7 @@ var api = {
         var options = {
             table: 'publications',
             //sql_filter: 'imagen_identificativa is not null',
-            sql_filter: `pertenencia_data like '%\"1\"%'`,
+            sql_filter: `pertenencia_data like 1 AND destacado = 1`,
             limit: 6,
             order: 'fecha_publicacion desc',
             //ar_fields: '*',
@@ -124,7 +124,7 @@ var api = {
         };
         if (serie !== null) {
             //options.sql_filter = options.sql_filter+' and serie_data = \'["'+serie+'"]\''
-            options.sql_filter = 'serie_data = \'["'+serie+'"]\''
+            options.sql_filter = 'serie_data = \'["'+serie+'"]\' AND destacado = 1'
         }
         return page.get_records(options);
     },

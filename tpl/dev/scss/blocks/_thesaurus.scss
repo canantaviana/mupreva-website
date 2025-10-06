@@ -189,6 +189,9 @@ html {
                     background-image: url("img/icon-close-subtree.svg");
                 }
             }
+            &:has(>.arrow.open) > .term a {
+                color: #fff;
+            }
         }
     }
 

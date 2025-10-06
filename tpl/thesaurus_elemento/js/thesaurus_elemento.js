@@ -192,9 +192,10 @@ var item = {
                 // }
             };
             if (self.table === 'ts_ubication') {
-            request_body.resolve_portals_custom = {
-                imagenes: "image"
-            };
+                request_body.resolve_portals_custom = {
+                    imagenes: "image"
+                };
+                request_body.sql_filter = request_body.sql_filter+' and parents like "%\\"ubication1_18\\"%"';
             }
             data_manager
                 .request({

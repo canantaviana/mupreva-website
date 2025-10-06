@@ -84,7 +84,7 @@ var item = {
         const ar_fields = options.ar_fields || default_fields || ["*"];
         const lang = options.lang || page_globals.WEB_CURRENT_LANG_CODE;
         const sql_filter =
-            options.filter || "pertenencia_data like '%\"1\"%' and section_id=" + parseInt(section_id);
+            options.filter || "pertenencia_data like 1 and section_id=" + parseInt(section_id);
 
         return new Promise(function (resolve) {
             // request
@@ -101,7 +101,7 @@ var item = {
                     children: "publications",
                 },
             };
-            console.log(request_body);
+            //console.log(request_body);
             //if (table === 'sets') {
             /*request_body.resolve_portals_custom = {
                     imagenes_identificativas: 'image',
@@ -116,7 +116,7 @@ var item = {
                     body: request_body,
                 })
                 .then((response) => {
-                    console.log(response);
+                    //console.log(response);
                     event_manager.publish("data_request_done", {
                         request_body: request_body,
                         result: response.result,
@@ -253,14 +253,14 @@ var item = {
     <div class="column is-1 is-hidden-touch is-hidden-desktop-only"></div>
     <div class="fullscreen__fullheight images-group column is-7-tablet is-half-desktop">
     ${
-        row.imagen_identificativa
+        row.pdf
             ? `
         <figure class="fullscreen__content fullscreen__content--3 has-text-left">
             <img loading="lazy" class="active" src="${
-                __WEB_MEDIA_ENGINE_URL__ + row.imagen_identificativa
+                __WEB_MEDIA_ENGINE_URL__ + imgPdf(row.pdf)
             }" data-original="${
                   __WEB_MEDIA_ENGINE_URL__ +
-                  imgOriginal(row.imagen_identificativa)
+                  imgPdf(row.pdf)
               }" alt="${row.titulo}">
             <!-- Eines -->
             <div class="is-flex gap-5 mt-2">

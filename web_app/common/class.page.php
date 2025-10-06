@@ -620,6 +620,7 @@ class page
         $options->lang             = WEB_CURRENT_LANG_CODE;
         $options->table         = WEB_MENU_TABLE;
         $options->sql_filter     = "parents like '%{$term_id_search}%'";
+        $options->order         = 'norder ASC';
 
         # HTTP request in php to the API
         $data = json_web_data::get_data($options);
@@ -818,8 +819,10 @@ class page
         $data = json_web_data::get_data($options);
 
         $breadcrumb = [];
+
         foreach (array_reverse($data->result) as $key => $value) {
-            if ($value->web_path === null) {
+
+            if ($value == false || $value->web_path === null) {
                 continue;
             }
             if ($value->web_path == 'main_home') {

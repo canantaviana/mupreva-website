@@ -554,8 +554,8 @@ var templateModules = {
                                 info.push(row.fecha_publicacion);
                             }
                             var image_url = '/assets/img/placeholder.png';
-                            if (row.imagen_identificativa !== null) {
-                                image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+                            if (row.pdf !== null) {
+                                image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(row.pdf);
                             }
 
                             return `
@@ -1123,7 +1123,7 @@ var templateModules = {
                 data[type].results = data[type].results.concat(results);
                 data[type].total = total;
                 data[type].loaded += results.length;
-                data[type].resultCount.innerHTML = `${total} ${(tstring.entries_found).toLowerCase()}`;
+                data[type].resultCount.innerHTML = `${total ? total : 0} ${(tstring.entries_found).toLowerCase()}`;
 
                 // Si ja s'han carregat tots els elements, es treu el botó de carregar més
                 if (data[type].loaded >= data[type].total) {
@@ -1212,8 +1212,8 @@ var templateModules = {
                         info.push(row.fecha_publicacion);
                     }
                     var image_url = '/assets/img/placeholder.png';
-                    if (row.imagen_identificativa !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+                    if (row.pdf !== null) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(row.pdf);
                     }
 
                     return `
@@ -1271,8 +1271,8 @@ var templateModules = {
                                 info.push(row.fecha_publicacion);
                             }
                             var image_url = '/assets/img/placeholder.png';
-                            if (row.imagen_identificativa !== null) {
-                                image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+                            if (row.pdf !== null) {
+                                image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(row.pdf);
                             }
 
                             return `
@@ -1348,7 +1348,9 @@ var templateModules = {
                                             `<tr>
                                                 <th>${tstring.directory_tel}</th>
                                                 <td>
-                                                    <a href="tel:${persona.telefono}">${persona.telefono}</a>
+                                                    ${persona.telefono.split(' | ').map(function(tel){
+                                                        return `<a href="tel:${tel}">${tel}</a>`;
+                                                    }).join(', ')}
                                                 </td>
                                             </tr>`
                                             :''}
@@ -1370,12 +1372,12 @@ var templateModules = {
         var logo_url = null;
         if (info.identifying_image !== null && info.identifying_image.length > 0) {
             logo_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(info.identifying_image)[0];
+            logo_url = logo_url.replace('.jpg', '.png');
         }
         var image_url = null;
         if (info.images !== null && info.images.length > 0) {
             image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(info.images)[0];
         }
-        logo_url = logo_url.replace('.jpg', '.png');
         return htmlTemplate(`
             <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${info.title}</h2>
                 <!-- block-text-img-dreta-fons-negre -->
@@ -1439,7 +1441,7 @@ var templateModules = {
                                 <div class="px-6">
                                     <ul class="columns is-multiline is-variable is-7">
                                     ${elem.children_data.map(function(site){
-                                        console.log(site);
+                                        //console.log(site);
                                         var image_url = null;
                                         if (site.identifying_image !== null && site.identifying_image.length > 0) {
                                             image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(site.identifying_image)[0];

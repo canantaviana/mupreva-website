@@ -107,6 +107,8 @@ var biblio = {
             container: document.getElementById("items_container")
         })
         self.default_submit = true
+        self.used_form = false
+
         // first list
         self.initial_search()
 
@@ -347,9 +349,9 @@ var biblio = {
 
             // input global search
             self.form.item_factory({
-                id: "global_search",
-                name: "global_search",
-                q_column: "global_search",
+                id: "search_data",
+                name: "search_data",
+                q_column: "search_data",
                 eq: "MATCH",
                 eq_in: "",
                 eq_out: "",
@@ -515,7 +517,7 @@ var biblio = {
                             var sql_filter = [];
                             checked.forEach(function(checkbox){
                                 value.push(checkbox.value);
-                                sql_filter.push('pertenencia_data = \'[\"'+checkbox.value+'\"]\'');
+                                sql_filter.push('pertenencia_data = '+checkbox.value);
                             })
                             form_item.sql_filter = '';
                             if (sql_filter.length > 0) {
@@ -565,6 +567,10 @@ var biblio = {
     form_submit: function (form_obj, options = {}) {
 
         const self = this
+
+        if (!self.default_submit) {
+            self.used_form = true;
+        }
 
         if (self.form.form_items.transcripcion.q !== '') {
             self.search_literal = true;
@@ -651,12 +657,13 @@ var biblio = {
                             ar_rows: response.result
                         })
                             .then(function (list_node) {
-                                const total = response.total || response.result.length;
-                                const resultsCountNode = document.createElement('p');
-                                resultsCountNode.className = 'has-text-right';
-                                resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
-                                rows_list_container.appendChild(resultsCountNode);
-
+                                if (self.used_form) {
+                                    const total_found = response.total || response.result.length || 0;
+                                    const resultsCountNode = document.createElement('p');
+                                    resultsCountNode.className = 'has-text-right';
+                                    resultsCountNode.textContent = `${total_found} ${(tstring.entries_found).toLowerCase()}`;
+                                    self.rows_list_container.appendChild(resultsCountNode);
+                                }
                                 if (common.is_node(list_node)) {
                                     rows_list_container.appendChild(list_node)
                                 }
@@ -843,8 +850,8 @@ var biblio = {
         }
 
         var image_url = '/assets/img/placeholder.png';
-        if (row.imagen_identificativa !== null) {
-            image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+        if (row.pdf !== null) {
+            image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(row.pdf);
         }
         const normalize = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
@@ -963,7 +970,7 @@ var biblio = {
         infoHead = infoHead.length > 0 ? infoHead.join(' | ') : '';
 
         let title = `${row.titulo}`;
-        if (row.pertenencia_data && JSON.parse(row.pertenencia_data) && JSON.parse(row.pertenencia_data).includes('1')) {
+        if (row.pertenencia_data  && row.pertenencia_data === 1) {
             title = `<a href=${url} target="_blank">${row.titulo}</a>`;
         }
 
@@ -1020,8 +1027,8 @@ var biblio = {
         }
 
         var image_url = '/assets/img/placeholder.png';
-        if (row.imagen_identificativa !== null) {
-            image_url = __WEB_MEDIA_ENGINE_URL__+row.imagen_identificativa;
+        if (row.pdf !== null) {
+            image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(row.pdf);
         }
         const year = row.fecha_publicacion;
         const content = parser.parseFromString(`

@@ -10,4 +10,11 @@ footer {
     body:has(#children_container > div[class*="has-background-"]:last-child) & {
         margin-top: 0 !important;
     }
+    .column:first-child img {
+        max-width: 170px;
+    }
+    .column:not(:first-child) img {
+        width: 24px;
+        filter: invert(1);
+    }
 }

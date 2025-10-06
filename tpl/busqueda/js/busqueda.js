@@ -2,7 +2,7 @@
 
 
 
-var biblio = {
+var search = {
 
 
 
@@ -14,6 +14,9 @@ var biblio = {
 
     // search_options
     search_options: {},
+
+    // keywords
+    keywords: null,
 
     // view_mode. rows view mode. default is 'list'. Others could be 'map', 'timeline' ..
     view_mode: 'list',
@@ -36,11 +39,37 @@ var biblio = {
 
     // fields
     /*ar_fields: [
-        "type_data",
-        "identifying_image_data",
-        "title",
-        "summary",
+        "author_main",
+        "author_others",
+        "authors",
+        "authors_name",
+        "authors_surname",
+        "authors_count",
+        "authors_data",
+        "authors_secondary",
+        "authors_alt",
+        "dd_relations",
+        "descriptors",
+        "descriptors_data",
+        "editor",
+        "magazine",
+        "magazine_data",
+        "other_people",
+        "other_people_data",
+        "pdf",
+        "physical_description",
+        "place",
+        "publication_date",
         "section_id",
+        "serie",
+        "title",
+        "title_secondary",
+        "transcription",
+        "typology",
+        "copy",
+        "editorial",
+        "typology_name",
+        "url_data"
     ],*/
 
     // biblio_config
@@ -49,7 +78,7 @@ var biblio = {
     // biblio_table
     biblio_table: 'publications',
 
-    serie: null,
+
 
     /**
     * SET_UP
@@ -57,6 +86,11 @@ var biblio = {
     set_up: function (options) {
 
         const self = this
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('keywords')) {
+            self.keywords = params.get('keywords');
+        }
 
         // options
         self.rows_list_container = options.rows_list_container
@@ -66,26 +100,28 @@ var biblio = {
 
         // pagination (only for list mode)
         self.pagination = {
-            limit: 18,
+            limit: 16,
             offset: 0,
             total: null
         }
-
-        self.serie = options.serie || null
-
-        // form. Created DOM form and add to items_container
-        /*self.render_form()
-            .then(function (form_node) {
-                const form_container = document.getElementById("items_container")
-                form_container.appendChild(form_node)
-            })*/
-        self.render_form({
-            container: document.getElementById("items_container")
-        })
-
         // first list
         self.initial_search()
 
+        self.search_literal = null
+
+        // subscribe events
+        // event_manager.subscribe('pagination_change', pagination_change_action)
+        // function pagination_change_action(item) {
+        // 	// fix the new offset value
+        // 	// self.offset	= item.offset
+
+        // 	// search again
+        // 	self.form_submit(null, {
+        // 		filter	: false,
+        // 		offset	: item.offset,
+        // 		total	: self.total
+        // 	})
+        // }
 
         // event paginate is triggered by list_factory.pagination nodes << < > >>
         event_manager.subscribe('paginate', paginating)
@@ -115,7 +151,7 @@ var biblio = {
         const self = this
 
         // cookie
-        const biblio_config = localStorage.getItem('games_config');
+        const biblio_config = localStorage.getItem('biblio_config');
         if (biblio_config) {
             // use existing one
             self.biblio_config = JSON.parse(biblio_config)
@@ -125,7 +161,7 @@ var biblio = {
                 pagination: self.pagination,
                 advanced_search_showed: false
             }
-            localStorage.setItem('games_config', JSON.stringify(biblio_config));
+            localStorage.setItem('biblio_config', JSON.stringify(biblio_config));
             self.biblio_config = biblio_config
         }
 
@@ -133,8 +169,10 @@ var biblio = {
             for (const key in options) {
                 self.biblio_config[key] = options[key]
             }
-            localStorage.setItem('games_config', JSON.stringify(self.biblio_config));
+            localStorage.setItem('biblio_config', JSON.stringify(self.biblio_config));
         }
+
+        // console.log("--> self.biblio_config [final]:", self.biblio_config);
 
         return self.biblio_config
     },//end set_config
@@ -149,8 +187,6 @@ var biblio = {
 
         const self = this
 
-        self.filters = {}
-
         self.form_submit(null, {
             filter: false
         })
@@ -162,59 +198,18 @@ var biblio = {
 
 
     /**
-    * RENDER_FORM
-    * Build DOM form nodes (inputs and buttons)
-    * Create logic and view of search
-    */
-    render_form: function (options) {
-
-        const self = this
-
-        return new Promise(function (resolve) {
-
-            // form_factory instance
-            self.form = self.form || new form_factory()
-
-            resolve(self.form.node)
-        })
-    },//end render_form
-
-
-    /**
-    * PARSE_AUTOCOMPLETE_RESULT
-    * @return array
-    */
-    parse_autocomplete_result: function (ar_result, term, q_splittable) {
-
-        const self = this
-
-        const ar_ordered_result = (q_splittable === true) ? self.sort_array_by_property(ar_result, "value") : ar_result
-        const ar_filtered_result = (term.length != 0) ? self.filter_drop_down_list(ar_ordered_result, term) : ar_ordered_result
-        const ar_drow_down_list = ar_filtered_result.slice(0, 30)
-
-        return ar_drow_down_list
-    },//end parse_autocomplete_result
-
-
-
-
-    /**
     * FORM_SUBMIT
     * Form submit launch search
     */
-    form_submit: function (form_obj, options = {}) {
+    form_submit: function () {
 
         const self = this
 
         // options
-        const order = options.order || null
-        const limit = options.limit || self.pagination.limit
-        const offset = options.offset || self.pagination.offset
-        const filter = (typeof options.filter !== "undefined")
-            ? options.filter
-            : self.form.build_filter({
-                form_items: self.form.form_items
-            });
+        const order = null
+        const limit = self.pagination.limit
+        const offset = self.pagination.offset
+        const scroll_result = true
 
         return new Promise(function (resolve) {
 
@@ -250,17 +245,7 @@ var biblio = {
             const ar_fields = self.ar_fields
 
             // search rows exec against API
-            self.search_rows({
-                filter: filter,
-                limit: limit,
-                offset: offset,
-                order: order,
-                ar_fields: ar_fields
-                // process_result	: {
-                // 	fn 		: 'process_result::add_parents_and_children_recursive',
-                // 	columns : [{name : "parents"}]
-                // }
-            })
+            self.search_rows()
                 .then(function (response) {
 
                     // clean container and add_spinner
@@ -283,6 +268,17 @@ var biblio = {
                             ar_rows: response.result
                         })
                             .then(function (list_node) {
+                                const searchTitle = document.createElement('h2');
+                                searchTitle.textContent = self.keywords
+                                    ? `"${self.keywords}"`
+                                    : '';
+                                rows_list_container.appendChild(searchTitle);
+                                const total = response.total || response.result.length || 0;
+                                const resultsCountNode = document.createElement('p');
+                                resultsCountNode.className = 'has-text-right';
+                                resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
+                                rows_list_container.appendChild(resultsCountNode);
+
                                 if (common.is_node(list_node)) {
                                     rows_list_container.appendChild(list_node)
                                 }
@@ -294,13 +290,6 @@ var biblio = {
                             })
                     }, self.draw_delay)
 
-                    // scrool to head result
-                    // if (response.result.length>0) {
-                    // 	const div_result = document.querySelector(".result")
-                    // 	if (div_result) {
-                    // 		div_result.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-                    // 	}
-                    // }
                 })
         })
     },//end form_submit
@@ -315,23 +304,21 @@ var biblio = {
 
         const self = this
 
+        if (!self.keywords) {
+            return Promise.resolve({ result: [], total: 0})
+        }
+
         // options
-        const table = options.table || self.biblio_table
-        const filter = options.filter || null
-        const ar_fields = options.ar_fields || ["*"]
-        // const order			= options.order || "COALESCE(authors_surname, 'zz') ASC, publication_date ASC"
-        const order = options.order || "fecha_publicacion desc";
-        const limit = options.limit || self.pagination.limit
-        const offset = options.offset || self.pagination.offset;
-        const count = typeof options.count !== "undefined" ? options.count : true
-        const process_result = options.process_result || null
-
-        const group = []
-        var sql_filter = self.form.parse_sql_filter(filter, group)
-
-        var customFilter = 'serie = \''+(this.serie.replace('\'', '\\\''))+'\'';
-        sql_filter = (sql_filter) ? sql_filter + ' AND '+customFilter : customFilter
-
+        const table = 'global_search'
+        const ar_fields = "*"
+        const order = 'section_id asc'
+        const limit = 0
+        const offset = self.pagination.offset;
+        const count = true
+        const process_result = null
+        const sql_filter = self.keywords
+            ? `MATCH (search_data) AGAINST ('${self.keywords}' IN BOOLEAN MODE)`
+            : null;
 
         // request
         const js_promise = data_manager.request({
@@ -342,15 +329,12 @@ var biblio = {
                 ar_fields: ar_fields,
                 lang: page_globals.WEB_CURRENT_LANG_CODE,
                 sql_filter: sql_filter,
-                group: (group.length > 0) ? group.join(",") : null,
+                group: null,
                 count: count,
                 limit: limit,
                 offset: offset,
                 order: order,
-                process_result: process_result,
-                resolve_portals_custom: {
-                    identifying_image_data: 'image',
-                }
+                process_result: process_result
             }
         })
 
@@ -371,6 +355,7 @@ var biblio = {
 
         // options
         const ar_rows = options.ar_rows
+        //console.log({ar_rows})
 
         return new Promise(function (resolve) {
 
@@ -380,16 +365,25 @@ var biblio = {
             const list_data = self.list_data(ar_rows) // prepares data to use in list
             self.list = self.list || new list_factory() // creates / get existing instance of list
             self.list.init({
-                data: list_data,
+                /*data: list_data,
                 fn_row_builder: self.list_row_builder,
                 pagination: pagination,
                 container_class: 'pubs-list link-dn',
+                caller: self*/
+                data: list_data,
+                fn_row_builder: self.list_row_builder,
+                pagination: pagination,
+                container_class: 'pub-text-results flow--l',
                 caller: self
             })
             self.list.render_list()
                 .then(function (list_node) {
                     resolve(list_node)
                 })
+            self.default_submit = false
+            self.form_submit_state = 'done';
+
+
         })
     },//end render_data
 
@@ -415,71 +409,38 @@ var biblio = {
     },// end list_data
 
     /**
-    * LIST_ROW_BUILDER
-    * Build DOM nodes to insert into list pop-up
-    */
+     * LITERAL SEARCH RESULTS
+     */
+
     list_row_builder: function (row) {
-        row.tpl = page.section_tipo_to_template(row.section_tipo);
+
+        row.tpl = page.section_tipo_to_template(row.ref_section_tipo);
 
         const parser = new DOMParser();
-        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-        var info = [];
-
-        var image_url = '/assets/img/placeholder.png';
-        if (row.pdf !== null) {
-            image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(row.pdf);
-        }
-
-        let infoHead = [];
-        if (row.pertenencia) {
-            infoHead.push(row.pertenencia);
-        }
-        if (row.tipologia_bibliografica) {
-            infoHead.push(row.tipologia_bibliografica);
-        }
-        infoHead = infoHead.length > 0 ? infoHead.join(' | ') : '';
-
-
-        let infoSerie = [];
-        if (row.serie) {
-            infoSerie.push(row.serie);
-        }
-        if (row.num_serie) {
-            infoSerie.push(row.num_serie);
-        }
-        if (row.fecha_publicacion) {
-            infoSerie.push(row.fecha_publicacion);
-        }
-        if (row.num_paginas) {
-            infoSerie.push(row.num_paginas);
-        }
-        infoSerie = infoSerie.length > 0 ? infoSerie.join(', ') : '';
-
+        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.ref_section_id;
 
         const content = parser.parseFromString(`
-            <li class="is-flex is-flex-direction-column full-link gap-2 ${row.tpl}">
-                <h3 class="is-size-6">
-                    <a href="${url}" target="_blank">${row.titulo}</a>
-                </h3>
-                <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
-                    <img loading="lazy" src="${image_url}" alt="">
+            <li class="pb-6">
+                <div class="columns is-flex-direction-row-reverse">
+                    <div class="column flow--2xs">
+                        <div class="flow--2xs">
+                            <h3 class="is-size-3 has-text-weight-normal">
+                                ${row.search_data.substring(0, 200)}...
+                            </h3>
+                            <p class="is-size-5 has-text-weight-medium">
+                            <a href="${url}">
+                                ${row.tpl}/${row.ref_section_id}
+                            </a>
+                            </p>
+                        </div>
+
+                    </div>
                 </div>
-                <p class="is-size-7">
-                    ${infoHead}<br>
-                    ${row.autor}<br>
-                    ${infoSerie}
-                </p>
             </li>
         `, "text/html");
         return content.body.firstChild;
 
-
-        /*const self = this
-
-        const row_node = row_fields.draw_item(item)
-
-        return row_node*/
-    },//end list_row_builder
+    },
 
 
     /**
