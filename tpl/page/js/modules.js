@@ -756,83 +756,83 @@ var templateModules = {
         const spinner = common.spinner(children_container)
         appendTemplate(target, content);
 
+        api.getActivitiesYears().then(function(results){
+            if (!results || results.length == 0) return;
+            const yearsArray = results.map(el => el.date_start_year);
 
-        function buildYear (year, activs) {
-            return `
-                <h2 class="accordion-header" id="tab${year}">
-                    <button type="button" aria-controls="panel${year}">${year}</button>
-                </h2>
-                <div class="accordion-content" id="panel${year}" aria-labelledby="tab${year}">
-                    <div class="swiper-container is-relative">
-                        <div class="swiper swiper--activitats swiper--activitats-${year}">
-                            <div class="swiper-wrapper">
-                                ${
-                                    activs.map(function(row){
-                                        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                                        var image_url = '/assets/img/placeholder.png';
-                                        if (row.identifying_image !== null) {
-                                            image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
-                                        }
-                                        var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+            Promise.all(
+                yearsArray.map(year => api.getActivitiesByYear(year).then(activities => ({ year, activities })))
+            ).then(yearsWithActivities => {
+                const html = yearsWithActivities.map(({ year, activities }) => {
+                    if (!activities || activities.length == 0) return '';
 
-                                        return `
-                                            <div class="swiper-slide">
-                                                <div class="card is-flex is-flex-direction-column full-link">
-                                                    <div class="pt-5 pb-5 px-6 flow">
-                                                        <h3 class="is-size-3 has-text-weight-semibold">
-                                                            <a href="${url}" target="_blank">${row.title}</a>
-                                                        </h3>
-                                                        ${(date)?
-                                                        `<p class="has-text-weight-medium">${date}</p>`
-                                                        :''}
-                                                        <p class="more-link">${tstring.home_activities_more}</p>
+                    return `
+                        <h2 class="accordion-header" id="tab${year}">
+                            <button type="button" aria-controls="panel${year}">${year}</button>
+                        </h2>
+                        <div class="accordion-content" id="panel${year}" aria-labelledby="tab${year}">
+                            <div class="swiper-container is-relative">
+                                <div class="swiper swiper--activitats swiper--activitats-${year}">
+                                    <div class="swiper-wrapper">
+                                        ${
+                                            activities.map(function(row){
+                                                const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                                                var image_url = '/assets/img/placeholder.png';
+                                                if (row.identifying_image !== null) {
+                                                    image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                                                }
+                                                var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                                                return `
+                                                    <div class="swiper-slide">
+                                                        <div class="card is-flex is-flex-direction-column full-link">
+                                                            <div class="pt-5 pb-5 px-6 flow">
+                                                                <h3 class="is-size-3 has-text-weight-semibold">
+                                                                    <a href="${url}" target="_blank">${row.title}</a>
+                                                                </h3>
+                                                                ${(date)?
+                                                                `<p class="has-text-weight-medium">${date}</p>`
+                                                                :''}
+                                                                <p class="more-link">${tstring.home_activities_more}</p>
+                                                            </div>
+                                                            ${(row.type)?
+                                                            `<p class="has-text-weight-medium mb-3">
+                                                                <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                                            </p>`
+                                                            :''}
+                                                            <img loading="lazy" src="${image_url}" alt="">
+                                                        </div>
                                                     </div>
-                                                    ${(row.type)?
-                                                    `<p class="has-text-weight-medium mb-3">
-                                                        <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
-                                                    </p>`
-                                                    :''}
-                                                    <img loading="lazy" src="${image_url}" alt="">
-                                                </div>
-                                            </div>
-                                        `;
-                                    }).join('')
-                                }
-                            </div>
-                            <div class="swiper--activitats-${year}__btns">
-                                <div class="swiper-button-prev"></div>
-                                <div class="swiper-button-next"></div>
+                                                `;
+                                            }).join('')
+                                        }
+                                    </div>
+                                    <div class="swiper--activitats-${year}__btns">
+                                        <div class="swiper-button-prev"></div>
+                                        <div class="swiper-button-next"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            `;
-        }
-        api.getActivities().then(function(results){
-            if (!results || results.length == 0) {
-                return '';
-            }
+                    `;
+                }).join('');
 
-            const groupedByYear = {};
-            results.forEach(activ => {
-                const year = activ.date_start_year;
-                if (year) {
-                    groupedByYear[year] = groupedByYear[year] || [];
-                    groupedByYear[year].push(activ);
-                }
-            })
-            const yearsArray = Object.keys(groupedByYear).sort((a,b) => b-a);
-
-            var content = htmlTemplate(`
-                ${yearsArray.map(function(year, i){
-                    return buildYear(year, groupedByYear[year], i);
-                }).join('')}`);
-            children_container.removeChild(children_container.lastChild);
-            appendTemplate(children_container, content);
-            swiperActividadesAnuales(yearsArray);
-            let accordionInstance = new TenUp.Accordion('.accordion');
+                children_container.removeChild(children_container.lastChild);
+                appendTemplate(children_container, htmlTemplate(html));
+                let initializedYears = new Set();
+                let accordionInstance = new TenUp.Accordion('.accordion', {
+                    onOpen: function({link}) {
+                        const year = link.textContent;
+                        if (!initializedYears.has(year)) {
+                            requestAnimationFrame(() => {
+                                swiperActividadesAnual(year);
+                            });
+                        }
+                        initializedYears.add(year);
+                    }
+                });
+            });
         });
-        return;
     },
 
 
@@ -889,6 +889,7 @@ var templateModules = {
         });
         return content;
     },
+
     bloque_exposiciones_anuales: function(target){
         const content = htmlTemplate(`
             <div class="children_container accordion accordion--primary mt-6">
@@ -899,84 +900,84 @@ var templateModules = {
         const spinner = common.spinner(children_container)
         appendTemplate(target, content);
 
-        function buildYear (year, expos) {
-            return `
-                <h2 class="accordion-header" id="tab${year}">
-                    <button type="button" aria-controls="panel${year}">${year}</button>
-                </h2>
-                <div class="accordion-content" id="panel${year}" aria-labelledby="tab${year}">
-                    <div class="swiper-container is-relative">
-                        <div class="swiper swiper--expos swiper--expos-${year}">
-                            <div class="swiper-wrapper">
-                                ${
-                                    expos.map(function(row){
-                                        const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                                        var image_url = '/assets/img/placeholder.png';
+        api.getExposYears().then(function(results) {
+            if (!results || results.length == 0) return;
+            const yearsArray = results.map(el => el.date_start_year);
 
-                                        if (row.identifying_image !== null) {
-                                            image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
-                                        }
-                                        var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+            Promise.all(
+                yearsArray.map(year => api.getExposByYear(year).then(expos => ({ year, expos })))
+            ).then(yearsWithExpos => {
+                const html = yearsWithExpos.map(({ year, expos }) => {
+                    if (!expos || expos.length == 0) return '';
 
-                                        return `
-                                            <div class="swiper-slide">
-                                                <div class="card is-flex is-flex-direction-column full-link">
-                                                    <div class="pt-5 pb-5 px-6 flow">
-                                                        <h3 class="is-size-3 has-text-weight-semibold">
-                                                            <a href="${url}" target="_blank">${row.title}</a>
-                                                        </h3>
-                                                        ${(date)?
-                                                        `<p class="has-text-weight-medium">${date}</p>`
-                                                        :''}
-                                                        <p class="more-link">${tstring.home_activities_more}</p>
+                    return `
+                        <h2 class="accordion-header" id="tab${year}">
+                            <button type="button" aria-controls="panel${year}">${year}</button>
+                        </h2>
+                        <div class="accordion-content" id="panel${year}" aria-labelledby="tab${year}">
+                            <div class="swiper-container is-relative">
+                                <div class="swiper swiper--expos swiper--expos-${year}">
+                                    <div class="swiper-wrapper">
+                                        ${
+                                            expos.map(function(row){
+                                                const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                                                var image_url = '/assets/img/placeholder.png';
+
+                                                if (row.identifying_image !== null) {
+                                                    image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                                                }
+                                                var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                                                return `
+                                                    <div class="swiper-slide">
+                                                        <div class="card is-flex is-flex-direction-column full-link">
+                                                            <div class="pt-5 pb-5 px-6 flow">
+                                                                <h3 class="is-size-3 has-text-weight-semibold">
+                                                                    <a href="${url}" target="_blank">${row.title}</a>
+                                                                </h3>
+                                                                ${(date)?
+                                                                `<p class="has-text-weight-medium">${date}</p>`
+                                                                :''}
+                                                                <p class="more-link">${tstring.home_activities_more}</p>
+                                                            </div>
+                                                            ${(row.type)?
+                                                            `<p class="has-text-weight-medium mb-3">
+                                                                <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                                            </p>`
+                                                            :''}
+                                                            <img loading="lazy" src="${image_url}" alt="">
+                                                        </div>
                                                     </div>
-                                                    ${(row.type)?
-                                                    `<p class="has-text-weight-medium mb-3">
-                                                        <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
-                                                    </p>`
-                                                    :''}
-                                                    <img loading="lazy" src="${image_url}" alt="">
-                                                </div>
-                                            </div>
-                                        `;
-                                    }).join('')
-                                }
-                            </div>
-                            <div class="swiper--expos-${year}__btns">
-                                <div class="swiper-button-prev"></div>
-                                <div class="swiper-button-next"></div>
+                                                `;
+                                            }).join('')
+                                        }
+                                    </div>
+                                    <div class="swiper--expos-${year}__btns">
+                                        <div class="swiper-button-prev"></div>
+                                        <div class="swiper-button-next"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            `;
-        }
+                    `;
+                }).join('');
 
-        api.getExposiciones().then(function(results){
-            if (!results || results.length == 0) {
-                return '';
-            }
-
-            const groupedByYear = {};
-            results.forEach(expo => {
-                const year = expo.date_start_year;
-                if (year) {
-                    groupedByYear[year] = groupedByYear[year] || [];
-                    groupedByYear[year].push(expo);
-                }
-            })
-            const yearsArray = Object.keys(groupedByYear).sort((a,b) => b-a);
-
-            var content = htmlTemplate(`
-                ${yearsArray.map(function(year, i){
-                    return buildYear(year, groupedByYear[year], i);
-                }).join('')}`);
-            children_container.removeChild(children_container.lastChild);
-            appendTemplate(children_container, content);
-            swiperExpos(yearsArray)
-            let accordionInstance = new TenUp.Accordion('.accordion', {open: true});
+                children_container.removeChild(children_container.lastChild);
+                appendTemplate(children_container, htmlTemplate(html));
+                let initializedYears = new Set();
+                let accordionInstance = new TenUp.Accordion('.accordion', {
+                    onOpen: function({link}) {
+                        const year = link.textContent;
+                        if (!initializedYears.has(year)) {
+                            requestAnimationFrame(() => {
+                                swiperExposAnual(year);
+                            });
+                        }
+                        initializedYears.add(year);
+                    }
+                });
+            });
         });
-        return;
     },
 
     bloque_exposiciones_actuales: function(){

@@ -215,13 +215,49 @@ var api = {
         return page.get_records(options);
     },
 
-    getActivities: function () {
+    getActivitiesByYear: function (year) {
         var options = {
             table: 'activities',
             order: 'time_frame desc',
-            ar_fields: '*',
+            ar_fields: 'date_start_year,section_id,identifying_image,time_frame,title,type',
+            sql_filter: `date_start_year = ${year}`,
             parse: page.parse_list_data
         };
+        return page.get_records(options);
+    },
+
+    getActivitiesYears: function() {
+        var options = {
+            table: 'activities',
+            order: 'date_start_year desc',
+            ar_fields: 'date_start_year',
+            group: 'date_start_year',
+            sql_filter: 'date_start_year IS NOT NULL',
+            parse: page.parse_list_data
+        }
+        return page.get_records(options);
+    },
+
+    getExposByYear: function (year) {
+        var options = {
+            table: 'activities',
+            order: 'time_frame desc',
+            ar_fields: 'date_start_year,section_id,identifying_image,time_frame,title,type',
+            sql_filter: `date_start_year = ${year}`,
+            parse: page.parse_list_data
+        };
+        return page.get_records(options);
+    },
+
+    getExposYears: function() {
+        var options = {
+            table: 'exhibitions',
+            order: 'date_start_year desc',
+            ar_fields: 'date_start_year',
+            group: 'date_start_year',
+            sql_filter: 'date_start_year IS NOT NULL',
+            parse: page.parse_list_data
+        }
         return page.get_records(options);
     },
 
