@@ -961,9 +961,9 @@ var biblio = {
         infoSerie = infoSerie.length > 0 ? infoSerie.join(', ') : '';
 
         let infoHead = [];
-        if (row.pertenencia) {
-            infoHead.push(row.pertenencia);
-        }
+        // if (row.pertenencia) {
+        //     infoHead.push(row.pertenencia);
+        // }
         if (row.tipologia_bibliografica) {
             infoHead.push(row.tipologia_bibliografica);
         }
