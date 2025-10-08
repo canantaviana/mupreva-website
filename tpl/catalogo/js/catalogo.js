@@ -351,6 +351,15 @@ var catalog = {
             return; // nothing to change
         }
 
+        const checkbox_immovables = self.form.node.querySelector('#checkbox_immovable');
+        if (view_mode === 'timeline') {
+            checkbox_immovables.setAttribute("disabled", true);
+            checkbox_immovables.removeAttribute("checked");
+            checkbox_immovables.checked = false;
+        } else {
+            checkbox_immovables.removeAttribute("disabled");
+        }
+
         const previous_view_mode = JSON.parse(JSON.stringify(self.view_mode));
 
         // fix current across proxy
@@ -401,6 +410,7 @@ var catalog = {
 
     form_template: function () {
         const params = new URLSearchParams(window.location.search);
+        const self = this;
 
         return htmlTemplate(`
 <form action="#" class="search-form search-form--col">
@@ -528,7 +538,7 @@ var catalog = {
                         <label for="checkbox_pictures">${tstring.collection_filter_pictures}</label>
                     </li>
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_immovable" name="col" value="immovables" ${!(params.has('filter')) && "checked"}>
+                        <input class="is-checkradio" type="checkbox" id="checkbox_immovable" name="col" value="immovables" ${!(params.has('filter')) && self.view_mode !== 'timeline' && "checked"} ${self.view_mode === 'timeline' && 'disabled'}>
                         <label for="checkbox_immovable">${tstring.collection_filter_fields}</label>
                     </li>
                     <li>
@@ -912,7 +922,7 @@ var catalog = {
                 const checked = self.catalog_config.ar_tables
                     ? self.catalog_config.ar_tables.indexOf("immovables") !== -1
                     : true;
-                if (checked)
+                if (checked && self.view_mode !== 'timeline')
                     checkbox_immovable.setAttribute("checked", checked);
                 checkbox_immovable.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
