@@ -608,7 +608,7 @@ var catalog = {
                 id: "global_search",
                 name: "global_search",
                 label: tstring.global_search || "Global search",
-                q_column: "global_search",
+                q_column: "search_data",
                 eq: "MATCH",
                 eq_in: "",
                 eq_out: "",

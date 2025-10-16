@@ -347,7 +347,7 @@ var item = {
                 row.lugar && lugarData
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
+            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar.split(',').slice(0,-1).join(',')}</a></dd>
             `
                     : ""
             }
@@ -434,7 +434,7 @@ var item = {
                 row.lugar && lugarData
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
+            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar.split(',').slice(0,-1).join(',')}</a></dd>
             `
                     : ""
             }
@@ -823,12 +823,12 @@ var item = {
                         : ""
                 }
                 ${
-                    row.lugar_produccion
+                    row.lugar_produccion_literal
                         ? `
                 <tr>
                     <td></td>
                     <th>${tstring.item_production}</th>
-                    <td>${row.lugar_produccion}</td>
+                    <td>${row.lugar_produccion_literal}</td>
                 </tr>
                 `
                         : ""
