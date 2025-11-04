@@ -194,7 +194,7 @@ var item = {
                 identifying_image_data: "image",
                 audiovisuals_data: "audiovisual",
                 images_data: "image",
-                bibliografia: "bibliographic_references",
+                bibliography_data: "bibliographic_references",
                 documents_data: "documents",
                 children_data: "activities",
                 "children_data.identifying_image": "image",
@@ -703,7 +703,7 @@ var item = {
 
     templateBiblio: function (target, row) {
         const self = this;
-        if (!row.bibliografia || row.bibliografia.length == 0) {
+        if (!row.bibliography_data || row.bibliography_data.length == 0) {
             return null;
         }
         const template = htmlTemplate(`
@@ -718,7 +718,7 @@ var item = {
         </div>
         `);
         const ul = template[2].querySelector("ul");
-        row.bibliografia.forEach(function (entry) {
+        row.bibliography_data.forEach(function (entry) {
             ul.appendChild(self.templateBibliografyEntry(entry));
         });
         appendTemplate(target, template);
@@ -829,7 +829,7 @@ var item = {
         appendTemplate(acordion, this.templateCredits(row));
 
         //bibliografia
-        //this.templateBiblio(acordion, row);
+        this.templateBiblio(acordion, row);
     }, //end render
 
     /**
