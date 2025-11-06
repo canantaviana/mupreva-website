@@ -658,7 +658,6 @@ page.parse_timeline_data_activity = function (rows) {
         }
         // clone row object to preserve it as immutable
         const row = Object.assign({}, rows[i]);
-console.log(row);
         if (row.date_start_year) {
             var group_date = row.date_start_year;
 

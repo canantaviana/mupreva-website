@@ -1018,7 +1018,7 @@ var actividades = {
         // content
         const block_content_list = common.create_dom_element({
             element_type: "ul",
-            class_name: "galeria galeria--92x92 link-dn mt-0",
+            class_name: "galeria galeria--170x240 link-dn mt-0",
             parent: block_content,
         });
 
