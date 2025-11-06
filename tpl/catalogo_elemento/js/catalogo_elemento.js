@@ -537,7 +537,6 @@ var item = {
 
     renderImages: function (row) {
         const images = row.imagenes_identificativas.concat(row.imagenes);
-        console.log(row.imagenes_identificativas);
         //if (this.isMoneda(row) && images.length > 1) {
         if (row.imagenes_identificativas.length > 1) {
             //imatges moneda, dos columens
