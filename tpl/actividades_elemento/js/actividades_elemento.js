@@ -325,7 +325,7 @@ var item = {
                     : ""
             }
             ${
-                row.time_start
+                row.time_start && row.time_start != '00:00:00'
                     ? `
             <dt>${tstring.item_hour}</dt>
             <dd>${row.time_start}</dd>
