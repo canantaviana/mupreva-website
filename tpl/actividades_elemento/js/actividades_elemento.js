@@ -198,7 +198,7 @@ var item = {
                 documents_data: "documents",
                 children_data: "activities",
                 "children_data.identifying_image": "image",
-                people_data: "people",
+                //people_data: "people",
 
                 //people_data: '',
                 //related_data: 'activities',

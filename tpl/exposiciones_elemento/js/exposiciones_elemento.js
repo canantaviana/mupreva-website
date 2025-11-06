@@ -198,7 +198,7 @@ var item = {
                 documents_data: "documents",
                 children_data: "activities",
                 "children_data.identifying_image": "image",
-                people_data: "people",
+                //people_data: "people",
 
                 //people_data: '',
                 //related_data: 'activities',
@@ -703,7 +703,7 @@ var item = {
 
     templateBiblio: function (target, row) {
         const self = this;
-console.log(row.bibliography_data);
+
         if (!row.bibliography_data || row.bibliography_data.length == 0) {
             return null;
         }

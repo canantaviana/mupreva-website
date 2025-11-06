@@ -19,7 +19,7 @@
             ?>
         </ol>
     </nav>
-    <?php if (isset($this->closeButton) && $this->closeButton) : ?>
+    <?php if (isset($this->closeButton) && $this->closeButton && isset($_SERVER['HTTP_REFERER'])) : ?>
     <button id="close-page" type="button" class="button button--icon is-flex-shrink-0">
         <img src="/assets/img/ico-tancar.svg" alt="<?php echo tstring('cerrar'); ?>" width="28" height="28">
     </button>
