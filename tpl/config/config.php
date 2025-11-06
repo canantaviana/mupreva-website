@@ -196,8 +196,8 @@ define('WEB_FIELDS_MAP', json_encode([
     'other_images_resolved'    => 'other_images_resolved',
     'other_images'    => 'other_images',
     //'audiovisual_resolved'    => 'audiovisual_resolved',
-    //'pdf_resolved'            => 'pdf_resolved',
-    //'pdf_title'                => 'pdf_title'
+    'pdf_resolved'            => 'pdf_resolved',
+    'pdf_title'                => 'pdf_title'
 ]));
 
 
