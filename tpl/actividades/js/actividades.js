@@ -110,6 +110,8 @@ var actividades = {
             self.view_mode = "list";
         }
 
+        self.didSearchSomething = null
+
         // offset
         const offset = 0;
 
@@ -570,11 +572,17 @@ var actividades = {
     form_submit: function (options) {
         const self = this;
 
+        if (self.form.form_items.global_search.q !== '' || self.form.form_items.place.q !== '' || self.form.form_items.time_frame.q !== '' || self.form.form_items.type.q !== '') {
+            self.didSearchSomething = true;
+        } else {
+            self.didSearchSomething = false;
+        }
+
         return new Promise(function (resolve) {
             // options
             options = typeof options !== "undefined" ? options : {};
 
-            const order = options.order || "section_id ASC";
+            const order = options.order || "time_frame desc";
             const limit = options.limit || self.pagination.limit;
             const offset = options.offset || self.pagination.offset;
 
@@ -788,13 +796,12 @@ var actividades = {
                         return;
                     }
 
-                    if (self.default_submit) {
+                    if (self.default_submit || self.didSearchSomething === false) {
                         var content =
                             templateModules.bloque_actividades_actuales();
                         appendTemplate(self.rows_list_container, content);
 
                         templateModules.bloque_actividades_anuales(self.rows_list_container);
-                        self.default_submit = false;
                         self.default_submit = false;
                         var subtitle = document.getElementById("subtitle");
                         subtitle.innerHTML = tstring.activitis_title_current;
@@ -847,7 +854,7 @@ var actividades = {
                         .then(function () {
                             self.timeline
                                 .render_timeline({
-                                    data: timeline_data,
+                                    data: [...timeline_data].reverse(),
                                 })
                                 .then(function (timeline_node) {
                                     resolve(timeline_node);
