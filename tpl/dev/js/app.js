@@ -711,7 +711,7 @@ function massonryEnable() {
 
 function viewInit() {
     // enable A11y Dialogs
-    enableDialogs(document.getElementById("children_container"));
+    enableDialogs(document.getElementById("main"));
 
     // -------------------------
     // Swiper (fitxa Col·lecció)
@@ -818,7 +818,8 @@ function viewInit() {
                         event.preventDefault();
                         const activeImage = this;
                         const urlImg = activeImage.dataset.original;
-                        hiresViewer(urlImg);
+                        const caption = activeImage.dataset.caption || null;
+                        hiresViewer(urlImg, caption);
                     });
                 });
             }
@@ -831,7 +832,8 @@ function viewInit() {
                         "img.active, div.active img"
                     );
                     const urlImg = activeImage.dataset.original;
-                    hiresViewer(urlImg);
+                    const caption = activeImage.dataset.caption || null;
+                    hiresViewer(urlImg, caption);
                 });
             }
             const download = group.querySelector(".image-action-download");
@@ -894,11 +896,14 @@ function viewInit() {
     }
 }
 
-function hiresViewer(hires_url) {
+function hiresViewer(hires_url, caption) {
     const new_image = new Image();
     new_image.src = hires_url;
 
     const viewer = new Viewer(new_image, {
+        title() {
+            return caption ? caption : "";
+        },
         // inline: true,
         viewed() {
             // viewer.zoomTo(1);

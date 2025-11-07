@@ -124,6 +124,9 @@ html:has(.dialog-container:not([aria-hidden])) {
         font-size: var(--step-0);
         font-weight: 600;
     }
+    .original-aspect-ratio {
+        aspect-ratio: auto;
+    }
 }
 .dialog-close {
     background: transparent;
@@ -135,7 +138,7 @@ html:has(.dialog-container:not([aria-hidden])) {
     top: .25rem;
     right: .25rem;
     + img {
-        max-height: 75vh;
+        max-height: 70vh;
         opacity: 1 !important;
     }
 }

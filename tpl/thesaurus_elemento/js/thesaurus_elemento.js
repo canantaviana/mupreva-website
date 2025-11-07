@@ -343,6 +343,7 @@ var item = {
 
         if (images.length === 1) {
             const image = images[0];
+            const imageFileName = image.image.split("/").pop();
             // una imatge
             return `
             <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
@@ -351,7 +352,7 @@ var item = {
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
-            }" alt="${image.title}">
+            }" alt="${image.title}" data-caption="${image.photographer ? image.photographer : imageFileName}">
                     <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                         ${this.renderImageButtons()}
                     </div>
@@ -368,11 +369,12 @@ var item = {
                     <div class="swiper-wrapper">
                         ${images
                             .map(function (image) {
+                                const imageFileName = image.image.split("/").pop();
                                 return `
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}">
+                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}" data-caption="${image.photographer ? image.photographer : imageFileName}">
                                 </div>
                             `;
                             })

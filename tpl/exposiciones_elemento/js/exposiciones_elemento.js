@@ -408,6 +408,7 @@ var item = {
         const images = row.identifying_image_data;
         if (images.length === 1) {
             const image = images[0];
+            const imageFileName = image.image.split("/").pop();
             // una imatge
             return `
             <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
@@ -416,7 +417,7 @@ var item = {
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
-            }" alt="${image.title}">
+            }" alt="${image.title}" data-caption="${image.photographer ? image.photographer : imageFileName}">
                     <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                         ${this.renderImageButtons()}
                     </div>
@@ -433,11 +434,12 @@ var item = {
                     <div class="swiper-wrapper">
                         ${images
                             .map(function (image) {
+                                const imageFileName = image.image.split("/").pop();
                                 return `
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}">
+                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}" data-caption="${image.photographer ? image.photographer : imageFileName}">
                                 </div>
                             `;
                             })
@@ -595,6 +597,7 @@ var item = {
                 <ul class="galeria galeria--242x242 link-dn">
                 ${row.images_data
                     .map(function (object) {
+                        console.log({object})
                         return self.templateGaleryElem(object);
                     })
                     .join("")}
@@ -608,6 +611,29 @@ var item = {
         if (row.image) {
             image_url = __WEB_MEDIA_ENGINE_URL__ + row.image;
         }
+        return `
+        <li>
+            <div class="button-like" data-a11y-dialog-show="dialog-${row.section_id}" role="button" tabindex="0">
+                <img src="${image_url}" alt="${row.title}" class="is-block">
+                <div class="dialog-container" data-a11y-dialog="dialog-${row.section_id}" aria-hidden="true" aria-labelledby="dialog-${row.section_id}-title">
+                    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+                    <div class="dialog-content" role="document">
+                        <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                            <svg width="44" height="44">
+                                <g fill="none" fill-rule="evenodd">
+                                    <path d="M0 0h44v44H0z" />
+                                    <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                </g>
+                            </svg>
+                        </button>
+                        <img loading="lazy" src="${image_url.replace('1.5MB', 'original')}" alt="" class="is-block original-aspect-ratio">
+                        <p class="has-text-centered mt-2">${row.footprint}</p>
+                        ${row.photographer ? `<p class="has-text-centered is-size-7">© ${row.photographer}</p>` : ''}
+                    </div>
+                </div>
+            </div>
+        </li>
+        `;
         return `
         <li>
             <a href="${image_url}" target="_blank">
