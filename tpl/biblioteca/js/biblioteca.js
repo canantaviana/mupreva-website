@@ -701,7 +701,8 @@ var biblio = {
         const filter = options.filter || null
         const ar_fields = options.ar_fields || ["*"]
         // const order = options.order || "COALESCE(authors_surname, 'zz') ASC, publication_date ASC"
-        const order = options.order || "pertenencia_data ASC, ISNULL(autor), autor ASC, fecha_publicacion ASC"
+        // const order = options.order || "pertenencia_data ASC, ISNULL(autor), autor ASC, fecha_publicacion ASC" // ORDRE MASSA COMPLEX I LENT
+        const order = options.order || "ISNULL(autor), autor ASC, fecha_publicacion ASC" // ORDRE SIMPLIFICAT
         const limit = options.limit || self.pagination.limit
         const offset = options.offset || self.pagination.offset;
         const count = typeof options.count !== "undefined" ? options.count : true
