@@ -150,18 +150,18 @@ var thesaurus = {
             'children',
             'code',
             'descriptor',
-            'illustration',
-            'indexation',
+            //'illustration',
+            //'indexation',
             'model',
             'norder',
             'parent',
-            'related',
+            //'related',
             'scope_note',
             'space',
-            'time',
+            //'time',
             'tld',
             'relations',
-            'dd_relations'
+            //'dd_relations'
         ]
 
         // options

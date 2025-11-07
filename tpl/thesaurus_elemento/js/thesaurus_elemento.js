@@ -161,10 +161,10 @@ var item = {
 
         switch (self.table) {
             case "ts_ubication":
-                default_fields = ["term", "definition", "relations", "dd_relations", "children", "tld", "section_id", "imagenes"];
+                default_fields = ["term", "definition", "relations", /*"dd_relations",*/ "children", "tld", "section_id", "imagenes"];
                 break;
             default:
-                default_fields = ["term", "definition", "relations", "dd_relations", "children", "tld", "section_id"];
+                default_fields = ["term", "definition", "relations", /*"dd_relations",*/ "children", "tld", "section_id"];
                 break;
         }
 

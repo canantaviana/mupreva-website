@@ -151,14 +151,14 @@ var salas = {
             'descriptor',
             'illustration',
             'definition',
-            'indexation',
+            //'indexation',
             'model',
             'norder',
             'parent',
-            'related',
+            //'related',
             'scope_note',
             'space',
-            'time',
+            //'time',
             'tld',
             'relations'
         ]
