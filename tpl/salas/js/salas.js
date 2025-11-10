@@ -147,7 +147,7 @@ var salas = {
             'term_id',
             'term',
             'children',
-            'code',
+            //'code',
             'descriptor',
             'illustration',
             'definition',

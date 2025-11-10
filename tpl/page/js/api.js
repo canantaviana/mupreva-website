@@ -494,4 +494,18 @@ var api = {
             return results[0]
         });
     },
+
+
+    tld_to_table: function(tld) {
+        const convert = {
+            'object1': 'ts_object',
+            'chronological1': 'ts_chronological',
+            'thematic1': 'ts_thematic',
+            'material1': 'ts_material',
+            'technique1': 'ts_technique',
+            'ubication1': 'ts_ubication'
+        };
+        return convert[tld] || null;
+    },
+
 };

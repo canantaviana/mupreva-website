@@ -228,7 +228,14 @@ function tree_factory() {
         }
 
         // Botó per a relations
-        let btn_relations
+        var btn_relations = common.create_dom_element({
+            element_type: "button",
+            class_name: "btn_relations",
+            parent: tree_node,
+            style: {"display": "none"}
+        })
+
+        /*let btn_relations
         if (row.relations && row.relations.length > 0) {
             btn_relations = common.create_dom_element({
                 element_type: "button",
@@ -244,7 +251,7 @@ function tree_factory() {
                     this.classList.add("open")
                 }
             })
-        }
+        }*/
 
         // botó a la fitxa
         // TODO boto ja hi es
@@ -316,7 +323,7 @@ function tree_factory() {
         }
 
         // relations wrapper
-        let relations_container
+        /*let relations_container
         if (row.relations && row.relations.length>0) {
 
             // relations_container
@@ -355,7 +362,90 @@ function tree_factory() {
                     // increment hilite_relations_showed until reach self.hilite_relations_limit
                     self.hilite_relations_showed++
                 }
-        }
+        }*/
+        // relations_container
+        var relations_container = common.create_dom_element({
+            element_type	: "div",
+            class_name		: "relations_container hide galeria galeria--92x92",
+            parent			: tree_node,
+            //style: {"display": "none"}
+        })
+        btn_relations.addEventListener("click", function () {
+            if (this.classList.contains("open")) {
+                relations_container.classList.add("hide")
+                this.classList.remove("open")
+            } else {
+                relations_container.classList.remove("hide")
+                this.classList.add("open")
+            }
+        })
+
+        var download = false;;
+        respondToVisibility(tree_node, visible => {
+            if (visible && download === false) {
+                const body = {
+                    dedalo_get: 'records',
+                    db_name: page_globals.WEB_DB,
+                    table: api.tld_to_table(row.tld),
+                    ar_fields: ['section_id', 'relations'],
+                    //ar_fields: '*',
+                    section_id: row.section_id,
+                    lang: page_globals.WEB_CURRENT_LANG_CODE,
+                    limit: 1
+                }
+                data_manager.request({
+                    body: body,
+                    cache: 'force-cache'
+                })
+                .then(function (response) {
+                    download = true;
+                    if (response.result && response.result.length > 0) {
+                        //relations = response.result[0].relations || [];
+                        row.relations = (response.result[0].relations)?JSON.parse(response.result[0].relations):[]
+                        row.relations = row.relations.filter(value => (value.image && value.image != null));
+                        if (row.relations.length > 0) {
+                            row.relations = row.relations.map(value => {
+                                value.thumb_url = __WEB_MEDIA_ENGINE_URL__ + value.image.replace('1.5MB', 'thumb');
+                                //value.thumb_url = __WEB_MEDIA_ENGINE_URL__ + value.image;
+                                return value;
+                            })
+                            btn_relations.style.display = "inline-block";
+                            self.render_relation_nodes(row, relations_container, self, false)
+
+                            // Callback function to execute when mutations are observed
+                            /*const callback = function(mutationsList, observer) {
+                                // Use traditional 'for loops' for IE 11
+                                for(let mutation of mutationsList) {
+                                    if (mutation.type==='attributes' && mutation.attributeName==='class') {
+                                        if (!mutationsList[0].target.classList.contains("hide")) {
+
+                                            // draw nodes
+                                            self.render_relation_nodes(row, relations_container, self, false)
+
+                                            // Stop observing
+                                            observer.disconnect();
+                                        }
+                                    }
+                                }
+                            };
+
+                            // Create an observer instance linked to the callback function
+                            const observer = new MutationObserver(callback);
+
+                            // Start observing the target node for configured mutations
+                            observer.observe(relations_container, { attributes: true, childList: false, subtree: false });
+
+                            if (row.hilite===true && self.hilite_relations_showed<self.hilite_relations_limit) {
+                                relations_container.classList.remove("hide")
+                                btn_relations.classList.add("open")
+                                // increment hilite_relations_showed until reach self.hilite_relations_limit
+                                self.hilite_relations_showed++
+                            }*/
+                        }
+                    }
+                })
+            }
+        })
 
         // indexation wrapper
         let indexation_container
