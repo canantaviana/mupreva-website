@@ -406,6 +406,7 @@ function tree_factory() {
                         if (row.relations.length > 0) {
                             row.relations = row.relations.map(value => {
                                 value.thumb_url = __WEB_MEDIA_ENGINE_URL__ + value.image.replace('1.5MB', 'thumb');
+                                value.path = 'cat';
                                 //value.thumb_url = __WEB_MEDIA_ENGINE_URL__ + value.image;
                                 return value;
                             })
