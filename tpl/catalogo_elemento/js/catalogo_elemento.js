@@ -1056,7 +1056,7 @@ var item = {
                             }
                             return `
                             <li>
-                                <a href="${page_globals.__WEB_ROOT_WEB__}/${elementsDic[self.table]}/${item.section_id}" target="_blank">
+                                <a href="${page_globals.__WEB_ROOT_WEB__}/cat/${item.section_id}" target="_blank">
                                     <figure>
                                         <img src="${imageUrl}" crossorigin="Anonymous" loading="lazy">
                                         <figcaption>${item.titulo}</figcaption>
