@@ -177,7 +177,7 @@ var api = {
             sql_filter: "time_frame is not null and NOW() < STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.activitadesCategorias()),
             //limit: 5,
             order: 'time_frame desc',
-            ar_fields: '*',
+            ar_fields: "section_id,identifying_image,time_frame,title,type,type_data",
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"image": "image"}'
         };
@@ -191,7 +191,7 @@ var api = {
             sql_filter: "time_frame is not null",
             //limit: 3,
             order: 'time_frame desc',
-            ar_fields: '*',
+            ar_fields: "section_id,identifying_image,time_frame,title,type",
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"image": "image"}'
         };
@@ -205,7 +205,7 @@ var api = {
             sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.activitadesCategorias()),
             //limit: 6,
             order: 'time_frame desc',
-            ar_fields: '*',
+            ar_fields: "section_id,identifying_image,time_frame,title,type,type_data",
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"image": "image"}'
         };
@@ -218,7 +218,7 @@ var api = {
             sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
             limit: 10,
             order: 'time_frame asc',
-            ar_fields: '*',
+            ar_fields: "section_id,identifying_image,time_frame,title,type",
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"image": "image"}'
         };
