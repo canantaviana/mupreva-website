@@ -194,7 +194,7 @@ var api = {
             table: 'activities',
             sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.activitadesCategorias()),
             //limit: 6,
-            order: 'time_frame asc',
+            order: 'time_frame desc',
             ar_fields: '*',
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"image": "image"}'

@@ -163,7 +163,7 @@ var actividades = {
                 self.default_submit = true;
                 self.form_submit({
                     filter: "(time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s'))",
-                    order: "time_frame asc",
+                    order: "time_frame desc",
                     limit: limit,
                 });
             }
