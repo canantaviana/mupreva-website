@@ -101,10 +101,10 @@ var api = {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'objects',
-            sql_filter: 'imagenes_identificativas is not null and destacado is not null',
+            sql_filter: "imagenes_identificativas is not null and destacado = 'Sí'",
             limit: 16,
             order: 'RAND()',
-            //ar_fields: '*',
+            ar_fields: 'section_id, imagenes_identificativas',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}'
         };
@@ -124,7 +124,7 @@ var api = {
         };
         if (serie !== null) {
             //options.sql_filter = options.sql_filter+' and serie_data = \'["'+serie+'"]\''
-            options.sql_filter = `serie = '${serie}'`
+            options.sql_filter = `serie = '${serie}' AND destacado = 1`
         }
         return page.get_records(options);
     },
