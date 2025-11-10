@@ -1244,20 +1244,20 @@ var templateModules = {
             appendTemplate(children_container, content);
             swiperPublications('ultimes');
         });
-        api.getPublicacionesSeries().then(function(results){
+        api.getSeries().then(function(results){
             results.forEach(function(elem){
                 var content = htmlTemplate(`
                 <div class="default_last mt-8 flow--xl">
                     <div class="is-flex is-justify-content-space-between is-align-items-center gap-4 mb-5">
-                        <h2>${elem.name}</h2>
-                        <a href="/publicaciones/${normalitzaText(elem.name)}" class="button button--simple-2">${tstring.collection_see_all}</a>
+                        <h2>${elem.term}</h2>
+                        <a href="/${elem.web_path}" class="button button--simple-2">${tstring.collection_see_all}</a>
                     </div>
                     <div class="swiper-container is-relative">
-                        <div class="swiper swiper--publications swiper--publications-${elem.id}">
+                        <div class="swiper swiper--publications swiper--publications-${elem.section_id}">
                             <div class="swiper-wrapper">
                             </div>
                         </div>
-                        <div class="swiper--publications-${elem.id}__btns">
+                        <div class="swiper--publications-${elem.section_id}__btns">
                             <div class="swiper-button-prev"></div>
                             <div class="swiper-button-next"></div>
                         </div>
@@ -1265,7 +1265,10 @@ var templateModules = {
                 </div>
                 `);
                 var children_container = content[0].querySelector('.swiper-container .swiper-wrapper');
-                api.getPublicacionesDestacados(elem.id).then(function(results){
+                let hasResults = false;
+
+                api.getPublicacionesDestacados(elem.title).then(function(results){
+                    if (results && results.length > 0) hasResults = true;
                     var content = htmlTemplate(`
                         ${results.map(function(row){
                             const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
@@ -1299,9 +1302,13 @@ var templateModules = {
                         }).join('')}
                     `);
                     appendTemplate(children_container, content);
-                });
-                appendTemplate(children_container_cats, content);
-                swiperPublications(elem.id);
+                }).then(() => {
+                    if (hasResults) {
+                        console.log('print', elem.term)
+                        appendTemplate(children_container_cats, content);
+                        swiperPublications(elem.section_id);
+                    }
+                })
             });
         });
         return contentBase;

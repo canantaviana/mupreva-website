@@ -699,7 +699,8 @@ var biblio = {
         // options
         const table = options.table || self.biblio_table
         const filter = options.filter || null
-        const ar_fields = options.ar_fields || ["*"]
+        // const ar_fields = options.ar_fields || "*"
+        const ar_fields = self.search_literal ? "*" : "section_id,autor,fecha_publicacion,pdf,titulo";
         // const order = options.order || "COALESCE(authors_surname, 'zz') ASC, publication_date ASC"
         // const order = options.order || "pertenencia_data ASC, ISNULL(autor), autor ASC, fecha_publicacion ASC" // ORDRE MASSA COMPLEX I LENT
         const order = options.order || "ISNULL(autor), autor ASC, fecha_publicacion ASC" // ORDRE SIMPLIFICAT

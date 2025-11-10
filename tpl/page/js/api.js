@@ -118,13 +118,13 @@ var api = {
             sql_filter: `pertenencia_data like 1 AND destacado = 1`,
             limit: 6,
             order: 'fecha_publicacion desc',
-            //ar_fields: '*',
+            ar_fields: "section_id,autor,fecha_publicacion,pdf,titulo",
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"imagen_identificativa": "image"}'
         };
         if (serie !== null) {
             //options.sql_filter = options.sql_filter+' and serie_data = \'["'+serie+'"]\''
-            options.sql_filter = 'serie_data = \'["'+serie+'"]\' AND destacado = 1'
+            options.sql_filter = `serie = '${serie}'`
         }
         return page.get_records(options);
     },
@@ -146,6 +146,16 @@ var api = {
             //ar_fields: '*',
             group: 'serie_data',
             parse: this.parseSeries,
+        };
+        return page.get_records(options);
+    },
+
+    getSeries: function() {
+        var options = {
+            table: "ts_web_mupreva",
+            ar_fields: "section_id, title, term, web_path",
+            sql_filter: "parent = 'www1_77' AND template_name = 'Series publicaciones'",
+            order: "norder ASC",
         };
         return page.get_records(options);
     },
