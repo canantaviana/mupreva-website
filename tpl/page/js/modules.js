@@ -1253,11 +1253,11 @@ var templateModules = {
                         <a href="/${elem.web_path}" class="button button--simple-2">${tstring.collection_see_all}</a>
                     </div>
                     <div class="swiper-container is-relative">
-                        <div class="swiper swiper--publications swiper--publications-${elem.section_id}">
+                        <div class="swiper swiper--publicacions swiper--publications-${elem.section_id}">
                             <div class="swiper-wrapper">
                             </div>
                         </div>
-                        <div class="swiper--publications-${elem.section_id}__btns">
+                        <div class="swiper--publicacions__btns swiper--publications-${elem.section_id}__btns">
                             <div class="swiper-button-prev"></div>
                             <div class="swiper-button-next"></div>
                         </div>
@@ -1286,14 +1286,16 @@ var templateModules = {
 
                             return `
                             <div class="swiper-slide">
-                                <h3 class="is-size-6">
-                                    <a href="${url}" target="_blank">${row.titulo}</a>
-                                </h3>
-                                <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
-                                    <img loading="lazy" src="${image_url}" alt="">
+                                <div class="is-flex is-flex-direction-column full-link gap-2">
+                                    <h3 class="is-size-6">
+                                        <a href="${url}" target="_blank">${row.titulo}</a>
+                                    </h3>
+                                    <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
+                                        <img loading="lazy" src="${image_url}" alt="">
+                                    </div>
                                 </div>
                                 ${(info.length > 0)?`
-                                <p class="is-size-7">
+                                <p class="is-size-7 mt-3">
                                     ${info.join('<br>')}
                                 </p>
                                 `:''}
