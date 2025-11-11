@@ -104,7 +104,7 @@ var api = {
             sql_filter: "imagenes_identificativas is not null and destacado = 'Sí'",
             limit: 16,
             order: 'RAND()',
-            ar_fields: 'section_id, imagenes_identificativas',
+            ar_fields: 'section_tipo,section_id, imagenes_identificativas',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}'
         };
@@ -118,7 +118,7 @@ var api = {
             sql_filter: `pertenencia_data like 1 AND destacado = 1`,
             limit: 6,
             order: 'fecha_publicacion desc',
-            ar_fields: "section_id,autor,fecha_publicacion,pdf,titulo",
+            ar_fields: "section_tipo,section_id,autor,fecha_publicacion,pdf,titulo",
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"imagen_identificativa": "image"}'
         };
@@ -398,7 +398,7 @@ var api = {
             resolve_portals_custom: '{"imagenes_identificativas": "image"}',
             limit: 50,
             order: 'datacion_ini ASC',
-            ar_fields: 'section_id,titulo,periodo,imagenes_identificativas',
+            ar_fields: 'section_tipo,section_id,titulo,periodo,imagenes_identificativas',
             count: true,
             offset: offset,
             get_count: true,
