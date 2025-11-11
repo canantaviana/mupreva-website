@@ -26,7 +26,7 @@ Follow these steps to deploy or test the project:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/mupreva.org.git
+   git clone https://github.com/mupreva/mupreva-website.git
    ```
 
 2. **Upload the files**
