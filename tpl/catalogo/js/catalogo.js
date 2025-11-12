@@ -1078,15 +1078,7 @@ var catalog = {
         const self = this;
         self.map_legend.innerHTML = '';
 
-        const { global_search, section_id, nombre_bien, titulo, periodo, materia, tecnica, tipologia, ubicacion, lugar } = self.form.form_items;
-
-        if (
-            global_search.q !== '' || section_id.q !== '' || nombre_bien.q !== '' || titulo.q !== '' || periodo.q !== '' || materia.q !== '' || tecnica.q !== '' || tipologia.q !== '' || ubicacion.q !== '' || lugar.q !== ''
-        ) {
-            self.didSearchSomething = true;
-        } else {
-            self.didSearchSomething = false;
-        }
+        self.didSearchSomething = !!(self.form && typeof self.form.has_active_filters === 'function' && self.form.has_active_filters());
 
         return new Promise(function (resolve) {
             // options

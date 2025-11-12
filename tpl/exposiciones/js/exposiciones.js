@@ -570,11 +570,7 @@ var actividades = {
     form_submit: function (options) {
         const self = this;
 
-        if (self.form.form_items.global_search.q !== '' || self.form.form_items.place.q !== '' || self.form.form_items.time_frame.q !== '' || self.form.form_items.type.q !== '') {
-            self.didSearchSomething = true;
-        } else {
-            self.didSearchSomething = false;
-        }
+        self.didSearchSomething = !!(self.form && typeof self.form.has_active_filters === 'function' && self.form.has_active_filters());
 
         return new Promise(function (resolve) {
             // options
