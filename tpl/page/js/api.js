@@ -250,7 +250,7 @@ var api = {
 
     getExposByYear: function (year) {
         var options = {
-            table: 'activities',
+            table: 'exhibitions',
             order: 'time_frame desc',
             ar_fields: 'date_start_year,section_id,identifying_image,time_frame,title,type',
             sql_filter: `date_start_year = ${year}`,
