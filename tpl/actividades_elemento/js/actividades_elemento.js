@@ -194,11 +194,11 @@ var item = {
                 identifying_image_data: "image",
                 audiovisuals_data: "audiovisual",
                 images_data: "image",
-                bibliografia: "bibliographic_references",
+                bibliography_data: "bibliographic_references",
                 documents_data: "documents",
                 children_data: "activities",
                 "children_data.identifying_image": "image",
-                people_data: "people",
+                //people_data: "people",
 
                 //people_data: '',
                 //related_data: 'activities',
@@ -325,7 +325,7 @@ var item = {
                     : ""
             }
             ${
-                row.time_start
+                row.time_start && row.time_start != '00:00:00'
                     ? `
             <dt>${tstring.item_hour}</dt>
             <dd>${row.time_start}</dd>
@@ -408,6 +408,7 @@ var item = {
         const images = row.identifying_image_data;
         if (images.length === 1) {
             const image = images[0];
+            const imageFileName = image.image.split("/").pop();
             // una imatge
             return `
             <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
@@ -416,7 +417,7 @@ var item = {
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
-            }" alt="${image.title}">
+            }" alt="${image.title}" data-caption="${image.photographer ? image.photographer : imageFileName}">
                     <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                         ${this.renderImageButtons()}
                     </div>
@@ -433,11 +434,12 @@ var item = {
                     <div class="swiper-wrapper">
                         ${images
                             .map(function (image) {
+                                const imageFileName = image.image.split("/").pop();
                                 return `
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}">
+                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}" data-caption="${image.photographer ? image.photographer : imageFileName}">
                                 </div>
                             `;
                             })
@@ -703,7 +705,7 @@ var item = {
 
     templateBiblio: function (target, row) {
         const self = this;
-        if (!row.bibliografia || row.bibliografia.length == 0) {
+        if (!row.bibliography_data || row.bibliography_data.length == 0) {
             return null;
         }
         const template = htmlTemplate(`
@@ -718,7 +720,7 @@ var item = {
         </div>
         `);
         const ul = template[2].querySelector("ul");
-        row.bibliografia.forEach(function (entry) {
+        row.bibliography_data.forEach(function (entry) {
             ul.appendChild(self.templateBibliografyEntry(entry));
         });
         appendTemplate(target, template);
@@ -829,7 +831,7 @@ var item = {
         appendTemplate(acordion, this.templateCredits(row));
 
         //bibliografia
-        //this.templateBiblio(acordion, row);
+        this.templateBiblio(acordion, row);
     }, //end render
 
     /**

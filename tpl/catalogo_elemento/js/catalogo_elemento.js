@@ -347,7 +347,7 @@ var item = {
                 row.lugar && lugarData
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
+            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar.split(',').slice(0,-1).join(',')}</a></dd>
             `
                     : ""
             }
@@ -434,7 +434,7 @@ var item = {
                 row.lugar && lugarData
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar}</a></dd>
+            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar.split(',').slice(0,-1).join(',')}</a></dd>
             `
                     : ""
             }
@@ -537,12 +537,13 @@ var item = {
 
     renderImages: function (row) {
         const images = row.imagenes_identificativas.concat(row.imagenes);
-        console.log(row.imagenes_identificativas);
         //if (this.isMoneda(row) && images.length > 1) {
         if (row.imagenes_identificativas.length > 1) {
             //imatges moneda, dos columens
             const image1 = images[0];
+            const image1FileName = image1.image.split("/").pop();
             const image2 = images[1];
+            const image2FileName = image2.image.split("/").pop();
             return `
             <div class="fullscreen__fullheight column is-7-tablet is-half-desktop">
                 <div class="columns">
@@ -551,7 +552,7 @@ var item = {
                             __WEB_MEDIA_ENGINE_URL__ + image1.image
                         }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image1.image)
-            }" alt="${image1.title}">
+            }" alt="${image1.title}" data-caption="${image1.photographer ? image1.photographer : image1FileName}">
                         <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                             ${this.renderImageButtons()}
                         </div>
@@ -561,7 +562,7 @@ var item = {
                             __WEB_MEDIA_ENGINE_URL__ + image2.image
                         }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image2.image)
-            }" alt="${image2.title}">
+            }" alt="${image2.title}" data-caption="${image2.photographer ? image2.photographer : image2FileName}">
                         <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                             ${this.renderImageButtons()}
                         </div>
@@ -572,6 +573,7 @@ var item = {
             `;
         } else if (row.tpl == "img" && images.length === 1) {
             const image = images[0];
+            const imageFileName = image.image.split("/").pop();
             // una imatge
             return `
             <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
@@ -580,7 +582,7 @@ var item = {
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
-            }" alt="${image.title}">
+            }" alt="${image.title}" data-caption="${image.photographer ? image.photographer : imageFileName}">
                     ${
                         image.footprint
                             ? `<figcaption>
@@ -603,6 +605,7 @@ var item = {
             `;
         } else if (images.length === 1) {
             const image = images[0];
+            const imageFileName = image.image.split("/").pop();
             // una imatge
             return `
             <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
@@ -611,7 +614,7 @@ var item = {
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
-            }" alt="${image.title}">
+            }" alt="${image.title}" data-caption="${image.photographer ? image.photographer : imageFileName}">
                     <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                         ${this.renderImageButtons()}
                     </div>
@@ -628,11 +631,12 @@ var item = {
                     <div class="swiper-wrapper">
                         ${images
                             .map(function (image) {
+                                const imageFileName = image.image.split("/").pop();
                                 return `
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}">
+                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}" data-caption="${image.photographer ? image.photographer : imageFileName}">
                                 </div>
                             `;
                             })
@@ -823,12 +827,12 @@ var item = {
                         : ""
                 }
                 ${
-                    row.lugar_produccion
+                    row.lugar_produccion_literal
                         ? `
                 <tr>
                     <td></td>
                     <th>${tstring.item_production}</th>
-                    <td>${row.lugar_produccion}</td>
+                    <td>${row.lugar_produccion_literal}</td>
                 </tr>
                 `
                         : ""
@@ -1019,10 +1023,10 @@ var item = {
         self.relationsData = {}
 
         const elementsDic = {
-            'objects': 'object',
-            'pictures': 'picture',
-            'immovables': 'immovable',
-            'documents_catalog': 'documents_catalog'
+            'objects': 'cat',
+            'pictures': 'img',
+            'immovables': 'imm',
+            'documents_catalog': 'doc'
         }
 
         function updateCategoryRelations(category, tab) {

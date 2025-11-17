@@ -572,7 +572,7 @@ var biblio = {
                 <div class
                 ="p-5 flow--xs has-background-grey-light">
                     <h4 class="is-size-5 has-text-weight-semibold">
-                        <a href="${url}">${row.title}</a>
+                        <a href="${url}" target="_blank">${row.title}</a>
                     </h4>
                     ${
                         row.thematic_indexation

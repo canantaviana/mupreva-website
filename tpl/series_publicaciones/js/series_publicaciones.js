@@ -35,13 +35,15 @@ var biblio = {
     list: null,
 
     // fields
-    /*ar_fields: [
-        "type_data",
-        "identifying_image_data",
-        "title",
-        "summary",
+    ar_fields: [
+        "section_tipo",
         "section_id",
-    ],*/
+        "autor",
+        "fecha_publicacion",
+        "pdf",
+        "titulo",
+        "pertenencia_data"
+    ],
 
     // biblio_config
     biblio_config: null,

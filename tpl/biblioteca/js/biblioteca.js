@@ -699,9 +699,11 @@ var biblio = {
         // options
         const table = options.table || self.biblio_table
         const filter = options.filter || null
-        const ar_fields = options.ar_fields || ["*"]
+        // const ar_fields = options.ar_fields || "*"
+        const ar_fields = self.search_literal ? "*" : "section_tipo,section_id,autor,fecha_publicacion,pdf,titulo,pertenencia_data";
         // const order = options.order || "COALESCE(authors_surname, 'zz') ASC, publication_date ASC"
-        const order = options.order || "pertenencia_data ASC, ISNULL(autor), autor ASC, fecha_publicacion ASC"
+        // const order = options.order || "pertenencia_data ASC, ISNULL(autor), autor ASC, fecha_publicacion ASC" // ORDRE MASSA COMPLEX I LENT
+        const order = options.order || "ISNULL(autor), autor ASC, fecha_publicacion ASC" // ORDRE SIMPLIFICAT
         const limit = options.limit || self.pagination.limit
         const offset = options.offset || self.pagination.offset;
         const count = typeof options.count !== "undefined" ? options.count : true
@@ -961,9 +963,9 @@ var biblio = {
         infoSerie = infoSerie.length > 0 ? infoSerie.join(', ') : '';
 
         let infoHead = [];
-        if (row.pertenencia) {
-            infoHead.push(row.pertenencia);
-        }
+        // if (row.pertenencia) {
+        //     infoHead.push(row.pertenencia);
+        // }
         if (row.tipologia_bibliografica) {
             infoHead.push(row.tipologia_bibliografica);
         }

@@ -639,60 +639,56 @@ function swiperExposicionesDestacadas() {
     });
 }
 
-function swiperActividadesAnuales(arr) {
+function swiperActividadesAnual(year) {
     // ---------------------------------
-    // Swiper Exposiciones
+    // Swiper Exposiciones por año
     // ---------------------------------
-    arr.forEach((year) => {
-        var swiperExposicionesDestacadas = new Swiper(`.swiper--activitats-${year}`, {
-            // spaceBetween: 10,
-            slideActiveClass: 'active',
-            navigation: {
-                prevEl: `.swiper--activitats-${year}__btns .swiper-button-prev`,
-                nextEl: `.swiper--activitats-${year}__btns .swiper-button-next`,
+    var swiperExposicionesDestacadas = new Swiper(`.swiper--activitats-${year}`, {
+        // spaceBetween: 10,
+        slideActiveClass: 'active',
+        navigation: {
+            prevEl: `.swiper--activitats-${year}__btns .swiper-button-prev`,
+            nextEl: `.swiper--activitats-${year}__btns .swiper-button-next`,
+        },
+        slidesPerView: 1,
+        spaceBetween: 33,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            700: {
+                slidesPerView: 2,
             },
-            slidesPerView: 1,
-            spaceBetween: 33,
-            freeMode: true,
-            watchSlidesProgress: true,
-            breakpoints: {
-                700: {
-                    slidesPerView: 2,
-                },
-                1000: {
-                    slidesPerView: 3,
-                },
+            1000: {
+                slidesPerView: 3,
             },
-        });
-    })
+        },
+    });
 }
 
-function swiperExpos(arr) {
+function swiperExposAnual(year) {
     // ---------------------------------
-    // Swiper Exposiciones
+    // Swiper Exposiciones por año
     // ---------------------------------
-    arr.forEach((year) => {
-        var swiperExposicionesDestacadas = new Swiper(`.swiper--expos-${year}`, {
-            // spaceBetween: 10,
-            slideActiveClass: 'active',
-            navigation: {
-                prevEl: `.swiper--expos-${year}__btns .swiper-button-prev`,
-                nextEl: `.swiper--expos-${year}__btns .swiper-button-next`,
+    var swiperExposicionesDestacadas = new Swiper(`.swiper--expos-${year}`, {
+        // spaceBetween: 10,
+        slideActiveClass: 'active',
+        navigation: {
+            prevEl: `.swiper--expos-${year}__btns .swiper-button-prev`,
+            nextEl: `.swiper--expos-${year}__btns .swiper-button-next`,
+        },
+        slidesPerView: 1,
+        spaceBetween: 33,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            700: {
+                slidesPerView: 2,
             },
-            slidesPerView: 1,
-            spaceBetween: 33,
-            freeMode: true,
-            watchSlidesProgress: true,
-            breakpoints: {
-                700: {
-                    slidesPerView: 2,
-                },
-                1000: {
-                    slidesPerView: 3,
-                },
+            1000: {
+                slidesPerView: 3,
             },
-        });
-    })
+        },
+    });
 }
 
 function massonryEnable() {
@@ -715,7 +711,7 @@ function massonryEnable() {
 
 function viewInit() {
     // enable A11y Dialogs
-    enableDialogs(document.getElementById("children_container"));
+    enableDialogs(document.getElementById("main"));
 
     // -------------------------
     // Swiper (fitxa Col·lecció)
@@ -822,7 +818,8 @@ function viewInit() {
                         event.preventDefault();
                         const activeImage = this;
                         const urlImg = activeImage.dataset.original;
-                        hiresViewer(urlImg);
+                        const caption = activeImage.dataset.caption || null;
+                        hiresViewer(urlImg, caption);
                     });
                 });
             }
@@ -835,7 +832,8 @@ function viewInit() {
                         "img.active, div.active img"
                     );
                     const urlImg = activeImage.dataset.original;
-                    hiresViewer(urlImg);
+                    const caption = activeImage.dataset.caption || null;
+                    hiresViewer(urlImg, caption);
                 });
             }
             const download = group.querySelector(".image-action-download");
@@ -898,11 +896,14 @@ function viewInit() {
     }
 }
 
-function hiresViewer(hires_url) {
+function hiresViewer(hires_url, caption) {
     const new_image = new Image();
     new_image.src = hires_url;
 
     const viewer = new Viewer(new_image, {
+        title() {
+            return caption ? caption : "";
+        },
         // inline: true,
         viewed() {
             // viewer.zoomTo(1);

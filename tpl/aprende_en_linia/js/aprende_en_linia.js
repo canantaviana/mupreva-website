@@ -431,7 +431,7 @@ var biblio = {
                 <div class="card is-flex is-flex-direction-column full-link">
                     <div class="p-4 flow--s">
                         <h2 class="is-size-5 has-text-weight-semibold">
-                            <a href="${url}">${row.title}</a>
+                            <a href="${url}" target="_blank">${row.title}</a>
                         </h2>
                         ${(row.summary)?
                         `<p class="is-size-6 has-text-weight-medium">${row.summary}</p>`

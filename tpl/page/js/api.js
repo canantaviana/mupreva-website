@@ -101,10 +101,10 @@ var api = {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'objects',
-            sql_filter: 'imagenes_identificativas is not null and destacado is not null',
+            sql_filter: "imagenes_identificativas is not null and destacado = 'Sí'",
             limit: 16,
             order: 'RAND()',
-            //ar_fields: '*',
+            ar_fields: 'section_tipo,section_id, imagenes_identificativas',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}'
         };
@@ -118,13 +118,13 @@ var api = {
             sql_filter: `pertenencia_data like 1 AND destacado = 1`,
             limit: 6,
             order: 'fecha_publicacion desc',
-            //ar_fields: '*',
+            ar_fields: "section_tipo,section_id,autor,fecha_publicacion,pdf,titulo",
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"imagen_identificativa": "image"}'
         };
         if (serie !== null) {
             //options.sql_filter = options.sql_filter+' and serie_data = \'["'+serie+'"]\''
-            options.sql_filter = 'serie_data = \'["'+serie+'"]\' AND destacado = 1'
+            options.sql_filter = `serie = '${serie}' AND destacado = 1`
         }
         return page.get_records(options);
     },
@@ -150,6 +150,16 @@ var api = {
         return page.get_records(options);
     },
 
+    getSeries: function() {
+        var options = {
+            table: "ts_web_mupreva",
+            ar_fields: "section_id, title, term, web_path",
+            sql_filter: "parent = 'www1_77' AND template_name = 'Series publicaciones'",
+            order: "norder ASC",
+        };
+        return page.get_records(options);
+    },
+
     parseSeries: function(rows) {
         var result = rows.map(value => {
             return {
@@ -167,7 +177,7 @@ var api = {
             sql_filter: "time_frame is not null and NOW() < STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.activitadesCategorias()),
             //limit: 5,
             order: 'time_frame desc',
-            ar_fields: '*',
+            ar_fields: "section_id,identifying_image,time_frame,title,type,type_data",
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"image": "image"}'
         };
@@ -181,7 +191,7 @@ var api = {
             sql_filter: "time_frame is not null",
             //limit: 3,
             order: 'time_frame desc',
-            ar_fields: '*',
+            ar_fields: "section_id,identifying_image,time_frame,title,type",
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"image": "image"}'
         };
@@ -194,8 +204,8 @@ var api = {
             table: 'activities',
             sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') and "+this.categoryToSql(this.activitadesCategorias()),
             //limit: 6,
-            order: 'time_frame asc',
-            ar_fields: '*',
+            order: 'time_frame desc',
+            ar_fields: "section_id,identifying_image,time_frame,title,type,type_data",
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"image": "image"}'
         };
@@ -208,20 +218,56 @@ var api = {
             sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
             limit: 10,
             order: 'time_frame asc',
-            ar_fields: '*',
+            ar_fields: "section_id,identifying_image,time_frame,title,type",
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"image": "image"}'
         };
         return page.get_records(options);
     },
 
-    getActivities: function () {
+    getActivitiesByYear: function (year) {
         var options = {
             table: 'activities',
             order: 'time_frame desc',
-            ar_fields: '*',
+            ar_fields: 'date_start_year,section_id,identifying_image,time_frame,title,type',
+            sql_filter: `date_start_year = ${year}`,
             parse: page.parse_list_data
         };
+        return page.get_records(options);
+    },
+
+    getActivitiesYears: function() {
+        var options = {
+            table: 'activities',
+            order: 'date_start_year desc',
+            ar_fields: 'date_start_year',
+            group: 'date_start_year',
+            sql_filter: 'date_start_year IS NOT NULL',
+            parse: page.parse_list_data
+        }
+        return page.get_records(options);
+    },
+
+    getExposByYear: function (year) {
+        var options = {
+            table: 'exhibitions',
+            order: 'time_frame desc',
+            ar_fields: 'date_start_year,section_id,identifying_image,time_frame,title,type',
+            sql_filter: `date_start_year = ${year}`,
+            parse: page.parse_list_data
+        };
+        return page.get_records(options);
+    },
+
+    getExposYears: function() {
+        var options = {
+            table: 'exhibitions',
+            order: 'date_start_year desc',
+            ar_fields: 'date_start_year',
+            group: 'date_start_year',
+            sql_filter: 'date_start_year IS NOT NULL',
+            parse: page.parse_list_data
+        }
         return page.get_records(options);
     },
 
@@ -352,7 +398,7 @@ var api = {
             resolve_portals_custom: '{"imagenes_identificativas": "image"}',
             limit: 50,
             order: 'datacion_ini ASC',
-            ar_fields: 'section_id,titulo,periodo,imagenes_identificativas',
+            ar_fields: 'section_tipo,section_id,titulo,periodo,imagenes_identificativas',
             count: true,
             offset: offset,
             get_count: true,
@@ -458,4 +504,18 @@ var api = {
             return results[0]
         });
     },
+
+
+    tld_to_table: function(tld) {
+        const convert = {
+            'object1': 'ts_object',
+            'chronological1': 'ts_chronological',
+            'thematic1': 'ts_thematic',
+            'material1': 'ts_material',
+            'technique1': 'ts_technique',
+            'ubication1': 'ts_ubication'
+        };
+        return convert[tld] || null;
+    },
+
 };

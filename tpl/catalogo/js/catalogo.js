@@ -128,6 +128,8 @@ var catalog = {
             ? self.catalog_config.view_mode
             : "list";
 
+        self.didSearchSomething = null;
+
         const params = new URLSearchParams(window.location.search);
         if (params.has('view')) {
             switch(params.get('view')) {
@@ -351,6 +353,15 @@ var catalog = {
             return; // nothing to change
         }
 
+        const checkbox_immovables = self.form.node.querySelector('#checkbox_immovable');
+        if (view_mode === 'timeline') {
+            checkbox_immovables.setAttribute("disabled", true);
+            checkbox_immovables.removeAttribute("checked");
+            checkbox_immovables.checked = false;
+        } else {
+            checkbox_immovables.removeAttribute("disabled");
+        }
+
         const previous_view_mode = JSON.parse(JSON.stringify(self.view_mode));
 
         // fix current across proxy
@@ -401,6 +412,7 @@ var catalog = {
 
     form_template: function () {
         const params = new URLSearchParams(window.location.search);
+        const self = this;
 
         return htmlTemplate(`
 <form action="#" class="search-form search-form--col">
@@ -528,7 +540,7 @@ var catalog = {
                         <label for="checkbox_pictures">${tstring.collection_filter_pictures}</label>
                     </li>
                     <li>
-                        <input class="is-checkradio" type="checkbox" id="checkbox_immovable" name="col" value="immovables" ${!(params.has('filter')) && "checked"}>
+                        <input class="is-checkradio" type="checkbox" id="checkbox_immovable" name="col" value="immovables" ${!(params.has('filter')) && self.view_mode !== 'timeline' && "checked"} ${self.view_mode === 'timeline' && 'disabled'}>
                         <label for="checkbox_immovable">${tstring.collection_filter_fields}</label>
                     </li>
                     <li>
@@ -598,7 +610,7 @@ var catalog = {
                 id: "global_search",
                 name: "global_search",
                 label: tstring.global_search || "Global search",
-                q_column: "global_search",
+                q_column: "search_data",
                 eq: "MATCH",
                 eq_in: "",
                 eq_out: "",
@@ -670,7 +682,7 @@ var catalog = {
                 eq_in: "%",
                 eq_out: "%",
                 node_input: currentForm.querySelector("#title"),
-                callback: function (form_item) {
+                /*callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
                         table: self.get_tables,
@@ -683,7 +695,7 @@ var catalog = {
                             );
                         },
                     });
-                },
+                },*/
             });
 
             // periodo
@@ -912,7 +924,7 @@ var catalog = {
                 const checked = self.catalog_config.ar_tables
                     ? self.catalog_config.ar_tables.indexOf("immovables") !== -1
                     : true;
-                if (checked)
+                if (checked && self.view_mode !== 'timeline')
                     checkbox_immovable.setAttribute("checked", checked);
                 checkbox_immovable.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
@@ -1065,6 +1077,8 @@ var catalog = {
     form_submit: function (options) {
         const self = this;
         self.map_legend.innerHTML = '';
+
+        self.didSearchSomething = !!(self.form && typeof self.form.has_active_filters === 'function' && self.form.has_active_filters());
 
         return new Promise(function (resolve) {
             // options
@@ -1343,7 +1357,7 @@ var catalog = {
                         self.export_data_container.classList.remove("is-hidden");
                     }
 
-                    if (self.default_submit) {
+                    if (self.default_submit || self.didSearchSomething === false) {
                         self.loaded_items = {
                             objects: { results: [], loaded: 0 },
                             pictures: { results: [], loaded: 0 },

@@ -36,12 +36,13 @@ html {
     background: url("img/icon-close-subtree.svg") no-repeat -9999px -9999px;
 }
 .tree_wrapper {
-    @include desktop {
-        width: 75%;
-    }
-    @include widescreen {
-        width: 60%;
-    }
+    // @include desktop {
+    //     width: 75%;
+    // }
+    // @include widescreen {
+    //     width: 60%;
+    // }
+    font-size: var(--step-1);
 
     // all levels
     .hide {
@@ -50,11 +51,21 @@ html {
     p.definition {
         padding: var(--space-s);
     }
+    .branch {
+        // padding-left: var(--space-xl);
+        padding-left: var(--space-2xs-l);
+        > img {
+            @include tablet {
+                max-width: 40rem;
+            }
+        }
+    }
     .grouped_children {
         display: flex;
         align-items: center;
         gap: var(--space-s);
-        padding: var(--space-xs) var(--space-s);
+        // padding: var(--space-xs) var(--space-s);
+        padding: var(--space-xs) 0;
         &:has(>.btn_relations) {
             flex-wrap: wrap;
         }
@@ -68,6 +79,9 @@ html {
             background-color: transparent;
             padding: 0;
             cursor: pointer;
+        }
+        a.btn_chain {
+            flex-shrink: 0;
         }
         > .btn_scope_note,
         > .btn_relations,
@@ -83,7 +97,8 @@ html {
             &.open {
                 // opacity: 0.5;
                 background-image: url("img/icon-x.svg");
-                background-size: 60%;
+                // background-size: 60%;
+                background-size: 80%;
             }
         }
         > .btn_scope_note {
@@ -97,9 +112,12 @@ html {
         }
     }
     .scope_note {
-        font-size: var(--step--1);
-        background-color: $grey-light;
-        padding: var(--space-xs) var(--space-s);
+        // font-size: var(--step--1);
+        font-size: var(--step-0);
+        // background-color: $grey-light;
+        // padding: var(--space-xs) var(--space-s);
+        background-color: transparent;
+        padding: 0;
 
         // hide double <br> in text
         br + br {
@@ -118,16 +136,17 @@ html {
     // top level
     > .tree_node {
         > .grouped_children {
-            border-bottom: 2px solid #000;
-            padding: var(--space-s);
-
+            // border-bottom: 2px solid #000;
+            // padding: var(--space-s);
+            padding: var(--space-s) 0;
             button {
                 flex-shrink: 0;
             }
 
             > .term {
                 font-weight: 600;
-                margin-right: auto;
+                // margin-right: auto;
+                text-transform: uppercase;
                 &:has(+ .nd) {
                     margin-right: 0;
                 }
@@ -136,6 +155,12 @@ html {
                     font-size: 11px;
                     letter-spacing: unset;
                     color: #c0c0c0;
+                }
+                a {
+                    text-decoration: none;
+                    &:hover {
+                        text-decoration: underline;
+                    }
                 }
             }
 
@@ -149,8 +174,10 @@ html {
                 background-image: url("img/ico-fletxa-desplegar.svg");
                 width: 20px;
                 height: 20px;
+                transform: rotate(270deg);
                 &.open {
-                    transform: rotate(180deg);
+                    // transform: rotate(180deg);
+                    transform: none;
                 }
             }
         }
@@ -164,63 +191,80 @@ html {
     // second level
     > .tree_node > .branch > .tree_node {
         > .grouped_children {
-            &:has(+ .branch:not(.hide)),
-            &:has(+ img + .branch:not(.hide)) {
-                color: #fff;
-                background-color: $primary;
-                .btn_chain {
-                    filter: invert(1);
-                }
-            }
-            &:hover {
-                background-color: $primary-light;
-            }
+            // &:has(+ .branch:not(.hide)),
+            // &:has(+ img + .branch:not(.hide)) {
+            //     color: #fff;
+            //     background-color: $primary;
+            //     .btn_chain {
+            //         filter: invert(1);
+            //     }
+            // }
+            // &:hover {
+            //     background-color: $primary-light;
+            // }
             > .term {
                 font-weight: 600;
+                a {
+                    text-decoration: none;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
             }
             > .arrow {
-                background-image: url("img/icon-open-subtree.svg");
-                width: 22px;
-                height: 22px;
-                order: -1;
+                // background-image: url("img/icon-open-subtree.svg");
+                // width: 22px;
+                // height: 22px;
+                // order: -1;
+                background-image: url("img/ico-fletxa-desplegar.svg");
+                width: 20px;
+                height: 20px;
+                transform: rotate(270deg);
                 &.open {
                     // transform: rotate(.125turn);
                     // filter: brightness(100) grayscale(1);
-                    background-image: url("img/icon-close-subtree.svg");
+                    // background-image: url("img/icon-close-subtree.svg");
+                    transform: none;
                 }
             }
-            &:has(>.arrow.open) > .term a {
-                color: #fff;
-            }
+            // &:has(>.arrow.open) > .term a {
+            //     color: #fff;
+            // }
         }
     }
 
     // third level
     > .tree_node > .branch > .tree_node > .branch {
-        background: $grey-light;
-        padding: var(--space-s);
+        // background: $grey-light;
+        // padding: var(--space-s);
         > .tree_node {
             > .grouped_children {
-                position: relative;
-                &::after {
-                    content: '';
-                    display: block;
-                    position: absolute;
-                    left: var(--space-s);
-                    right: var(--space-s);
-                    bottom: 0;
-                    height: 1px;
-                    background-color: $grey-lighter;
-                }
-                &:has(+ .branch:not(.hide)),
-                &:has(+ .scope_note + .branch:not(.hide)) {
-                    &::after {
-                        display: none;
-                    }
-                }
+                // position: relative;
+                // &::after {
+                //     content: '';
+                //     display: block;
+                //     position: absolute;
+                //     left: var(--space-s);
+                //     right: var(--space-s);
+                //     bottom: 0;
+                //     height: 1px;
+                //     background-color: $grey-lighter;
+                // }
+                // &:has(+ .branch:not(.hide)),
+                // &:has(+ .scope_note + .branch:not(.hide)) {
+                //     &::after {
+                //         display: none;
+                //     }
+                // }
                 > .term {
                     font-weight: 600;
-                    margin-right: auto;
+                    // margin-right: auto;
+                    a {
+                        text-decoration: none;
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
                 }
                 > .arrow {
                     background-image: url("img/ico-fletxa-desplegar.svg");
@@ -232,37 +276,40 @@ html {
                     }
                 }
             }
-            > .branch:not(.hide) {
-                position: relative;
-                padding-bottom: var(--space-xs);
-                &::after {
-                    content: '';
-                    display: block;
-                    position: absolute;
-                    left: var(--space-s);
-                    right: var(--space-s);
-                    bottom: 0;
-                    height: 1px;
-                    background-color: $grey-lighter;
-                }
-            }
-            &:last-child {
-                > .grouped_children,
-                > .branch:not(.hide) {
-                    &::after {
-                        display: none;
-                    }
-                }
-                > .branch:not(.hide) {
-                    padding-bottom: 0;
-                }
-            }
+            // > .branch:not(.hide) {
+            //     position: relative;
+            //     padding-bottom: var(--space-xs);
+            //     &::after {
+            //         content: '';
+            //         display: block;
+            //         position: absolute;
+            //         left: var(--space-s);
+            //         right: var(--space-s);
+            //         bottom: 0;
+            //         height: 1px;
+            //         background-color: $grey-lighter;
+            //     }
+            // }
+            // &:last-child {
+            //     > .grouped_children,
+            //     > .branch:not(.hide) {
+            //         &::after {
+            //             display: none;
+            //         }
+            //     }
+            //     > .branch:not(.hide) {
+            //         padding-bottom: 0;
+            //     }
+            // }
         }
         .scope_note {
-            font-size: var(--step--2);
-            background-color: $grey-lighter;
-            padding: var(--space-2xs) var(--space-xs);
-            margin: 0 var(--space-s) var(--space-xs) var(--space-s);
+            font-size: var(--step-0);
+            // background-color: $grey-lighter;
+            // padding: var(--space-2xs) var(--space-xs);
+            background-color: transparent;
+            // margin: 0 var(--space-s) var(--space-xs) var(--space-s);
+            margin: 0 0 var(--space-s) 0;
+            padding: 0;
         }
     }
 
@@ -271,7 +318,7 @@ html {
         > .tree_node {
             > .grouped_children {
                 > .term {
-                    font-weight: 500;
+                    font-weight: 600;
                 }
             }
         }
@@ -280,15 +327,24 @@ html {
     // rest of levels
     > .tree_node > .branch > .tree_node > .branch > .tree_node > .branch .tree_node {
         .grouped_children {
-            gap: var(--space-2xs);
-            padding: var(--space-3xs) var(--space-s);
+            // gap: var(--space-2xs);
+            gap: var(--space-s);
+            // padding: var(--space-3xs) var(--space-s);
+            padding: var(--space-xs) 0;
             > .term {
-                font-size: var(--step--1);
+                // font-size: var(--step--1);
+                font-weight: 600;
+                a {
+                    text-decoration: none;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
             }
             > .arrow {
                 background-image: url("img/ico-fletxa-desplegar.svg");
-                background-size: 60%;
-                background-position: 50%;
+                // background-size: 60%;
+                // background-position: 50%;
                 transform: rotate(-90deg);
                 width: 20px;
                 height: 20px;
@@ -297,12 +353,12 @@ html {
                 }
             }
         }
-        .branch {
-            padding-left: var(--space-l);
-        }
-        .scope_note {
-            margin-top: var(--space-2xs);
-        }
+        // .branch {
+        //     padding-left: var(--space-l);
+        // }
+        // .scope_note {
+        //     margin-top: var(--space-2xs);
+        // }
     }
 
 }

@@ -52,7 +52,7 @@
                         t.setAttribute("id","panel"+e+"-"+ni);
                         t.setAttribute("aria-labelledby","tab"+e+"-"+ni)
                     })},
-            n.openAccordionItem=function(t){var e=t.content;t.link.setAttribute("aria-expanded","true"),e.setAttribute("aria-hidden","false"),this.settings.onOpen&&"function"==typeof this.settings.onOpen&&this.settings.onOpen.call(t)},
+            n.openAccordionItem=function(t){var e=t.content;t.link.setAttribute("aria-expanded","true"),e.setAttribute("aria-hidden","false"),this.settings.onOpen&&"function"==typeof this.settings.onOpen&&this.settings.onOpen.call(t, t)},
             n.closeAccordionItem=function(t){var e=t.content;t.link.setAttribute("aria-expanded","false"),e.setAttribute("aria-hidden","true"),this.settings.onClose&&"function"==typeof this.settings.onClose&&this.settings.onClose.call(t)},
             n.toggleAccordionItem=function(t){
                 var e=t.target.closest('.accordion-header').querySelector('button'),

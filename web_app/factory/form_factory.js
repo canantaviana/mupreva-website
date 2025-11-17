@@ -1179,6 +1179,69 @@ function form_factory() {
         return sql_filter
     }//end form_to_sql_filter
 
+    /**
+    * HAS_ACTIVE_FILTERS
+    * Check if any form item currently contains a user-provided filter/search value
+    * returns boolean
+    */
+    this.has_active_filters = function () {
+
+        const self = this
+
+        for (let [id, form_item] of Object.entries(self.form_items)) {
+
+            if (!form_item) continue
+
+            // q (typed value)
+            if (typeof form_item.q === "string" && form_item.q.trim().length > 0 && form_item.q !== '*') {
+                return true
+            }
+
+            // selected values from autocomplete / selects
+            if (Array.isArray(form_item.q_selected) && form_item.q_selected.length > 0) {
+                return true
+            }
+
+            // explicit SQL filter attached
+            if (form_item.sql_filter) {
+                return true
+            }
+
+            // input node value (covers selects and inputs not kept in q for some widgets)
+            if (form_item.node_input) {
+                try {
+                    const ni = form_item.node_input
+                    // some widgets store value on .value
+                    if (typeof ni.value === "string" && ni.value.trim().length > 0 && ni.value !== '*') {
+                        return true
+                    }
+                    // select: selectedIndex / selected option other than placeholder
+                    if (ni.tagName && ni.tagName.toLowerCase() === "select" && ni.selectedIndex > -1) {
+                        const opt = ni.options[ni.selectedIndex]
+                        if (opt && opt.value && String(opt.value).trim().length > 0) return true
+                    }
+                } catch (e) {
+                    // ignore DOM read errors
+                }
+            }
+
+            // node_values container (user added tokens)
+            if (form_item.node_values && form_item.node_values.children && form_item.node_values.children.length > 0) {
+                return true
+            }
+
+            // range slider: check linked in/out inputs if present in DOM
+            if (form_item.input_type === "range_slider") {
+                const inNode = document.getElementById(form_item.id + "_in")
+                const outNode = document.getElementById(form_item.id + "_out")
+                if ((inNode && String(inNode.value).trim().length > 0) || (outNode && String(outNode.value).trim().length > 0)) {
+                    return true
+                }
+            }
+        }
+
+        return false
+    }//end has_active_filters
 
 
 }//end form_factory

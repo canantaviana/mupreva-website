@@ -1240,3 +1240,18 @@ function normalitzaText(text) {
     .replace(/[^a-z0-9\s]/g, '') // elimina caràcters especials (excepte lletres, números i espais)
     .replace(/\s+/g, '_'); // substitueix espais per "_"
 }
+
+
+function respondToVisibility(element, callback) {
+    var options = {
+        root: document.documentElement
+    }
+
+    var observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            callback(entry.intersectionRatio > 0);
+        });
+    }, options);
+
+    observer.observe(element);
+}

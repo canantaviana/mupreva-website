@@ -640,7 +640,7 @@ var biblio_row_fields = {
 
             const line = common.create_dom_element({
 				element_type 	: "a",
-                href: (biblio_object.publications_data)?'/publication/'+JSON.parse(biblio_object.publications_data)[0]:'#',
+                href: (biblio_object.publications_data)?'/pub/'+JSON.parse(biblio_object.publications_data)[0]:'#',
                 parent			: lineLi
 			})
 
