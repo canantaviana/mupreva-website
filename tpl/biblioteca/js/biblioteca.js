@@ -349,8 +349,8 @@ var biblio = {
 
             // input global search
             self.form.item_factory({
-                id: "search_data",
-                name: "search_data",
+                id: "global_search",
+                name: "global_search",
                 q_column: "search_data",
                 eq: "MATCH",
                 eq_in: "",
