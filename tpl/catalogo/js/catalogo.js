@@ -554,8 +554,8 @@ var catalog = {
                 <div class="control">
                     <div class="select select--simple is-flex is-align-items-center">
                         <select id="input_limit" name="registres">
-                            <option value="10">10</option>
-                            <option value="20">20</option>
+                            <option value="18">18</option>
+                            <option value="30">30</option>
                             <option value="40">40</option>
                             <option value="80">80</option>
                             <option value="100">100</option>
@@ -1361,7 +1361,7 @@ var catalog = {
                         self.loaded_items = {
                             objects: { results: [], loaded: 0 },
                             pictures: { results: [], loaded: 0 },
-                            immovables: { results: [], loaded: 0 },
+                            //immovables: { results: [], loaded: 0 },
                             documents: { results: [], loaded: 0 },
                         }
                         var content = templateModules.bloque_catalogo_default(self);

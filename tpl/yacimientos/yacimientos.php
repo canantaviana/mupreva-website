@@ -7,12 +7,20 @@
 // Prepend this style to the beginning of 'page::$css_ar_url' array to decrease its prevalence
 array_unshift(
     page::$css_ar_url,
+    __WEB_TEMPLATE_WEB__ . '/assets/lib/vertical-timeline-master/assets/css/style.css',
+    __WEB_TEMPLATE_WEB__ . '/assets/lib/leaflet/leaflet.css',
+    __WEB_TEMPLATE_WEB__ . '/assets/lib/leaflet/markercluster/MarkerCluster.css',
     __WEB_TEMPLATE_WEB__ . '/assets/lib/jquery-ui/jquery-ui.min.css'
 );
 
 
 // js
+page::$js_ar_url[]  = __WEB_TEMPLATE_WEB__ . '/assets/lib/masonry/masonry.pkgd.min.js';
+page::$js_ar_url[]  = __WEB_TEMPLATE_WEB__ . '/assets/lib/masonry/imagesloaded.pkgd.min.js';
 page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/assets/lib/jquery-ui/jquery-ui.min.js';
+page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/assets/lib/leaflet/leaflet.js';
+page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/assets/lib/leaflet/markercluster/leaflet.markercluster.js';
+page::$js_ar_url[]    = __WEB_TEMPLATE_WEB__ . '/catalogo/js/item_list_row' . JS_SUFFIX . '.js';
 
 
 
