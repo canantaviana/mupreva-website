@@ -392,7 +392,7 @@ var actividades = {
                 self.form_submit();
             });
 
-            var customFilter = api.categoryToSql(api.activitadesCategorias());
+            var customFilter = api.categoryToSqlDiscard(api.actividadesBlacklistCategorias());
             // object
             self.form.item_factory({
                 id: "type",
@@ -715,7 +715,7 @@ var actividades = {
             count = false;
         }
 
-        var customFilter = api.categoryToSql(api.activitadesCategorias());
+        var customFilter = api.categoryToSqlDiscard(api.actividadesBlacklistCategorias());
         sql_filter = sql_filter
             ? sql_filter + " AND " + customFilter
             : customFilter;
