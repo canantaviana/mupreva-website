@@ -38,6 +38,10 @@ var api = {
         ];
     },
 
+    actividadesBlacklistCategorias: function() {
+        return [1, ...this.aprendeMuseoCategorias()];
+    },
+
     categoryToSql: function(cats) {
         if (cats.length == 0) {
             return '';
@@ -46,6 +50,16 @@ var api = {
             return "type_data like '%\\\""+elem+"\\\"%'";
         });
         return '('+filter.join(' or ')+')';
+    },
+
+    categoryToSqlDiscard: function(cats) {
+        if (cats.length == 0) {
+            return '';
+        }
+        var filter = cats.map(function(elem){
+            return "type_data not like '%\\\""+elem+"\\\"%'";
+        });
+        return '('+filter.join(' and ')+')';
     },
 
     getSliderPortada: function() {
@@ -226,11 +240,13 @@ var api = {
     },
 
     getActivitiesByYear: function (year) {
+        var customFilter = this.categoryToSqlDiscard(this.actividadesBlacklistCategorias());
+
         var options = {
             table: 'activities',
             order: 'time_frame desc',
             ar_fields: 'date_start_year,section_id,identifying_image,time_frame,title,type',
-            sql_filter: `date_start_year = ${year}`,
+            sql_filter: `date_start_year = ${year} AND ${customFilter}`,
             parse: page.parse_list_data
         };
         return page.get_records(options);

@@ -1,7 +1,21 @@
 .table-collapsibles {
     width: 100%;
+
     tr {
         position: relative;
+
+        /*
+          Safari doesn't support `position: relative` on `<tr>` elements,
+          but these two properties can be used as an alternative.
+          Source: https://mtsknn.fi/blog/relative-tr-in-safari/
+        */
+        transform: translate(0);
+        clip-path: inset(0);
+        &:focus-within {
+            outline: 2px solid transparent;
+            outline-offset: -2px; /* Needs to be negative because of the `clip-path` above */
+        }
+
         &:has(td > button:only-child):hover {
             background-color: $primary-light;
         }
@@ -46,6 +60,9 @@
                 left: 0;
                 top: 0;
                 background: none;
+
+                // Safari fix
+                inset: 0;
             }
             &[aria-expanded="true"] img {
                 transform: rotate(0.125turn);

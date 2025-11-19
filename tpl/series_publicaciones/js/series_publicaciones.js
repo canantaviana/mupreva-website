@@ -468,7 +468,7 @@ var biblio = {
                 </div>
                 <p class="is-size-7">
                     ${infoHead}<br>
-                    ${row.autor}<br>
+                    ${(row.autor)?row.autor:''}<br>
                     ${infoSerie}
                 </p>
             </li>

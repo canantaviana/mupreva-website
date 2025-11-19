@@ -54,7 +54,7 @@ if (is_array($images) && count($images) > 0) {
                                 $img = '<img src="'.__WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.svg', $images[0])).'" alt="'.$subcolumn->title.'" class="mr-2">';
                             }
                         }
-                        $links[] = '<a href="'.__WEB_ROOT_WEB__.'/'.$subcolumn->web_path.'">'.$img.$subcolumn->title.'</a>';
+                        $links[] = '<a href="'.$subcolumn->web_path.'">'.$img.$subcolumn->title.'</a>';
                     endforeach ?>
                     <?php
                     if (count($links) > 0) : ?>

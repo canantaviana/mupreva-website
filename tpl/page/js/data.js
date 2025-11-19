@@ -28,18 +28,16 @@ page.parse_map_data = function (rows) {
             : row.map
 
         let geolocation_data_geojson
-
         if (row.geolocalizacion !== null) {
             geolocation_data_geojson = (typeof row.geolocalizacion === 'string' || row.geolocalizacion instanceof String)
             ? JSON.parse(row.geolocalizacion)
             : row.geolocalizacion
         }
-        if (row.geolocalizacion_produccion !== null) {
+        if (typeof row.geolocalizacion_produccion !== 'undefined' && row.geolocalizacion_produccion !== null) {
             geolocation_data_geojson = (typeof row.geolocalizacion_produccion === 'string' || row.geolocalizacion_produccion instanceof String)
             ? JSON.parse(row.geolocalizacion_produccion)
             : row.geolocalizacion_produccion
         }
-
         if (geolocation_data_geojson && geolocation_data_geojson.length > 0) {
 
             // const identifying_images = row.identifying_images ? row.identifying_images.split(' | ') : []

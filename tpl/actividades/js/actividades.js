@@ -369,7 +369,7 @@ var actividades = {
                 id: "global_search",
                 name: "global_search",
                 label: tstring.global_search || "Global search",
-                q_column: "global_search",
+                q_column: "search_data",
                 eq: "MATCH",
                 eq_in: "",
                 eq_out: "",
@@ -392,7 +392,7 @@ var actividades = {
                 self.form_submit();
             });
 
-            var customFilter = api.categoryToSql(api.activitadesCategorias());
+            var customFilter = api.categoryToSqlDiscard(api.actividadesBlacklistCategorias());
             // object
             self.form.item_factory({
                 id: "type",
@@ -715,7 +715,7 @@ var actividades = {
             count = false;
         }
 
-        var customFilter = api.categoryToSql(api.activitadesCategorias());
+        var customFilter = api.categoryToSqlDiscard(api.actividadesBlacklistCategorias());
         sql_filter = sql_filter
             ? sql_filter + " AND " + customFilter
             : customFilter;
