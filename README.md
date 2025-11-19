@@ -1,6 +1,6 @@
 # 🌐 mupreva.org
 
-This repository contains the source code for the official **[mupreva.org](https://mupreva.org)** website, scheduled for launch in **2025**.
+This repository contains the source code for the official **[mupreva.org](https://mupreva.org)** website, scheduled for launch in **2026**.
 The project is developed entirely with **custom code**, without the use of any external frameworks or CMS, to ensure maximum performance, security, and flexibility.
 
 ---
