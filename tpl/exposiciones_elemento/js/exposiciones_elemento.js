@@ -694,11 +694,11 @@ var item = {
     },
 
     templateCredits: function (row) {
-        if (!row.people || !row.people_role) {
+        if (!row.people) {
             return "";
         }
         var people = JSON.parse(row.people);
-        var rols = JSON.parse(row.people_role);
+        var rols = row.people_role ? JSON.parse(row.people_role) : [];
         return htmlTemplate(`
             <h2 class="accordion-header">
                 <button type="button">${tstring.item_credits}</button>
@@ -711,7 +711,7 @@ var item = {
                             .map(function (object, index) {
                                 return `
                             <tr>
-                                <th>${rols[index]}</th>
+                                ${rols.length > 0 ? `<th>${rols[index] || ''}</th>` : ''}
                                 <td>${object}</td>
                             </tr>`;
                             })
