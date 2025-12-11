@@ -627,8 +627,8 @@ var item = {
                             </svg>
                         </button>
                         <img loading="lazy" src="${image_url.replace('1.5MB', 'original')}" alt="" class="is-block original-aspect-ratio">
-                        <p class="has-text-centered mt-2">${row.footprint}</p>
-                        ${row.photographer ? `<p class="has-text-centered is-size-7">© ${row.photographer}</p>` : ''}
+                        ${row.footprint ? `<p class="has-text-centered mt-2">${row.footprint}</p>` : ''}
+                        ${row.photographer ? `<p class="has-text-centered is-size-7 mt-2">${row.photographer}</p>` : ''}
                     </div>
                 </div>
             </div>
