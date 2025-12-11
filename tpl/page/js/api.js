@@ -521,6 +521,16 @@ var api = {
         });
     },
 
+    getGlobalSearchTypes: function(query) {
+        var options = {
+            table: 'global_search',
+            ar_fields: 'ref_section_tipo',
+            sql_filter: `MATCH (search_data) AGAINST ('${query}' IN BOOLEAN MODE)`,
+            group: 'ref_section_tipo'
+        }
+
+        return page.get_records(options);
+    },
 
     tld_to_table: function(tld) {
         const convert = {

@@ -17,6 +17,7 @@ var search = {
 
     // keywords
     keywords: null,
+    last_keywords: null,
 
     // view_mode. rows view mode. default is 'list'. Others could be 'map', 'timeline' ..
     view_mode: 'list',
@@ -244,10 +245,9 @@ var search = {
             // fields
             const ar_fields = self.ar_fields
 
-            // search rows exec against API
-            self.search_rows()
-                .then(function (response) {
-
+            const performSearch = () => {
+                // search rows exec against API
+                self.search_rows().then(function (response) {
                     // clean container and add_spinner
                     // const rows_list_container = document.querySelector("#rows_list")
                     // while (rows_list_container.hasChildNodes()) {
@@ -273,6 +273,32 @@ var search = {
                                     ? `"${self.keywords}"`
                                     : '';
                                 rows_list_container.appendChild(searchTitle);
+
+                                const typesContainerId = 'search_types_container'
+                                let typesContainer = document.getElementById(typesContainerId)
+                                if (!typesContainer) {
+                                    typesContainer = document.createElement('div')
+                                    typesContainer.className = 'wrapper mt-8 search-types-container'
+                                    typesContainer.id = typesContainerId
+                                    rows_list_container.appendChild(typesContainer)
+                                } else {
+                                    typesContainer.innerHTML = ''
+                                }
+
+                                const types = self.search_types || []
+                                types.forEach(function (tipo) {
+                                    const btn = document.createElement('button')
+                                    btn.textContent = tstring[tipo] || tipo
+                                    btn.dataset.tipo = tipo
+                                    if (self.ref_section_tipo_selected === tipo) btn.className = 'selected'
+                                    btn.addEventListener('click', function () {
+                                        if (self.ref_section_tipo_selected === tipo) return
+                                        self.ref_section_tipo_selected = tipo
+                                        self.pagination.offset = 0
+                                        self.form_submit()
+                                    })
+                                    typesContainer.appendChild(btn)
+                                })
                                 const total = response.total || response.result.length || 0;
                                 const resultsCountNode = document.createElement('p');
                                 resultsCountNode.className = 'has-text-right';
@@ -286,11 +312,32 @@ var search = {
                                 event_manager.publish('rendered', {
                                     rows_list_container: rows_list_container
                                 })
-                                resolve(rows_list_container) // All work is done. Final resolve !
+                                resolve(rows_list_container)
                             })
                     }, self.draw_delay)
 
                 })
+            }
+
+            if(self.last_keywords !== self.keywords) {
+                api.getGlobalSearchTypes(self.keywords)
+                    .then((res) => {
+                        const types = res.map(item => item.ref_section_tipo);
+                        self.search_types = types || [];
+                        self.ref_section_tipo_selected = types[0] || null;
+                    })
+                    .catch((err) => {
+                        self.search_types = self.search_types || []
+                    })
+                    .finally(() => {
+                        self.last_keywords = self.keywords;
+                        performSearch();
+                    })
+
+            } else {
+                performSearch();
+            }
+
         })
     },//end form_submit
 
@@ -312,12 +359,13 @@ var search = {
         const table = 'global_search'
         const ar_fields = "*"
         const order = 'section_id asc'
-        const limit = 0
+        const limit = 10
         const offset = self.pagination.offset;
         const count = true
         const process_result = null
+        const section_tipo_filter = self.ref_section_tipo_selected ? ` AND ref_section_tipo='${self.ref_section_tipo_selected}'` : '';
         const sql_filter = self.keywords
-            ? `MATCH (search_data) AGAINST ('${self.keywords}' IN BOOLEAN MODE)`
+            ? `MATCH (search_data) AGAINST ('${self.keywords}' IN BOOLEAN MODE)${section_tipo_filter}`
             : null;
 
         // request
