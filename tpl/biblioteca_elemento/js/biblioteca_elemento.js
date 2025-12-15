@@ -267,13 +267,13 @@ var item = {
                 ${
                     row.pdf
                         ? `
-                <a href="${
+                <button type="button" class="button button--icon js-download-pdf" data-download-url="${
                     __WEB_MEDIA_ENGINE_URL__ + row.pdf
-                }" download type="button" class="button button--icon">
+                }" data-download-filename="${row.pdf ? row.pdf.split('/').pop() : ''}">
                     <img src="/assets/img/ico-descarregar.svg" alt="" width="30" height="30"> ${
                         tstring.item_download
                     }
-                </a>
+                </button>
                 `
                         : ""
                 }
@@ -321,11 +321,11 @@ ${
                     <div class="column is-narrow">
                         <div class="columns is-mobile is-variable is-1">
                             <div class="column is-narrow">
-                                <a href="${
+                                <button type="button" class="button button--icon js-download-pdf" data-download-url="${
                                     __WEB_MEDIA_ENGINE_URL__ + value.pdf
-                                }">
+                                }" data-download-filename="${value.pdf ? value.pdf.split('/').pop() : ''}">
                                     <img src="/assets/img/ico-descarregar.svg" width="30" height="30">
-                                </a>
+                                </button>
                             </div>
                             <div class="column is-narrow">
                                 <a href="${url}">
@@ -338,12 +338,12 @@ ${
 
 
 
-                <a href="${
+                <button type="button" class="js-download-pdf" data-download-url="${
                     __WEB_MEDIA_ENGINE_URL__ + value.pdf
-                }" download target="_blank"><br>
+                }" data-download-filename="${value.pdf ? value.pdf.split('/').pop() : ''}"><br>
                     <span class="has-text-weight-semibold"></span><br>
 
-                </a>
+                </button>
             </li>`;
             })
             .join("\n")}
@@ -406,6 +406,32 @@ ${
         appendTemplate(target, this.templateShare(row));
         appendTemplate(target, this.template(row));
         appendTemplate(target, this.templateContent(row));
+
+        // Descarregar PDF botons
+        try {
+            const downloadBtns = target.querySelectorAll('.js-download-pdf');
+            downloadBtns.forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const url = btn.dataset.downloadUrl;
+                    if (btn.disabled || !url) return;
+                    btn.disabled = true;
+                    btn.lastChild.textContent = tstring.item_downloading + '...';
+                    const filename = btn.dataset.downloadFilename || 'download.pdf';
+                    common.download_item(url, filename)
+                        .then(function () {
+                            btn.disabled = false;
+                            btn.lastChild.textContent = tstring.item_download;
+                        })
+                        .catch(function (err) {
+                            console.error('Download failed', err);
+                            btn.disabled = false;
+                        });
+                });
+            });
+        } catch (err) {
+            console.warn('Download failed', err);
+        }
 
         const acordion = common.create_dom_element({
             element_type: "div",
