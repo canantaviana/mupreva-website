@@ -416,12 +416,13 @@ ${
                     const url = btn.dataset.downloadUrl;
                     if (btn.disabled || !url) return;
                     btn.disabled = true;
+                    const prevText = btn.lastChild.textContent;
                     btn.lastChild.textContent = tstring.item_downloading + '...';
                     const filename = btn.dataset.downloadFilename || 'download.pdf';
                     common.download_item(url, filename)
                         .then(function () {
                             btn.disabled = false;
-                            btn.lastChild.textContent = tstring.item_download;
+                            btn.lastChild.textContent = prevText;
                         })
                         .catch(function (err) {
                             console.error('Download failed', err);

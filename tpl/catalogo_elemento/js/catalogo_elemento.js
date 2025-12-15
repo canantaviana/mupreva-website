@@ -31,6 +31,9 @@ var item = {
         // export_data_buttons (define before load_data to prepare the event subscribe)
         const export_data_buttons = page.render_export_data_buttons();
 
+        const seed = Math.floor(Math.random() * 1e9).toString();
+        self.catalog_seed = seed;
+
         // load and render
         self.load_data({}).then(function (response) {
             if (!response.result || response.result.length < 1) {
@@ -1048,7 +1051,7 @@ var item = {
             const tabData = self.relationsData[category][tab];
             const offset = tabData.loaded;
             const relationId = tabData.section_id
-            api.getRelatedElements(self.table, category+'_data', relationId, offset).then(({data, total}) => {
+            api.getRelatedElements({table: self.table, relation: category+'_data', relationId, offset, seed: self.catalog_seed}).then(({data, total}) => {
                 tabData.result.push(...data)
                 tabData.loaded = tabData.loaded + data.length;
                 setCategoryRelations(category);
@@ -1108,7 +1111,7 @@ var item = {
             const promises = JSON.parse(row[category+'_data']).map((relationId, i) => {
                 const tab = row[category].split(',')[i].trim();
 
-                return api.getRelatedElements(self.table, category+'_data', relationId).then(({data, total}) => {
+                return api.getRelatedElements({table: self.table, relation: category+'_data', relationId, seed: self.catalog_seed}).then(({data, total}) => {
                     self.relationsData[category] = self.relationsData[category] || {};
                     self.relationsData[category][tab] = self.relationsData[category][tab] || {};
                     const tabData = self.relationsData[category][tab];
