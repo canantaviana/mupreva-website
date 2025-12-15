@@ -330,13 +330,13 @@ var api = {
         });
     },
 
-    getObjectsDefault: function(offset = 0) {
+    getObjectsDefault: function({offset = 0, seed = null}) {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'objects',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: null,
+            order: seed ? `RAND(${seed})` : null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}',
@@ -346,62 +346,66 @@ var api = {
         };
         return page.get_records(options);
     },
-    getPicturesDefault: function() {
+    getPicturesDefault: function({offset = 0, seed = null}) {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'pictures',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: null,
+            order: seed ? `RAND(${seed})` : null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}',
             count: true,
             get_count: true,
+            offset: offset,
         };
         return page.get_records(options);
     },
-    getInmovablesDefault: function() {
+    getInmovablesDefault: function({offset = 0, seed = null}) {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'immovables',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: null,
+            order: seed ? `RAND(${seed})` : null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}',
             count: true,
             get_count: true,
+            offset: offset,
         };
         return page.get_records(options);
     },
-    getDocumentsDefault: function() {
+    getDocumentsDefault: function({offset = 0, seed = null}) {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'documents_catalog',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: null,
+            order: seed ? `RAND(${seed})` : null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}',
             count: true,
             get_count: true,
+            offset: offset,
         };
         return page.get_records(options);
     },
 
-    getBiblioDefault: function() {
+    getBiblioDefault: function({offset = 0, seed = null}) {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'documents_catalog',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: 'RAND()',
+            order: seed ? `RAND(${seed})` : null,
             //ar_fields: '*',
             parse: page.parse_list_data,
-            resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+            offset: offset,
         };
         return page.get_records(options);
     },

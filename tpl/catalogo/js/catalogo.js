@@ -130,6 +130,9 @@ var catalog = {
 
         self.didSearchSomething = null;
 
+        const seed = Math.floor(Math.random() * 1e9).toString();
+        self.catalog_seed = seed;
+
         const params = new URLSearchParams(window.location.search);
         if (params.has('view')) {
             switch(params.get('view')) {
@@ -1364,7 +1367,7 @@ var catalog = {
                             //immovables: { results: [], loaded: 0 },
                             documents: { results: [], loaded: 0 },
                         }
-                        var content = templateModules.bloque_catalogo_default(self);
+                        var content = templateModules.bloque_catalogo_default(self, self.catalog_seed);
                         appendTemplate(self.rows_list_container, content);
                         self.default_submit = false;
                         resolve();

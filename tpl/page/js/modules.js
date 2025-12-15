@@ -1045,7 +1045,7 @@ var templateModules = {
 
 
 
-    bloque_catalogo_default: function(self){
+    bloque_catalogo_default: function(self, seed = null){
         const data = self.loaded_items;
 
         var content = htmlTemplate(`
@@ -1121,7 +1121,7 @@ var templateModules = {
             var gallery_children = container.querySelector('.galeria');
 
             // Crida a la api per carregar més elements
-            apiCall(data[type].loaded).then(function({data: results, total}){
+            apiCall({offset: data[type].loaded, seed}).then(function({data: results, total}){
                 if (!results || results.length == 0) {
                     return;
                 }
