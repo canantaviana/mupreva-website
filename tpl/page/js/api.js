@@ -532,6 +532,16 @@ var api = {
         return page.get_records(options);
     },
 
+    getDownloadLicenseText: function() {
+        var options = {
+            table: 'ts_web_mupreva',
+            ar_fields: 'body',
+            section_id: 235
+        }
+
+        return page.get_records(options);
+    },
+
     tld_to_table: function(tld) {
         const convert = {
             'object1': 'ts_object',
