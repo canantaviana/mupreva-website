@@ -203,6 +203,22 @@ var common = {
         return element;
     },//end create_dom_element
 
+    /**
+    * SANITIZE_TEXT_BR
+    * Esborra els nodes <br> després del segon consecutiu
+    */
+    sanitizeTextBr: function (htmlString) {
+        if (!htmlString) return "";
+        try {
+            let s = htmlString.replace(/<br\s*\/?>/gi, '<br>');
+            s = s.replace(/(?:\s*<br>\s*){3,}/gi, '<br><br>');
+            return s;
+        } catch (e) {
+            console.warn('sanitizeTextBr failed', e);
+            return htmlString;
+        }
+    },
+
 
 
     /**
