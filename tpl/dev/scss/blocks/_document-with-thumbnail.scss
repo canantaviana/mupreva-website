@@ -1,0 +1,26 @@
+.document-with-thumbnail {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    img {
+        width: 128px;
+        height: 128px;
+        object-fit: contain;
+    }
+
+    .block-dedalo ul > & {
+        &::before {
+            top: unset;
+        }
+    }
+
+    @include mobile {
+        gap: .5rem;
+
+        img {
+            width: 96px;
+            height: 96px;
+        }
+    }
+}
