@@ -216,7 +216,7 @@ var item = {
                 row.serie
                     ? `
             <dt>${tstring.item_serie}</dt>
-            <dd><a href="/publicaciones/${normalitzaText(row.serie)}">${row.serie}</a>
+            <dd><a href="/pub/${normalitzaText(row.serie)}">${row.serie}</a>
             ${
                 row.num_serie
                     ? `
