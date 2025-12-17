@@ -476,7 +476,7 @@ var search = {
                                 ${row.search_data.substring(0, 200)}...
                             </h3>
                             <p class="is-size-5 has-text-weight-medium">
-                            <a href="${url}">
+                            <a href="${url}" target="_blank">
                                 ${row.tpl}/${row.ref_section_id}
                             </a>
                             </p>
