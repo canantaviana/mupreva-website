@@ -894,12 +894,17 @@ var item = {
                             </div>
 
                             <div class="tab-group">
-                                ${row.periodo.split(',').map((el, i) => (
-                                    `<div class="tab-content" id="periodo-tab${i}" role="tabpanel">
-                                        <div id="periodo-relations${i}"></div>
-                                        <div id="periodo-load-more${i}"></div>
-                                    </div>`
-                                )).join('')}
+                                ${row.periodo.split(',').map((el, i) => {
+                                    const ids = row.periodo_data ? JSON.parse(row.periodo_data) : [];
+                                    const url = '/cro/' + ids[i];
+                                    return (
+                                        `<div class="tab-content" id="periodo-tab${i}" role="tabpanel">
+                                            <a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>
+                                            <div id="periodo-relations${i}"></div>
+                                            <div id="periodo-load-more${i}"></div>
+                                        </div>`
+                                    )
+                                }).join('')}
                             </div>
 
                         </div>
@@ -936,12 +941,17 @@ var item = {
                             </div>
 
                             <div class="tab-group">
-                                ${row.nombre_bien.split(',').map((el, i) => (
-                                    `<div class="tab-content" id="nombre_bien-tab${i}" role="tabpanel">
-                                        <div id="nombre_bien-relations${i}"></div>
-                                        <div id="nombre_bien-load-more${i}"></div>
-                                    </div>`
-                                )).join('')}
+                                ${row.nombre_bien.split(',').map((el, i) => {
+                                    const ids = row.nombre_bien_data ? JSON.parse(row.nombre_bien_data) : [];
+                                    const url = '/obj/' + ids[i];
+                                    return (
+                                        `<div class="tab-content" id="nombre_bien-tab${i}" role="tabpanel">
+                                            <a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>
+                                            <div id="nombre_bien-relations${i}"></div>
+                                            <div id="nombre_bien-load-more${i}"></div>
+                                        </div>`
+                                    )
+                                }).join('')}
                             </div>
                         </div>
                     </td>
@@ -977,12 +987,17 @@ var item = {
                             </div>
 
                             <div class="tab-group">
-                                ${row.materia.split(',').map((el, i) => (
-                                    `<div class="tab-content" id="materia-tab${i}" role="tabpanel">
-                                        <div id="materia-relations${i}"></div>
-                                        <div id="materia-load-more${i}"></div>
-                                    </div>`
-                                )).join('')}
+                                ${row.materia.split(',').map((el, i) => {
+                                    const ids = row.materia_data ? JSON.parse(row.materia_data) : [];
+                                    const url = '/mat/' + ids[i];
+                                    return (
+                                        `<div class="tab-content" id="materia-tab${i}" role="tabpanel">
+                                            <a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>
+                                            <div id="materia-relations${i}"></div>
+                                            <div id="materia-load-more${i}"></div>
+                                        </div>`
+                                    )
+                                }).join('')}
                             </div>
                         </div>
                     </td>
@@ -1018,12 +1033,17 @@ var item = {
                             </div>
 
                             <div class="tab-group">
-                                ${row.tecnica.split(',').map((el, i) => (
-                                    `<div class="tab-content" id="tecnica-tab${i}" role="tabpanel">
-                                        <div id="tecnica-relations${i}"></div>
-                                        <div id="tecnica-load-more${i}"></div>
-                                    </div>`
-                                )).join('')}
+                                ${row.tecnica.split(',').map((el, i) => {
+                                    const ids = row.tecnica_data ? JSON.parse(row.tecnica_data) : [];
+                                    const url = '/tec/' + ids[i];
+                                    return (
+                                        `<div class="tab-content" id="tecnica-tab${i}" role="tabpanel">
+                                            <a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>
+                                            <div id="tecnica-relations${i}"></div>
+                                            <div id="tecnica-load-more${i}"></div>
+                                        </div>`
+                                    )
+                                }).join('')}
                             </div>
                         </div>
                     </td>
