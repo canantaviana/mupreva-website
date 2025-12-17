@@ -498,7 +498,7 @@ var templateModules = {
                         }
                         return `
                             <div class="masonry-grid-item ${extraClass}">
-                                <a href="${url}">
+                                <a href="${url}" target="_blank">
                                     <img src="${image_url}" alt="">
                                 </a>
                             </div>
@@ -643,11 +643,11 @@ var templateModules = {
                             <div class="swiper-slide">
                                 <div class="is-flex is-flex-direction-column gap-4 full-link">
                                     <h3 class="is-size-4">
-                                        <a href="${url}">${row.title}</a>
+                                        <a href="${url}" target="_blank">${row.title}</a>
                                     </h3>
                                     ${(row.type)?
                                     `<p class="has-text-weight-medium is-size-6">
-                                        <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                        <a href="/activities/?type=${row.type}" class="link-dn is-relative" target="_blank">${row.type}</a>
                                     </p>`
                                     :''}
                                     <img loading="lazy" src="${image_url}" alt="">
@@ -721,11 +721,11 @@ var templateModules = {
                             <div class="swiper-slide">
                                 <div class="is-flex is-flex-direction-column gap-4 full-link">
                                     <h3 class="is-size-4">
-                                        <a href="${url}">${row.title}</a>
+                                        <a href="${url}" target="_blank">${row.title}</a>
                                     </h3>
                                     ${(row.type)?
                                     `<p class="has-text-weight-medium is-size-6">
-                                        <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                        <a href="/expositions/?type=${row.type}" class="link-dn is-relative" target="_blank">${row.type}</a>
                                     </p>`
                                     :''}
                                     <img loading="lazy" src="${image_url}" alt="">

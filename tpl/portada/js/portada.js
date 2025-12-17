@@ -55,7 +55,7 @@ var portada = {
                     const tpl = expo.table === 'exhibitions' ? 'exp' : 'act';
 
                     return `
-                        <a href="/${tpl}/${expo.section_id}" class="swiper-slide">
+                        <a href="/${tpl}/${expo.section_id}" class="swiper-slide" target="_blank">
                             <div class="wrapper is-relative">
                                 <h2 class="has-text-white has-text-weight-semibold is-size-2 link-dn">
                                     <p class="link-text">${expo.title}</p>
