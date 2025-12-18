@@ -256,65 +256,94 @@ var search = {
                     // // page.add_spinner(rows_list_container)
 
                     // update pagination total
-                    if (response.total !== undefined) {
-                        self.pagination.total = response.total
-                    }
+                        if (response.total !== undefined) {
+                            self.pagination.total = response.total
+                        }
 
                     // draw
-                    setTimeout(() => {
-                        spinner.remove()
+                        const rows = response.result || []
+                        const imagePromises = rows.map(function (row) {
+                            if (!row || !row.ref_section_id || !row.ref_table) return Promise.resolve(row)
 
-                        self.render_data({
-                            ar_rows: response.result
+                            return api.getImagenIdentificativa(row.ref_section_id, row.ref_table)
+                                .then(function (imgRes) {
+                                    let img = null;
+
+                                    if (row.ref_table === 'publications') {
+                                        img = imgRes[0].pdf.replace('.pdf', '.jpg').replace('web', 'thumb') || null
+                                    } else if (['exhibitions', 'activities'].includes(row.ref_table)) {
+                                        const imgArr = JSON.parse(imgRes[0].identifying_image)
+                                        img = Array.isArray(imgArr) ? imgArr[0] : null
+                                    } else if (['objects', 'pictures', 'immovables', 'documents_catalog'].includes(row.ref_table)) {
+                                        const imgArr = imgRes[0].imagenes_identificativas
+                                        img = Array.isArray(imgArr) ? imgArr[0].image : null
+                                    }
+
+                                    row.identifying_image = img;
+                                    return row
+                                })
+                                .catch(function () {
+                                    row.identifying_image = null
+                                    return row
+                                })
                         })
-                            .then(function (list_node) {
-                                const searchTitle = document.createElement('h2');
-                                searchTitle.textContent = self.keywords
-                                    ? `"${self.keywords}"`
-                                    : '';
-                                rows_list_container.appendChild(searchTitle);
 
-                                const typesContainerId = 'search_types_container'
-                                let typesContainer = document.getElementById(typesContainerId)
-                                if (!typesContainer) {
-                                    typesContainer = document.createElement('div')
-                                    typesContainer.className = 'wrapper mt-8 search-types-container'
-                                    typesContainer.id = typesContainerId
-                                    rows_list_container.appendChild(typesContainer)
-                                } else {
-                                    typesContainer.innerHTML = ''
-                                }
+                        Promise.all(imagePromises).then(function (rowsWithImages) {
+                            setTimeout(() => {
+                                spinner.remove()
 
-                                const types = self.search_types || []
-                                types.forEach(function (tipo) {
-                                    const btn = document.createElement('button')
-                                    btn.textContent = tstring[tipo] || tipo
-                                    btn.dataset.tipo = tipo
-                                    if (self.ref_section_tipo_selected === tipo) btn.className = 'selected'
-                                    btn.addEventListener('click', function () {
-                                        if (self.ref_section_tipo_selected === tipo) return
-                                        self.ref_section_tipo_selected = tipo
-                                        self.pagination.offset = 0
-                                        self.form_submit()
+                                self.render_data({
+                                    ar_rows: rowsWithImages
+                                })
+                                    .then(function (list_node) {
+                                        const searchTitle = document.createElement('h2');
+                                        searchTitle.textContent = self.keywords
+                                            ? `"${self.keywords}"`
+                                            : '';
+                                        rows_list_container.appendChild(searchTitle);
+
+                                        const typesContainerId = 'search_types_container'
+                                        let typesContainer = document.getElementById(typesContainerId)
+                                        if (!typesContainer) {
+                                            typesContainer = document.createElement('div')
+                                            typesContainer.className = 'wrapper mt-8 search-types-container'
+                                            typesContainer.id = typesContainerId
+                                            rows_list_container.appendChild(typesContainer)
+                                        } else {
+                                            typesContainer.innerHTML = ''
+                                        }
+
+                                        const types = self.search_types || []
+                                        types.forEach(function (tipo) {
+                                            const btn = document.createElement('button')
+                                            btn.textContent = tstring[tipo] || tipo
+                                            btn.dataset.tipo = tipo
+                                            if (self.ref_section_tipo_selected === tipo) btn.className = 'selected'
+                                            btn.addEventListener('click', function () {
+                                                if (self.ref_section_tipo_selected === tipo) return
+                                                self.ref_section_tipo_selected = tipo
+                                                self.pagination.offset = 0
+                                                self.form_submit()
+                                            })
+                                            typesContainer.appendChild(btn)
+                                        })
+                                        const total = response.total || rowsWithImages.length || 0;
+                                        const resultsCountNode = document.createElement('p');
+                                        resultsCountNode.className = 'has-text-right';
+                                        resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
+                                        rows_list_container.appendChild(resultsCountNode);
+
+                                        if (common.is_node(list_node)) {
+                                            rows_list_container.appendChild(list_node)
+                                        }
+                                        self.form_submit_state = 'done'
+                                        event_manager.publish('rendered', {
+                                            rows_list_container: rows_list_container
+                                        })
+                                        resolve(rows_list_container)
                                     })
-                                    typesContainer.appendChild(btn)
-                                })
-                                const total = response.total || response.result.length || 0;
-                                const resultsCountNode = document.createElement('p');
-                                resultsCountNode.className = 'has-text-right';
-                                resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
-                                rows_list_container.appendChild(resultsCountNode);
-
-                                if (common.is_node(list_node)) {
-                                    rows_list_container.appendChild(list_node)
-                                }
-                                self.form_submit_state = 'done'
-                                event_manager.publish('rendered', {
-                                    rows_list_container: rows_list_container
-                                })
-                                resolve(rows_list_container)
-                            })
-                    }, self.draw_delay)
+                            }, self.draw_delay)
+                        })
 
                 })
             }
@@ -466,10 +495,17 @@ var search = {
 
         const parser = new DOMParser();
         const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.ref_section_id;
+        const imgUrl = row.identifying_image ? __WEB_MEDIA_ENGINE_URL__ + row.identifying_image : null;
 
         const content = parser.parseFromString(`
-            <li class="pb-6">
-                <div class="columns is-flex-direction-row-reverse">
+            <li class="pb-6 global-search-result">
+                <div class="columns is-mobile">
+                    ${imgUrl
+                        ? `<div class="column is-2-desktop is-3-touch thumbnail">
+                            <img src="${imgUrl}" alt="" />
+                        </div>`
+                        : '<div class="column is-2 is-hidden-mobile"></div>'
+                    }
                     <div class="column flow--2xs">
                         <div class="flow--2xs">
                             <h3 class="is-size-3 has-text-weight-normal">

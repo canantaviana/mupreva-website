@@ -1,0 +1,36 @@
+.global-search {
+    .search-types-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        button {
+            background: none;
+            border: none;
+            font-size: var(--step-2);
+            font-weight: 600;
+            padding: 0.5rem;
+
+            &.selected, &:hover, &:focus {
+                background-color: $primary;
+                color: #fff;
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+
+    .global-search-result {
+        .thumbnail {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            @include mobile {
+                align-items: flex-start;
+            }
+        }
+    }
+}

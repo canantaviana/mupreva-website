@@ -536,6 +536,32 @@ var api = {
         return page.get_records(options);
     },
 
+    getImagenIdentificativa: function(id, table) {
+        const arFieldsMap = {
+            'objects': 'imagenes_identificativas',
+            'pictures': 'imagenes_identificativas',
+            'immovables': 'imagenes_identificativas',
+            'documents_catalog': 'imagenes_identificativas',
+            'activities': 'identifying_image',
+            'exhibitions': 'identifying_image',
+            'publications': 'pdf',
+        }
+        const resolvePortalsMap = {
+            'objects': '{"imagenes_identificativas": "image"}',
+            'immovables': '{"imagenes_identificativas": "image"}',
+            'pictures': '{"imagenes_identificativas": "image"}',
+        }
+
+        var options = {
+            table: table,
+            ar_fields: arFieldsMap[table] || 'identifying_image',
+            section_id: id,
+            resolve_portals_custom: resolvePortalsMap[table] || null,
+        }
+
+        return page.get_records(options);
+    },
+
     getDownloadLicenseText: function() {
         var options = {
             table: 'ts_web_mupreva',
