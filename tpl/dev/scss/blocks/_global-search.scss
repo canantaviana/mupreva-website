@@ -33,4 +33,18 @@
             }
         }
     }
+
+    .toggle-more, .toggle-less {
+        background: none;
+        border: none;
+        color: $primary;
+        font-size: var(--step-0);
+        font-weight: 600;
+        padding: 0;
+
+        &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    }
 }

@@ -495,34 +495,76 @@ var search = {
 
         const parser = new DOMParser();
         const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.ref_section_id;
-        const imgUrl = row.identifying_image ? __WEB_MEDIA_ENGINE_URL__ + row.identifying_image : null;
+        const identifyingImageUrl = row.identifying_image ? __WEB_MEDIA_ENGINE_URL__ + row.identifying_image : null;
+        const searchImage = row.image ? JSON.parse(row.image)[0] : null;
+        const searchImageUrl = searchImage ? __WEB_MEDIA_ENGINE_URL__ + searchImage : null;
+
+        const title = row.title || null;
+        const place = row.place ? `[${row.place}]` : null;
+        const startDate = row.start_date || null;
+        const endDate = row.end_date || null;
+        const header = [title, place, startDate, endDate].filter(Boolean).join(', ');
+        const finalImage = searchImageUrl || identifyingImageUrl || null;
+
+        const shortDescription = row.search_data.substring(0, 160) + (row.search_data.length > 160 ? '...' : '');
 
         const content = parser.parseFromString(`
             <li class="pb-6 global-search-result">
                 <div class="columns is-mobile">
-                    ${imgUrl
-                        ? `<div class="column is-2-desktop is-3-touch thumbnail">
-                            <img src="${imgUrl}" alt="" />
-                        </div>`
-                        : '<div class="column is-2 is-hidden-mobile"></div>'
-                    }
                     <div class="column flow--2xs">
                         <div class="flow--2xs">
-                            <h3 class="is-size-3 has-text-weight-normal">
-                                ${row.search_data.substring(0, 200)}...
-                            </h3>
+                            ${header ?
+                                `<h3 class="is-size-3 has-text-weight-normal">
+                                    ${header}
+                                </h3>`
+                            : ''}
+                            ${row.search_data ?
+                                `
+                                <p class="short-desc">${shortDescription} <button type="button" class="toggle-more">${(row.search_data.length>200) ? (tstring.mas).toLowerCase() : ''}</button></p>
+                                <p class="full-desc" style="display:none">${row.search_data} <button type="button" class="toggle-less">${(tstring.menos).toLowerCase()}</button></p>
+                                `
+                            : ''}
                             <p class="is-size-5 has-text-weight-medium">
                             <a href="${url}" target="_blank">
                                 ${row.tpl}/${row.ref_section_id}
                             </a>
                             </p>
                         </div>
-
                     </div>
+                    ${finalImage
+                        ? `<div class="column is-2-desktop is-3-touch thumbnail">
+                            <img src="${finalImage}" alt="" />
+                        </div>`
+                        : '<div class="column is-2 is-hidden-mobile"></div>'
+                    }
                 </div>
             </li>
         `, "text/html");
-        return content.body.firstChild;
+
+        const node = content.body.firstChild;
+        const shortEl = node.querySelector('.short-desc');
+        const fullEl = node.querySelector('.full-desc');
+        const btnMore = node.querySelector('.toggle-more');
+        const btnLess = node.querySelector('.toggle-less');
+
+        if (btnMore) {
+            btnMore.addEventListener('click', function () {
+                if (shortEl && fullEl) {
+                    shortEl.style.display = 'none';
+                    fullEl.style.display = 'block';
+                }
+            });
+        }
+        if (btnLess) {
+            btnLess.addEventListener('click', function () {
+                if (shortEl && fullEl) {
+                    shortEl.style.display = 'block';
+                    fullEl.style.display = 'none';
+                }
+            });
+        }
+
+        return node;
 
     },
 
