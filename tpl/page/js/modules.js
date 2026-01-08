@@ -1046,15 +1046,17 @@ var templateModules = {
 
 
     bloque_catalogo_default: function(self, seed = null){
+        const ar_tables = self.catalog_config.ar_tables;
+        console.log({ar_tables})
         const data = self.loaded_items;
 
         var content = htmlTemplate(`
         <div>
             <div class="default_objects mt-8 flow--xl">
             </div>
-            <div class="default_pictures mt-8 flow--xl">
+            <div class="default_sets mt-8 flow--xl">
             </div>
-            <div class="default_inmovables mt-8 flow--xl">
+            <div class="default_pictures mt-8 flow--xl">
             </div>
             <div class="default_documents mt-8 flow--xl">
             </div>
@@ -1062,8 +1064,8 @@ var templateModules = {
         `);
 
         var children_container_objects = content[0].querySelector('div.default_objects');
+        var children_container_sets = content[0].querySelector('div.default_sets');
         var children_container_pictures = content[0].querySelector('div.default_pictures');
-        var children_container_inmovables = content[0].querySelector('div.default_inmovables');
         var children_container_documents = content[0].querySelector('div.default_documents');
 
         function load_items(type) {
@@ -1076,15 +1078,15 @@ var templateModules = {
                     apiCall = api.getObjectsDefault;
                     container = children_container_objects;
                     break;
+                case 'sets':
+                    title = tstring.collection_sets_default;
+                    apiCall = api.getSetsDefault;
+                    container = children_container_sets;
+                    break;
                 case 'pictures':
                     title = tstring.collection_pictures_default;
                     apiCall = api.getPicturesDefault;
                     container = children_container_pictures;
-                    break;
-                case 'inmovables':
-                    title = tstring.collection_inmovables_default;
-                    apiCall = api.getInmovablesDefault;
-                    container = children_container_inmovables;
                     break;
                 case 'documents':
                     title = tstring.collection_documents_default;
@@ -1163,10 +1165,18 @@ var templateModules = {
                 appendTemplate(gallery_children, content);
             });
         }
-        load_items('objects');
-        load_items('pictures');
-        load_items('immovables');
-        load_items('documents');
+        if (ar_tables.includes('objects')) {
+            load_items('objects');
+        }
+        if (ar_tables.includes('sets')) {
+            load_items('sets');
+        }
+        if (ar_tables.includes('pictures')) {
+            load_items('pictures');
+        }
+        if (ar_tables.includes('documents_catalog')) {
+            load_items('documents');
+        }
 
         return content;
     },

@@ -26,11 +26,7 @@
         .thumbnail {
             display: flex;
             justify-content: center;
-            align-items: center;
-
-            @include mobile {
-                align-items: flex-start;
-            }
+            align-items: flex-start;
         }
     }
 

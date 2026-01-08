@@ -539,6 +539,10 @@ var catalog = {
                         <label for="checkbox_objects">${tstring.collection_filter_objects}</label>
                     </li>
                     <li>
+                        <input class="is-checkradio" type="checkbox" id="checkbox_sets" name="col" value="sets" ${!(params.has('filter')) && "checked"}>
+                        <label for="checkbox_sets">${tstring.collection_filter_sets}</label>
+                    </li>
+                    <li>
                         <input class="is-checkradio" type="checkbox" id="checkbox_pictures" name="col" value="pictures" ${!(params.has('filter')) && "checked"}>
                         <label for="checkbox_pictures">${tstring.collection_filter_pictures}</label>
                     </li>
@@ -901,6 +905,21 @@ var catalog = {
                 });
             }
 
+            // checkbox_sets (Conjuntos are objects with tipo_registro = 'Conjunto')
+            if (table_selector_container) {
+                const checkbox_sets = currentForm.querySelector("#checkbox_sets");
+                checkbox_sets.setAttribute("name", "catalog_tables");
+                checkbox_sets.setAttribute("value", "sets");
+                const checkedSets = self.catalog_config.ar_tables
+                    ? self.catalog_config.ar_tables.indexOf("sets") !== -1
+                    : true;
+                if (checkedSets) checkbox_sets.setAttribute("checked", checkedSets);
+                checkbox_sets.addEventListener("change", function (e) {
+                    self.changed_table_selector(e);
+                    removeParam('filter');
+                });
+            }
+
             // checkbox_pictures
             if (table_selector_container) {
                 const checkbox_pictures =
@@ -1254,13 +1273,32 @@ var catalog = {
         // tables
         const ar_tables = self.get_tables();
 
+        let request_tables = ar_tables.map((t) => (t === "sets" ? "objects" : t));
+        request_tables = Array.from(new Set(request_tables));
+
+        let extra_object_filter = null;
+        const requestedHasSets = ar_tables.indexOf("sets") !== -1;
+        const requestedHasObjects = ar_tables.indexOf("objects") !== -1;
+
+        const onlyObjectsRequested = request_tables.length === 1 && request_tables[0] === "objects";
+        if (onlyObjectsRequested) {
+            if (requestedHasSets && !requestedHasObjects) {
+                extra_object_filter = "tipo_registro = 'Conjunto'";
+            } else if (requestedHasObjects && !requestedHasSets) {
+                extra_object_filter = "tipo_registro = 'Bien singular'";
+            }
+        }
+
+        if (extra_object_filter) {
+            sql_filter = sql_filter ? `${sql_filter} AND (${extra_object_filter})` : extra_object_filter;
+        }
+
         // request
         const request_body = {
             dedalo_get: "records",
             db_name: page_globals.WEB_DB,
             lang: page_globals.WEB_CURRENT_LANG_CODE,
-            // table		: 'objects',
-            table: ar_tables.join(","),
+            table: request_tables.join(","),
             ar_fields: ar_fields,
             sql_filter: sql_filter,
             limit: limit,
@@ -1363,10 +1401,14 @@ var catalog = {
                     if (self.default_submit || self.didSearchSomething === false) {
                         self.loaded_items = {
                             objects: { results: [], loaded: 0 },
+                            sets: { results: [], loaded: 0 },
                             pictures: { results: [], loaded: 0 },
-                            //immovables: { results: [], loaded: 0 },
                             documents: { results: [], loaded: 0 },
                         }
+                        const tables = self.get_tables();
+                        self.catalog_config = self.catalog_config || {};
+                        self.catalog_config.ar_tables = tables;
+
                         var content = templateModules.bloque_catalogo_default(self, self.catalog_seed);
                         appendTemplate(self.rows_list_container, content);
                         self.default_submit = false;
