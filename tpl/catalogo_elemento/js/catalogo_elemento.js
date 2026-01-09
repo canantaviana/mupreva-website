@@ -1392,32 +1392,71 @@ var item = {
     },
 
     isGroup: function (row) {
-        return (
-            typeof row.tipo_registro !== "undefined" &&
-            row.tipo_registro === "Conjunto" &&
-            row.children.length > 0
-        );
+        // return (
+        //     typeof row.tipo_registro !== "undefined" &&
+        //     row.tipo_registro === "Conjunto" &&
+        //     row.children.length > 0
+        // );
+        return row.tipo_registro === "Conjunto";
     },
 
-    templateGroup: function (row) {
+    templateGroup: function (target, row) {
         var self = this;
         if (!this.isGroup(row)) {
             return "";
         }
-        return htmlTemplate(`
+        const template =  htmlTemplate(`
             <h2 class="accordion-header">
                 <button type="button">${tstring.item_group}</button>
             </h2>
             <div class="accordion-content block-dedalo">
                 <ul class="galeria galeria--242x242 link-dn">
-                ${row.children
-                    .map(function (object) {
-                        return self.template_catalog_elem(object);
-                    })
-                    .join("")}
                 </ul>
             </div>
         `);
+        const ul = template[2].querySelector("ul");
+        api.getElementsFromSet(row.section_id).then(function(results){
+            var content = htmlTemplate(`
+                ${results.map(function(object){
+                    return self.template_catalog_elem(object);
+                }).join('')}`)
+            appendTemplate(ul, content);
+            enableDialogs(ul);
+        });
+        appendTemplate(target, template);
+    },
+
+    isInSet: function (row) {
+        return row.tipo_registro === "Conjunto en origen";
+    },
+
+    templateIsInSets: function (target, row) {
+        var self = this;
+        if (!this.isInSet(row)) {
+            return "";
+        }
+        const template =  htmlTemplate(`
+            <h2 class="accordion-header">
+                <button type="button">${tstring.sets}</button>
+            </h2>
+            <div class="accordion-content block-dedalo">
+                <ul class="galeria galeria--242x242 link-dn">
+                </ul>
+            </div>
+        `);
+        const ul = template[2].querySelector("ul");
+        const parentsArray = JSON.parse(row.parent);
+        const parentsIds = parentsArray.map(parent => parent.split('_')[1]);
+
+        api.getSetsFromElement(parentsIds.join(',')).then(function(results){
+            var content = htmlTemplate(`
+                ${results.map(function(object){
+                    return self.template_catalog_elem(object);
+                }).join('')}`)
+            appendTemplate(ul, content);
+            enableDialogs(ul);
+        });
+        appendTemplate(target, template);
     },
 
     hasRelated: function (row) {
@@ -1764,7 +1803,9 @@ var item = {
         appendTemplate(acordion, this.templateRestoration(row));
 
         //conjunto
-        appendTemplate(acordion, this.templateGroup(row));
+        // appendTemplate(acordion, this.templateGroup(row));
+        this.templateGroup(acordion, row);
+        this.templateIsInSets(acordion, row);
 
         //bibliografia
         this.templateBiblio(acordion, row);

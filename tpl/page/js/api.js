@@ -426,6 +426,29 @@ var api = {
         return page.get_records(options);
     },
 
+    getElementsFromSet: function(set_id) {
+        var options = {
+            table: 'objects',
+            sql_filter: `parent = '[\"tch1_${set_id}\"]' AND tipo_registro = 'Conjunto en origen'`,
+            ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
+            parse: page.parse_list_data,
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+        };
+        return page.get_records(options);
+    },
+
+    getSetsFromElement: function(section_id) {
+        var options = {
+            table: 'objects',
+            section_id: section_id,
+            sql_filter: `tipo_registro = 'Conjunto'`,
+            ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
+            parse: page.parse_list_data,
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+        };
+        return page.get_records(options);
+    },
+
     getRelatedElements: function({table, relation, relationId, offset = 0, seed = null}) {
         var options = {
             table: table,
