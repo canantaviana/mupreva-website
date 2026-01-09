@@ -226,7 +226,9 @@ page.parse_tree_data = function (rows, hilite_terms) {
         const row = data[i]
 
         const parent_term_id = (row.parent && row.parent[0]) ? row.parent[0] : false
-        if (!parent_term_id) {
+        const isRoot = ['object1_1', 'dc1_83', 'ts1_1', 'material1_89', 'technique1_1'].includes(row.term_id);
+
+        if (!parent_term_id && !isRoot) {
             console.warn("Ignored undefined parent_term_id:", row);
             // set to remove
             term_id_to_remove.push(row.term_id)
