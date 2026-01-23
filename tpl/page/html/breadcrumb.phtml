@@ -1,6 +1,6 @@
 
-<div class="has-background-grey-light mb-6">
-    <div class="wrapper py-6">
+<div>
+    <div class="wrapper pt-6">
         <nav class="breadcrumb-nav link-dn is-size-6 has-text-weight-light" aria-label="Molla de pa">
             <ol itemscope="" itemtype="https://schema.org/BreadcrumbList">
                 <?php
@@ -27,7 +27,7 @@
             <?php if (count($this->breadcrumb) > 2) : ?>
             <p class="has-text-weight-semibold is-size-3 is-flex-grow-0"><?php echo $this->breadcrumb[1]->term ?></p>
             <?php else: ?>
-            <h1 class="has-text-weight-semibold is-size-2 is-flex-grow-0"><?php echo $title ?></h1>
+            <h1 class="has-text-weight-black is-size-1 is-flex-grow-0"><?php echo $title ?></h1>
             <?php endif ?>
 
             <?php if (!empty($this->menu_title_html)) : ?>
