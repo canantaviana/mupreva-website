@@ -51,6 +51,7 @@ input[type="date"].filled {
 .select {
     &.is-small {
         font-size: var(--step--2);
+        border-radius: $input-radius;
     }
 }
 
@@ -76,7 +77,8 @@ ul.field {
     select {
         width: 100%;
         background: $input-background-color;
-        border-color: $grey;
+        border: 0;
+        border-radius: 0;
         cursor: default;
         &.not-first-selected {
             border-color: #000;

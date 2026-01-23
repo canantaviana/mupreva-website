@@ -260,7 +260,7 @@ details {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 2px solid;
+        border-bottom: 1px solid $primary;
         padding: var(--space-3xs) 0;
         cursor: default;
         &::after {

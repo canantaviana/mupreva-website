@@ -1,12 +1,12 @@
 // Modificacions dels valors de les variables de controls (node_modules/bulma-scss/utilities/_controls.scss)
 
 // $control-radius: $radius !default;
-$control-radius: 0;
+$control-radius: $radius-rounded;
 // $control-radius-small: $radius-small !default;
 $control-radius-small: 0;
 
 // $control-border-width: 1px !default;
-$control-border-width: 2px;
+$control-border-width: 1px;
 
 // $control-height: 2.5em !default;
 $control-height: 2.5rem;

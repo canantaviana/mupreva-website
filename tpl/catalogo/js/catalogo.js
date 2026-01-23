@@ -420,8 +420,8 @@ var catalog = {
         return htmlTemplate(`
 <form action="#" class="search-form search-form--col">
     <fieldset>
-        <legend class="pt-5 px-6">${tstring.collection_explore}</legend>
-        <div class="py-5 px-6 mb-5 has-background-grey-light">
+        <legend class="pt-5 has-text-weight-black has-text-primary">${tstring.collection_explore}</legend>
+        <div class="py-5 mb-5">
             <div class="columns">
                 <div class="column">
                     <div class="field">

@@ -386,7 +386,7 @@ var catalog = {
         return htmlTemplate(`
 <form action="#" class="search-form search-form--col">
     <fieldset>
-        <div class="py-5 px-6 mb-5 has-background-grey-light">
+        <div class="py-5 mb-5">
             <div class="columns">
                 <div class="column">
                     <div class="field">

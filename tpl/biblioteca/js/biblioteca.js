@@ -224,8 +224,8 @@ var biblio = {
         return htmlTemplate(`
 <form action="" class="search-form search-form--pub">
     <fieldset>
-        <legend class="pt-5 px-6">${tstring.documents_explore}</legend>
-        <div class="py-5 px-6 mb-5 has-background-grey-light">
+        <legend class="pt-5 has-text-weight-black has-text-primary">${tstring.documents_explore}</legend>
+        <div class="py-5 mb-5">
             <div class="columns is-variable is-5">
                 <div class="column">
                     <div class="columns">
