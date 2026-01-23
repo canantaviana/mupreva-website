@@ -4,7 +4,10 @@ if ($this->web_foot->identify_image != null) {
     $images = json_decode($this->web_foot->identify_image, true);
 }
 if (is_array($images) && count($images) > 0) {
-    $image = __WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.png', $images[0]));
+    $image = __WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.svg', $images[0]));
+    if(count($images) > 1) {
+        $image2 = __WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.svg', $images[1]));
+    }
 } else {
     $image = __WEB_ROOT_WEB__.'/assets/img/logo-mupreva.png';
 }
@@ -14,6 +17,9 @@ if (is_array($images) && count($images) > 0) {
             <div class="columns is-multiline is-size-6">
                 <div class="column is-full-tablet is-one-fifth-widescreen is-2-fullhd has-text-centered-tablet has-text-left-widescreen">
                     <img src="<?php echo $image ?>" alt="<?php echo $this->web_root->title ?>" width="321" height="110">
+                    <?php if (isset($image2)): ?>
+                        <img src="<?php echo $image2 ?>" alt="<?php echo $this->web_root->title ?>" width="321" height="110">
+                    <?php endif ?>
                 </div>
                 <div class="column is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only"></div>
 
@@ -25,11 +31,11 @@ if (is_array($images) && count($images) > 0) {
                     <?php //var_dump($column); ?>
                 <div class="column is-one-third-tablet is-one-fifth-widescreen is-2-fullhd">
                     <?php if (!empty($column->identify_image)) : ?>
-                    <div class="is-flex gap-2 mb-4">
+                    <!-- <div class="is-flex gap-2 mb-4">
                         <?php foreach (json_decode($column->identify_image) as $image) : ?>
                         <img src="<?php echo __WEB_MEDIA_ENGINE_URL__.'/'.str_replace('.jpg', '.svg', str_replace('1.5MB', 'original', $image)) ?>" alt="">
                         <?php endforeach ?>
-                    </div>
+                    </div> -->
                     <?php endif ?>
                     <?php if (!empty($column->title)) : ?>
                     <p class="is-size-5 mb-4"><?php echo $column->title ?></p>
