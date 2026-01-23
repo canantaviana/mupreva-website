@@ -17,4 +17,21 @@ footer {
         width: 24px;
         filter: invert(1);
     }
+
+    // Xarxes socials
+    ul:has(img) {
+        a {
+            display: flex;
+            border: 1px solid #fff;
+            border-radius: $radius-rounded;
+            width: 2rem;
+            height: 2rem;
+            justify-content: center;
+            align-items: center;
+            img {
+                width: 1rem;
+                height: 1rem;
+            }
+        }
+    }
 }

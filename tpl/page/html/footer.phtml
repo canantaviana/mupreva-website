@@ -51,7 +51,7 @@ if (is_array($images) && count($images) > 0) {
                         if (!empty($subcolumn->identify_image)) {
                             $images = json_decode($subcolumn->identify_image, true);
                             if (is_array($images) && count($images) > 0) {
-                                $img = '<img src="'.__WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.svg', $images[0])).'" alt="'.$subcolumn->title.'" class="mr-2">';
+                                $img = '<img src="'.__WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.svg', $images[0])).'" alt="'.$subcolumn->title.'">';
                             }
                         }
                         $links[] = '<a href="'.$subcolumn->web_path.'">'.$img.$subcolumn->title.'</a>';
