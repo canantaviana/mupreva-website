@@ -7,14 +7,19 @@
             width: 25px;
             height: 25px;
             background: url("img/ico-lupa.svg") no-repeat;
-            .home & {
-                background-image: url("img/ico-lupa-home.svg");
+            @include fullhd {
+                .home & {
+                    background-image: url("img/ico-lupa-home.svg");
+                }
             }
+            
             &[aria-expanded="true"] {
                 background-image: url("img/ico-tancar.svg");
                 background-size: contain;
-                .home & {
-                    background-image: url("img/ico-tancar-home.svg");
+                @include fullhd {
+                    .home & {
+                        background-image: url("img/ico-tancar-home.svg");
+                    }
                 }
             }
         }
