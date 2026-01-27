@@ -99,10 +99,16 @@
                 width: max-content;
                 gap: var(--space-l);
                 z-index: 1;
+                .home & {
+                    background-color: rgba(0, 0, 0, 0.5);
+                }
                 > * + * {
                     margin-top: var(--space-s);
                 }
                 a {
+                    .home & {
+                        color: #fff;
+                    }
                     &:hover {
                         text-decoration: underline;
                     }
