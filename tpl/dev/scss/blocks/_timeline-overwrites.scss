@@ -12,14 +12,14 @@
         margin: 0;
     }
     &::before {
-        width: 2px;
+        width: 1px;
         left: 0;
     }
 }
 .cd-timeline__content {
     border-radius: 0;
     box-shadow: none;
-    margin-left: 2px;
+    margin-left: 1px;
     padding-top: 0;
     padding-left: 0;
     padding-bottom: 0;
@@ -30,7 +30,7 @@
         display: none;
     }
     p {
-        border-bottom: 2px solid #000;
+        border-bottom: 1px solid #000;
         padding-bottom: var(--space-xs);
     }
 }
