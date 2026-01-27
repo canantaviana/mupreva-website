@@ -57,6 +57,7 @@
             gap: var(--space-xl);
             > li {
                 padding-bottom: var(--space-m);
+                position: relative;
                 > a {
                     &::after {
                         content: "";
@@ -72,7 +73,7 @@
                     }
                 }
                 &.open > ul {
-                    display: flex;
+                    display: block;
                 }
                 &.open > a,
                 &:hover > a,
@@ -92,44 +93,18 @@
             ul {
                 position: absolute;
                 background-color: #fff;
-                padding: var(--space-l) 0;
-                display: flex;
-                justify-content: center;
-                flex-wrap: wrap;
+                padding: var(--space-m);
                 top: 100%;
-                left: 50%;
-                width: 100%;
-                transform: translateX(-50%);
+                left: calc(var(--space-m) * -1);
+                width: max-content;
                 gap: var(--space-l);
                 z-index: 1;
-                &::before,
-                &::after {
-                    content: "";
-                    display: block;
-                    position: absolute;
-                    top: 0;
-                    bottom: 0;
-                    background: inherit;
-                    width: 800%;
+                > * + * {
+                    margin-top: var(--space-s);
                 }
-                &::before {
-                    left: calc(-800% + 1px);
-                }
-                &::after {
-                    right: calc(-800% + 1px);
-                }
-                // .home & {
-                //     background-color: rgba(#691008,.75);
-                // }
                 a {
-                    display: block;
-                    padding-right: 2.5rem;
-                    width: max-content;
-                    background: url("img/fletxa-dreta-submenu.svg")
-                        calc(100% - 3px) 50% no-repeat;
                     &:hover {
                         text-decoration: underline;
-                        background-position: 100% 50%;
                     }
                 }
             }
