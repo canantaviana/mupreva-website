@@ -26,13 +26,33 @@ document.addEventListener("DOMContentLoaded", function () {
     // ----------
     // scroll top
     // ----------
-    $(window).on("scroll", function () {
-        if ($(this).scrollTop() > 300) {
-            $(".scrolltop").addClass("visible");
-        } else {
-            $(".scrolltop").removeClass("visible");
-        }
-    });
+    const scrollTopElement = document.querySelector(".scrolltop");
+    const footer = document.querySelector("footer");
+    
+    if (scrollTopElement) {
+        window.addEventListener("scroll", function () {
+            if (window.scrollY > 300) {
+                scrollTopElement.classList.add("visible");
+                
+                // Adjust position to not overlap footer
+                if (footer) {
+                    const footerRect = footer.getBoundingClientRect();
+                    const scrollTopHeight = scrollTopElement.offsetHeight;
+                    const windowHeight = window.innerHeight;
+                    
+                    // If footer is visible in viewport, move scrolltop above it
+                    if (footerRect.top < windowHeight) {
+                        const offset = windowHeight - footerRect.top;
+                        scrollTopElement.style.bottom = (offset + 20) + "px";
+                    } else {
+                        scrollTopElement.style.bottom = "20px";
+                    }
+                }
+            } else {
+                scrollTopElement.classList.remove("visible");
+            }
+        });
+    }
 
     // ------------------
     // Cercador capçalera
