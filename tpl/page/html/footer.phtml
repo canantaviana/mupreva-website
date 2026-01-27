@@ -14,14 +14,13 @@ if (is_array($images) && count($images) > 0) {
 ?>
     <footer class="pt-8 pb-5 mt-9 has-background-primary has-text-white link-dn is-relative">
         <div class="wrapper">
-            <div class="columns is-multiline is-size-6">
-                <div class="column is-full-tablet is-one-fifth-widescreen is-2-fullhd has-text-centered-tablet has-text-left-widescreen">
-                    <img src="<?php echo $image ?>" alt="<?php echo $this->web_root->title ?>" width="321" height="110">
+            <div class="columns is-multiline is-size-6 is-justify-content-space-between mb-6">
+                <div class="column is-full-tablet is-one-fifth-widescreen is-2-fullhd has-text-centered-tablet has-text-left-widescreen flow--l">
+                    <img src="<?php echo $image ?>" alt="<?php echo $this->web_root->title ?>" width="321" height="110" class="is-block">
                     <?php if (isset($image2)): ?>
-                        <img src="<?php echo $image2 ?>" alt="<?php echo $this->web_root->title ?>" width="321" height="110">
+                        <img src="<?php echo $image2 ?>" alt="<?php echo $this->web_root->title ?>" width="321" height="110" class="is-block">
                     <?php endif ?>
                 </div>
-                <div class="column is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only"></div>
 
                 <?php foreach ($this->web_foot_columns as $column) :
                     if ($column->parent != WEB_FOOT_COLUMNS) {
@@ -38,7 +37,7 @@ if (is_array($images) && count($images) > 0) {
                     </div> -->
                     <?php endif ?>
                     <?php if (!empty($column->title)) : ?>
-                    <p class="is-size-5 mb-4"><?php echo $column->title ?></p>
+                    <p class="is-size-5 mb-4"><strong><?php echo $column->title ?></strong></p>
                     <?php endif ?>
                     <?php if (!empty($column->abstract)) : ?>
                     <div class="flow--m">
@@ -96,7 +95,7 @@ if (is_array($images) && count($images) > 0) {
                 <?php endif ?>
 
 
-                <ul class="is-flex is-flex-wrap-wrap gap-6 is-justify-content-center mx-auto is-size-6 has-text-weight-medium">
+                <ul class="is-flex is-flex-wrap-wrap gap-6 is-justify-content-center mx-auto is-size-7 has-text-weight-medium">
                 <?php foreach ($this->menu_footer as $entry) : ?>
                     <li>
                         <a href="<?php echo __WEB_ROOT_WEB__ . '/'.$entry->web_path ?>"><?php echo $entry->title ?></a>
