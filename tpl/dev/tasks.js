@@ -8,7 +8,7 @@ module.exports = (gulp) => {
   const log = require('fancy-log');
   const newer = require('gulp-newer');
   const plumber = require('gulp-plumber');
-  const svg2png = require('gulp-svg2png-update');
+  const sharpResponsive = require('gulp-sharp-responsive');
   const gulpIf = require('gulp-if');
   const babel = require('gulp-babel');
   const autoprefixer = require('gulp-autoprefixer');
@@ -180,11 +180,15 @@ module.exports = (gulp) => {
     );
 
     stream.add(gulp.src(filesExist('dev/logo.svg', fileExistOptions))
-      .pipe(svg2png())
+      .pipe(sharpResponsive({
+        formats: [
+          { format: 'png' }
+        ]
+      }))
       .pipe(rename({ extname: '.png' }))
       .pipe(plumber('FAVICON generate'))
       .pipe(favicons({
-        background: '#870d01',
+        background: '#fff',
         path: '/favicons',
         icons: {
           android: true, // Create Android homescreen icon. `boolean`
