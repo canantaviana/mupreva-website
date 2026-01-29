@@ -68,9 +68,9 @@
                         // margin-top: 21px;
                         transition: background-color 0.05s ease-in;
                     }
-                    .home & {
-                        color: #fff;
-                    }
+                    // .home:not(.slider-out) & {
+                    //     color: #fff;
+                    // }
                 }
                 &.open > ul {
                     display: block;
@@ -80,9 +80,9 @@
                 &:has([aria-current="page"]) > a {
                     &::after {
                         background-color: getColor(secondary);
-                        .home & {
-                            background-color: #fff;
-                        }
+                        // .home:not(.slider-out) & {
+                        //     background-color: #fff;
+                        // }
                     }
                 }
                 &.has-submenu a::after {
@@ -99,16 +99,16 @@
                 width: max-content;
                 gap: var(--space-l);
                 z-index: 1;
-                .home & {
-                    background-color: rgba(0, 0, 0, 0.5);
-                }
+                // .home:not(.slider-out) & {
+                //     background-color: rgba(0, 0, 0, 0.5);
+                // }
                 > * + * {
                     margin-top: var(--space-s);
                 }
                 a {
-                    .home & {
-                        color: #fff;
-                    }
+                    // .home:not(.slider-out) & {
+                    //     color: #fff;
+                    // }
                     &:hover {
                         text-decoration: underline;
                     }
@@ -124,9 +124,9 @@
         border: none;
         width: 25px;
         height: 25px;
-        .home & {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='m.823.823 4 4 4-4'/%3E%3C/svg%3E");
-        }
+        // .home:not(.slider-out) & {
+        //     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='m.823.823 4 4 4-4'/%3E%3C/svg%3E");
+        // }
     }
 }
 

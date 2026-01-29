@@ -18,8 +18,8 @@
     }
     @include fullhd {
         padding-bottom: var(--space-m);
-        .home & {
-            filter: invert(1);
-        }
+        // .home:not(.slider-out) & {
+        //     filter: invert(1);
+        // }
     }
 }
