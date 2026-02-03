@@ -940,7 +940,8 @@ var common = {
 
                 fetch(url)
                     .then(function (response) {
-                        if (!(response.url.includes('.jpg'))) {
+                        const contentType = response.headers.get('content-type');
+                        if (response.redirected || !contentType || !contentType.startsWith('image/')) {
                             attempt();
                             return;
                         }
