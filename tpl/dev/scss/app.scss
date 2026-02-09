@@ -1,8 +1,7 @@
 // ------
 // GLOBAL
 // ------
-@import "base/_googleFonts_Archivo-swap.scss";
-@import "base/_googleFonts_Noto Serif-swap.scss";
+@import "base/_googleFonts_Manrope-swap.scss";
 @import "base/utopia";
 
 // Bulma cusotmize
@@ -23,6 +22,7 @@
 // Mixins
 // -------
 @import "helpers/mixins";
+@import "helpers/functions";
 
 // Base styles
 // -----------
@@ -133,11 +133,14 @@
 @import "blocks/copy-message";
 @import "blocks/dedalo-link";
 @import "blocks/desplegables";
+@import "blocks/document-with-thumbnail";
+@import "blocks/download-modal-overlay";
 @import "blocks/dl-list";
 @import "blocks/dl-minimal";
 @import "blocks/expos-list";
 @import "blocks/fitxa-intro";
 @import "blocks/galeria";
+@import "blocks/global-search";
 @import "blocks/header-search";
 @import "blocks/home-grid";
 @import "blocks/map";

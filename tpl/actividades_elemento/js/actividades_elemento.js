@@ -486,13 +486,14 @@ var item = {
         if (!row.description || row.description == "") {
             return null;
         }
+        const safeDesc = common.sanitizeTextBr(row.description) || row.description;
         return htmlTemplate(`
             <h2 class="accordion-header">
                 <button type="button">${tstring.item_general_info}</button>
             </h2>
             <div class="accordion-content block-dedalo">
                 <div class="accordion accordion--secondary">
-                ${row.description}
+                ${safeDesc}
                 </div>
             </div>
         `);
@@ -565,12 +566,14 @@ var item = {
                             <ul>
                                 ${row.documents_data
                                     .map(function (entry) {
+                                        const pdfUrl = __WEB_MEDIA_ENGINE_URL__ + entry.document;
+                                        const imageUrl = pdfUrl.replace('.pdf', '.jpg').replace('web', 'thumb');
                                         return `
-                                    <li><a target="_blank" href="${
-                                        __WEB_MEDIA_ENGINE_URL__ +
-                                        entry.document
-                                    }">${entry.title}</a></li>
-                                    `;
+                                            <li class="document-with-thumbnail">
+                                                <img src="${imageUrl}">
+                                                <a target="_blank" href="${pdfUrl}">${entry.title}</a>
+                                            </li>
+                                        `;
                                     })
                                     .join("")}
                             </ul>

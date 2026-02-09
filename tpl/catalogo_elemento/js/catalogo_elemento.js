@@ -31,6 +31,9 @@ var item = {
         // export_data_buttons (define before load_data to prepare the event subscribe)
         const export_data_buttons = page.render_export_data_buttons();
 
+        const seed = Math.floor(Math.random() * 1e9).toString();
+        self.catalog_seed = seed;
+
         // load and render
         self.load_data({}).then(function (response) {
             if (!response.result || response.result.length < 1) {
@@ -891,12 +894,17 @@ var item = {
                             </div>
 
                             <div class="tab-group">
-                                ${row.periodo.split(',').map((el, i) => (
-                                    `<div class="tab-content" id="periodo-tab${i}" role="tabpanel">
-                                        <div id="periodo-relations${i}"></div>
-                                        <div id="periodo-load-more${i}"></div>
-                                    </div>`
-                                )).join('')}
+                                ${row.periodo.split(',').map((el, i) => {
+                                    const ids = row.periodo_data ? JSON.parse(row.periodo_data) : [];
+                                    const url = '/cro/' + ids[i];
+                                    return (
+                                        `<div class="tab-content" id="periodo-tab${i}" role="tabpanel">
+                                            <a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>
+                                            <div id="periodo-relations${i}"></div>
+                                            <div id="periodo-load-more${i}"></div>
+                                        </div>`
+                                    )
+                                }).join('')}
                             </div>
 
                         </div>
@@ -933,12 +941,17 @@ var item = {
                             </div>
 
                             <div class="tab-group">
-                                ${row.nombre_bien.split(',').map((el, i) => (
-                                    `<div class="tab-content" id="nombre_bien-tab${i}" role="tabpanel">
-                                        <div id="nombre_bien-relations${i}"></div>
-                                        <div id="nombre_bien-load-more${i}"></div>
-                                    </div>`
-                                )).join('')}
+                                ${row.nombre_bien.split(',').map((el, i) => {
+                                    const ids = row.nombre_bien_data ? JSON.parse(row.nombre_bien_data) : [];
+                                    const url = '/obj/' + ids[i];
+                                    return (
+                                        `<div class="tab-content" id="nombre_bien-tab${i}" role="tabpanel">
+                                            <a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>
+                                            <div id="nombre_bien-relations${i}"></div>
+                                            <div id="nombre_bien-load-more${i}"></div>
+                                        </div>`
+                                    )
+                                }).join('')}
                             </div>
                         </div>
                     </td>
@@ -974,12 +987,17 @@ var item = {
                             </div>
 
                             <div class="tab-group">
-                                ${row.materia.split(',').map((el, i) => (
-                                    `<div class="tab-content" id="materia-tab${i}" role="tabpanel">
-                                        <div id="materia-relations${i}"></div>
-                                        <div id="materia-load-more${i}"></div>
-                                    </div>`
-                                )).join('')}
+                                ${row.materia.split(',').map((el, i) => {
+                                    const ids = row.materia_data ? JSON.parse(row.materia_data) : [];
+                                    const url = '/mat/' + ids[i];
+                                    return (
+                                        `<div class="tab-content" id="materia-tab${i}" role="tabpanel">
+                                            <a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>
+                                            <div id="materia-relations${i}"></div>
+                                            <div id="materia-load-more${i}"></div>
+                                        </div>`
+                                    )
+                                }).join('')}
                             </div>
                         </div>
                     </td>
@@ -1015,12 +1033,17 @@ var item = {
                             </div>
 
                             <div class="tab-group">
-                                ${row.tecnica.split(',').map((el, i) => (
-                                    `<div class="tab-content" id="tecnica-tab${i}" role="tabpanel">
-                                        <div id="tecnica-relations${i}"></div>
-                                        <div id="tecnica-load-more${i}"></div>
-                                    </div>`
-                                )).join('')}
+                                ${row.tecnica.split(',').map((el, i) => {
+                                    const ids = row.tecnica_data ? JSON.parse(row.tecnica_data) : [];
+                                    const url = '/tec/' + ids[i];
+                                    return (
+                                        `<div class="tab-content" id="tecnica-tab${i}" role="tabpanel">
+                                            <a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>
+                                            <div id="tecnica-relations${i}"></div>
+                                            <div id="tecnica-load-more${i}"></div>
+                                        </div>`
+                                    )
+                                }).join('')}
                             </div>
                         </div>
                     </td>
@@ -1048,7 +1071,7 @@ var item = {
             const tabData = self.relationsData[category][tab];
             const offset = tabData.loaded;
             const relationId = tabData.section_id
-            api.getRelatedElements(self.table, category+'_data', relationId, offset).then(({data, total}) => {
+            api.getRelatedElements({table: self.table, relation: category+'_data', relationId, offset, seed: self.catalog_seed}).then(({data, total}) => {
                 tabData.result.push(...data)
                 tabData.loaded = tabData.loaded + data.length;
                 setCategoryRelations(category);
@@ -1108,7 +1131,7 @@ var item = {
             const promises = JSON.parse(row[category+'_data']).map((relationId, i) => {
                 const tab = row[category].split(',')[i].trim();
 
-                return api.getRelatedElements(self.table, category+'_data', relationId).then(({data, total}) => {
+                return api.getRelatedElements({table: self.table, relation: category+'_data', relationId, seed: self.catalog_seed}).then(({data, total}) => {
                     self.relationsData[category] = self.relationsData[category] || {};
                     self.relationsData[category][tab] = self.relationsData[category][tab] || {};
                     const tabData = self.relationsData[category][tab];
@@ -1369,32 +1392,71 @@ var item = {
     },
 
     isGroup: function (row) {
-        return (
-            typeof row.tipo_registro !== "undefined" &&
-            row.tipo_registro === "Conjunto" &&
-            row.children.length > 0
-        );
+        // return (
+        //     typeof row.tipo_registro !== "undefined" &&
+        //     row.tipo_registro === "Conjunto" &&
+        //     row.children.length > 0
+        // );
+        return row.tipo_registro === "Conjunto";
     },
 
-    templateGroup: function (row) {
+    templateGroup: function (target, row) {
         var self = this;
         if (!this.isGroup(row)) {
             return "";
         }
-        return htmlTemplate(`
+        const template =  htmlTemplate(`
             <h2 class="accordion-header">
                 <button type="button">${tstring.item_group}</button>
             </h2>
             <div class="accordion-content block-dedalo">
                 <ul class="galeria galeria--242x242 link-dn">
-                ${row.children
-                    .map(function (object) {
-                        return self.template_catalog_elem(object);
-                    })
-                    .join("")}
                 </ul>
             </div>
         `);
+        const ul = template[2].querySelector("ul");
+        api.getElementsFromSet(row.section_id).then(function(results){
+            var content = htmlTemplate(`
+                ${results.map(function(object){
+                    return self.template_catalog_elem(object);
+                }).join('')}`)
+            appendTemplate(ul, content);
+            enableDialogs(ul);
+        });
+        appendTemplate(target, template);
+    },
+
+    isInSet: function (row) {
+        return row.tipo_registro === "Conjunto en origen";
+    },
+
+    templateIsInSets: function (target, row) {
+        var self = this;
+        if (!this.isInSet(row)) {
+            return "";
+        }
+        const template =  htmlTemplate(`
+            <h2 class="accordion-header">
+                <button type="button">${tstring.sets}</button>
+            </h2>
+            <div class="accordion-content block-dedalo">
+                <ul class="galeria galeria--242x242 link-dn">
+                </ul>
+            </div>
+        `);
+        const ul = template[2].querySelector("ul");
+        const parentsArray = JSON.parse(row.parent);
+        const parentsIds = parentsArray.map(parent => parent.split('_')[1]);
+
+        api.getSetsFromElement(parentsIds.join(',')).then(function(results){
+            var content = htmlTemplate(`
+                ${results.map(function(object){
+                    return self.template_catalog_elem(object);
+                }).join('')}`)
+            appendTemplate(ul, content);
+            enableDialogs(ul);
+        });
+        appendTemplate(target, template);
     },
 
     hasRelated: function (row) {
@@ -1741,7 +1803,9 @@ var item = {
         appendTemplate(acordion, this.templateRestoration(row));
 
         //conjunto
-        appendTemplate(acordion, this.templateGroup(row));
+        // appendTemplate(acordion, this.templateGroup(row));
+        this.templateGroup(acordion, row);
+        this.templateIsInSets(acordion, row);
 
         //bibliografia
         this.templateBiblio(acordion, row);

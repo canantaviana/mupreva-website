@@ -330,13 +330,13 @@ var api = {
         });
     },
 
-    getObjectsDefault: function(offset = 0) {
+    getObjectsDefault: function({offset = 0, seed = null}) {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'objects',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: null,
+            order: seed ? `RAND(${seed})` : null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}',
@@ -346,74 +346,117 @@ var api = {
         };
         return page.get_records(options);
     },
-    getPicturesDefault: function() {
+    getSetsDefault: function({offset = 0, seed = null}) {
+        var options = {
+            //table: 'objects,pictures,immovables,documents_catalog',
+            table: 'objects',
+            sql_filter: 'imagenes_identificativas is not null and destacado is not null AND tipo_registro = "Conjunto"',
+            limit: 12,
+            order: seed ? `RAND(${seed})` : null,
+            ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
+            parse: page.parse_list_data,
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+            count: true,
+            get_count: true,
+            offset: offset,
+        };
+        return page.get_records(options);
+    },
+    getPicturesDefault: function({offset = 0, seed = null}) {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'pictures',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: null,
+            order: seed ? `RAND(${seed})` : null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}',
             count: true,
             get_count: true,
+            offset: offset,
         };
         return page.get_records(options);
     },
-    getInmovablesDefault: function() {
+    getInmovablesDefault: function({offset = 0, seed = null}) {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'immovables',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: null,
+            order: seed ? `RAND(${seed})` : null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}',
             count: true,
             get_count: true,
+            offset: offset,
         };
         return page.get_records(options);
     },
-    getDocumentsDefault: function() {
+    getDocumentsDefault: function({offset = 0, seed = null}) {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'documents_catalog',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: null,
+            order: seed ? `RAND(${seed})` : null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}',
             count: true,
             get_count: true,
+            offset: offset,
         };
         return page.get_records(options);
     },
 
-    getBiblioDefault: function() {
+    getBiblioDefault: function({offset = 0, seed = null}) {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'documents_catalog',
             sql_filter: 'imagenes_identificativas is not null and destacado is not null',
             limit: 12,
-            order: 'RAND()',
+            order: seed ? `RAND(${seed})` : null,
             //ar_fields: '*',
             parse: page.parse_list_data,
-            resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+            offset: offset,
         };
         return page.get_records(options);
     },
 
-    getRelatedElements: function(table, relation, relationId, offset = 0) {
+    getElementsFromSet: function(set_id) {
+        var options = {
+            table: 'objects',
+            sql_filter: `parent = '[\"tch1_${set_id}\"]' AND tipo_registro = 'Conjunto en origen'`,
+            ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
+            parse: page.parse_list_data,
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+        };
+        return page.get_records(options);
+    },
+
+    getSetsFromElement: function(section_id) {
+        var options = {
+            table: 'objects',
+            section_id: section_id,
+            sql_filter: `tipo_registro = 'Conjunto'`,
+            ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
+            parse: page.parse_list_data,
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+        };
+        return page.get_records(options);
+    },
+
+    getRelatedElements: function({table, relation, relationId, offset = 0, seed = null}) {
         var options = {
             table: table,
             sql_filter: `${relation} LIKE '%\"${relationId}\"%' and imagenes_identificativas is not null`,
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}',
             limit: 50,
-            order: 'datacion_ini ASC',
+            order: seed ? `RAND(${seed})` : 'datacion_ini ASC',
             ar_fields: 'section_tipo,section_id,titulo,periodo,imagenes_identificativas',
             count: true,
             offset: offset,
@@ -521,12 +564,58 @@ var api = {
         });
     },
 
+    getGlobalSearchTypes: function(query) {
+        var options = {
+            table: 'global_search',
+            ar_fields: 'ref_section_tipo',
+            sql_filter: `MATCH (search_data) AGAINST ('${query}' IN BOOLEAN MODE)`,
+            group: 'ref_section_tipo'
+        }
+
+        return page.get_records(options);
+    },
+
+    getImagenIdentificativa: function(id, table) {
+        const arFieldsMap = {
+            'objects': 'imagenes_identificativas',
+            'pictures': 'imagenes_identificativas',
+            'immovables': 'imagenes_identificativas',
+            'documents_catalog': 'imagenes_identificativas',
+            'activities': 'identifying_image',
+            'exhibitions': 'identifying_image',
+            'publications': 'pdf',
+        }
+        const resolvePortalsMap = {
+            'objects': '{"imagenes_identificativas": "image"}',
+            'immovables': '{"imagenes_identificativas": "image"}',
+            'pictures': '{"imagenes_identificativas": "image"}',
+        }
+
+        var options = {
+            table: table,
+            ar_fields: arFieldsMap[table] || 'identifying_image',
+            section_id: id,
+            resolve_portals_custom: resolvePortalsMap[table] || null,
+        }
+
+        return page.get_records(options);
+    },
+
+    getDownloadLicenseText: function() {
+        var options = {
+            table: 'ts_web_mupreva',
+            ar_fields: 'body',
+            section_id: 235
+        }
+
+        return page.get_records(options);
+    },
 
     tld_to_table: function(tld) {
         const convert = {
             'object1': 'ts_object',
-            'chronological1': 'ts_chronological',
-            'thematic1': 'ts_thematic',
+            'dc1': 'ts_chronological',
+            'ts1': 'ts_thematic',
             'material1': 'ts_material',
             'technique1': 'ts_technique',
             'ubication1': 'ts_ubication'

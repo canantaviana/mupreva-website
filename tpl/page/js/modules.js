@@ -63,8 +63,8 @@ var templateModules = {
                                     </svg>
                                 </button>
                                 <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
-                                <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
-                                ${info.image[0].photographer ? `<p class="has-text-centered is-size-7">© ${info.image[0].photographer}</p>` : ''}
+                                ${info.image[0].footprint ? `<p class="has-text-centered mt-2">${info.image[0].footprint}</p>` : ''}
+                                ${info.image[0].photographer ? `<p class="has-text-centered is-size-7 mt-2">${info.image[0].photographer}</p>` : ''}
                             </div>
                         </div>
                     </div>`
@@ -104,8 +104,8 @@ var templateModules = {
                                     </svg>
                                 </button>
                                 <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
-                                <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
-                                ${info.image[0].photographer ? `<p class="has-text-centered is-size-7">© ${info.image[0].photographer}</p>` : ''}
+                                ${info.image[0].footprint ? `<p class="has-text-centered mt-2">${info.image[0].footprint}</p>` : ''}
+                                ${info.image[0].photographer ? `<p class="has-text-centered is-size-7 mt-2">${info.image[0].photographer}</p>` : ''}
                             </div>
                         </div>
                     </div>`
@@ -146,8 +146,8 @@ var templateModules = {
                                             </svg>
                                         </button>
                                         <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
-                                        <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
-                                        ${info.image[0].photographer ? `<p class="has-text-centered is-size-7">© ${info.image[0].photographer}</p>` : ''}
+                                        ${info.image[0].footprint ? `<p class="has-text-centered mt-2">${info.image[0].footprint}</p>` : ''}
+                                        ${info.image[0].photographer ? `<p class="has-text-centered is-size-7 mt-2">${info.image[0].photographer}</p>` : ''}
                                     </div>
                                 </div>
                             </div>`
@@ -193,8 +193,8 @@ var templateModules = {
                                             </svg>
                                         </button>
                                         <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
-                                        <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
-                                        ${info.image[0].photographer ? `<p class="has-text-centered is-size-7">© ${info.image[0].photographer}</p>` : ''}
+                                        ${info.image[0].footprint ? `<p class="has-text-centered mt-2">${info.image[0].footprint}</p>` : ''}
+                                        ${info.image[0].photographer ? `<p class="has-text-centered is-size-7 mt-2">${info.image[0].photographer}</p>` : ''}
                                     </div>
                                 </div>
                             </div>`
@@ -365,8 +365,8 @@ var templateModules = {
                                     </svg>
                                 </button>
                                 <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
-                                <p class="has-text-centered mt-2">${info.image[0].footprint}</p>
-                                ${info.image[0].photographer ? `<p class="has-text-centered is-size-7">© ${info.image[0].photographer}</p>` : ''}
+                                ${info.image[0].footprint ? `<p class="has-text-centered mt-2">${info.image[0].footprint}</p>` : ''}
+                                ${info.image[0].photographer ? `<p class="has-text-centered is-size-7 mt-2">${info.image[0].photographer}</p>` : ''}
                             </div>
                         </div>
                     </div>`
@@ -498,7 +498,7 @@ var templateModules = {
                         }
                         return `
                             <div class="masonry-grid-item ${extraClass}">
-                                <a href="${url}">
+                                <a href="${url}" target="_blank">
                                     <img src="${image_url}" alt="">
                                 </a>
                             </div>
@@ -643,11 +643,11 @@ var templateModules = {
                             <div class="swiper-slide">
                                 <div class="is-flex is-flex-direction-column gap-4 full-link">
                                     <h3 class="is-size-4">
-                                        <a href="${url}">${row.title}</a>
+                                        <a href="${url}" target="_blank">${row.title}</a>
                                     </h3>
                                     ${(row.type)?
                                     `<p class="has-text-weight-medium is-size-6">
-                                        <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                        <a href="/activities/?type=${row.type}" class="link-dn is-relative" target="_blank">${row.type}</a>
                                     </p>`
                                     :''}
                                     <img loading="lazy" src="${image_url}" alt="">
@@ -721,11 +721,11 @@ var templateModules = {
                             <div class="swiper-slide">
                                 <div class="is-flex is-flex-direction-column gap-4 full-link">
                                     <h3 class="is-size-4">
-                                        <a href="${url}">${row.title}</a>
+                                        <a href="${url}" target="_blank">${row.title}</a>
                                     </h3>
                                     ${(row.type)?
                                     `<p class="has-text-weight-medium is-size-6">
-                                        <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                        <a href="/expositions/?type=${row.type}" class="link-dn is-relative" target="_blank">${row.type}</a>
                                     </p>`
                                     :''}
                                     <img loading="lazy" src="${image_url}" alt="">
@@ -1045,16 +1045,18 @@ var templateModules = {
 
 
 
-    bloque_catalogo_default: function(self){
+    bloque_catalogo_default: function(self, seed = null){
+        const ar_tables = self.catalog_config.ar_tables;
+        console.log({ar_tables})
         const data = self.loaded_items;
 
         var content = htmlTemplate(`
         <div>
             <div class="default_objects mt-8 flow--xl">
             </div>
-            <div class="default_pictures mt-8 flow--xl">
+            <div class="default_sets mt-8 flow--xl">
             </div>
-            <div class="default_inmovables mt-8 flow--xl">
+            <div class="default_pictures mt-8 flow--xl">
             </div>
             <div class="default_documents mt-8 flow--xl">
             </div>
@@ -1062,8 +1064,8 @@ var templateModules = {
         `);
 
         var children_container_objects = content[0].querySelector('div.default_objects');
+        var children_container_sets = content[0].querySelector('div.default_sets');
         var children_container_pictures = content[0].querySelector('div.default_pictures');
-        var children_container_inmovables = content[0].querySelector('div.default_inmovables');
         var children_container_documents = content[0].querySelector('div.default_documents');
 
         function load_items(type) {
@@ -1076,15 +1078,15 @@ var templateModules = {
                     apiCall = api.getObjectsDefault;
                     container = children_container_objects;
                     break;
+                case 'sets':
+                    title = tstring.collection_sets_default;
+                    apiCall = api.getSetsDefault;
+                    container = children_container_sets;
+                    break;
                 case 'pictures':
                     title = tstring.collection_pictures_default;
                     apiCall = api.getPicturesDefault;
                     container = children_container_pictures;
-                    break;
-                case 'inmovables':
-                    title = tstring.collection_inmovables_default;
-                    apiCall = api.getInmovablesDefault;
-                    container = children_container_inmovables;
                     break;
                 case 'documents':
                     title = tstring.collection_documents_default;
@@ -1121,7 +1123,7 @@ var templateModules = {
             var gallery_children = container.querySelector('.galeria');
 
             // Crida a la api per carregar més elements
-            apiCall(data[type].loaded).then(function({data: results, total}){
+            apiCall({offset: data[type].loaded, seed}).then(function({data: results, total}){
                 if (!results || results.length == 0) {
                     return;
                 }
@@ -1163,10 +1165,18 @@ var templateModules = {
                 appendTemplate(gallery_children, content);
             });
         }
-        load_items('objects');
-        load_items('pictures');
-        load_items('immovables');
-        load_items('documents');
+        if (ar_tables.includes('objects')) {
+            load_items('objects');
+        }
+        if (ar_tables.includes('sets')) {
+            load_items('sets');
+        }
+        if (ar_tables.includes('pictures')) {
+            load_items('pictures');
+        }
+        if (ar_tables.includes('documents_catalog')) {
+            load_items('documents');
+        }
 
         return content;
     },

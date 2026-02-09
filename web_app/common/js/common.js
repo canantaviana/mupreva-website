@@ -203,6 +203,22 @@ var common = {
         return element;
     },//end create_dom_element
 
+    /**
+    * SANITIZE_TEXT_BR
+    * Esborra els nodes <br> després del segon consecutiu
+    */
+    sanitizeTextBr: function (htmlString) {
+        if (!htmlString) return "";
+        try {
+            let s = htmlString.replace(/<br\s*\/?>/gi, '<br>');
+            s = s.replace(/(?:\s*<br>\s*){3,}/gi, '<br><br>');
+            return s;
+        } catch (e) {
+            console.warn('sanitizeTextBr failed', e);
+            return htmlString;
+        }
+    },
+
 
 
     /**
@@ -906,29 +922,52 @@ var common = {
     * DOWNLOAD_ITEM
     * @return promise
     */
-    download_item: function (donwload_url, file_name) {
+    download_item: function (download_url, file_name) {
+        const modifiedImg = download_url.replace('1.5MB', 'modified');
+        const originalImg = download_url.replace('1.5MB', 'original')
 
-        return new Promise(function (resolve) {
+        const tryUrls = [modifiedImg, originalImg, download_url].filter(Boolean);
 
-            fetch(donwload_url)
-                .then(function (response) {
-                    return response.blob();
-                })
-                .then(function (blob) {
-                    const href = URL.createObjectURL(blob)
+        return new Promise(function (resolve, reject) {
+            let idx = 0;
 
-                    // link_obj
-                    const link_obj = common.create_dom_element({
-                        element_type: "a",
-                        href: href,
-                        download: file_name || 'image.jpg'
+            function attempt() {
+                if (idx >= tryUrls.length) {
+                    reject(Error('All download attempts failed'));
+                    return;
+                }
+                const url = tryUrls[idx++];
+
+                fetch(url)
+                    .then(function (response) {
+                        const contentType = response.headers.get('content-type');
+                        if (response.redirected || !contentType || !contentType.startsWith('image/')) {
+                            attempt();
+                            return;
+                        }
+                        return response.blob().then(function (blob) {
+                            const href = URL.createObjectURL(blob)
+
+                            // link_obj
+                            const link_obj = common.create_dom_element({
+                                element_type: "a",
+                                href: href,
+                                download: file_name || 'image.jpg'
+                            })
+                            link_obj.click()
+                            link_obj.remove()
+
+                            resolve(true)
+                        });
                     })
-                    link_obj.click()
-                    link_obj.remove()
+                    .catch(function() {
+                        attempt();
+                    })
+            }
 
-                    resolve(true)
-                });
-        })
+            attempt();
+
+        });
     },//end download_item
 
 

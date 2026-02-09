@@ -174,7 +174,8 @@ function tree_factory() {
             element_type: "a",
             href: page_globals.__WEB_ROOT_WEB__ + '/' + page.tld_to_template(row.tld) + '/' + row.section_id,
             inner_html: term_value,
-            parent: term_span
+            parent: term_span,
+            target: "_blank"
         });
 
         // Element per al nd

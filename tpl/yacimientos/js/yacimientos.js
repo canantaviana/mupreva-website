@@ -386,7 +386,7 @@ var catalog = {
         return htmlTemplate(`
 <form action="#" class="search-form search-form--col">
     <fieldset>
-        <div class="py-5 px-6 mb-5 has-background-grey-light">
+        <div class="py-5 mb-5">
             <div class="columns">
                 <div class="column">
                     <div class="field">
@@ -458,12 +458,12 @@ var catalog = {
             <ul class="is-flex gap-5" id="mode_group">
                 <li>
                     <button type="button" id="button_list" class="button button--icon">
-                        <img src="/assets/img/galeria-inactiu.svg" data-src-on="/assets/img/galeria-actiu.svg" data-src-off="/assets/img/galeria-inactiu.svg" title="${tstring.show_list}" width="37" height="37">
+                        <img src="/assets/img/galeria-inactiu.svg" data-src-on="/assets/img/galeria-actiu.svg" data-src-off="/assets/img/galeria-inactiu.svg" title="${tstring.show_list}" width="34" height="34">
                     </button>
                 </li>
                 <li>
                     <button type="button" id="button_map" class="button button--icon">
-                        <img src="/assets/img/mapa-inactiu.svg" data-src-on="/assets/img/mapa-actiu.svg" data-src-off="/assets/img/mapa-inactiu.svg" title="${tstring.show_map}" width="37" height="37">
+                        <img src="/assets/img/mapa-inactiu.svg" data-src-on="/assets/img/mapa-actiu.svg" data-src-off="/assets/img/mapa-inactiu.svg" title="${tstring.show_map}" width="34" height="34">
                     </button>
                 </li>
             </ul>

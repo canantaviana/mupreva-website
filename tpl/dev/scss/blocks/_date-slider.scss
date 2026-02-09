@@ -18,7 +18,7 @@
     pointer-events: all;
     width: 14px;
     height: 14px;
-    background: $grey;
+    background: $primary;
     border-radius: 0;
     cursor: pointer;
     -webkit-appearance: none;
@@ -29,7 +29,7 @@
     pointer-events: all;
     width: 14px;
     height: 14px;
-    background: $grey;
+    background: $primary;
     border-radius: 0;
     cursor: pointer;
     border: 0;
@@ -38,16 +38,16 @@
 .date-slider-track,
 .date-slider-range {
     position: absolute;
-    top: 6px;
-    height: 2px;
+    top: 7px;
+    height: 1px;
     width: 100%;
 }
 .date-slider-track {
-    background-color: #ddd;
+    background-color: $grey-light;
     z-index: 1;
 }
 .date-slider-range {
-    background-color: $grey;
+    background-color: $primary;
     z-index: 2;
 }
 
@@ -69,8 +69,9 @@
     input {
         width: 50%;
         background: none;
-        border: 2px solid $grey !important;
+        border: 1px solid $primary !important;
         text-align: center;
+        border-radius: $radius-rounded;
         -moz-appearance: textfield;
         &::-webkit-outer-spin-button,
         &::-webkit-inner-spin-button {
@@ -78,7 +79,7 @@
         }
 
         &:focus, &:active {
-            border-color: #000 !important;
+            border-color: $primary !important;
         }
     }
 }

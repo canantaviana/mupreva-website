@@ -130,6 +130,9 @@ var catalog = {
 
         self.didSearchSomething = null;
 
+        const seed = Math.floor(Math.random() * 1e9).toString();
+        self.catalog_seed = seed;
+
         const params = new URLSearchParams(window.location.search);
         if (params.has('view')) {
             switch(params.get('view')) {
@@ -417,8 +420,8 @@ var catalog = {
         return htmlTemplate(`
 <form action="#" class="search-form search-form--col">
     <fieldset>
-        <legend class="pt-5 px-6">${tstring.collection_explore}</legend>
-        <div class="py-5 px-6 mb-5 has-background-grey-light">
+        <legend class="pt-5 has-text-weight-black has-text-primary">${tstring.collection_explore}</legend>
+        <div class="py-5 mb-5">
             <div class="columns">
                 <div class="column">
                     <div class="field">
@@ -536,6 +539,10 @@ var catalog = {
                         <label for="checkbox_objects">${tstring.collection_filter_objects}</label>
                     </li>
                     <li>
+                        <input class="is-checkradio" type="checkbox" id="checkbox_sets" name="col" value="sets" ${!(params.has('filter')) && "checked"}>
+                        <label for="checkbox_sets">${tstring.collection_filter_sets}</label>
+                    </li>
+                    <li>
                         <input class="is-checkradio" type="checkbox" id="checkbox_pictures" name="col" value="pictures" ${!(params.has('filter')) && "checked"}>
                         <label for="checkbox_pictures">${tstring.collection_filter_pictures}</label>
                     </li>
@@ -566,18 +573,18 @@ var catalog = {
             <ul class="is-flex gap-5" id="mode_group">
                 <li>
                     <button type="button" id="button_list" class="button button--icon">
-                        <img src="/assets/img/galeria-inactiu.svg" data-src-on="/assets/img/galeria-actiu.svg" data-src-off="/assets/img/galeria-inactiu.svg" title="${tstring.show_list}" width="37" height="37">
+                        <img src="/assets/img/galeria-inactiu.svg" data-src-on="/assets/img/galeria-actiu.svg" data-src-off="/assets/img/galeria-inactiu.svg" title="${tstring.show_list}" width="34" height="34">
                     </button>
                 </li>
                 <li>
                     <button type="button" id="button_timeline" class="button button--icon">
-                        <img src="/assets/img/linia-temps-inactiu.svg" data-src-on="/assets/img/linia-temps-actiu.svg" data-src-off="/assets/img/linia-temps-inactiu.svg" title="${tstring.show_timeline}" width="37" height="37">
+                        <img src="/assets/img/linia-temps-inactiu.svg" data-src-on="/assets/img/linia-temps-actiu.svg" data-src-off="/assets/img/linia-temps-inactiu.svg" title="${tstring.show_timeline}" width="34" height="34">
 
                     </button>
                 </li>
                 <li>
                     <button type="button" id="button_map" class="button button--icon">
-                        <img src="/assets/img/mapa-inactiu.svg" data-src-on="/assets/img/mapa-actiu.svg" data-src-off="/assets/img/mapa-inactiu.svg" title="${tstring.show_map}" width="37" height="37">
+                        <img src="/assets/img/mapa-inactiu.svg" data-src-on="/assets/img/mapa-actiu.svg" data-src-off="/assets/img/mapa-inactiu.svg" title="${tstring.show_map}" width="34" height="34">
                     </button>
                 </li>
             </ul>
@@ -893,6 +900,21 @@ var catalog = {
                     : true;
                 if (checked) checkbox_objects.setAttribute("checked", checked);
                 checkbox_objects.addEventListener("change", function (e) {
+                    self.changed_table_selector(e);
+                    removeParam('filter');
+                });
+            }
+
+            // checkbox_sets (Conjuntos are objects with tipo_registro = 'Conjunto')
+            if (table_selector_container) {
+                const checkbox_sets = currentForm.querySelector("#checkbox_sets");
+                checkbox_sets.setAttribute("name", "catalog_tables");
+                checkbox_sets.setAttribute("value", "sets");
+                const checkedSets = self.catalog_config.ar_tables
+                    ? self.catalog_config.ar_tables.indexOf("sets") !== -1
+                    : true;
+                if (checkedSets) checkbox_sets.setAttribute("checked", checkedSets);
+                checkbox_sets.addEventListener("change", function (e) {
                     self.changed_table_selector(e);
                     removeParam('filter');
                 });
@@ -1251,13 +1273,32 @@ var catalog = {
         // tables
         const ar_tables = self.get_tables();
 
+        let request_tables = ar_tables.map((t) => (t === "sets" ? "objects" : t));
+        request_tables = Array.from(new Set(request_tables));
+
+        let extra_object_filter = null;
+        const requestedHasSets = ar_tables.indexOf("sets") !== -1;
+        const requestedHasObjects = ar_tables.indexOf("objects") !== -1;
+
+        const onlyObjectsRequested = request_tables.length === 1 && request_tables[0] === "objects";
+        if (onlyObjectsRequested) {
+            if (requestedHasSets && !requestedHasObjects) {
+                extra_object_filter = "tipo_registro = 'Conjunto'";
+            } else if (requestedHasObjects && !requestedHasSets) {
+                extra_object_filter = "tipo_registro = 'Bien singular'";
+            }
+        }
+
+        if (extra_object_filter) {
+            sql_filter = sql_filter ? `${sql_filter} AND (${extra_object_filter})` : extra_object_filter;
+        }
+
         // request
         const request_body = {
             dedalo_get: "records",
             db_name: page_globals.WEB_DB,
             lang: page_globals.WEB_CURRENT_LANG_CODE,
-            // table		: 'objects',
-            table: ar_tables.join(","),
+            table: request_tables.join(","),
             ar_fields: ar_fields,
             sql_filter: sql_filter,
             limit: limit,
@@ -1360,11 +1401,15 @@ var catalog = {
                     if (self.default_submit || self.didSearchSomething === false) {
                         self.loaded_items = {
                             objects: { results: [], loaded: 0 },
+                            sets: { results: [], loaded: 0 },
                             pictures: { results: [], loaded: 0 },
-                            //immovables: { results: [], loaded: 0 },
                             documents: { results: [], loaded: 0 },
                         }
-                        var content = templateModules.bloque_catalogo_default(self);
+                        const tables = self.get_tables();
+                        self.catalog_config = self.catalog_config || {};
+                        self.catalog_config.ar_tables = tables;
+
+                        var content = templateModules.bloque_catalogo_default(self, self.catalog_seed);
                         appendTemplate(self.rows_list_container, content);
                         self.default_submit = false;
                         resolve();

@@ -1,0 +1,80 @@
+html:has(.download-modal-overlay) {
+  overflow-y: hidden;
+}
+
+.download-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 24px;
+}
+
+.download-modal {
+  background: #fff;
+  max-width: 720px;
+  width: 100%;
+  max-height: 80vh;
+  overflow: auto;
+  border-radius: 6px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.download-modal__title {
+  margin: 0 0 12px 0;
+  font-size: 1.25rem;
+}
+
+.download-modal__content {
+  margin: 0 0 18px 0;
+  line-height: 1.5;
+  color: #222;
+  font-size: .9rem;
+
+  & > * + * {
+    margin-bottom: .6rem;
+  }
+
+  ul, ol {
+    padding-left: 2rem;
+  }
+
+  ul {
+    list-style: disc;
+    li {
+        list-style-type: disc;
+    }
+  }
+
+  ol {
+    list-style: decimal;
+    li {
+        list-style-type: decimal;
+    }
+  }
+}
+
+.download-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.download-modal__btn-cancel {
+    &::after {
+        content: none;
+    }
+}
+
+// .download-modal__btn-download {
+// }
+
+@media (max-width: 480px) {
+  .download-modal { padding: 16px; }
+  .download-modal__title { font-size: 1.1rem; }
+}

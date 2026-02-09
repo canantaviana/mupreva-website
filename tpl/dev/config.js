@@ -60,19 +60,13 @@ module.exports = function () {
 
     googleFonts: {
       // Fons a descarregar de google
-      'Archivo': [
+      'Manrope': [
         '300',
         '400',
-        '400italic',
         '500',
-        '500italic',
         '600',
         '700',
-        '800',
-        '900',
-      ],
-      'Noto Serif': [
-        '400'
+        '800'
       ]
     },
 

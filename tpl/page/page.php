@@ -87,9 +87,9 @@ $li_drawer = function ($menu_element, $embed_html = '', $current = null) {
     }
 
     if ($active === true) {
-        $html .= '<a href="' . $url . '" '.$currentAria.' class="is-relative has-text-white '.$currentClass.'">' . $menu_element->term . '</a>';
+        $html .= '<a href="' . $url . '" '.$currentAria.' class="is-relative '.$currentClass.'">' . $menu_element->term . '</a>';
     } else {
-        $html .= '<a href="#" '.$currentAria.' class="is-relative has-text-white '.$currentClass.'">' . $menu_element->term . '</a>';
+        $html .= '<a href="#" '.$currentAria.' class="is-relative '.$currentClass.'">' . $menu_element->term . '</a>';
     }
 
     $html .= $embed_html;

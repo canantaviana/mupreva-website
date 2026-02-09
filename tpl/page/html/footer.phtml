@@ -4,18 +4,23 @@ if ($this->web_foot->identify_image != null) {
     $images = json_decode($this->web_foot->identify_image, true);
 }
 if (is_array($images) && count($images) > 0) {
-    $image = __WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.png', $images[0]));
+    $image = __WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.svg', $images[0]));
+    if(count($images) > 1) {
+        $image2 = __WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.svg', $images[1]));
+    }
 } else {
     $image = __WEB_ROOT_WEB__.'/assets/img/logo-mupreva.png';
 }
 ?>
     <footer class="pt-8 pb-5 mt-9 has-background-primary has-text-white link-dn is-relative">
         <div class="wrapper">
-            <div class="columns is-multiline is-size-6">
-                <div class="column is-full-tablet is-one-fifth-widescreen is-2-fullhd has-text-centered-tablet has-text-left-widescreen">
-                    <img src="<?php echo $image ?>" alt="<?php echo $this->web_root->title ?>" width="321" height="110">
+            <div class="columns is-multiline is-size-6 is-justify-content-space-between mb-6">
+                <div class="column is-full-tablet is-one-fifth-widescreen is-2-fullhd has-text-centered-tablet has-text-left-widescreen flow--l">
+                    <img src="<?php echo $image ?>" alt="<?php echo $this->web_root->title ?>" width="321" height="110" class="is-block">
+                    <?php if (isset($image2)): ?>
+                        <img src="<?php echo $image2 ?>" alt="<?php echo $this->web_root->title ?>" width="321" height="110" class="is-block">
+                    <?php endif ?>
                 </div>
-                <div class="column is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only"></div>
 
                 <?php foreach ($this->web_foot_columns as $column) :
                     if ($column->parent != WEB_FOOT_COLUMNS) {
@@ -25,14 +30,14 @@ if (is_array($images) && count($images) > 0) {
                     <?php //var_dump($column); ?>
                 <div class="column is-one-third-tablet is-one-fifth-widescreen is-2-fullhd">
                     <?php if (!empty($column->identify_image)) : ?>
-                    <div class="is-flex gap-2 mb-4">
+                    <!-- <div class="is-flex gap-2 mb-4">
                         <?php foreach (json_decode($column->identify_image) as $image) : ?>
                         <img src="<?php echo __WEB_MEDIA_ENGINE_URL__.'/'.str_replace('.jpg', '.svg', str_replace('1.5MB', 'original', $image)) ?>" alt="">
                         <?php endforeach ?>
-                    </div>
+                    </div> -->
                     <?php endif ?>
                     <?php if (!empty($column->title)) : ?>
-                    <p class="is-size-5 mb-4"><?php echo $column->title ?></p>
+                    <p class="is-size-5 mb-4"><strong><?php echo $column->title ?></strong></p>
                     <?php endif ?>
                     <?php if (!empty($column->abstract)) : ?>
                     <div class="flow--m">
@@ -51,7 +56,7 @@ if (is_array($images) && count($images) > 0) {
                         if (!empty($subcolumn->identify_image)) {
                             $images = json_decode($subcolumn->identify_image, true);
                             if (is_array($images) && count($images) > 0) {
-                                $img = '<img src="'.__WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.svg', $images[0])).'" alt="'.$subcolumn->title.'" class="mr-2">';
+                                $img = '<img src="'.__WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.svg', $images[0])).'" alt="'.$subcolumn->title.'">';
                             }
                         }
                         $links[] = '<a href="'.$subcolumn->web_path.'">'.$img.$subcolumn->title.'</a>';
@@ -90,7 +95,7 @@ if (is_array($images) && count($images) > 0) {
                 <?php endif ?>
 
 
-                <ul class="is-flex is-flex-wrap-wrap gap-6 is-justify-content-center mx-auto is-size-6 has-text-weight-medium">
+                <ul class="is-flex is-flex-wrap-wrap gap-6 is-justify-content-center mx-auto is-size-7 has-text-weight-medium">
                 <?php foreach ($this->menu_footer as $entry) : ?>
                     <li>
                         <a href="<?php echo __WEB_ROOT_WEB__ . '/'.$entry->web_path ?>"><?php echo $entry->title ?></a>
@@ -98,13 +103,8 @@ if (is_array($images) && count($images) > 0) {
                     <?php endforeach ?>
                 </ul>
             </div>
-            <a href="#top" aria-label="<?php echo tstring('footer_to_top') ?>" class="scrolltop is-block ml-auto">
-                <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
-                    <g fill="none" fill-rule="evenodd">
-                        <path fill="#000" d="M0 50h50V0H0z" />
-                        <path stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 30.102 25.102 20l10.102 10.102" />
-                    </g>
-                </svg>
+            <a href="#top" aria-label="<?php echo tstring('footer_to_top') ?>" class="scrolltop is-flex is-justify-content-center is-align-items-center ml-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28.299"><g><g fill="none" stroke="#8b5b48"><rect width="28" height="28.299" stroke="none" rx="14"/><rect width="27" height="27.299" x=".5" y=".5" rx="13.5"/></g><g><path fill="#8b5b48" d="m6 14.149 1.436 1.436 5.695-5.687v12.4h2.037v-12.4l5.694 5.684 1.438-1.433-8.151-8.151Z"/></g></g></svg>
             </a>
         </div>
     </footer>

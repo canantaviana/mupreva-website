@@ -629,10 +629,24 @@ var biblio_row_fields = {
 		}
 
 		// line
-			const line = common.create_dom_element({
+			const li = common.create_dom_element({
 				element_type 	: "li",
 				class_name 		: "info_line row_title"
 			})
+
+        // publication id link
+        const section_id = biblio_object.publications_data
+            ? JSON.parse(biblio_object.publications_data)[0]
+            : null
+
+        const publication_link = common.create_dom_element({
+            element_type	: "a",
+            href            : '/pub/' + section_id,
+            parent          : li
+        })
+		publication_link.setAttribute('target', '_blank');
+
+        const line = section_id ? publication_link : li
 
 		// authors
 			const authors = (biblio_object.ref_publications_authors)
@@ -850,7 +864,7 @@ var biblio_row_fields = {
 			return biblio_data;
 		}
 
-		return line
+		return li
 	},//end render_row_bibliography
 
 

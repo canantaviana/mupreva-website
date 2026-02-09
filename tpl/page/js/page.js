@@ -899,6 +899,12 @@ var page = {
             case 'rsc205':
                 template = 'pub';
                 break;
+            case 'exhibition1':
+                template = 'exp';
+                break;
+            case 'activity1':
+                template = 'act';
+                break;
         }
         return template
     },//end section_tipo_to_template

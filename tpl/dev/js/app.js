@@ -26,13 +26,33 @@ document.addEventListener("DOMContentLoaded", function () {
     // ----------
     // scroll top
     // ----------
-    $(window).on("scroll", function () {
-        if ($(this).scrollTop() > 300) {
-            $(".scrolltop").addClass("visible");
-        } else {
-            $(".scrolltop").removeClass("visible");
-        }
-    });
+    const scrollTopElement = document.querySelector(".scrolltop");
+    const footer = document.querySelector("footer");
+    
+    if (scrollTopElement) {
+        window.addEventListener("scroll", function () {
+            if (window.scrollY > 300) {
+                scrollTopElement.classList.add("visible");
+                
+                // Adjust position to not overlap footer
+                if (footer) {
+                    const footerRect = footer.getBoundingClientRect();
+                    const scrollTopHeight = scrollTopElement.offsetHeight;
+                    const windowHeight = window.innerHeight;
+                    
+                    // If footer is visible in viewport, move scrolltop above it
+                    if (footerRect.top < windowHeight) {
+                        const offset = windowHeight - footerRect.top;
+                        scrollTopElement.style.bottom = (offset + 20) + "px";
+                    } else {
+                        scrollTopElement.style.bottom = "20px";
+                    }
+                }
+            } else {
+                scrollTopElement.classList.remove("visible");
+            }
+        });
+    }
 
     // ------------------
     // Cercador capçalera
@@ -844,7 +864,7 @@ function viewInit() {
                         "img.active, div.active img"
                     );
                     const urlImg = activeImage.dataset.original;
-                    return common.download_item(urlImg);
+                    showDownloadModal(urlImg);
                 });
             }
             const fullscreen = group.querySelector(".image-action-fullscreen");
@@ -893,6 +913,83 @@ function viewInit() {
                 });
             }
         });
+    }
+}
+
+/**
+ * Mostrar modal de confirmació de descàrrega amb text de llicència
+ * @param {string} urlImg
+ */
+function showDownloadModal(urlImg) {
+    const overlay = common.create_dom_element({
+        element_type: 'div',
+        class_name: 'download-modal-overlay'
+    });
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+
+    const modal = common.create_dom_element({
+        element_type: 'div',
+        class_name: 'download-modal'
+    });
+
+    const content = common.create_dom_element({
+        element_type: 'div',
+        id: 'download_license_text',
+        class_name: 'download-modal__content',
+        inner_html: '<p>Loading...</p>'
+    });
+
+    const footer = common.create_dom_element({
+        element_type: 'div',
+        class_name: 'download-modal__footer'
+    });
+
+    const btnCancel = common.create_dom_element({
+        element_type: 'button',
+        class_name: 'button button--alt download-modal__btn-cancel',
+        text_content: tstring.cancel,
+        type: 'button'
+    });
+
+    const btnDownload = common.create_dom_element({
+        element_type: 'button',
+        class_name: 'button download-modal__btn-download',
+        text_content: tstring.download,
+        type: 'button'
+    });
+
+    modal.appendChild(content);
+    footer.appendChild(btnCancel);
+    footer.appendChild(btnDownload);
+    modal.appendChild(footer);
+    overlay.appendChild(modal);
+
+    document.body.appendChild(overlay);
+
+    function closeModal() {
+        if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    }
+
+    btnCancel.addEventListener('click', closeModal);
+    btnDownload.addEventListener('click', function () {
+        common.download_item(urlImg);
+        closeModal();
+    });
+    overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeModal();
+    });
+
+    try {
+        api.getDownloadLicenseText().then(function (rows) {
+            if (rows && rows[0] && rows[0].body) {
+                content.innerHTML = rows[0].body;
+            }
+        }).catch(function () {
+            content.innerHTML = tstring.download_terms;
+        });
+    } catch (err) {
+        content.innerHTML = tstring.download_terms;
     }
 }
 
