@@ -6,9 +6,9 @@
     row-gap: var(--space-l);
     &__pict {
         height: 21rem;
-        // background: aqua;
         img {
             max-height: 100%;
+            border: 1px solid $grey-light;
         }
     }
 }
