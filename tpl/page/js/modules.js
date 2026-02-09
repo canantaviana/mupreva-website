@@ -895,7 +895,7 @@ var templateModules = {
         return content;
     },
 
-    bloque_exposiciones_anuales: function(target){
+    bloque_exposiciones_anuales: function(target, type = null){
         const content = htmlTemplate(`
             <div class="children_container accordion accordion--primary mt-6">
                 <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${tstring.historical}</h2>
@@ -905,12 +905,12 @@ var templateModules = {
         const spinner = common.spinner(children_container)
         appendTemplate(target, content);
 
-        api.getExposYears().then(function(results) {
+        api.getExposYears(type).then(function(results) {
             if (!results || results.length == 0) return;
             const yearsArray = results.map(el => el.date_start_year);
 
             Promise.all(
-                yearsArray.map(year => api.getExposByYear(year).then(expos => ({ year, expos })))
+                yearsArray.map(year => api.getExposByYear(year, type).then(expos => ({ year, expos })))
             ).then(yearsWithExpos => {
                 const html = yearsWithExpos.map(({ year, expos }) => {
                     if (!expos || expos.length == 0) return '';
@@ -985,7 +985,7 @@ var templateModules = {
         });
     },
 
-    bloque_exposiciones_actuales: function(){
+    bloque_exposiciones_actuales: function(type = null){
         var content = htmlTemplate(`
         <div class="children_container swiper-container is-relative">
             <div class="swiper swiper--exposiciones-actuales">
@@ -1001,7 +1001,7 @@ var templateModules = {
 
         var children_container = content[0].querySelector('.children_container .swiper-wrapper');
 
-        api.getExposicionesActuales().then(function(results){
+        api.getExposicionesActuales(type).then(function(results){
             var content = htmlTemplate(`
                 ${results.map(function(row){
                     const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
@@ -1024,7 +1024,7 @@ var templateModules = {
                                 :''}
                                 <p class="more-link">${tstring.home_activities_more}</p>
                             </div>
-                            ${(row.type)?
+                            ${(type == null && row.type)?
                             `<p class="has-text-weight-medium mb-3">
                                 <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
                             </p>`

@@ -6,8 +6,65 @@
             <?php echo $body ?>
         </div>
         <?php endif ?>
-        <?php if (isset($pdf) && !empty($pdf)) : ?>
+        <?php if ((isset($pdf) && !empty($pdf)) || (isset($ar_image) && count($ar_image) > 0 )) : ?>
         <div class="column is-half-desktop flow">
+
+
+            <?php if (isset($ar_image) && count($ar_image) > 0 ) : ?>
+            <div class="text-base">
+                <?php if (count($ar_image) === 1) {
+                    $image = $ar_image[0];
+                    // una imatge
+                    echo '
+                    <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
+                        <figure class="fullscreen__content fullscreen__content--3 has-text-left">
+                            <img loading="lazy" class="active" src="' . __WEB_MEDIA_ENGINE_URL__ . $image . '">
+                        </figure>
+                    </div>
+                    ';
+                } else if (count($ar_image) > 1) {
+                    //multiples imatges
+                    echo '
+                        <div class="images-group fullscreen__fullheight">
+                            <!-- Slider -->
+                            <div class="fullscreen__content fullscreen__content--1 swiper swiper--fitxa">
+                                <div class="swiper-wrapper">';
+                                    foreach ($ar_image as $image) {
+                                        echo '
+                                        <div class="swiper-slide">
+                                            <img loading="lazy" src="' . __WEB_MEDIA_ENGINE_URL__ . $image . '">
+                                        </div>
+                                        ';
+                                    }
+                                echo '</div>
+                            </div>
+                            <!-- Eines -->
+                            <div class="is-flex is-justify-content-center gap-7 is-relative py-4">
+                                <!-- fletxes -->
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+                                <!-- /fletxes -->
+                            </div>
+                            <div class="swiper swiper--thumbs">
+                                <div class="swiper-wrapper">';
+                                    foreach ($ar_image as $image) {
+                                        echo '
+                                        <div class="swiper-slide">
+                                            <img loading="lazy" src="' . __WEB_MEDIA_ENGINE_URL__ . $image . '">
+                                        </div>
+                                        ';
+                                    }
+                                echo '</div>
+                            </div>
+                            <!-- /Slider -->
+                        </div>
+                    ';
+                }
+                ?>
+            </div>
+            <?php endif ?>
+
+            <?php if (isset($pdf) && !empty($pdf)) : ?>
             <ul class="rows_container pub-text-results flow--l">
                 <?php foreach ($pdf as $value) : ?>
                 <li class="pb-6">
@@ -27,6 +84,7 @@
                 </li>
                 <?php endforeach ?>
             </ul>
+            <?php endif ?>
         </div>
         <?php endif ?>
     </div>

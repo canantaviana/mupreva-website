@@ -226,7 +226,7 @@ var api = {
         return page.get_records(options);
     },
 
-    getExposicionesActuales: function() {
+    getExposicionesActuales: function(type = null) {
         var options = {
             table: 'exhibitions',
             sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
@@ -236,6 +236,9 @@ var api = {
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"image": "image"}'
         };
+        if (type != null) {
+            options.sql_filter += ` AND type_data like '%\"${type}\"%'`
+        }
         return page.get_records(options);
     },
 
@@ -264,7 +267,7 @@ var api = {
         return page.get_records(options);
     },
 
-    getExposByYear: function (year) {
+    getExposByYear: function (year, type = null) {
         var options = {
             table: 'exhibitions',
             order: 'time_frame desc',
@@ -272,10 +275,13 @@ var api = {
             sql_filter: `date_start_year = ${year}`,
             parse: page.parse_list_data
         };
+        if (type != null) {
+            options.sql_filter += ` AND type_data like '%\"${type}\"%'`
+        }
         return page.get_records(options);
     },
 
-    getExposYears: function() {
+    getExposYears: function(type = null) {
         var options = {
             table: 'exhibitions',
             order: 'date_start_year desc',
@@ -284,6 +290,10 @@ var api = {
             sql_filter: 'date_start_year IS NOT NULL',
             parse: page.parse_list_data
         }
+        if (type != null) {
+            options.sql_filter += ` AND type_data like '%\"${type}\"%'`
+        }
+        console.log(options.sql_filter);
         return page.get_records(options);
     },
 
