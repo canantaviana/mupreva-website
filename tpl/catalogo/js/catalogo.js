@@ -1522,20 +1522,22 @@ var catalog = {
                     const unordered_timeline_data =
                         page.parse_timeline_data_catalog(ar_rows); // prepares data to use in timeline
 
-                    const filtered_timeline_data = unordered_timeline_data.filter(item => item.date.includes('dc1_'));
+                    let filtered_timeline_data = unordered_timeline_data.filter(item => item.date.includes('dc1_')); // remove all groups that are not a time period
 
-                    const periodIds = filtered_timeline_data.map(el => Number(el.date.replace('dc1_', '')))
+                    const periodIds = filtered_timeline_data.map(el => Number(el.date.replace('dc1_', ''))) // array with period ids to request to API
 
                     api.getPeriodYears(periodIds).then(function (periods) {
                         const periodsObj = periods.reduce(function (acc, el) {
                             let year = null;
+                            const periodo_data = 'dc1_' + el.section_id;
                             if (el.time) {
                                 const firstDate = el.time.split(',')[0].trim();
                                 year = firstDate.startsWith('-')
                                     ? Number(firstDate.split('-')[1]) * -1
                                     : Number(firstDate.split('-')[0]);
+                            } else {
+                                filtered_timeline_data = filtered_timeline_data.filter(item => item.date !== periodo_data); // if there is no time data, remove group from timeline
                             }
-                            const periodo_data = 'dc1_' + el.section_id;
                             acc[periodo_data] = {year, term: el.term}
                             return acc;
                         }, {});
