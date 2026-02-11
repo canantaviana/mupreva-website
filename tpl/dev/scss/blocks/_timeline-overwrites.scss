@@ -103,6 +103,17 @@
     }
 }
 
-.text-component figcaption {
-    color: unset;
+.text-component {
+    figcaption {
+        color: unset;
+        text-align: left;
+        text-wrap: balance;
+        max-width: 40ch;
+    }
+    figure {
+        img {
+            width: 150px;
+        }
+    }
 }
+
