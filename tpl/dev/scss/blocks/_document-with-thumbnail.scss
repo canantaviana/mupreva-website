@@ -1,7 +1,12 @@
 .document-with-thumbnail {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 1rem;
+    padding-left: 0 !important;
+    &::before {
+        display: none !important;
+    }
 
     img {
         width: 128px;
@@ -13,6 +18,10 @@
         &::before {
             top: unset;
         }
+    }
+
+    > div * + * {
+        margin-top: 0 !important;
     }
 
     @include mobile {

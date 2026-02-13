@@ -571,15 +571,14 @@ var item = {
                                         return `
                                             <li class="document-with-thumbnail">
                                                 <img src="${imageUrl}">
-                                                <div class="is-flex is-flex-direction-column gap-1">
-                                                    <a target="_blank" href="${pdfUrl}">${entry.title}</a>
-
+                                                <div>
+                                                    <p><a target="_blank" href="${pdfUrl}">${entry.title}</a></p>
                                                     ${entry.original_lang
-                                                        ? `<p">${tstring.original_lang}: ${entry.original_lang}</p>`
+                                                        ? `<p>${tstring.original_lang}: ${entry.original_lang}</p>`
                                                         : ''
                                                     }
                                                     ${entry.original_format
-                                                        ? `<p">${tstring.original_format}: ${entry.original_format}</p>`
+                                                        ? `<p>${tstring.original_format}: ${entry.original_format}</p>`
                                                         : ''
                                                     }
                                                 </div>
