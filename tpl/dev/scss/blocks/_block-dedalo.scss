@@ -182,7 +182,7 @@
                         max-width: 114ch;
                     }
                 }
-                .column:has(img:only-child) {
+                .column:has(img:only-child):not(.column:has(div.swiper)) {
                     flex: none;
                     width: unset;
                 }
