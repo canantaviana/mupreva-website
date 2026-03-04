@@ -1021,7 +1021,7 @@ var actividades = {
         // content
         const block_content_list = common.create_dom_element({
             element_type: "ul",
-            class_name: "galeria galeria--170x240 link-dn mt-0",
+            class_name: "link-dn mt-0 flow--l",
             parent: block_content,
         });
 
@@ -1046,9 +1046,9 @@ var actividades = {
                 var content = htmlTemplate(`
                     <li>
                         <a href="${url}" target="_blank">
-                            <figure>
-                                <img src="${image_src}" alt="">
-                                <figcaption>${title}</figcaption>
+                            <figure class="is-flex-tablet gap-4">
+                                <img src="${image_src}" alt="" class="flex-grow-0 mx-0">
+                                <figcaption class="mt-4">${title}</figcaption>
                             </figure>
                         </a>
                     </li>

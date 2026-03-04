@@ -238,6 +238,7 @@ var thesaurus = {
         } else {
             sql_filter = '('+filterAux+')'
         }
+        sql_filter = sql_filter + " and (children is not null or relations is not null)";
 
         return new Promise(function (resolve) {
             // request
@@ -329,7 +330,6 @@ var thesaurus = {
     },//end group_parents
 
 
-
     /**
     * RENDER_DATA
     * Render received DB data based on 'view_mode' (list, map, timeline)
@@ -337,6 +337,17 @@ var thesaurus = {
     */
     render_data: function (options) {
 
+
+        function prune_tree(data) {
+            const next = data.filter(item =>
+                (item.relations && item.relations.length > 0) ||
+                (item.children && item.children.length > 0)
+            );
+
+            if (next.length === data.length) return next;
+
+            return prune_tree(next);
+        }
         const self = this
 
         // options
@@ -354,6 +365,8 @@ var thesaurus = {
                 : null
 
             self.data_clean = page.parse_tree_data(ar_rows, hilite_terms) // prepares data to use in list
+
+            //self.data_clean = prune_tree(self.data_clean)
 
             self.tree = self.tree || new tree_factory() // creates / get existing instance of tree
             self.tree.init({

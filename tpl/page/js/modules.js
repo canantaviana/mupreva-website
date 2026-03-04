@@ -36,7 +36,7 @@ var templateModules = {
     bloque_de_texto_con_imagen_a_la_derecha: function(info){
         return htmlTemplate(`
             <div class="block-text-img-dreta block-dedalo columns is-widescreen is-variable is-8">
-                <div class="column is-5-widescreen flow--l">
+                <div class="column is-half is-5-desktop flow--l">
                 ${(info.title)?
                 `<h2 id="${this.fix_names(info.title)}" class="is-flex is-align-items-center gap-2 mb-7 has-text-black">
                         ${(info.image_icon && info.image_icon.length > 0)?
@@ -47,12 +47,18 @@ var templateModules = {
                 :''}
                 ${(info.body)?info.body:''}
                 </div>
-                <div class="column">
-                    ${(info.image.length > 0)?
-                    `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                <div class="column is-half is-7-desktop">
+                    ${(info.image && info.image.length === 1) ? `
+                    <div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
                         <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
-                        <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
+
+                        <div class="dialog-container" 
+                            data-a11y-dialog="dialog-${info.section_id}" 
+                            aria-hidden="true" 
+                            aria-labelledby="dialog-${info.section_id}-title">
+
                             <div class="dialog-overlay" data-a11y-dialog-hide></div>
+
                             <div class="dialog-content" role="document">
                                 <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
                                     <svg width="44" height="44">
@@ -62,13 +68,89 @@ var templateModules = {
                                         </g>
                                     </svg>
                                 </button>
-                                <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
+
+                                <img loading="lazy"
+                                    src="${info.image[0].image.replace('1.5MB','original')}"
+                                    alt=""
+                                    class="is-block">
+
                                 ${info.image[0].footprint ? `<p class="has-text-centered mt-2">${info.image[0].footprint}</p>` : ''}
                                 ${info.image[0].photographer ? `<p class="has-text-centered is-size-7 mt-2">${info.image[0].photographer}</p>` : ''}
                             </div>
                         </div>
-                    </div>`
-                    :''}
+                    </div>
+                    ` : ''}
+
+
+                    ${(info.image && info.image.length > 1) ? `
+                    <div class="images-group">
+
+                        <!-- Slider principal -->
+                        <div class="swiper swiper--fitxa">
+                            <div class="swiper-wrapper">
+                                ${info.image.map((image, index) => {
+                                    const dialogId = `dialog-${info.section_id}-${index}`;
+                                    return `
+                                    <div class="swiper-slide">
+
+                                        <div class="button-like"
+                                            data-a11y-dialog-show="${dialogId}"
+                                            role="button"
+                                            tabindex="0">
+
+                                            <img  src="${image.image}"
+                                                alt="${image.title ? image.title : ""}">
+                                        </div>
+                                    </div>
+                                    `;
+                                }).join("")}
+                            </div>
+                        </div>
+
+                        <!-- Controls -->
+                        <div class="is-flex is-justify-content-center gap-7 is-relative py-4">
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
+
+                        <!-- Thumbs -->
+                        <div class="swiper swiper--thumbs">
+                            <div class="swiper-wrapper">
+                                ${info.image.map(image => `
+                                    <div class="swiper-slide">
+                                        <img src="${image.image}"
+                                            alt="${image.title ? image.title : ""}">
+                                    </div>
+                                `).join("")}
+                            </div>
+                        </div>
+                        ${info.image.map((image, index) => {
+                            const dialogId = `dialog-${info.section_id}-${index}`;
+                            return `
+                        <!-- Popup -->
+                        <div class="dialog-container"
+                            data-a11y-dialog="${dialogId}"
+                            aria-hidden="true">
+
+                            <div class="dialog-overlay" data-a11y-dialog-hide></div>
+
+                            <div class="dialog-content" role="document">
+                                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                    ✕
+                                </button>
+
+                                <img loading="lazy"
+                                    src="${image.image.replace('1.5MB','original')}"
+                                    alt=""
+                                    class="is-block">
+
+                                ${image.footprint ? `<p class="has-text-centered mt-2">${image.footprint}</p>` : ''}
+                                ${image.photographer ? `<p class="has-text-centered is-size-7 mt-2">${image.photographer}</p>` : ''}
+                            </div>
+                        </div>
+                        `}).join("")}
+                    </div>
+                    ` : ''}
                 </div>
             </div>
         `);
@@ -77,7 +159,7 @@ var templateModules = {
         return htmlTemplate(`
 
             <div class="block-text-img-esquerra block-dedalo columns is-widescreen is-variable is-8 is-flex-direction-row-reverse">
-                <div class="column is-5-widescreen flow--l">
+                <div class="column is-half is-5-desktop flow--l">
                 ${(info.title)?
                 `<h2 id="${this.fix_names(info.title)}" class="is-flex is-align-items-center gap-2 mb-7 has-text-black">
                         ${(info.image_icon && info.image_icon.length > 0)?
@@ -88,12 +170,18 @@ var templateModules = {
                 :''}
                 ${(info.body)?info.body:''}
                 </div>
-                <div class="column">
-                    ${(info.image.length > 0)?
-                    `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                <div class="column is-half is-7-desktop">
+                    ${(info.image && info.image.length === 1) ? `
+                    <div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
                         <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
-                        <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
+
+                        <div class="dialog-container"
+                            data-a11y-dialog="dialog-${info.section_id}"
+                            aria-hidden="true"
+                            aria-labelledby="dialog-${info.section_id}-title">
+    
                             <div class="dialog-overlay" data-a11y-dialog-hide></div>
+
                             <div class="dialog-content" role="document">
                                 <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
                                     <svg width="44" height="44">
@@ -103,13 +191,87 @@ var templateModules = {
                                         </g>
                                     </svg>
                                 </button>
-                                <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
+                                <img loading="lazy"
+                                    src="${info.image[0].image.replace('1.5MB', 'original')}"
+                                    alt="${info.image[0].title}"
+                                    class="is-block">
+
                                 ${info.image[0].footprint ? `<p class="has-text-centered mt-2">${info.image[0].footprint}</p>` : ''}
                                 ${info.image[0].photographer ? `<p class="has-text-centered is-size-7 mt-2">${info.image[0].photographer}</p>` : ''}
                             </div>
                         </div>
                     </div>`
                     :''}
+
+                    ${(info.image && info.image.length > 1) ? `
+                    <div class="images-group">
+
+                        <!-- Slider principal -->
+                        <div class="swiper swiper--fitxa">
+                            <div class="swiper-wrapper">
+                                ${info.image.map((image, index) => {
+                                    const dialogId = `dialog-${info.section_id}-${index}`;
+                                    return `
+                                    <div class="swiper-slide">
+
+                                        <div class="button-like"
+                                            data-a11y-dialog-show="${dialogId}"
+                                            role="button"
+                                            tabindex="0">
+
+                                            <img  src="${image.image}"
+                                                alt="${image.title ? image.title : ""}">
+                                        </div>
+                                    </div>
+                                    `;
+                                }).join("")}
+                            </div>
+                        </div>
+
+                        <!-- Controls -->
+                        <div class="is-flex is-justify-content-center gap-7 is-relative py-4">
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
+
+                        <!-- Thumbs -->
+                        <div class="swiper swiper--thumbs">
+                            <div class="swiper-wrapper">
+                                ${info.image.map(image => `
+                                    <div class="swiper-slide">
+                                        <img src="${image.image}"
+                                            alt="${image.title ? image.title : ""}">
+                                    </div>
+                                `).join("")}
+                            </div>
+                        </div>
+                        ${info.image.map((image, index) => {
+                            const dialogId = `dialog-${info.section_id}-${index}`;
+                            return `
+                        <!-- Popup -->
+                        <div class="dialog-container"
+                            data-a11y-dialog="${dialogId}"
+                            aria-hidden="true">
+
+                            <div class="dialog-overlay" data-a11y-dialog-hide></div>
+
+                            <div class="dialog-content" role="document">
+                                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                    ✕
+                                </button>
+
+                                <img loading="lazy"
+                                    src="${image.image.replace('1.5MB','original')}"
+                                    alt=""
+                                    class="is-block">
+
+                                ${image.footprint ? `<p class="has-text-centered mt-2">${image.footprint}</p>` : ''}
+                                ${image.photographer ? `<p class="has-text-centered is-size-7 mt-2">${image.photographer}</p>` : ''}
+                            </div>
+                        </div>
+                        `}).join("")}
+                    </div>
+                    ` : ''}
                 </div>
             </div>
         `);
@@ -127,33 +289,114 @@ var templateModules = {
                     </h2>`
                     :''}
                     <div class="block-dedalo columns is-widescreen is-variable is-8">
-                        <div class="column is-5-widescreen flow--l">
+                        <div class="column is-half is-5-desktop flow--l">
                         ${(info.body)?info.body:''}
                         </div>
-                        <div class="column">
-                            ${(info.image.length > 0)?
-                            `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
-                                <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
-                                <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
-                                    <div class="dialog-overlay" data-a11y-dialog-hide></div>
-                                    <div class="dialog-content" role="document">
-                                        <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
-                                            <svg width="44" height="44">
-                                                <g fill="none" fill-rule="evenodd">
-                                                    <path d="M0 0h44v44H0z" />
-                                                    <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
-                                                </g>
-                                            </svg>
-                                        </button>
-                                        <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
-                                        ${info.image[0].footprint ? `<p class="has-text-centered mt-2">${info.image[0].footprint}</p>` : ''}
-                                        ${info.image[0].photographer ? `<p class="has-text-centered is-size-7 mt-2">${info.image[0].photographer}</p>` : ''}
-                                    </div>
-                                </div>
-                            </div>`
-                            :''}
+                    <div class="column is-half is-7-desktop">
+                        ${(info.image && info.image.length === 1) ? `
+                        <div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                            <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
 
+                            <div class="dialog-container" 
+                                data-a11y-dialog="dialog-${info.section_id}" 
+                                aria-hidden="true" 
+                                aria-labelledby="dialog-${info.section_id}-title">
+
+                                <div class="dialog-overlay" data-a11y-dialog-hide></div>
+
+                                <div class="dialog-content" role="document">
+                                    <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                        <svg width="44" height="44">
+                                            <g fill="none" fill-rule="evenodd">
+                                                <path d="M0 0h44v44H0z" />
+                                                <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                                            </g>
+                                        </svg>
+                                    </button>
+
+                                    <img loading="lazy"
+                                        src="${info.image[0].image.replace('1.5MB','original')}"
+                                        alt=""
+                                        class="is-block">
+
+                                    ${info.image[0].footprint ? `<p class="has-text-centered mt-2">${info.image[0].footprint}</p>` : ''}
+                                    ${info.image[0].photographer ? `<p class="has-text-centered is-size-7 mt-2">${info.image[0].photographer}</p>` : ''}
+                                </div>
+                            </div>
                         </div>
+                        ` : ''}
+
+
+                        ${(info.image && info.image.length > 1) ? `
+                        <div class="images-group">
+
+                            <!-- Slider principal -->
+                            <div class="swiper swiper--fitxa">
+                                <div class="swiper-wrapper">
+                                    ${info.image.map((image, index) => {
+                                        const dialogId = `dialog-${info.section_id}-${index}`;
+                                        return `
+                                        <div class="swiper-slide">
+
+                                            <div class="button-like"
+                                                data-a11y-dialog-show="${dialogId}"
+                                                role="button"
+                                                tabindex="0">
+
+                                                <img  src="${image.image}"
+                                                    alt="${image.title ? image.title : ""}">
+                                            </div>
+                                        </div>
+                                        `;
+                                    }).join("")}
+                                </div>
+                            </div>
+
+                            <!-- Controls -->
+                            <div class="is-flex is-justify-content-center gap-7 is-relative py-4">
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+                            </div>
+
+                            <!-- Thumbs -->
+                            <div class="swiper swiper--thumbs">
+                                <div class="swiper-wrapper">
+                                    ${info.image.map(image => `
+                                        <div class="swiper-slide">
+                                            <img src="${image.image}"
+                                                alt="${image.title ? image.title : ""}">
+                                        </div>
+                                    `).join("")}
+                                </div>
+                            </div>
+                            ${info.image.map((image, index) => {
+                                const dialogId = `dialog-${info.section_id}-${index}`;
+                                return `
+                            <!-- Popup -->
+                            <div class="dialog-container"
+                                data-a11y-dialog="${dialogId}"
+                                aria-hidden="true">
+
+                                <div class="dialog-overlay" data-a11y-dialog-hide></div>
+
+                                <div class="dialog-content" role="document">
+                                    <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                        ✕
+                                    </button>
+
+                                    <img loading="lazy"
+                                        src="${image.image.replace('1.5MB','original')}"
+                                        alt=""
+                                        class="is-block">
+
+                                    ${image.footprint ? `<p class="has-text-centered mt-2">${image.footprint}</p>` : ''}
+                                    ${image.photographer ? `<p class="has-text-centered is-size-7 mt-2">${image.photographer}</p>` : ''}
+                                </div>
+                            </div>
+                            `}).join("")}
+                        </div>
+                        ` : ''}
+
                     </div>
                 </div>
 
@@ -174,15 +417,21 @@ var templateModules = {
                     </h2>`
                     :''}
                     <div class="block-dedalo columns is-widescreen is-variable is-8 is-flex-direction-row-reverse">
-                        <div class="column is-5-widescreen flow--l">
+                        <div class="column is-half is-5-desktop flow--l">
                         ${(info.body)?info.body:''}
                         </div>
-                        <div class="column">
-                            ${(info.image.length > 0)?
-                            `<div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
+                        <div class="column is-half is-7-desktop">
+                            ${(info.image && info.image.length === 1) ? `
+                            <div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
                                 <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
-                                <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
+
+                                <div class="dialog-container"
+                                    data-a11y-dialog="dialog-${info.section_id}"
+                                    aria-hidden="true"
+                                    aria-labelledby="dialog-${info.section_id}-title">
+            
                                     <div class="dialog-overlay" data-a11y-dialog-hide></div>
+
                                     <div class="dialog-content" role="document">
                                         <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
                                             <svg width="44" height="44">
@@ -192,13 +441,87 @@ var templateModules = {
                                                 </g>
                                             </svg>
                                         </button>
-                                        <img loading="lazy" src="${info.image[0].image.replace('1.5MB', 'original')}" alt="" class="is-block">
+                                        <img loading="lazy"
+                                            src="${info.image[0].image.replace('1.5MB', 'original')}"
+                                            alt="${info.image[0].title}"
+                                            class="is-block">
+
                                         ${info.image[0].footprint ? `<p class="has-text-centered mt-2">${info.image[0].footprint}</p>` : ''}
                                         ${info.image[0].photographer ? `<p class="has-text-centered is-size-7 mt-2">${info.image[0].photographer}</p>` : ''}
                                     </div>
                                 </div>
                             </div>`
                             :''}
+
+                            ${(info.image && info.image.length > 1) ? `
+                            <div class="images-group">
+
+                                <!-- Slider principal -->
+                                <div class="swiper swiper--fitxa">
+                                    <div class="swiper-wrapper">
+                                        ${info.image.map((image, index) => {
+                                            const dialogId = `dialog-${info.section_id}-${index}`;
+                                            return `
+                                            <div class="swiper-slide">
+
+                                                <div class="button-like"
+                                                    data-a11y-dialog-show="${dialogId}"
+                                                    role="button"
+                                                    tabindex="0">
+
+                                                    <img  src="${image.image}"
+                                                        alt="${image.title ? image.title : ""}">
+                                                </div>
+                                            </div>
+                                            `;
+                                        }).join("")}
+                                    </div>
+                                </div>
+
+                                <!-- Controls -->
+                                <div class="is-flex is-justify-content-center gap-7 is-relative py-4">
+                                    <div class="swiper-button-prev"></div>
+                                    <div class="swiper-button-next"></div>
+                                </div>
+
+                                <!-- Thumbs -->
+                                <div class="swiper swiper--thumbs">
+                                    <div class="swiper-wrapper">
+                                        ${info.image.map(image => `
+                                            <div class="swiper-slide">
+                                                <img src="${image.image}"
+                                                    alt="${image.title ? image.title : ""}">
+                                            </div>
+                                        `).join("")}
+                                    </div>
+                                </div>
+                                ${info.image.map((image, index) => {
+                                    const dialogId = `dialog-${info.section_id}-${index}`;
+                                    return `
+                                <!-- Popup -->
+                                <div class="dialog-container"
+                                    data-a11y-dialog="${dialogId}"
+                                    aria-hidden="true">
+
+                                    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+
+                                    <div class="dialog-content" role="document">
+                                        <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                            ✕
+                                        </button>
+
+                                        <img loading="lazy"
+                                            src="${image.image.replace('1.5MB','original')}"
+                                            alt=""
+                                            class="is-block">
+
+                                        ${image.footprint ? `<p class="has-text-centered mt-2">${image.footprint}</p>` : ''}
+                                        ${image.photographer ? `<p class="has-text-centered is-size-7 mt-2">${image.photographer}</p>` : ''}
+                                    </div>
+                                </div>
+                                `}).join("")}
+                            </div>
+                            ` : ''}
                         </div>
                     </div>
                 </div>
@@ -895,7 +1218,7 @@ var templateModules = {
         return content;
     },
 
-    bloque_exposiciones_anuales: function(target){
+    bloque_exposiciones_anuales: function(target, type = null){
         const content = htmlTemplate(`
             <div class="children_container accordion accordion--primary mt-6">
                 <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${tstring.historical}</h2>
@@ -905,12 +1228,12 @@ var templateModules = {
         const spinner = common.spinner(children_container)
         appendTemplate(target, content);
 
-        api.getExposYears().then(function(results) {
+        api.getExposYears(type).then(function(results) {
             if (!results || results.length == 0) return;
             const yearsArray = results.map(el => el.date_start_year);
 
             Promise.all(
-                yearsArray.map(year => api.getExposByYear(year).then(expos => ({ year, expos })))
+                yearsArray.map(year => api.getExposByYear(year, type).then(expos => ({ year, expos })))
             ).then(yearsWithExpos => {
                 const html = yearsWithExpos.map(({ year, expos }) => {
                     if (!expos || expos.length == 0) return '';
@@ -985,7 +1308,7 @@ var templateModules = {
         });
     },
 
-    bloque_exposiciones_actuales: function(){
+    bloque_exposiciones_actuales: function(type = null){
         var content = htmlTemplate(`
         <div class="children_container swiper-container is-relative">
             <div class="swiper swiper--exposiciones-actuales">
@@ -1001,7 +1324,7 @@ var templateModules = {
 
         var children_container = content[0].querySelector('.children_container .swiper-wrapper');
 
-        api.getExposicionesActuales().then(function(results){
+        api.getExposicionesActuales(type).then(function(results){
             var content = htmlTemplate(`
                 ${results.map(function(row){
                     const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
@@ -1024,7 +1347,7 @@ var templateModules = {
                                 :''}
                                 <p class="more-link">${tstring.home_activities_more}</p>
                             </div>
-                            ${(row.type)?
+                            ${(type == null && row.type)?
                             `<p class="has-text-weight-medium mb-3">
                                 <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
                             </p>`

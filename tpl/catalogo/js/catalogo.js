@@ -1522,22 +1522,27 @@ var catalog = {
                     const unordered_timeline_data =
                         page.parse_timeline_data_catalog(ar_rows); // prepares data to use in timeline
 
-                    const periodIds = unordered_timeline_data.map(el => Number(el.date))
+                    let filtered_timeline_data = unordered_timeline_data.filter(item => item.date.includes('dc1_')); // remove all groups that are not a time period
+
+                    const periodIds = filtered_timeline_data.map(el => Number(el.date.replace('dc1_', ''))) // array with period ids to request to API
 
                     api.getPeriodYears(periodIds).then(function (periods) {
                         const periodsObj = periods.reduce(function (acc, el) {
                             let year = null;
+                            const periodo_data = 'dc1_' + el.section_id;
                             if (el.time) {
                                 const firstDate = el.time.split(',')[0].trim();
                                 year = firstDate.startsWith('-')
-                                    ? `-${firstDate.split('-')[1]}`
-                                    : firstDate.split('-')[0];
+                                    ? Number(firstDate.split('-')[1]) * -1
+                                    : Number(firstDate.split('-')[0]);
+                            } else {
+                                filtered_timeline_data = filtered_timeline_data.filter(item => item.date !== periodo_data); // if there is no time data, remove group from timeline
                             }
-                            acc[el.section_id] = {year, term: el.term}
+                            acc[periodo_data] = {year, term: el.term}
                             return acc;
                         }, {});
 
-                        const timeline_data = unordered_timeline_data
+                        const timeline_data = filtered_timeline_data
                             .map(item => {
                                 return {
                                     ...item,
@@ -1715,7 +1720,7 @@ var catalog = {
         // content
         const block_content_list = common.create_dom_element({
             element_type: "ul",
-            class_name: "galeria galeria--92x92 link-dn mt-0",
+            class_name: "link-dn mt-0 flow--l",
             parent: block_content,
         });
 
@@ -1744,9 +1749,9 @@ var catalog = {
                 var content = htmlTemplate(`
                     <li>
                         <a href="${url}" target="_blank">
-                            <figure>
-                                <img src="${image_src}" alt="">
-                                <figcaption>${title}</figcaption>
+                            <figure class="is-flex-tablet gap-4">
+                                <img src="${image_src}" alt="" class="flex-grow-0 mx-0">
+                                <figcaption class="mt-4">${title}</figcaption>
                             </figure>
                         </a>
                     </li>

@@ -4,7 +4,7 @@
     padding-top: 0;
 
     --cd-color-2: #000;
-    --cd-color-4: #870d01;
+    --cd-color-4: $primary;
 }
 .cd-timeline__container {
     padding: 0;
@@ -103,6 +103,17 @@
     }
 }
 
-.text-component figcaption {
-    color: unset;
+.text-component {
+    figcaption {
+        color: unset;
+        text-align: left;
+        text-wrap: balance;
+        max-width: 40ch;
+    }
+    figure {
+        img {
+            width: 150px;
+        }
+    }
 }
+

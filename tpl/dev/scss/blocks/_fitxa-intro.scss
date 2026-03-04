@@ -4,4 +4,7 @@
         font-family: $family-secondary;
         line-height: 1.2;
     }
+    figure > img {
+        border: 1px solid $border;
+    }
 }

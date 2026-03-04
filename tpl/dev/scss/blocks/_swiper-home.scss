@@ -38,7 +38,7 @@
         }
         &:hover .link-text {
             text-decoration: underline 2px;
-            text-underline-offset: .3em;
+            text-underline-offset: .1em;
         }
     }
     .wrapper:has(h2) {
@@ -51,7 +51,7 @@
         box-sizing: border-box;
     }
     h2 {
-        line-height: 1.2;
+        line-height: 1;
         font-weight: 800;
         text-shadow: 0px 8px 12px rgba(0, 0, 0, 0.35);
         font-size: var(--fluid-40-74);
