@@ -1459,7 +1459,7 @@ var item = {
         `);
         const ul = template[2].querySelector("ul");
         const parentsArray = JSON.parse(row.parent);
-        const parentsIds = parentsArray.map(parent => parent.split('_')[1]);
+        const parentsIds = (parentsArray != null) ? parentsArray.map(parent => parent.split('_')[1]) : [];
 
         api.getSetsFromElement(parentsIds.join(',')).then(function(results){
             var content = htmlTemplate(`
