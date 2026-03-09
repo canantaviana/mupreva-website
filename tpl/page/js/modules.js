@@ -1577,7 +1577,7 @@ var templateModules = {
             appendTemplate(children_container, content);
             swiperPublications('ultimes');
         });
-        api.getSeries().then(function(results){
+        /*api.getSeries().then(function(results){
             results.forEach(function(elem){
                 var content = htmlTemplate(`
                 <div class="default_last mt-8 flow--xl">
@@ -1645,7 +1645,7 @@ var templateModules = {
                     }
                 })
             });
-        });
+        });*/
         return contentBase;
     },
 
