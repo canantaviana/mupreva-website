@@ -503,6 +503,19 @@ var item = {
         `
                 : ""
         }
+
+        ${
+            row.analisis
+                ? `
+        <dl>
+            <dt>${tstring.item_analisis}</dt>
+            <dd>${row.analisis}</dd>
+        </dl>
+        `
+                : ""
+        }
+
+
         ${
             row.informacion_publica
                 ? `
