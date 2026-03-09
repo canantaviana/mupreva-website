@@ -888,7 +888,7 @@ var actividades = {
         <li class="${row.tpl}">
             <div class="is-flex is-flex-direction-column gap-3 full-link">
                 <h3 class="is-size-6 has-text-weight-semibold">
-                    <a href="${url}">${row.title}</a>
+                    <a href="${url}" target="_blank">${row.title}</a>
                 </h3>
                 ${
                     row.type
