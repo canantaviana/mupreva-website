@@ -339,14 +339,22 @@ var thesaurus = {
 
 
         function prune_tree(data) {
-            const next = data.filter(item =>
-                (item.relations && item.relations.length > 0) ||
-                (item.children && item.children.length > 0)
-            );
+            console.log("prune_tree data:", data);
 
-            if (next.length === data.length) return next;
+            const activeParents = data.map(item => {
+                return item.section_id.toString();
+            });
 
-            return prune_tree(next);
+            console.log("activeParents:", activeParents);
+            return data.map(item => {
+                if (item.children && item.children.length > 0) {
+                    console.log(item);
+                    item.children = item.children.filter(child => {
+                        return child.section_tipo == item.tld && activeParents.includes(child.section_id);
+                    });
+                }
+                return item;
+            });
         }
         const self = this
 
@@ -366,7 +374,8 @@ var thesaurus = {
 
             self.data_clean = page.parse_tree_data(ar_rows, hilite_terms) // prepares data to use in list
 
-            //self.data_clean = prune_tree(self.data_clean)
+            self.data_clean = prune_tree(self.data_clean);
+            console.log("data_clean:", self.data_clean);
 
             self.tree = self.tree || new tree_factory() // creates / get existing instance of tree
             self.tree.init({
