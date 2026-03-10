@@ -341,16 +341,17 @@ var thesaurus = {
         function prune_tree(data) {
             console.log("prune_tree data:", data);
 
-            const activeParents = data.map(item => {
-                return item.section_id.toString();
-            });
+            const activeParents = new Set(
+                data.map(item => item.term_id)
+            );
 
             console.log("activeParents:", activeParents);
             return data.map(item => {
                 if (item.children && item.children.length > 0) {
                     console.log(item);
                     item.children = item.children.filter(child => {
-                        return child.section_tipo == item.tld && activeParents.includes(child.section_id);
+                        return child.section_tipo == item.tld &&
+                            activeParents.has(`${child.section_tipo}_${child.section_id}`);
                     });
                 }
                 return item;
