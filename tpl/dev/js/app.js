@@ -733,40 +733,49 @@ function viewInit() {
     // enable A11y Dialogs
     enableDialogs(document.getElementById("main"));
 
-    // -------------------------
-    // Swiper (fitxa Col·lecció)
-    // -------------------------
-    var swiper = new Swiper(".swiper--thumbs", {
-        slidesPerView: 4,
-        spaceBetween: 6,
-        freeMode: true,
-        watchSlidesProgress: true,
-        breakpoints: {
-            600: {
-                spaceBetween: 10,
-                slidesPerView: 5,
+    document.querySelectorAll('.images-group').forEach(function(gallery){
+
+        // thumbs
+        const thumbsEl = gallery.querySelector('.swiper--thumbs');
+
+        const swiperThumbs = new Swiper(thumbsEl, {
+            slidesPerView: 4,
+            spaceBetween: 6,
+            freeMode: true,
+            watchSlidesProgress: true,
+            breakpoints: {
+                600: {
+                    spaceBetween: 10,
+                    slidesPerView: 5,
+                },
+                768: {
+                    slidesPerView: 4,
+                },
+                1400: {
+                    slidesPerView: 5,
+                },
+                1500: {
+                    spaceBetween: 15,
+                },
             },
-            768: {
-                slidesPerView: 4,
+        });
+
+        // slider principal
+        const mainEl = gallery.querySelector('.swiper--fitxa');
+
+        const swiperMain = new Swiper(mainEl, {
+            slideActiveClass: "active",
+
+            navigation: {
+                nextEl: gallery.querySelector('.swiper-button-next'),
+                prevEl: gallery.querySelector('.swiper-button-prev'),
             },
-            1400: {
-                slidesPerView: 5,
-            },
-            1500: {
-                spaceBetween: 15,
-            },
-        },
-    });
-    var swiper2 = new Swiper(".swiper--fitxa", {
-        // spaceBetween: 10,
-        slideActiveClass: "active",
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
-        thumbs: {
-            swiper: swiper,
-        },
+
+            thumbs: {
+                swiper: swiperThumbs,
+            }
+        });
+
     });
 
     // ---------
