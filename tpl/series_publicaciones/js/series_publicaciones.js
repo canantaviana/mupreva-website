@@ -331,7 +331,20 @@ var biblio = {
         const group = []
         var sql_filter = self.form.parse_sql_filter(filter, group)
 
-        var customFilter = 'serie = \''+(this.serie.replace('\'', '\\\''))+'\'';
+        // var customFilter = 'serie = \''+(this.serie.replace('\'', '\\\''))+'\'';
+        const seriesDict = {
+            "serie_de_trabajos_varios": 3,
+            "revista_apl": 9,
+            "la_labor_del_sip_y_su_museo": 4,
+            "catalogos_de_exposiciones": 8,
+            "jornadas": 12,
+            "publicaciones_diversas": 7,
+            "didactica": 6,
+            "dodia_dodia": 13,
+            "coediciones": 10,
+        }
+        var customFilter = `serie_data = '[\"${seriesDict[this.serie]}\"]'`;
+        console.log({customFilter})
         sql_filter = (sql_filter) ? sql_filter + ' AND '+customFilter : customFilter
 
 
