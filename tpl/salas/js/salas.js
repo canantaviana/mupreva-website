@@ -867,21 +867,11 @@ var salas = {
             <div class="images-group">
                 <div class="swiper swiper--sala-${unique_id}">
                     <div class="swiper-wrapper">
-                        ${images.map(image => {
-                            const isRelation = image.path;
-                            const relationUrl = page_globals.__WEB_ROOT_WEB__ + '/' + image.path + '/' + image.section_id;
-                            const imageUrl = __WEB_MEDIA_ENGINE_URL__ + image.image;
-                            const alt = image.title || '';
-
-                            return `
-                                <div class="swiper-slide">
-                                    ${isRelation
-                                        ? `<a href="${relationUrl}" target="_blank"><img src="${imageUrl}" alt="${alt}"></a>${alt ? `<p class="image-caption">${alt}</p>` : ''}`
-                                        : `<img src="${imageUrl}" alt="${alt}">`
-                                    }
-                                </div>
-                            `
-                        }).join('')}
+                        ${images.map(image =>
+                            `<div class="swiper-slide">
+                                <img src="${__WEB_MEDIA_ENGINE_URL__ + image.image}" alt="${image.title || ''}">
+                            </div>`
+                        ).join('')}
                     </div>
                 </div>
                 <div class="is-flex is-justify-content-center gap-7 is-relative py-4">
@@ -1118,22 +1108,23 @@ var salas = {
                     })
                     relations_title.textContent = tstring.pieces;
 
-                    const relations_container = common.create_dom_element({
-                        element_type: 'div',
-                        class_name: 'relations-container',
-                        parent: content
-                    })
-                    relations_container.setAttribute('data-loaded', 'false')
-
-                    const button_element = header.querySelector('button')
-                    if (button_element) {
-                        button_element.addEventListener('click', function() {
-                            if (relations_container.getAttribute('data-loaded') === 'false') {
-                                self.render_swiper(relations_container, item.relations_data, item.term_id+'-relations', 4)
-                                relations_container.setAttribute('data-loaded', 'true')
+                    const relations_container = htmlTemplate(`
+                        <div class="relations_container galeria galeria--92x92">
+                            ${(item.relations_data && item.relations_data.length > 0)
+                                ? item.relations_data.map(image => {
+                                    const relationUrl = page_globals.__WEB_ROOT_WEB__ + '/' + image.path + '/' + image.section_id;
+                                    const imageUrl = __WEB_MEDIA_ENGINE_URL__ + image.image;
+                                    return `
+                                        <a href="${relationUrl}" class="relation_item" target="_blank">
+                                            <img src="${imageUrl}" alt="${image.title || ''}" loading="lazy">
+                                        </a>
+                                    `
+                                }).join('')
+                                : ''
                             }
-                        })
-                    }
+                        </div>
+                    `)
+                    appendTemplate(content, relations_container)
                 }
 
                 // Children (recursive)
