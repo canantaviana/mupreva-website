@@ -913,10 +913,10 @@ var salas = {
                 // Level 0: Render as title without accordion
                 if (level === 0) {
                     const salas_title = htmlTemplate(`
-                        <h2 class="mb-2 has-text-black is-uppercase">
+                        <h2 class="mb-8 has-text-black">
                             ${item.term}
                         </h2>
-                        <hr class="mb-7">
+                        
                     `)
                     appendTemplate(parent_element, salas_title)
 
@@ -963,7 +963,7 @@ var salas = {
 
                 // Accordion header
                 const header = common.create_dom_element({
-                    element_type: 'h2',
+                    element_type: 'h4',
                     class_name: 'accordion-header',
                     parent: accordion_wrapper
                 })
@@ -973,15 +973,15 @@ var salas = {
                 if (level === 1) {
 
                     const title_level1 = htmlTemplate(`
-                        <h2 class="term-title">${item.term}</h2>
+                        <h3 class="term-title is-size-3">${item.term}</h3>
                     `)
                     appendTemplate(sala_wrapper, title_level1)
 
                     const sala_info = htmlTemplate(`
-                        <div class="sala-info columns is-variable is-8 mt-9">
+                        <div class="sala-info columns is-variable is-8 mt-4">
                             ${item.definition ?
                                 `<div class="column">
-                                    <div class="definition mt-2 has-text-weight-light is-size-6">
+                                    <div class="definition is-size-6">
                                         ${item.definition}
                                     </div>
                                 </div>` : ''
@@ -1016,8 +1016,8 @@ var salas = {
                     sala_wrapper.appendChild(accordion_wrapper)
 
                     const button_template = htmlTemplate(`
-                        <button type="button" class="${is_expanded ? 'is-active' : ''} ${item.hilite ? 'hilite' : ''}" aria-controls="${panel_id}" aria-expanded="${is_expanded ? 'true' : 'false'}">
-                            <p class="term-title">${tstring.zones}</p>
+                        <button type="button" class="button ${is_expanded ? 'is-active' : ''} ${item.hilite ? 'hilite' : ''}" aria-controls="${panel_id}" aria-expanded="${is_expanded ? 'true' : 'false'}">
+                            <span class="term-title is-size-7">${tstring.zones}</span>
                         </button>
                     `)
                     appendTemplate(header, button_template)
@@ -1028,7 +1028,7 @@ var salas = {
 
                     // Simple button with just the term
                     const level2_button_template = htmlTemplate(`
-                        <button type="button" class="${is_expanded ? 'is-active' : ''} ${item.hilite ? 'hilite' : ''}" aria-controls="${panel_id}" aria-expanded="${is_expanded ? 'true' : 'false'}">
+                        <button type="button" class="is-size-6 ${is_expanded ? 'is-active' : ''} ${item.hilite ? 'hilite' : ''}" aria-controls="${panel_id}" aria-expanded="${is_expanded ? 'true' : 'false'}">
                             ${item.term}
                         </button>
                     `)
@@ -1038,7 +1038,7 @@ var salas = {
                 // Accordion content
                 const content = common.create_dom_element({
                     element_type: 'div',
-                    class_name: 'accordion-content' + is_active_class,
+                    class_name: 'pb-5 accordion-content' + is_active_class,
                     parent: accordion_wrapper
                 })
                 content.id = panel_id
@@ -1051,7 +1051,7 @@ var salas = {
                         <div class="info-container block-dedalo columns is-variable is-8">
                             ${item.definition ?
                                 `<div class="column">
-                                    <div class="definition">
+                                    <div class="definition is-size-6">
                                         ${item.definition}
                                     </div>
                                 </div>` : ''
@@ -1070,8 +1070,8 @@ var salas = {
 
                     if (level === 2 && item.children_data.length > 0) {
                         const relations_title = common.create_dom_element({
-                            element_type: 'h3',
-                            class_name: 'relations-title mt-5 mb-3',
+                            element_type: 'h5',
+                            class_name: 'relations-title mt-0 mb-3 has-text-weight-bold is-size-6',
                             parent: content
                         })
                         relations_title.textContent = tstring.showcases;
@@ -1102,8 +1102,8 @@ var salas = {
 
                 if (level >= 3 && item.relations_data && item.relations_data.length > 0) {
                     const relations_title = common.create_dom_element({
-                        element_type: 'h3',
-                        class_name: 'relations-title mt-5 mb-3',
+                        element_type: 'h5',
+                        class_name: 'relations-title mt-0 mb-3 has-text-weight-bold is-size-6',
                         parent: content
                     })
                     relations_title.textContent = tstring.pieces;
@@ -1131,7 +1131,7 @@ var salas = {
                 if (item.children_data.length > 0) {
                     const children_container = common.create_dom_element({
                         element_type: 'div',
-                        class_name: 'children-container',
+                        class_name: 'children-container mt-0',
                         parent: content
                     })
 
