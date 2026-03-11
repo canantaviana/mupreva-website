@@ -272,7 +272,7 @@ page.parse_tree_data = function (rows, hilite_terms) {
         }
     }
     function set_status_as_opened(data_clean, row, recursion) {
-        const parent_term_id = row.parent[0]
+        const parent_term_id = row.parent?.[0] || ""
         const parent_row = data_clean.find(item => item.term_id === parent_term_id)
         if (parent_row) {
             parent_row.status = "opened"
