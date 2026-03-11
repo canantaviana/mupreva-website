@@ -1582,19 +1582,21 @@ page.parse_ts_web = function (rows) {
             ? JSON.parse(row.image)
             : null*/
         if (row.image) {
-            row.image_icon = row.image.filter(function(elem){
-                return elem.title === 'icon';
-            }).map(function(elem){
-                elem.image = common.get_media_engine_url(elem.image, 'image')
-                return elem;
-            });
+            if ((Array.isArray(row.image))) {
+                row.image_icon = row.image.filter(function(elem){
+                    return elem.title === 'icon';
+                }).map(function(elem){
+                    elem.image = common.get_media_engine_url(elem.image, 'image')
+                    return elem;
+                });
 
-            row.image = row.image.filter(function(elem){
-                return elem.title !== 'icon';
-            }).map(function(elem){
-                elem.image = common.get_media_engine_url(elem.image, 'image')
-                return elem;
-            });
+                row.image = row.image.filter(function(elem){
+                    return elem.title !== 'icon';
+                }).map(function(elem){
+                    elem.image = common.get_media_engine_url(elem.image, 'image')
+                    return elem;
+                });
+            }
         } else {
             row.image_icon = [];
             row.image = [];

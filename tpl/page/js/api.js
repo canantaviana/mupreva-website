@@ -621,6 +621,17 @@ var api = {
         return page.get_records(options);
     },
 
+    getImagesFromArray: function(ids) {
+        const section_id = ids.join(',');
+        var options = {
+            table: 'image',
+            ar_fields: 'section_id, image, title',
+            section_id: section_id,
+        }
+
+        return page.get_records(options);
+    },
+
     tld_to_table: function(tld) {
         const convert = {
             'object1': 'ts_object',
