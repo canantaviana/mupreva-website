@@ -874,6 +874,7 @@ var salas = {
                         ).join('')}
                     </div>
                 </div>
+                <div class="swiper-pagination-${unique_id}"></div>
                 <div class="is-flex is-justify-content-center gap-7 is-relative py-4">
                     <div class="swiper-button-prev swiper-button-prev-${unique_id}"></div>
                     <div class="swiper-button-next swiper-button-next-${unique_id}"></div>
@@ -891,6 +892,10 @@ var salas = {
             navigation: {
                 nextEl: `.swiper-button-next.swiper-button-next-${unique_id}`,
                 prevEl: `.swiper-button-prev.swiper-button-prev-${unique_id}`
+            },
+            pagination: {
+                el: `.swiper-pagination-${unique_id}`,
+                type: 'bullets',
             },
         })
 
@@ -916,7 +921,7 @@ var salas = {
                         <h2 class="mb-8 has-text-black">
                             ${item.term}
                         </h2>
-                        
+
                     `)
                     appendTemplate(parent_element, salas_title)
 
