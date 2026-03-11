@@ -1027,7 +1027,7 @@ var salas = {
 
                     const button_template = htmlTemplate(`
                         <button type="button" class="${is_expanded ? 'is-active' : ''} ${item.hilite ? 'hilite' : ''}" aria-controls="${panel_id}" aria-expanded="${is_expanded ? 'true' : 'false'}">
-                            <p class="term-title">Zonas:</p>
+                            <p class="term-title">${tstring.zones}</p>
                         </button>
                     `)
                     appendTemplate(header, button_template)
@@ -1084,7 +1084,7 @@ var salas = {
                             class_name: 'relations-title mt-5 mb-3',
                             parent: content
                         })
-                        relations_title.textContent = 'Vitrinas'
+                        relations_title.textContent = tstring.showcases;
                     }
 
                 }
@@ -1116,7 +1116,7 @@ var salas = {
                         class_name: 'relations-title mt-5 mb-3',
                         parent: content
                     })
-                    relations_title.textContent = 'Piezas'
+                    relations_title.textContent = tstring.pieces;
 
                     const relations_container = common.create_dom_element({
                         element_type: 'div',
