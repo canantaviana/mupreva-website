@@ -874,9 +874,9 @@ var salas = {
                         ).join('')}
                     </div>
                 </div>
-                <div class="swiper-pagination-${unique_id}"></div>
-                <div class="is-flex is-justify-content-center gap-7 is-relative py-4">
+                <div class="is-flex is-justify-content-center is-align-items-center gap-7 is-relative py-4">
                     <div class="swiper-button-prev swiper-button-prev-${unique_id}"></div>
+                    <div class="swiper-pagination-${unique_id} is-flex is-justify-content-center"></div>
                     <div class="swiper-button-next swiper-button-next-${unique_id}"></div>
                 </div>
             </div>
