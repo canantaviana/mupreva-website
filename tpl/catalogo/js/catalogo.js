@@ -1244,7 +1244,7 @@ var catalog = {
 
         const filters = [];
         if (parsed_filter) filters.push(`(${parsed_filter})`);
-        if (dates_filter) filters.push(dates_filter);
+        if (dates_filter && !parsed_filter.includes("section_id")) filters.push(dates_filter);
         let sql_filter = filters.join(' AND ');
 
         // prev_filter fix
