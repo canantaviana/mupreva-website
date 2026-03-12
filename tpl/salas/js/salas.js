@@ -1135,7 +1135,10 @@ var salas = {
                         id: 'button_load_more_' + item.term_id,
                         parent: load_more_wrapper
                     })
-                    load_more_btn.textContent = tstring.collection_see_more
+                    const total = all_relations.length
+                    const update_btn_text = () => {
+                        load_more_btn.textContent = tstring.load_more + ' (' + offset + ' ' + tstring.of + ' ' + total + ')'
+                    }
 
                     const render_batch = () => {
                         const batch = all_relations.slice(offset, offset + page_size)
@@ -1160,10 +1163,13 @@ var salas = {
                         offset += batch.length
                         if (offset >= all_relations.length) {
                             content.querySelector('#button_load_more_' + item.term_id).remove()
+                        } else {
+                            update_btn_text()
                         }
                     }
 
                     render_batch()
+                    update_btn_text()
                     load_more_btn.addEventListener('click', render_batch)
                 }
 
