@@ -1113,23 +1113,58 @@ var salas = {
                     })
                     relations_title.textContent = tstring.pieces;
 
-                    const relations_container = htmlTemplate(`
-                        <div class="relations_container galeria galeria--92x92">
-                            ${(item.relations_data && item.relations_data.length > 0)
-                                ? item.relations_data.map(image => {
-                                    const relationUrl = page_globals.__WEB_ROOT_WEB__ + '/' + image.path + '/' + image.section_id;
-                                    const imageUrl = __WEB_MEDIA_ENGINE_URL__ + image.image;
-                                    return `
-                                        <a href="${relationUrl}" class="relation_item" target="_blank">
-                                            <img src="${imageUrl}" alt="${image.title || ''}" loading="lazy">
-                                        </a>
-                                    `
-                                }).join('')
-                                : ''
-                            }
-                        </div>
-                    `)
-                    appendTemplate(content, relations_container)
+                    const page_size = 25
+                    let offset = 0
+                    const all_relations = item.relations_data
+
+                    const galeria_div = common.create_dom_element({
+                        element_type: 'div',
+                        class_name: 'relations_container galeria galeria--92x92',
+                        parent: content
+                    })
+
+                    const load_more_wrapper = common.create_dom_element({
+                        element_type: 'div',
+                        class_name: 'has-text-centered mt-6',
+                        parent: content
+                    })
+                    const load_more_btn = common.create_dom_element({
+                        element_type: 'button',
+                        type: 'button',
+                        class_name: 'button button--icon button--carrega',
+                        id: 'button_load_more_' + item.term_id,
+                        parent: load_more_wrapper
+                    })
+                    load_more_btn.textContent = tstring.collection_see_more
+
+                    const render_batch = () => {
+                        const batch = all_relations.slice(offset, offset + page_size)
+                        batch.forEach(image => {
+                            const relationUrl = page_globals.__WEB_ROOT_WEB__ + '/' + image.path + '/' + image.section_id
+                            const imageUrl = __WEB_MEDIA_ENGINE_URL__ + image.image
+                            const link = common.create_dom_element({
+                                element_type: 'a',
+                                class_name: 'relation_item',
+                                parent: galeria_div
+                            })
+                            link.href = relationUrl
+                            link.target = '_blank'
+                            const img = common.create_dom_element({
+                                element_type: 'img',
+                                parent: link
+                            })
+                            img.src = imageUrl
+                            img.alt = image.title || ''
+                            img.loading = 'lazy'
+                        })
+                        offset += batch.length
+                        if (offset >= all_relations.length) {
+                            content.querySelector('#button_load_more_' + item.term_id).remove()
+                        }
+                    }
+
+                    render_batch()
+                    load_more_btn.addEventListener('click', render_batch)
                 }
 
                 // Children (recursive)
