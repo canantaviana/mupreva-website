@@ -39,6 +39,7 @@
         }
         .swiper-slide {
             display: flex;
+            height: auto;
         }
         img {
             width: 100%;
@@ -54,8 +55,10 @@
                 position: static;
                 margin: 0;
             }
+            .swiper-pagination-bullets {
+                row-gap: 6px;
+            }
         }
-        
     }
 
     .definition {

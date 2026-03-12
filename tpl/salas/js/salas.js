@@ -876,7 +876,7 @@ var salas = {
                 </div>
                 <div class="is-flex is-justify-content-center is-align-items-center gap-7 is-relative py-4">
                     <div class="swiper-button-prev swiper-button-prev-${unique_id}"></div>
-                    <div class="swiper-pagination-${unique_id} is-flex is-justify-content-center"></div>
+                    <div class="swiper-pagination-${unique_id} is-flex is-flex-wrap-wrap is-justify-content-center"></div>
                     <div class="swiper-button-next swiper-button-next-${unique_id}"></div>
                 </div>
             </div>
@@ -1061,13 +1061,13 @@ var salas = {
                                     </div>
                                 </div>` : ''
                             }
-                            ${item.illustration && item.illustration.length > 0 ?
+                            ${level < 3 && item.illustration && item.illustration.length > 0 ?
                                 `<div class="column is-one-third">
                                     <img class="illustration" src="${__WEB_MEDIA_ENGINE_URL__ + item.illustration}" alt="${item.term || ''}">
                                 </div>` : ''
                             }
                             ${item.image_ids && item.image_ids.length > 0 ?
-                                `<div class="column is-one-third images-container" data-image-ids='${JSON.stringify(item.image_ids)}' data-term-id='${item.term_id}' data-loaded='false'></div>` : ''
+                                `<div class="${level < 3 ? 'column is-one-third images-container' : 'column is-half-tablet is-one-third-widescreen images-container'}" data-image-ids='${JSON.stringify(item.image_ids)}' data-term-id='${item.term_id}' data-loaded='false'></div>` : ''
                             }
                         </div>
                     `)
