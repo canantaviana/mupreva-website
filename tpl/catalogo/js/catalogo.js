@@ -667,7 +667,7 @@ var catalog = {
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
-                        table: self.get_tables,
+                        table: self.get_tables_search,
                         limit: 60,
                         parse_result: function (ar_result, term) {
                             return self.parse_autocomplete_result(
@@ -692,7 +692,7 @@ var catalog = {
                 /*callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
-                        table: self.get_tables,
+                        table: self.get_tables_search,
                         limit: 60,
                         parse_result: function (ar_result, term) {
                             return self.parse_autocomplete_result(
@@ -721,7 +721,7 @@ var catalog = {
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
-                        table: self.get_tables,
+                        table: self.get_tables_search,
                         limit: 60,
                         parse_result: function (ar_result, term) {
                             return self.parse_autocomplete_result(
@@ -750,7 +750,7 @@ var catalog = {
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
-                        table: self.get_tables,
+                        table: self.get_tables_search,
                         limit: 60,
                         parse_result: function (ar_result, term) {
                             return self.parse_autocomplete_result(
@@ -779,7 +779,7 @@ var catalog = {
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
-                        table: self.get_tables,
+                        table: self.get_tables_search,
                         limit: 60,
                         parse_result: function (ar_result, term) {
                             return self.parse_autocomplete_result(
@@ -808,7 +808,7 @@ var catalog = {
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
-                        table: self.get_tables,
+                        table: self.get_tables_search,
                         limit: 60,
                         parse_result: function (ar_result, term) {
                             return self.parse_autocomplete_result(
@@ -833,7 +833,7 @@ var catalog = {
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
-                        table: self.get_tables,
+                        table: self.get_tables_search,
                         limit: 60,
                         parse_result: function (ar_result, term) {
                             return self.parse_autocomplete_result(
@@ -858,7 +858,7 @@ var catalog = {
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,
-                        table: self.get_tables,
+                        table: self.get_tables_search,
                         limit: 60,
                         parse_result: function (ar_result, term) {
                             return self.parse_autocomplete_result(
@@ -1244,7 +1244,7 @@ var catalog = {
 
         const filters = [];
         if (parsed_filter) filters.push(`(${parsed_filter})`);
-        if (dates_filter) filters.push(dates_filter);
+        if (dates_filter && !parsed_filter.includes("section_id")) filters.push(dates_filter);
         let sql_filter = filters.join(' AND ');
 
         // prev_filter fix
@@ -1351,6 +1351,11 @@ var catalog = {
 
         return ar_tables;
     }, //end get_tables
+
+    get_tables_search: function () {
+        const ar_tables = catalog.get_tables();
+        return ar_tables.map((t) => (t === "sets" ? "objects" : t));
+    },
 
     /**
      * RENDER_DATA
@@ -1818,7 +1823,7 @@ var catalog = {
         const self = this;
 
         return new Promise(function (resolve) {
-            const ar_tables = self.get_tables();
+            const ar_tables = self.get_tables_search();
             const ar_fields = [
                 "id",
                 "section_tipo",

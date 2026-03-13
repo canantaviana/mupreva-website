@@ -238,30 +238,65 @@ var thesaurus = {
         } else {
             sql_filter = '('+filterAux+')'
         }
-        sql_filter = sql_filter + " and (children is not null or relations is not null)";
+        //sql_filter = sql_filter + " and (children is not null or relations is not null)";
 
         return new Promise(function (resolve) {
+            //fer una consulta convinada per agrupar els que tenen relacions dels que no
             // request
-            const body = {
-                dedalo_get: 'records',
-                db_name: page_globals.WEB_DB,
-                table: table,
-                ar_fields: ar_fields,
-                lang: lang,
-                sql_filter: sql_filter,
-                limit: 0,
-                count: false,
-                order: order
-            }
+            const calls = [
+                {
+                    id: "with_relations",
+                    options: {
+                        dedalo_get: 'records',
+                        db_name: page_globals.WEB_DB,
+                        table: table,
+                        ar_fields: ar_fields,
+                        lang: lang,
+                        sql_filter: sql_filter + " and (children is not null and relations is not null)",
+                        limit: 0,
+                        count: false,
+                        order: order
+                    }
+                },
+                {
+                    id: "without_relations",
+                    options: {
+                        dedalo_get: 'records',
+                        db_name: page_globals.WEB_DB,
+                        table: table,
+                        ar_fields: ar_fields,
+                        lang: lang,
+                        sql_filter: sql_filter + " and (children is not null and relations is null)",
+                        limit: 0,
+                        count: false,
+                        order: order
+                    }
+                }
+            ]
+
             data_manager.request({
-                body: body,
+                body: {
+                    dedalo_get: 'combi',
+                    db_name: page_globals.WEB_DB,
+                    lang: lang,
+                    ar_calls: JSON.stringify(calls)
+                },
                 cache: 'force-cache'
             })
                 .then(function (response) {
-
                     if (response.result) {
+                        // merge with_relations and without_relations results
+                        const with_relations = response.result[0].result.map(el => {
+                            el.with_relations = true
+                            return el
+                        })
+                        const without_relations = response.result[1].result.map(el => {
+                            el.with_relations = false
+                            return el
+                        })
+                        const raw_tree_data = [...with_relations, ...without_relations];
 
-                        const raw_tree_data = JSON.parse(JSON.stringify(response.result))
+                        //const raw_tree_data = JSON.parse(JSON.stringify(response.result))
 
                         // group parents
                         self.tree_data = self.group_parents(raw_tree_data)
@@ -337,16 +372,32 @@ var thesaurus = {
     */
     render_data: function (options) {
 
-
         function prune_tree(data) {
-            const next = data.filter(item =>
-                (item.relations && item.relations.length > 0) ||
+            const pruned = prune_tree_childrens(data);
+            const next = pruned.filter(item =>
+                (item.with_relations) ||
                 (item.children && item.children.length > 0)
             );
 
             if (next.length === data.length) return next;
 
             return prune_tree(next);
+        }
+
+        function prune_tree_childrens(data) {
+            const activeParents = new Set(
+                data.map(item => item.term_id)
+            );
+
+            return data.map(item => {
+                if (item.children && item.children.length > 0) {
+                    item.children = item.children.filter(child => {
+                        return child.section_tipo == item.tld &&
+                            activeParents.has(`${child.section_tipo}_${child.section_id}`);
+                    });
+                }
+                return item;
+            });
         }
         const self = this
 
@@ -366,7 +417,7 @@ var thesaurus = {
 
             self.data_clean = page.parse_tree_data(ar_rows, hilite_terms) // prepares data to use in list
 
-            //self.data_clean = prune_tree(self.data_clean)
+            self.data_clean = prune_tree(self.data_clean);
 
             self.tree = self.tree || new tree_factory() // creates / get existing instance of tree
             self.tree.init({

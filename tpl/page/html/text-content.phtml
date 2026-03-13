@@ -10,7 +10,7 @@
         <div class="column is-half-desktop flow">
 
 
-            <?php if (isset($ar_image) && count($ar_image) > 0 ) : ?>
+            <?php if (isset($ar_image) && !empty($ar_image) && is_array($ar_image) && count($ar_image) > 0 ) : ?>
             <div class="text-base">
                 <?php if (count($ar_image) === 1) {
                     $image = $ar_image[0];
@@ -64,7 +64,7 @@
             </div>
             <?php endif ?>
 
-            <?php if (isset($pdf) && !empty($pdf)) : ?>
+            <?php if (isset($pdf) && !empty($pdf) && is_array($pdf) && count($pdf) > 0) : ?>
             <ul class="rows_container pub-text-results flow--l">
                 <?php foreach ($pdf as $value) : ?>
                 <li class="pb-6">

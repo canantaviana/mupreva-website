@@ -885,7 +885,7 @@ var actividades = {
             <div class="card is-flex is-flex-direction-column full-link">
                 <div class="p-4 flow--2xs">
                     <h4 class="is-size-5 has-text-weight-semibold">
-                        <a href="${url}">${row.title}</a>
+                        <a href="${url}" target="_blank">${row.title}</a>
                     </h4>
                     ${
                         date

@@ -190,6 +190,7 @@
     "item_ubication": "Ubicació",
     "item_url_perm": "URI Permanent",
     "item_year": "Any",
+    "item_analisis": "Análisis",
     "items": "Elements",
     "lista": "Llista",
     "load_more": "Carregar més",
@@ -214,6 +215,7 @@
     "or": "o",
     "original_lang": "Idioma original",
     "original_format": "Format original",
+    "pieces": "Peces",
     "position": "Posició",
     "principal": "Principal",
     "publications": "Publicacions",
@@ -238,6 +240,7 @@
     "show_list": "Veure els resultats en una taula",
     "show_map": "Visualitza els resultats en un mapa",
     "show_timeline": "Veure els resultats en una línia de temps",
+    "showcases": "Vitrines",
     "showed": "Mostrats",
     "siguenos": "Segueix-nos en",
     "site_how_arrive": "Com arribar",
@@ -272,5 +275,6 @@
     "visitor_comment": "Comentari del visitant",
     "volver": "Tornar",
     "wildcard_at_end": "Comodí al final de la paraula",
+    "zones": "Descobreix les diferents zones d'aquesta sala",
     "zoom": "Zoom"
 }

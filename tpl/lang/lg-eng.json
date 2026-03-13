@@ -214,6 +214,7 @@
     "or": "or",
     "original_format": "Original format",
     "original_lang": "Original language",
+    "pieces": "Pieces",
     "position": "Position",
     "principal": "Principal",
     "publications": "Publications",
@@ -238,6 +239,7 @@
     "show_list": "View results in a table",
     "show_map": "View results on a map",
     "show_timeline": "View results on a timeline",
+    "showcases": "Showcases",
     "showed": "Showed",
     "siguenos": "Follow us in",
     "site_how_arrive": "How to arrive",
@@ -272,5 +274,6 @@
     "visitor_comment": "Visitor's comment",
     "volver": "Back",
     "wildcard_at_end": "Wildcard at the end of the word",
+    "zones": "Discover the different areas of this room",
     "zoom": "Zoom"
 }

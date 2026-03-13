@@ -190,6 +190,7 @@
     "item_ubication": "Ubicación",
     "item_url_perm": "URI Permanente",
     "item_year": "Año",
+    "item_analisis": "Análisis",
     "items": "Elementos",
     "lista": "Lista",
     "load_more": "Cargar más",
@@ -214,6 +215,7 @@
     "or": "o",
     "original_lang": "Idioma original",
     "original_format": "Formato original",
+    "pieces": "Piezas",
     "position": "Posición",
     "principal": "Principal",
     "publications": "Publicaciones",
@@ -238,6 +240,7 @@
     "show_list": "Ver los resultados en una tabla",
     "show_map": "Visualiza resultados en un mapa",
     "show_timeline": "Ver resultados en una línea de tiempo",
+    "showcases": "Vitrinas",
     "showed": "Mostrados",
     "siguenos": "Síguenos en",
     "site_how_arrive": "Como llegar",
@@ -272,5 +275,6 @@
     "visitor_comment": "Comentario del visitante",
     "volver": "Volver",
     "wildcard_at_end": "Comodín al final de la palabra",
+    "zones": "Descubre las diferentes zonas de esta sala",
     "zoom": "Zoom"
 }

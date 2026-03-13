@@ -115,15 +115,17 @@ var salas = {
         self.load_tree_data({})
             .then(function (ar_rows) {
 
-                const render = self.render_data({
-                    target: rows_list,
-                    ar_rows: ar_rows,
-                    set_hilite: (self.term_id && self.term_id.length > 0)
-                })
-                    .then(function () {
-                        spinner.remove()
-                    })
-            })
+                const organized_data = self.organize_data(ar_rows, self.root_term);
+
+                return self.render_tree(rows_list, organized_data);
+
+                // const render = self.render_data({
+                //     target: rows_list,
+                //     ar_rows: ar_rows,
+                //     set_hilite: (self.term_id && self.term_id.length > 0)
+                // })
+
+            }).then(() => spinner.remove());
 
         // event publish template_render_end
         event_manager.publish('template_render_end', {})
@@ -160,7 +162,9 @@ var salas = {
             'space',
             //'time',
             'tld',
-            'relations'
+            'relations',
+            'imagenes',
+            'imagenes_identificativas'
         ]
 
         // options
@@ -249,7 +253,7 @@ var salas = {
                 sql_filter: sql_filter,
                 limit: 0,
                 count: false,
-                order: order
+                order: order,
             }
             data_manager.request({
                 body: body,
@@ -709,29 +713,502 @@ var salas = {
                     self.load_tree_data({})
                         .then(function (response) {
 
-                            const ar_rows = response.map(function (row) {
-                                if (to_hilite.indexOf(row.term_id) !== -1) {
-                                    row.hilite = true
-                                    row.status = "closed"
-                                }
-                                return row
-                            })
+                            const organized_data = self.organize_data(ar_rows, self.root_term);
 
-                            // render_data
-                            self.render_data({
-                                target: rows_list_node,
-                                ar_rows: ar_rows,
-                                set_hilite: true
-                            })
-                                .then(function () {
+                            return self.render_tree(rows_list_node, organized_data);
+
+                            // const ar_rows = response.map(function (row) {
+                            //     if (to_hilite.indexOf(row.term_id) !== -1) {
+                            //         row.hilite = true
+                            //         row.status = "closed"
+                            //     }
+                            //     return row
+                            // })
+
+                            // // render_data
+                            // self.render_data({
+                            //     target: rows_list_node,
+                            //     ar_rows: ar_rows,
+                            //     set_hilite: true
+                            // })
+
+                        }).then(function () {
                                     spinner.remove()
                                 })
-                        })
 
                     resolve(true)
                 })
         })
-    }//end form_submit
+    },//end form_submit
+
+    /**
+     * ORGANIZE_DATA
+     * Transform raw tree data into a clean, renderable structure
+     * @param {Array} raw_data - Raw data from API
+     * @param {Array} root_terms - Root term IDs
+     * @return {Object} organized data structure
+     */
+    organize_data: function(raw_data, root_terms) {
+        const self = this
+
+        // Create lookup map for quick access
+        const data_map = new Map()
+        raw_data.forEach(item => {
+            let relationsArray = item.relations ? JSON.parse(item.relations) : [];
+            relationsArray = relationsArray.filter(el => (el.image && el.image != null));
+
+            if (relationsArray.length > 0) {
+                relationsArray = relationsArray.map(rel => {
+                    rel.thumb_url = __WEB_MEDIA_ENGINE_URL__ + rel.image.replace('1.5MB', 'thumb');
+                    rel.path = 'cat';
+                    return rel;
+                })
+            }
+
+            // Parse image IDs from imagenes_identificativas and imagenes
+            let image_ids = []
+            if (item.imagenes_identificativas) {
+                try {
+                    const ids = JSON.parse(item.imagenes_identificativas)
+                    image_ids = image_ids.concat(ids)
+                } catch (e) {
+                    console.warn('Error parsing imagenes_identificativas:', item.imagenes_identificativas)
+                }
+            }
+            if (item.imagenes) {
+                try {
+                    const ids = JSON.parse(item.imagenes)
+                    image_ids = image_ids.concat(ids)
+                } catch (e) {
+                    console.warn('Error parsing imagenes:', item.imagenes)
+                }
+            }
+
+            data_map.set(item.term_id, {
+                ...item,
+                relations_data: relationsArray,
+                image_ids: image_ids,
+                children_data: [],
+                level: 0
+            })
+        })
+
+        // Build parent-child relationships
+        const tree = []
+        data_map.forEach(item => {
+            // Check if this item IS a root term
+            if (root_terms.includes(item.term_id)) {
+                tree.push(item)
+            } else {
+                // This is not a root, so add it to its parent's children
+                const parent_ids = item.parent ? JSON.parse(item.parent) : []
+
+                parent_ids.forEach(parent_id => {
+                    const parent = data_map.get(parent_id)
+                    if (parent) {
+                        parent.children_data.push(item)
+                    }
+                })
+            }
+        })
+
+        // Sort children by norder if available
+        const sort_children = (nodes) => {
+            nodes.forEach(node => {
+                if (node.children_data.length > 0) {
+                    node.children_data.sort((a, b) => {
+                        const a_order = parseInt(a.norder) || 0
+                        const b_order = parseInt(b.norder) || 0
+                        return a_order - b_order
+                    })
+                    sort_children(node.children_data)
+                }
+            })
+        }
+
+        // Sort root level by norder
+        tree.sort((a, b) => {
+            const a_order = parseInt(a.norder) || 0
+            const b_order = parseInt(b.norder) || 0
+            return a_order - b_order
+        })
+        sort_children(tree)
+
+        // Calculate levels recursively
+        const calculate_levels = (nodes, level = 0) => {
+            nodes.forEach(node => {
+                node.level = level
+                if (node.children_data.length > 0) {
+                    calculate_levels(node.children_data, level + 1)
+                }
+            })
+        }
+        calculate_levels(tree)
+
+        return {
+            tree: tree,
+            flat: Array.from(data_map.values()),
+            map: data_map
+        }
+    },
+
+    /**
+     * RENDER_SWIPER
+     * Render swiper gallery for images
+     * @param {HTMLElement} container - Target container
+     * @param {Array} images - Array of image objects with 'image' property
+     * @param {String} unique_id - Unique identifier for this swiper instance
+     * @param {Number} slides_per_view - Number of slides to show per view (default: 1)
+     */
+    render_swiper: function(container, images, unique_id, slides_per_view = 1) {
+        if (!images || images.length === 0) return
+
+        const content = htmlTemplate(`
+            <div class="images-group">
+                <div class="swiper swiper--sala-${unique_id}">
+                    <div class="swiper-wrapper">
+                        ${images.map(image =>
+                            `<div class="swiper-slide">
+                                <img src="${__WEB_MEDIA_ENGINE_URL__ + image.image}" alt="${image.title || ''}">
+                            </div>`
+                        ).join('')}
+                    </div>
+                </div>
+                <div class="is-flex is-justify-content-center is-align-items-center gap-7 is-relative py-4">
+                    <div class="swiper-button-prev swiper-button-prev-${unique_id}"></div>
+                    <div class="swiper-pagination-${unique_id} is-flex is-flex-wrap-wrap is-justify-content-center"></div>
+                    <div class="swiper-button-next swiper-button-next-${unique_id}"></div>
+                </div>
+            </div>
+            `)
+        appendTemplate(container, content)
+
+        // Initialize swiper
+        const mainSwiper = new Swiper(`.swiper--sala-${unique_id}`, {
+            slidesPerView: slides_per_view,
+            loop: true,
+            spaceBetween: 6,
+            freeMode: true,
+            navigation: {
+                nextEl: `.swiper-button-next.swiper-button-next-${unique_id}`,
+                prevEl: `.swiper-button-prev.swiper-button-prev-${unique_id}`
+            },
+            pagination: {
+                el: `.swiper-pagination-${unique_id}`,
+                type: 'bullets',
+            },
+        })
+
+    },
+
+    /**
+     * RENDER_TREE
+     * Accordion-style tree renderer
+     * @param {HTMLElement} container - Target container
+     * @param {Object} organized_data - Data from organize_data()
+     * @return {Promise}
+     */
+    render_tree: function(container, organized_data) {
+        const self = this
+
+        return new Promise(function(resolve) {
+            const fragment = document.createDocumentFragment()
+
+            const render_node = (item, parent_element, level) => {
+                // Level 0: Render as title without accordion
+                if (level === 0) {
+                    const salas_title = htmlTemplate(`
+                        <h2 class="mb-8 has-text-black">
+                            ${item.term}
+                        </h2>
+
+                    `)
+                    appendTemplate(parent_element, salas_title)
+
+                    // Create container for children
+                    if (item.children_data.length > 0) {
+                        const accordion_container = common.create_dom_element({
+                            element_type: 'div',
+                            class_name: 'salas flow--2xl',
+                            parent: parent_element
+                        })
+
+                        item.children_data.forEach(child => {
+                            render_node(child, accordion_container, level + 1)
+                        })
+                    }
+                    return
+                }
+
+                // Create accordion wrapper
+                const sala_wrapper = common.create_dom_element({
+                    element_type: 'div',
+                    class_name: `sala nivel-${level}`,
+                    parent: parent_element
+                })
+
+                // Level 1+: Render as accordion
+                const accordion_class = level <= 2
+                    ? 'accordion accordion--primary'
+                    : 'accordion accordion--secondary'
+
+                // Generate unique IDs for this node
+                const tab_id = `tab-${item.term_id}`
+                const panel_id = `panel-${item.term_id}`
+
+                // Determine if this node should be initially expanded
+                const is_expanded = item.hilite
+                const is_active_class = is_expanded ? ' is-active' : ''
+
+                // Create accordion wrapper (not yet appended - position depends on level)
+                const accordion_wrapper = common.create_dom_element({
+                    element_type: 'div',
+                    class_name: accordion_class
+                })
+
+                // Accordion header
+                const header = common.create_dom_element({
+                    element_type: 'h4',
+                    class_name: 'accordion-header',
+                    parent: accordion_wrapper
+                })
+                header.id = tab_id
+
+                // Level 1: Add definition, illustration and button in header
+                if (level === 1) {
+
+                    const title_level1 = htmlTemplate(`
+                        <h3 class="term-title is-size-3">${item.term}</h3>
+                    `)
+                    appendTemplate(sala_wrapper, title_level1)
+
+                    const sala_info = htmlTemplate(`
+                        <div class="sala-info columns is-variable is-8 mt-4">
+                            ${item.definition ?
+                                `<div class="column">
+                                    <div class="definition is-size-6">
+                                        ${item.definition}
+                                    </div>
+                                </div>` : ''
+                            }
+                            ${item.illustration && item.illustration.length > 0 ?
+                                `<div class="column">
+                                    <img class="illustration" src="${__WEB_MEDIA_ENGINE_URL__ + item.illustration}" alt="${item.term || ''}">
+                                </div>` : ''
+                            }
+                        </div>
+                    `)
+
+                    // Fetch and render images for level 1 (immediate)
+                    if (item.image_ids && item.image_ids.length > 0) {
+                        const images_column = common.create_dom_element({
+                            element_type: 'div',
+                            class_name: 'column is-one-third',
+                            parent: sala_info[0]
+                        })
+
+                        // Fetch images immediately for level 1
+                        api.getImagesFromArray(item.image_ids).then(images => {
+                            if (images && images.length > 0) {
+                                self.render_swiper(images_column, images, item.term_id+'-images')
+                            }
+                        })
+                    }
+
+                    appendTemplate(sala_wrapper, sala_info)
+
+                    // Append accordion after title and sala-info
+                    sala_wrapper.appendChild(accordion_wrapper)
+
+                    const button_template = htmlTemplate(`
+                        <button type="button" class="button ${is_expanded ? 'is-active' : ''} ${item.hilite ? 'hilite' : ''}" aria-controls="${panel_id}" aria-expanded="${is_expanded ? 'true' : 'false'}">
+                            <span class="term-title is-size-7">${tstring.zones}</span>
+                        </button>
+                    `)
+                    appendTemplate(header, button_template)
+
+                } else {
+                    // For level 2+: append accordion directly
+                    sala_wrapper.appendChild(accordion_wrapper)
+
+                    // Simple button with just the term
+                    const level2_button_template = htmlTemplate(`
+                        <button type="button" class="is-size-6 ${is_expanded ? 'is-active' : ''} ${item.hilite ? 'hilite' : ''}" aria-controls="${panel_id}" aria-expanded="${is_expanded ? 'true' : 'false'}">
+                            ${item.term}
+                        </button>
+                    `)
+                    appendTemplate(header, level2_button_template)
+                }
+
+                // Accordion content
+                const content = common.create_dom_element({
+                    element_type: 'div',
+                    class_name: 'pb-5 accordion-content' + is_active_class,
+                    parent: accordion_wrapper
+                })
+                content.id = panel_id
+                content.setAttribute('aria-labelledby', tab_id)
+                content.setAttribute('aria-hidden', is_expanded ? 'false' : 'true')
+
+                // Definition, illustration and images slider - only for level 2+
+                if (level > 1 && (item.definition || item.illustration || (item.image_ids && item.image_ids.length > 0))) {
+                    const info_template = htmlTemplate(`
+                        <div class="info-container block-dedalo columns is-variable is-8">
+                            ${item.definition ?
+                                `<div class="column">
+                                    <div class="definition is-size-6">
+                                        ${item.definition}
+                                    </div>
+                                </div>` : ''
+                            }
+                            ${level < 3 && item.illustration && item.illustration.length > 0 ?
+                                `<div class="column is-one-third">
+                                    <img class="illustration" src="${__WEB_MEDIA_ENGINE_URL__ + item.illustration}" alt="${item.term || ''}">
+                                </div>` : ''
+                            }
+                            ${item.image_ids && item.image_ids.length > 0 ?
+                                `<div class="${level < 3 ? 'column is-one-third images-container' : 'column is-half-tablet is-one-third-widescreen images-container'}" data-image-ids='${JSON.stringify(item.image_ids)}' data-term-id='${item.term_id}' data-loaded='false'></div>` : ''
+                            }
+                        </div>
+                    `)
+                    appendTemplate(content, info_template)
+
+                    if (level === 2 && item.children_data.length > 0) {
+                        const relations_title = common.create_dom_element({
+                            element_type: 'h5',
+                            class_name: 'relations-title mt-0 mb-3 has-text-weight-bold is-size-6',
+                            parent: content
+                        })
+                        relations_title.textContent = tstring.showcases;
+                    }
+
+                }
+
+                // Add event listener for lazy loading images on level 2+
+                if (level > 1 && item.image_ids && item.image_ids.length > 0) {
+                    const button_element = header.querySelector('button')
+                    if (button_element) {
+                        button_element.addEventListener('click', function() {
+                            const images_container = content.querySelector('.images-container')
+                            if (images_container && images_container.getAttribute('data-loaded') === 'false') {
+                                const image_ids = JSON.parse(images_container.getAttribute('data-image-ids'))
+                                const term_id = images_container.getAttribute('data-term-id')
+
+                                api.getImagesFromArray(image_ids).then(images => {
+                                    if (images && images.length > 0) {
+                                        self.render_swiper(images_container, images, term_id+'-images')
+                                        images_container.setAttribute('data-loaded', 'true')
+                                    }
+                                })
+                            }
+                        })
+                    }
+                }
+
+                if (level >= 3 && item.relations_data && item.relations_data.length > 0) {
+                    const relations_title = common.create_dom_element({
+                        element_type: 'h5',
+                        class_name: 'relations-title mt-0 mb-3 has-text-weight-bold is-size-6',
+                        parent: content
+                    })
+                    relations_title.textContent = tstring.pieces;
+
+                    const page_size = 25
+                    let offset = 0
+                    const all_relations = item.relations_data
+
+                    const galeria_div = common.create_dom_element({
+                        element_type: 'div',
+                        class_name: 'relations_container galeria galeria--92x92',
+                        parent: content
+                    })
+
+                    const load_more_wrapper = common.create_dom_element({
+                        element_type: 'div',
+                        class_name: 'has-text-centered mt-6',
+                        parent: content
+                    })
+                    const load_more_btn = common.create_dom_element({
+                        element_type: 'button',
+                        type: 'button',
+                        class_name: 'button button--icon button--carrega',
+                        id: 'button_load_more_' + item.term_id,
+                        parent: load_more_wrapper
+                    })
+                    const total = all_relations.length
+                    const update_btn_text = () => {
+                        load_more_btn.textContent = tstring.load_more + ' (' + offset + ' ' + tstring.of + ' ' + total + ')'
+                    }
+
+                    const render_batch = () => {
+                        const batch = all_relations.slice(offset, offset + page_size)
+                        batch.forEach(image => {
+                            const relationUrl = page_globals.__WEB_ROOT_WEB__ + '/' + image.path + '/' + image.section_id
+                            const imageUrl = __WEB_MEDIA_ENGINE_URL__ + image.image
+                            const link = common.create_dom_element({
+                                element_type: 'a',
+                                class_name: 'relation_item',
+                                parent: galeria_div
+                            })
+                            link.href = relationUrl
+                            link.target = '_blank'
+                            const img = common.create_dom_element({
+                                element_type: 'img',
+                                parent: link
+                            })
+                            img.src = imageUrl
+                            img.alt = image.title || ''
+                            img.loading = 'lazy'
+                        })
+                        offset += batch.length
+                        if (offset >= all_relations.length) {
+                            content.querySelector('#button_load_more_' + item.term_id).remove()
+                        } else {
+                            update_btn_text()
+                        }
+                    }
+
+                    render_batch()
+                    update_btn_text()
+                    load_more_btn.addEventListener('click', render_batch)
+                }
+
+                // Children (recursive)
+                if (item.children_data.length > 0) {
+                    const children_container = common.create_dom_element({
+                        element_type: 'div',
+                        class_name: 'children-container mt-0',
+                        parent: content
+                    })
+
+                    item.children_data.forEach(child => {
+                        render_node(child, children_container, level + 1)
+                    })
+                }
+            }
+
+            // Render root nodes (each will create its own structure)
+            organized_data.tree.forEach(root_item => {
+                render_node(root_item, fragment, 0)
+            })
+
+            // Clear and append
+            container.innerHTML = ''
+            container.appendChild(fragment)
+
+            // Initialize accordion functionality
+            const accordionInstance = new TenUp.Accordion('.accordion', {
+                onOpen: function() {
+                    // Optional: Add custom logic when accordion opens
+                },
+                onClose: function() {
+                    // Optional: Add custom logic when accordion closes
+                }
+            })
+
+            resolve(fragment)
+        })
+    },
 
 
 

@@ -214,6 +214,7 @@
     "or": "ou",
     "original_format": "Format original",
     "original_lang": "Langue originale",
+    "pieces": "Pièces",
     "position": "Position",
     "principal": "Principal",
     "publications": "Publications",
@@ -238,6 +239,7 @@
     "show_list": "Voir les résultats sous forme de tableau",
     "show_map": "Voir les résultats sur une carte",
     "show_timeline": "Voir les résultats sur une chronologie",
+    "showcases": "Vitrines",
     "showed": "Affichés",
     "siguenos": "Suivez-nous sur",
     "site_how_arrive": "Comment arriver",
@@ -272,5 +274,6 @@
     "visitor_comment": "Commentaire du visiteur",
     "volver": "Revenir",
     "wildcard_at_end": "Sauvage à la fin du mot",
+    "zones": "Découvrez les différentes zones de cette salle",
     "zoom": "Zoom"
 }

@@ -47,4 +47,4 @@ $area_name    = $_GET['area_name'];
 $ar_parts    = explode('/', $area_name);
 
 // term_id (is inside get var 'area_name' as '/thesaurus/technique1_92')
-$serie = $title;
+$serie = end($ar_parts);
