@@ -623,7 +623,12 @@ function form_factory() {
                     if (item.sql_filter && item.sql_filter.length > 0) {
                         filter_line = item.sql_filter
                     } else if (item.op === 'MATCH') {
-                        filter_line = "MATCH (" + item_field + ") AGAINST (" + item.value + " IN BOOLEAN MODE)"
+                        const search = item.value
+                            .trim()
+                            .split(/\s+/)
+                            .map(word => `+${word}`)
+                            .join(' ');
+                        filter_line = "MATCH (" + item_field + ") AGAINST (" + search + " IN BOOLEAN MODE)"
                     } else {
                         filter_line = (item_field.indexOf("AS") !== -1 || (item.wrapper && item.wrapper.length > 0))
                             ? "" + item_field + "" + " " + item.op + " " + item.value + (" AND " + item_field + "!=''")
