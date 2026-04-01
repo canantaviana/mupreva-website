@@ -228,6 +228,24 @@ function tree_factory() {
             })
         }
 
+        // Botó per a public_info
+        if (row.public_info && row.public_info.length > 0) {
+            const btn_public_info = common.create_dom_element({
+                element_type: "button",
+                class_name: "btn_scope_note",
+                parent: tree_node
+            })
+            btn_public_info.addEventListener("click", function () {
+                if (this.classList.contains("open")) {
+                    public_info.classList.add("hide")
+                    this.classList.remove("open")
+                } else {
+                    public_info.classList.remove("hide")
+                    this.classList.add("open")
+                }
+            })
+        }
+
         // Botó per a relations
         var btn_relations = common.create_dom_element({
             element_type: "button",
@@ -319,6 +337,19 @@ function tree_factory() {
                 element_type: "div",
                 class_name: "scope_note hide",
                 inner_html: scope_note_text,
+                parent: tree_node
+            })
+        }
+
+        // Creació de l'element per a scope_note (sempre es manté fora)
+        let public_info
+        if (row.public_info && row.public_info.length > 0) {
+            const hide_style = row.state === "opened" ? "" : " hide"
+            const public_info_text = row.public_info.replace(/^\s*<br\s*\/?>|<br\s*\/?>\s*$/g, '');
+            public_info = common.create_dom_element({
+                element_type: "div",
+                class_name: "scope_note hide",
+                inner_html: public_info_text,
                 parent: tree_node
             })
         }
