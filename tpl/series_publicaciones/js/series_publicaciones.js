@@ -334,7 +334,7 @@ var biblio = {
         // var customFilter = 'serie = \''+(this.serie.replace('\'', '\\\''))+'\'';
         const seriesDict = {
             "serie_de_trabajos_varios": 3,
-            "revista_apl": 9,
+            "revista_apl": 1,
             "la_labor_del_sip_y_su_museo": 4,
             "catalogos_de_exposiciones": 8,
             "jornadas": 12,

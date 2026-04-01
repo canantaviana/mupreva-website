@@ -298,17 +298,21 @@ ${
         ? `
 <div class="flow--xl mt-8">
     <h2 class="is-size-3">${tstring.item_content}</h2>
-    <ol class="link-dn cols-list-2 is-size-6">
+    <ol class="link-dn is-size-6">
         ${row.children
             .map(function (value) {
                 const url =
                     page_globals.__WEB_ROOT_WEB__ +
                     "/pub/" +
                     value.section_id;
+                var image_url = '/assets/img/placeholder.png';
+                if (value.pdf !== null) {
+                    image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(value.pdf);
+                }
                 return `<li class="mb-3">
                 <div class="columns is-mobile is-flex-direction-row-reverse">
                     <div class="column">
-                        ${value.autor}<br>
+                        ${value.autor?value.autor:''}<br>
                         <a href="${url}"><span class="has-text-weight-semibold">${value.titulo}</span></a><br>
                         ${
                             value.num_paginas
@@ -334,16 +338,10 @@ ${
                             </div>
                         </div>
                     </div>
+                    <div class="column is-narrow">
+                        <img loading="lazy" src=${image_url} width="102" height="132" alt="">
+                    </div>
                 </div>
-
-
-
-                <button type="button" class="js-download-pdf" data-download-url="${
-                    __WEB_MEDIA_ENGINE_URL__ + value.pdf
-                }" data-download-filename="${value.pdf ? value.pdf.split('/').pop() : ''}"><br>
-                    <span class="has-text-weight-semibold"></span><br>
-
-                </button>
             </li>`;
             })
             .join("\n")}
