@@ -345,7 +345,14 @@ var item = {
                 row.nombre_bien
                     ? `
             <dt>${tstring.item_object}</dt>
-            <dd>${row.nombre_bien}</dd>
+            <dd>${row.nombre_bien.split(',').map((el, i) => {
+                    const ids = row.nombre_bien_data ? JSON.parse(row.nombre_bien_data) : [];
+                    const url = '/obj/' + ids[i];
+                    return (
+                        `<a href="${url}" target="_blank">${el}</a>`
+                    )
+                }).join(', ')}
+            </dd>
             `
                     : ""
             }
@@ -432,7 +439,14 @@ var item = {
                 row.nombre_bien
                     ? `
             <dt>${tstring.item_object}</dt>
-            <dd>${row.nombre_bien}</dd>
+            <dd>${row.nombre_bien.split(',').map((el, i) => {
+                    const ids = row.nombre_bien_data ? JSON.parse(row.nombre_bien_data) : [];
+                    const url = '/obj/' + ids[i];
+                    return (
+                        `<a href="${url}" target="_blank">${el}</a>`
+                    )
+                }).join(', ')}
+            </dd>
             `
                     : ""
             }
