@@ -52,9 +52,9 @@ var templateModules = {
                     <div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
                         <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
 
-                        <div class="dialog-container" 
-                            data-a11y-dialog="dialog-${info.section_id}" 
-                            aria-hidden="true" 
+                        <div class="dialog-container"
+                            data-a11y-dialog="dialog-${info.section_id}"
+                            aria-hidden="true"
                             aria-labelledby="dialog-${info.section_id}-title">
 
                             <div class="dialog-overlay" data-a11y-dialog-hide></div>
@@ -179,7 +179,7 @@ var templateModules = {
                             data-a11y-dialog="dialog-${info.section_id}"
                             aria-hidden="true"
                             aria-labelledby="dialog-${info.section_id}-title">
-    
+
                             <div class="dialog-overlay" data-a11y-dialog-hide></div>
 
                             <div class="dialog-content" role="document">
@@ -297,9 +297,9 @@ var templateModules = {
                         <div class="button-like" data-a11y-dialog-show="dialog-${info.section_id}" role="button" tabindex="0">
                             <img src="${info.image[0].image}" alt="${info.image[0].title}" class="is-block">
 
-                            <div class="dialog-container" 
-                                data-a11y-dialog="dialog-${info.section_id}" 
-                                aria-hidden="true" 
+                            <div class="dialog-container"
+                                data-a11y-dialog="dialog-${info.section_id}"
+                                aria-hidden="true"
                                 aria-labelledby="dialog-${info.section_id}-title">
 
                                 <div class="dialog-overlay" data-a11y-dialog-hide></div>
@@ -429,7 +429,7 @@ var templateModules = {
                                     data-a11y-dialog="dialog-${info.section_id}"
                                     aria-hidden="true"
                                     aria-labelledby="dialog-${info.section_id}-title">
-            
+
                                     <div class="dialog-overlay" data-a11y-dialog-hide></div>
 
                                     <div class="dialog-content" role="document">
@@ -1099,50 +1099,88 @@ var templateModules = {
                             <button type="button" aria-controls="panel${year}">${year}</button>
                         </h2>
                         <div class="accordion-content" id="panel${year}" aria-labelledby="tab${year}">
-                            <div class="swiper-container is-relative">
-                                <div class="swiper swiper--activitats swiper--activitats-${year}">
-                                    <div class="swiper-wrapper">
-                                        ${
-                                            activities.map(function(row){
-                                                const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                                                var image_url = '/assets/img/placeholder.png';
-                                                if (row.identifying_image !== null) {
-                                                    image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
-                                                }
-                                                var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+                            <div class="activities-gallery">
+                                ${activities.map(row => {
+                                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                                    let image_url = '/assets/img/placeholder.png';
+                                    if (row.identifying_image !== null) {
+                                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                                    }
+                                    const date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
-                                                return `
-                                                    <div class="swiper-slide">
-                                                        <div class="card is-flex is-flex-direction-column full-link">
-                                                            <div class="pt-5 pb-5 px-6 flow">
-                                                                <h3 class="is-size-3 has-text-weight-semibold">
-                                                                    <a href="${url}" target="_blank">${row.title}</a>
-                                                                </h3>
-                                                                ${(date)?
-                                                                `<p class="has-text-weight-medium">${date}</p>`
-                                                                :''}
-                                                                <p class="more-link">${tstring.home_activities_more}</p>
-                                                            </div>
-                                                            ${(row.type)?
-                                                            `<p class="has-text-weight-medium mb-3">
-                                                                <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
-                                                            </p>`
-                                                            :''}
-                                                            <img loading="lazy" src="${image_url}" alt="">
-                                                        </div>
-                                                    </div>
-                                                `;
-                                            }).join('')
-                                        }
-                                    </div>
-                                    <div class="swiper--activitats-${year}__btns">
-                                        <div class="swiper-button-prev"></div>
-                                        <div class="swiper-button-next"></div>
-                                    </div>
-                                </div>
+                                    return `
+                                        <div class="card is-flex is-flex-direction-column full-link">
+                                            <div class="pt-5 pb-5 px-6 flow">
+                                                <h3 class="is-size-3 has-text-weight-semibold">
+                                                    <a href="${url}" target="_blank">${row.title}</a>
+                                                </h3>
+                                                ${(date)?
+                                                `<p class="has-text-weight-medium">${date}</p>`
+                                                :''}
+                                                <p class="more-link">${tstring.home_activities_more}</p>
+                                            </div>
+                                            ${(row.type)?
+                                            `<p class="has-text-weight-medium mb-3">
+                                                <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                            </p>`
+                                            :''}
+                                            <img loading="lazy" src="${image_url}" alt="">
+                                        </div>
+                                    `
+                                }).join('')}
                             </div>
                         </div>
                     `;
+
+                    // return `
+                    //     <h2 class="accordion-header" id="tab${year}">
+                    //         <button type="button" aria-controls="panel${year}">${year}</button>
+                    //     </h2>
+                    //     <div class="accordion-content" id="panel${year}" aria-labelledby="tab${year}">
+                    //         <div class="swiper-container is-relative">
+                    //             <div class="swiper swiper--activitats swiper--activitats-${year}">
+                    //                 <div class="swiper-wrapper">
+                    //                     ${
+                    //                         activities.map(function(row){
+                    //                             const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                    //                             var image_url = '/assets/img/placeholder.png';
+                    //                             if (row.identifying_image !== null) {
+                    //                                 image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                    //                             }
+                    //                             var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                    //                             return `
+                    //                                 <div class="swiper-slide">
+                    //                                     <div class="card is-flex is-flex-direction-column full-link">
+                    //                                         <div class="pt-5 pb-5 px-6 flow">
+                    //                                             <h3 class="is-size-3 has-text-weight-semibold">
+                    //                                                 <a href="${url}" target="_blank">${row.title}</a>
+                    //                                             </h3>
+                    //                                             ${(date)?
+                    //                                             `<p class="has-text-weight-medium">${date}</p>`
+                    //                                             :''}
+                    //                                             <p class="more-link">${tstring.home_activities_more}</p>
+                    //                                         </div>
+                    //                                         ${(row.type)?
+                    //                                         `<p class="has-text-weight-medium mb-3">
+                    //                                             <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                    //                                         </p>`
+                    //                                         :''}
+                    //                                         <img loading="lazy" src="${image_url}" alt="">
+                    //                                     </div>
+                    //                                 </div>
+                    //                             `;
+                    //                         }).join('')
+                    //                     }
+                    //                 </div>
+                    //                 <div class="swiper--activitats-${year}__btns">
+                    //                     <div class="swiper-button-prev"></div>
+                    //                     <div class="swiper-button-next"></div>
+                    //                 </div>
+                    //             </div>
+                    //         </div>
+                    //     </div>
+                    // `;
                 }).join('');
 
                 children_container.removeChild(children_container.lastChild);
@@ -1165,24 +1203,15 @@ var templateModules = {
 
 
     bloque_actividades_actuales: function(){
-        var content = htmlTemplate(`
-        <div class="children_container swiper-container is-relative">
-            <div class="swiper swiper--actividades-actuales">
-                <div class="swiper-wrapper">
-                </div>
+        const content = htmlTemplate(`
+            <div class="activities-gallery">
             </div>
-            <div class="swiper--actividades-actuales__btns">
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-            </div>
-        </div>
         `);
+        const children_container = content[0];
 
-        var children_container = content[0].querySelector('.children_container .swiper-wrapper');
-
-        api.getActividadesActuales().then(function(results){
-            var content = htmlTemplate(`
-                ${results.map(function(row){
+        api.getActividadesActuales().then(results => {
+            const content = htmlTemplate(`
+                ${results.map(row => {
                     const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
                     var image_url = '/assets/img/placeholder.png';
                     if (row.identifying_image !== null) {
@@ -1191,15 +1220,15 @@ var templateModules = {
                     var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
                     return `
-                    <div class="swiper-slide">
                         <div class="card is-flex is-flex-direction-column full-link">
                             <div class="pt-5 pb-5 px-6 flow">
-                                <h3 class="is-size-4">
+                                <h3 class="is-size-3 has-text-weight-semibold">
                                     <a href="${url}" target="_blank">${row.title}</a>
                                 </h3>
                                 ${(date)?
                                 `<p class="has-text-weight-medium">${date}</p>`
                                 :''}
+                                <p class="more-link">${tstring.home_activities_more}</p>
                             </div>
                             ${(row.type)?
                             `<p class="has-text-weight-medium mb-3">
@@ -1208,13 +1237,64 @@ var templateModules = {
                             :''}
                             <img loading="lazy" src="${image_url}" alt="">
                         </div>
-                    </div>
                     `;
                 }).join('')}
             `);
             appendTemplate(children_container, content);
             swiperActividadesActuales();
         });
+
+
+        // var content = htmlTemplate(`
+        // <div class="children_container swiper-container is-relative">
+        //     <div class="swiper swiper--actividades-actuales">
+        //         <div class="swiper-wrapper">
+        //         </div>
+        //     </div>
+        //     <div class="swiper--actividades-actuales__btns">
+        //         <div class="swiper-button-prev"></div>
+        //         <div class="swiper-button-next"></div>
+        //     </div>
+        // </div>
+        // `);
+
+        // var children_container = content[0].querySelector('.children_container .swiper-wrapper');
+
+        // api.getActividadesActuales().then(function(results){
+        //     var content = htmlTemplate(`
+        //         ${results.map(function(row){
+        //             const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+        //             var image_url = '/assets/img/placeholder.png';
+        //             if (row.identifying_image !== null) {
+        //                 image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+        //             }
+        //             var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+        //             return `
+        //             <div class="swiper-slide">
+        //                 <div class="card is-flex is-flex-direction-column full-link">
+        //                     <div class="pt-5 pb-5 px-6 flow">
+        //                         <h3 class="is-size-4">
+        //                             <a href="${url}" target="_blank">${row.title}</a>
+        //                         </h3>
+        //                         ${(date)?
+        //                         `<p class="has-text-weight-medium">${date}</p>`
+        //                         :''}
+        //                     </div>
+        //                     ${(row.type)?
+        //                     `<p class="has-text-weight-medium mb-3">
+        //                         <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+        //                     </p>`
+        //                     :''}
+        //                     <img loading="lazy" src="${image_url}" alt="">
+        //                 </div>
+        //             </div>
+        //             `;
+        //         }).join('')}
+        //     `);
+        //     appendTemplate(children_container, content);
+        //     swiperActividadesActuales();
+        // });
         return content;
     },
 

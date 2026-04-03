@@ -28,18 +28,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // ----------
     const scrollTopElement = document.querySelector(".scrolltop");
     const footer = document.querySelector("footer");
-    
+
     if (scrollTopElement) {
         window.addEventListener("scroll", function () {
             if (window.scrollY > 300) {
                 scrollTopElement.classList.add("visible");
-                
+
                 // Adjust position to not overlap footer
                 if (footer) {
                     const footerRect = footer.getBoundingClientRect();
                     const scrollTopHeight = scrollTopElement.offsetHeight;
                     const windowHeight = window.innerHeight;
-                    
+
                     // If footer is visible in viewport, move scrolltop above it
                     if (footerRect.top < windowHeight) {
                         const offset = windowHeight - footerRect.top;
@@ -675,11 +675,20 @@ function swiperActividadesAnual(year) {
         freeMode: true,
         watchSlidesProgress: true,
         breakpoints: {
-            700: {
+            600: {
                 slidesPerView: 2,
             },
-            1000: {
+            850: {
                 slidesPerView: 3,
+            },
+            1100: {
+                slidesPerView: 4,
+            },
+            1400: {
+                slidesPerView: 5,
+            },
+            1700: {
+                slidesPerView: 6,
             },
         },
     });
