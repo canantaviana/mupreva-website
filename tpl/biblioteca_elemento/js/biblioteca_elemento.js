@@ -99,6 +99,7 @@ var item = {
                 count: false,
                 resolve_portals_custom: {
                     children: "publications",
+                    parent: "publications",
                 },
             };
             //console.log(request_body);
@@ -186,6 +187,17 @@ var item = {
 
     template: function (row) {
         const url = this.absUrl(row);
+        const seriesDict = {
+            3: "serie_de_trabajos_varios",
+            1: "revista_apl",
+            4: "la_labor_del_sip_y_su_museo",
+            8: "catalogos_de_exposiciones",
+            12: "jornadas",
+            7: "publicaciones_diversas",
+            6: "didactica",
+            13: "dodia_dodia",
+            10: "coediciones",
+        };
         return htmlTemplate(`
 <div class="fitxa-intro columns is-variable is-8">
     <div class="column flow--l">
@@ -213,10 +225,15 @@ var item = {
                     : ""
             }
             ${
-                row.serie
+                row.serie && row.serie_data && JSON.parse(row.serie_data).length > 0
                     ? `
             <dt>${tstring.item_serie}</dt>
-            <dd><a href="/pub/${normalitzaText(row.serie)}">${row.serie}</a>
+            <dd>
+                ${Object.keys(seriesDict).includes(JSON.parse(row.serie_data)[0])
+                    ? `<a href="/pub/${seriesDict[JSON.parse(row.serie_data)[0]]}">${row.serie}</a>`
+                    : row.serie
+                }
+
             ${
                 row.num_serie
                     ? `
@@ -227,6 +244,11 @@ var item = {
             </dd>
             `
                     : ""
+            }
+            ${(row.parent && row.parent.length > 0)
+                ? `<dt>${tstring.full_publication}</dt>
+                    <dd><a href="/pub/${row.parent[0].section_id}" target="_blank">${row.parent[0].titulo}</a></dd>`
+                : ""
             }
             ${
                 row.num_paginas
