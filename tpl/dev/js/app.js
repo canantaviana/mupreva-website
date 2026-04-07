@@ -882,7 +882,8 @@ function viewInit() {
                         "img.active, div.active img"
                     );
                     const urlImg = activeImage.dataset.original;
-                    showDownloadModal(urlImg);
+                    const caption = activeImage.dataset.caption || null;
+                    showDownloadModal(urlImg, caption);
                 });
             }
             const fullscreen = group.querySelector(".image-action-fullscreen");
@@ -938,7 +939,7 @@ function viewInit() {
  * Mostrar modal de confirmació de descàrrega amb text de llicència
  * @param {string} urlImg
  */
-function showDownloadModal(urlImg) {
+function showDownloadModal(urlImg, fileName) {
     const overlay = common.create_dom_element({
         element_type: 'div',
         class_name: 'download-modal-overlay'
@@ -991,7 +992,7 @@ function showDownloadModal(urlImg) {
 
     btnCancel.addEventListener('click', closeModal);
     btnDownload.addEventListener('click', function () {
-        common.download_item(urlImg);
+        common.download_item(urlImg, fileName);
         closeModal();
     });
     overlay.addEventListener('click', function (e) {
