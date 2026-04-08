@@ -970,7 +970,7 @@ var templateModules = {
                                     </h3>
                                     ${(row.type)?
                                     `<p class="has-text-weight-medium is-size-6">
-                                        <a href="/activities/?type=${row.type}" class="link-dn is-relative" target="_blank">${row.type}</a>
+                                        <a href="/actividades/?type=${row.type}" class="link-dn is-relative" target="_blank">${row.type}</a>
                                     </p>`
                                     :''}
                                     <img loading="lazy" src="${image_url}" alt="">
@@ -1048,7 +1048,7 @@ var templateModules = {
                                     </h3>
                                     ${(row.type)?
                                     `<p class="has-text-weight-medium is-size-6">
-                                        <a href="/expositions/?type=${row.type}" class="link-dn is-relative" target="_blank">${row.type}</a>
+                                        <a href="/exposiciones/?type=${row.type}" class="link-dn is-relative" target="_blank">${row.type}</a>
                                     </p>`
                                     :''}
                                     <img loading="lazy" src="${image_url}" alt="">
@@ -1072,6 +1072,118 @@ var templateModules = {
             swiperExposicionesDestacadas();
         });
         return content;
+    },
+
+    aprende_en_el_museo_actuales: function(data, target) {
+        const content = htmlTemplate(`
+            <h2>${tstring.activitis_title_current}</h2>
+            <div class="activities-gallery">
+                ${data.map(row => {
+                    const url = page_globals.__WEB_ROOT_WEB__ + "/act/" + row.section_id;
+                    var image_url = "/assets/img/placeholder.png";
+                    if (row.identifying_image_data.length > 0) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__ + row.identifying_image_data[0].image;
+                    }
+                    var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                    return `
+                        <div class="card is-flex is-flex-direction-column full-link">
+                            <div class="pt-5 pb-5 px-6 flow">
+                                <h3 class="is-size-3 has-text-weight-semibold">
+                                    <a href="${url}" target="_blank">${row.title}</a>
+                                </h3>
+                                ${(date)
+                                    ? `<p class="has-text-weight-medium">${date}</p>`
+                                    :''
+                                }
+                                ${row.thematic_indexation
+                                    ? `<div class="is-size-7">${row.thematic_indexation
+                                        .split(", ")
+                                        .map(function (elem) {
+                                            return `<p>${elem}</p>`;
+                                        })
+                                        .join("")}
+                                    </div>`
+                                    : ""
+                                }
+                            </div>
+                            ${row.type
+                                ? `<p class="has-text-weight-medium mb-3">
+                                    <a href="/actividades/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                </p>`
+                                : ""
+                            }
+                            <img loading="lazy" src="${image_url}" alt="">
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `);
+
+        appendTemplate(target, content);
+    },
+
+    aprende_en_el_museo_anuales: function(data, target) {
+        const years = Object.keys(data).sort((a, b) => b - a);
+
+        const content = htmlTemplate(`
+            <div class="children_container accordion accordion--primary mt-6">
+                <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${tstring.historical}</h2>
+                ${years.map(year => {
+                    return `
+                        <h2 class="accordion-header" id="tab${year}">
+                            <button type="button" aria-controls="panel${year}">${year}</button>
+                        </h2>
+                        <div class="accordion-content" id="panel${year}" aria-labelledby="tab${year}">
+                            <div class="activities-gallery">
+                                ${data[year].map(row => {
+                                    const url = page_globals.__WEB_ROOT_WEB__ + "/act/" + row.section_id;
+                                    var image_url = "/assets/img/placeholder.png";
+                                    if (row.identifying_image_data.length > 0) {
+                                        image_url = __WEB_MEDIA_ENGINE_URL__ + row.identifying_image_data[0].image;
+                                    }
+                                    var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
+
+                                    return `
+                                        <div class="card is-flex is-flex-direction-column full-link">
+                                            <div class="pt-5 pb-5 px-6 flow">
+                                                <h3 class="is-size-3 has-text-weight-semibold">
+                                                    <a href="${url}" target="_blank">${row.title}</a>
+                                                </h3>
+                                                ${(date)
+                                                    ? `<p class="has-text-weight-medium">${date}</p>`
+                                                    :''
+                                                }
+                                                ${row.thematic_indexation
+                                                    ? `<div class="is-size-7">${row.thematic_indexation
+                                                        .split(", ")
+                                                        .map(function (elem) {
+                                                            return `<p>${elem}</p>`;
+                                                        })
+                                                        .join("")}
+                                                    </div>`
+                                                    : ""
+                                                }
+                                            </div>
+                                            ${row.type
+                                                ? `<p class="has-text-weight-medium mb-3">
+                                                    <a href="/actividades/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                                </p>`
+                                                : ""
+                                            }
+                                            <img loading="lazy" src="${image_url}" alt="">
+                                        </div>
+                                    `
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `);
+        appendTemplate(target, content);
+        new TenUp.Accordion('.accordion');
+        return;
     },
 
     bloque_actividades_anuales: function(target, actualesFound = true) {
@@ -1121,7 +1233,7 @@ var templateModules = {
                                             </div>
                                             ${(row.type)?
                                             `<p class="has-text-weight-medium mb-3">
-                                                <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                                <a href="/actividades/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
                                             </p>`
                                             :''}
                                             <img loading="lazy" src="${image_url}" alt="">
@@ -1163,7 +1275,7 @@ var templateModules = {
                     //                                         </div>
                     //                                         ${(row.type)?
                     //                                         `<p class="has-text-weight-medium mb-3">
-                    //                                             <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                    //                                             <a href="/actividades/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
                     //                                         </p>`
                     //                                         :''}
                     //                                         <img loading="lazy" src="${image_url}" alt="">
@@ -1221,7 +1333,7 @@ var templateModules = {
                             </div>
                             ${(row.type)?
                             `<p class="has-text-weight-medium mb-3">
-                                <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                <a href="/actividades/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
                             </p>`
                             :''}
                             <img loading="lazy" src="${image_url}" alt="">
@@ -1272,7 +1384,7 @@ var templateModules = {
         //                     </div>
         //                     ${(row.type)?
         //                     `<p class="has-text-weight-medium mb-3">
-        //                         <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+        //                         <a href="/actividades/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
         //                     </p>`
         //                     :''}
         //                     <img loading="lazy" src="${image_url}" alt="">
@@ -1334,7 +1446,7 @@ var templateModules = {
                                             </div>
                                             ${(row.type)?
                                             `<p class="has-text-weight-medium mb-3">
-                                                <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                                <a href="/actividades/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
                                             </p>`
                                             :''}
                                             <img loading="lazy" src="${image_url}" alt="">
@@ -1381,7 +1493,7 @@ var templateModules = {
                             </div>
                             ${(type == null && row.type)?
                             `<p class="has-text-weight-medium mb-3">
-                                <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                <a href="/exposiciones/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
                             </p>`
                             :''}
                             <img loading="lazy" src="${image_url}" alt="">

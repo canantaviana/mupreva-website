@@ -36,6 +36,8 @@ var biblio = {
         "title",
         "type",
         "thematic_indexation",
+        "date_start_year",
+        "time_frame",
     ],
 
     // biblio_config
@@ -58,7 +60,7 @@ var biblio = {
 
         // pagination (only for list mode)
         self.pagination = {
-            limit: 16,
+            limit: 0,
             offset: 0,
             total: null,
         };
@@ -309,9 +311,9 @@ var biblio = {
                 id: "thematic",
                 name: "thematic",
                 q_column: "thematic_indexation",
-                eq: "=",
-                eq_in: "",
-                eq_out: "",
+                eq: "LIKE",
+                eq_in: "%",
+                eq_out: "%",
                 node_input: currentForm.querySelector("#thematic"),
             });
 
@@ -520,20 +522,28 @@ var biblio = {
         const ar_rows = options.ar_rows;
 
         return new Promise(function (resolve) {
-            const pagination = self.pagination;
+            // const pagination = self.pagination;
 
             const list_data = self.list_data(ar_rows); // prepares data to use in list
-            self.list = self.list || new list_factory(); // creates / get existing instance of list
-            self.list.init({
-                data: list_data,
-                fn_row_builder: self.list_row_builder,
-                pagination: pagination,
-                container_class: "galeria galeria--380x250 link-dn",
-                caller: self,
-            });
-            self.list.render_list().then(function (list_node) {
-                resolve(list_node);
-            });
+            if (list_data.currentActivities.length) {
+                templateModules.aprende_en_el_museo_actuales(list_data.currentActivities, self.rows_list_container);
+            }
+            if (Object.keys(list_data.dataByYear).length) {
+                templateModules.aprende_en_el_museo_anuales(list_data.dataByYear, self.rows_list_container);
+            }
+            resolve();
+
+            // self.list = self.list || new list_factory(); // creates / get existing instance of list
+            // self.list.init({
+            //     data: list_data,
+            //     fn_row_builder: self.list_row_builder,
+            //     pagination: pagination,
+            //     container_class: "galeria galeria--380x250 link-dn",
+            //     caller: self,
+            // });
+            // self.list.render_list().then(function (list_node) {
+            //     resolve(list_node);
+            // });
         });
     }, //end render_data
 
@@ -542,16 +552,44 @@ var biblio = {
      * Parse rows data to use in list_factory
      */
     list_data: function (ar_rows) {
-        const data = [];
+        const currentActivities = [];
+        const dataByYear = {};
 
         const ar_rows_length = ar_rows.length;
         for (let i = 0; i < ar_rows_length; i++) {
             const item = ar_rows[i];
 
-            data.push(item);
+            if (!item.date_start_year) continue;
+
+            if (dataByYear[item.date_start_year]) {
+                dataByYear[item.date_start_year].push(item);
+            } else {
+                dataByYear[item.date_start_year] = [item];
+            }
+
+            // Check if current date is within time_frame
+            if (item.time_frame) {
+                const dates = item.time_frame.split(',');
+                if (dates.length === 2) {
+                    const startDate = new Date(dates[0].trim());
+                    const endDate = new Date(dates[1].trim());
+                    const currentDate = new Date();
+
+                    if (currentDate >= startDate && currentDate <= endDate) {
+                        currentActivities.push(item);
+                    }
+                }
+            }
         }
 
-        return data;
+        // Sort currentActivities by end date (earliest to latest)
+        currentActivities.sort((a, b) => {
+            const endDateA = a.time_frame ? new Date(a.time_frame.split(',')[1].trim()) : new Date(0);
+            const endDateB = b.time_frame ? new Date(b.time_frame.split(',')[1].trim()) : new Date(0);
+            return endDateA - endDateB;
+        });
+
+        return {currentActivities, dataByYear};
     }, // end list_data
 
     /**

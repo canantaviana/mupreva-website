@@ -800,7 +800,7 @@ var actividades = {
                         let subtitleText = "";
                         if (content && content[0]) {
                             actualesFound = true;
-                            subtitleText = tstring.expositions_title_current;
+                            subtitleText = tstring.activitis_title_current;
                         }
                         var subtitle = document.getElementById("subtitle");
                         subtitle.innerHTML = subtitleText;
