@@ -1074,7 +1074,7 @@ var templateModules = {
         return content;
     },
 
-    bloque_actividades_anuales: function(target) {
+    bloque_actividades_anuales: function(target, actualesFound = true) {
         const content = htmlTemplate(`
             <div class="children_container accordion accordion--primary mt-6">
                 <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${tstring.historical}</h2>
@@ -1185,18 +1185,7 @@ var templateModules = {
 
                 children_container.removeChild(children_container.lastChild);
                 appendTemplate(children_container, htmlTemplate(html));
-                let initializedYears = new Set();
-                let accordionInstance = new TenUp.Accordion('.accordion', {
-                    onOpen: function({link}) {
-                        const year = link.textContent;
-                        if (!initializedYears.has(year)) {
-                            requestAnimationFrame(() => {
-                                swiperActividadesAnual(year);
-                            });
-                        }
-                        initializedYears.add(year);
-                    }
-                });
+                new TenUp.Accordion('.accordion', {openFirst: !actualesFound});
             });
         });
     },
@@ -1241,7 +1230,7 @@ var templateModules = {
                 }).join('')}
             `);
             appendTemplate(children_container, content);
-            swiperActividadesActuales();
+            // swiperActividadesActuales();
         });
 
 
@@ -1298,7 +1287,7 @@ var templateModules = {
         return content;
     },
 
-    bloque_exposiciones_anuales: function(target, type = null){
+    bloque_exposiciones_anuales: function(target, type = null, actualesFound = true){
         const content = htmlTemplate(`
             <div class="children_container accordion accordion--primary mt-6">
                 <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${tstring.historical}</h2>
@@ -1323,48 +1312,35 @@ var templateModules = {
                             <button type="button" aria-controls="panel${year}">${year}</button>
                         </h2>
                         <div class="accordion-content" id="panel${year}" aria-labelledby="tab${year}">
-                            <div class="swiper-container is-relative">
-                                <div class="swiper swiper--expos swiper--expos-${year}">
-                                    <div class="swiper-wrapper">
-                                        ${
-                                            expos.map(function(row){
-                                                const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                                                var image_url = '/assets/img/placeholder.png';
+                            <div class="activities-gallery">
+                                ${expos.map(row => {
+                                    const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
+                                    let image_url = '/assets/img/placeholder.png';
+                                    if (row.identifying_image !== null) {
+                                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                                    }
+                                    const date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
-                                                if (row.identifying_image !== null) {
-                                                    image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
-                                                }
-                                                var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
-
-                                                return `
-                                                    <div class="swiper-slide">
-                                                        <div class="card is-flex is-flex-direction-column full-link">
-                                                            <div class="pt-5 pb-5 px-6 flow">
-                                                                <h3 class="is-size-3 has-text-weight-semibold">
-                                                                    <a href="${url}" target="_blank">${row.title}</a>
-                                                                </h3>
-                                                                ${(date)?
-                                                                `<p class="has-text-weight-medium">${date}</p>`
-                                                                :''}
-                                                                <p class="more-link">${tstring.home_activities_more}</p>
-                                                            </div>
-                                                            ${(row.type)?
-                                                            `<p class="has-text-weight-medium mb-3">
-                                                                <a href="/expositions/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
-                                                            </p>`
-                                                            :''}
-                                                            <img loading="lazy" src="${image_url}" alt="">
-                                                        </div>
-                                                    </div>
-                                                `;
-                                            }).join('')
-                                        }
-                                    </div>
-                                    <div class="swiper--expos-${year}__btns">
-                                        <div class="swiper-button-prev"></div>
-                                        <div class="swiper-button-next"></div>
-                                    </div>
-                                </div>
+                                    return `
+                                        <div class="card is-flex is-flex-direction-column full-link">
+                                            <div class="pt-5 pb-5 px-6 flow">
+                                                <h3 class="is-size-3 has-text-weight-semibold">
+                                                    <a href="${url}" target="_blank">${row.title}</a>
+                                                </h3>
+                                                ${(date)?
+                                                `<p class="has-text-weight-medium">${date}</p>`
+                                                :''}
+                                                <p class="more-link">${tstring.home_activities_more}</p>
+                                            </div>
+                                            ${(row.type)?
+                                            `<p class="has-text-weight-medium mb-3">
+                                                <a href="/activities/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                                            </p>`
+                                            :''}
+                                            <img loading="lazy" src="${image_url}" alt="">
+                                        </div>
+                                    `
+                                }).join('')}
                             </div>
                         </div>
                     `;
@@ -1372,41 +1348,18 @@ var templateModules = {
 
                 children_container.removeChild(children_container.lastChild);
                 appendTemplate(children_container, htmlTemplate(html));
-                let initializedYears = new Set();
-                let accordionInstance = new TenUp.Accordion('.accordion', {
-                    onOpen: function({link}) {
-                        const year = link.textContent;
-                        if (!initializedYears.has(year)) {
-                            requestAnimationFrame(() => {
-                                swiperExposAnual(year);
-                            });
-                        }
-                        initializedYears.add(year);
-                    }
-                });
+                new TenUp.Accordion('.accordion', {openFirst: !actualesFound});
             });
         });
     },
 
     bloque_exposiciones_actuales: function(type = null){
-        var content = htmlTemplate(`
-        <div class="children_container swiper-container is-relative">
-            <div class="swiper swiper--exposiciones-actuales">
-                <div class="swiper-wrapper">
-                </div>
-            </div>
-            <div class="swiper--exposiciones-actuales__btns">
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-            </div>
-        </div>
-        `);
+        const content = htmlTemplate(`<div class="activities-gallery"></div>`);
+        const children_container = content[0];
 
-        var children_container = content[0].querySelector('.children_container .swiper-wrapper');
-
-        api.getExposicionesActuales(type).then(function(results){
-            var content = htmlTemplate(`
-                ${results.map(function(row){
+        api.getExposicionesActuales(type).then(results => {
+            const content = htmlTemplate(`
+                ${results.map(row => {
                     const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
                     var image_url = '/assets/img/placeholder.png';
 
@@ -1416,7 +1369,6 @@ var templateModules = {
                     var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
                     return `
-                    <div class="swiper-slide">
                         <div class="card is-flex is-flex-direction-column full-link">
                             <div class="pt-5 pb-5 px-6 flow">
                                 <h3 class="is-size-3 has-text-weight-semibold">
@@ -1434,13 +1386,11 @@ var templateModules = {
                             :''}
                             <img loading="lazy" src="${image_url}" alt="">
                         </div>
-                    </div>
                     `;
                 }).join('')}
             `);
             appendTemplate(children_container, content);
-            swiperExposicionesActuales();
-        });
+        })
         return content;
     },
 
