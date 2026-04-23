@@ -13,7 +13,7 @@
             }),
             t&&"string"==typeof t?(this.$accordions=document.querySelectorAll(t),
             this.$accordions?(document.documentElement.classList.add("js"),
-            this.settings=e({},{onCreate:null,onOpen:null,onClose:null,onToggle:null, open:false},n),
+            this.settings=e({},{onCreate:null,onOpen:null,onClose:null,onToggle:null, open:false, openFirst:false},n),
             this.$accordions.forEach(function(t,e){o.setupAccordion(t,e)}),
             this.settings.onCreate&&"function"==typeof this.settings.onCreate&&this.settings.onCreate.call()):
             console.error("10up Accordion: Target not found. A valid target (accordion area) must be used.")):
@@ -34,7 +34,7 @@
                 i.forEach(function(t,o){
                     var parentHeader = t.closest('.accordion-header');
                     parentHeader.setAttribute("id","tab"+e+"-"+o);
-                    if (n.settings.open) {
+                    if (n.settings.open || (n.settings.openFirst && o === 0)) {
                         t.setAttribute("aria-expanded", "true");
                         t.classList.add("is-active");
                     } else {
@@ -43,7 +43,7 @@
                     t.setAttribute("aria-controls","panel"+e+"-"+o),
                     n.addEventListener(t,"click",function(t){t.preventDefault(),n.toggleAccordionItem(t)})}),
                     r.forEach(function(t,ni){
-                        if (n.settings.open) {
+                        if (n.settings.open || (n.settings.openFirst && ni === 0)) {
                             t.setAttribute("aria-hidden","false");
                             t.classList.add("is-active");
                         } else {

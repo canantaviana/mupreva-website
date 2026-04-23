@@ -919,24 +919,25 @@ var common = {
 
 
     /**
-    * DOWNLOAD_ITEM
-    * @return promise
+    * GET_BEST_IMAGE_URL
+    * @param {string} download_url
+    * @return {Promise}
     */
-    download_item: function (download_url, file_name) {
+    get_best_image_url: function (download_url) {
         const modifiedImg = download_url.replace('1.5MB', 'modified');
-        const originalImg = download_url.replace('1.5MB', 'original')
+        const originalImg = download_url.replace('1.5MB', 'original');
 
-        const tryUrls = [modifiedImg, originalImg, download_url].filter(Boolean);
+        const urlsToTry = [modifiedImg, originalImg, download_url].filter(Boolean);
 
         return new Promise(function (resolve, reject) {
             let idx = 0;
 
             function attempt() {
-                if (idx >= tryUrls.length) {
-                    reject(Error('All download attempts failed'));
+                if (idx >= urlsToTry.length) {
+                    resolve(null);
                     return;
                 }
-                const url = tryUrls[idx++];
+                const url = urlsToTry[idx++];
 
                 fetch(url)
                     .then(function (response) {
@@ -945,20 +946,7 @@ var common = {
                             attempt();
                             return;
                         }
-                        return response.blob().then(function (blob) {
-                            const href = URL.createObjectURL(blob)
-
-                            // link_obj
-                            const link_obj = common.create_dom_element({
-                                element_type: "a",
-                                href: href,
-                                download: file_name || 'image.jpg'
-                            })
-                            link_obj.click()
-                            link_obj.remove()
-
-                            resolve(true)
-                        });
+                        resolve(url);
                     })
                     .catch(function() {
                         attempt();
@@ -966,8 +954,39 @@ var common = {
             }
 
             attempt();
-
         });
+    },//end get_best_image_url
+
+
+
+    /**
+    * DOWNLOAD_ITEM
+    * @return promise
+    */
+    download_item: function (download_url, file_name) {
+        const self = this;
+
+        return self.get_best_image_url(download_url)
+            .then(function(url) {
+                return fetch(url);
+            })
+            .then(function(response) {
+                return response.blob();
+            })
+            .then(function(blob) {
+                const href = URL.createObjectURL(blob);
+
+                // link_obj
+                const link_obj = common.create_dom_element({
+                    element_type: "a",
+                    href: href,
+                    download: file_name || 'image.jpg'
+                });
+                link_obj.click();
+                link_obj.remove();
+
+                return true;
+            });
     },//end download_item
 
 

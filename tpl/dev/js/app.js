@@ -28,18 +28,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // ----------
     const scrollTopElement = document.querySelector(".scrolltop");
     const footer = document.querySelector("footer");
-    
+
     if (scrollTopElement) {
         window.addEventListener("scroll", function () {
             if (window.scrollY > 300) {
                 scrollTopElement.classList.add("visible");
-                
+
                 // Adjust position to not overlap footer
                 if (footer) {
                     const footerRect = footer.getBoundingClientRect();
                     const scrollTopHeight = scrollTopElement.offsetHeight;
                     const windowHeight = window.innerHeight;
-                    
+
                     // If footer is visible in viewport, move scrolltop above it
                     if (footerRect.top < windowHeight) {
                         const offset = windowHeight - footerRect.top;
@@ -675,11 +675,20 @@ function swiperActividadesAnual(year) {
         freeMode: true,
         watchSlidesProgress: true,
         breakpoints: {
-            700: {
+            600: {
                 slidesPerView: 2,
             },
-            1000: {
+            850: {
                 slidesPerView: 3,
+            },
+            1100: {
+                slidesPerView: 4,
+            },
+            1400: {
+                slidesPerView: 5,
+            },
+            1700: {
+                slidesPerView: 6,
             },
         },
     });
@@ -873,7 +882,8 @@ function viewInit() {
                         "img.active, div.active img"
                     );
                     const urlImg = activeImage.dataset.original;
-                    showDownloadModal(urlImg);
+                    const caption = activeImage.dataset.caption || null;
+                    showDownloadModal(urlImg, caption);
                 });
             }
             const fullscreen = group.querySelector(".image-action-fullscreen");
@@ -929,7 +939,7 @@ function viewInit() {
  * Mostrar modal de confirmació de descàrrega amb text de llicència
  * @param {string} urlImg
  */
-function showDownloadModal(urlImg) {
+function showDownloadModal(urlImg, fileName) {
     const overlay = common.create_dom_element({
         element_type: 'div',
         class_name: 'download-modal-overlay'
@@ -982,7 +992,7 @@ function showDownloadModal(urlImg) {
 
     btnCancel.addEventListener('click', closeModal);
     btnDownload.addEventListener('click', function () {
-        common.download_item(urlImg);
+        common.download_item(urlImg, fileName);
         closeModal();
     });
     overlay.addEventListener('click', function (e) {

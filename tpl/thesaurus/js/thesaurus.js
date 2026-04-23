@@ -156,7 +156,8 @@ var thesaurus = {
             'norder',
             'parent',
             //'related',
-            'scope_note',
+            //'scope_note',
+            'public_info',
             'space',
             //'time',
             'tld',
@@ -634,6 +635,7 @@ var thesaurus = {
                 const element = {
                     term: item.term,
                     scope_note: item.scope_note,
+                    public_info: item.public_info,
                     parent: item.parent,
                     term_id: item.term_id,
                     nd: item.nd

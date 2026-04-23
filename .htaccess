@@ -6,8 +6,6 @@
 # Activate rewrite
     RewriteEngine on
 
-RewriteCond %{HTTPS} off
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # RewriteBase / . Use the name of base directory like "/web_qdp" for https://museuquartdepoblet.org/web
     #RewriteBase "/web"

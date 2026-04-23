@@ -796,11 +796,16 @@ var actividades = {
                         var content =
                             templateModules.bloque_actividades_actuales();
                         appendTemplate(self.rows_list_container, content);
-
-                        templateModules.bloque_actividades_anuales(self.rows_list_container);
-                        self.default_submit = false;
+                        let actualesFound = false;
+                        let subtitleText = "";
+                        if (content && content[0]) {
+                            actualesFound = true;
+                            subtitleText = tstring.activitis_title_current;
+                        }
                         var subtitle = document.getElementById("subtitle");
-                        subtitle.innerHTML = tstring.activitis_title_current;
+                        subtitle.innerHTML = subtitleText;
+                        templateModules.bloque_actividades_anuales(self.rows_list_container, actualesFound);
+                        self.default_submit = false;
                         resolve();
                         return;
                     } else {
@@ -838,6 +843,8 @@ var actividades = {
                     break;
 
                 case "timeline":
+                    var subtitle = document.getElementById("subtitle");
+                    subtitle.innerHTML = "";
                     const timeline_data =
                         page.parse_timeline_data_activity(ar_rows); // prepares data to use in timeline
                     self.timeline = self.timeline || new timeline_factory(); // creates / get existing instance of timeline

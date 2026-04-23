@@ -317,13 +317,6 @@ var item = {
     },
 
     templateFieldsPicture: function (row) {
-        var lugarData = null;
-        if (row.lugar_data) {
-            try {
-                lugarData = JSON.parse(row.lugar_data)[0];
-            } catch (e) {}
-        }
-
         return `
             ${
                 row.section_id
@@ -345,7 +338,14 @@ var item = {
                 row.nombre_bien
                     ? `
             <dt>${tstring.item_object}</dt>
-            <dd>${row.nombre_bien}</dd>
+            <dd>${row.nombre_bien.split(',').map((el, i) => {
+                    const ids = row.nombre_bien_data ? JSON.parse(row.nombre_bien_data) : [];
+                    const url = '/obj/' + ids[i];
+                    return (
+                        `<a href="${url}" target="_blank">${el}</a>`
+                    )
+                }).join(', ')}
+            </dd>
             `
                     : ""
             }
@@ -358,10 +358,29 @@ var item = {
                     : ""
             }
             ${
-                row.lugar && lugarData
+                row.lugar && row.lugar_data
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar.split(',').slice(0,-1).join(',')}</a></dd>
+            <dd>${row.lugar.split(',').slice(0,-1).map((el, i) => {
+                    const ids = row.lugar_data ? JSON.parse(row.lugar_data) : [];
+                    const url = '/imm/' + ids[i].replace('tchi1_', '');
+                    return (
+                        `<a href="${url}" target="_blank">${el}</a>`
+                    )
+                }).join(', ')}
+            </dd>
+            
+            
+            ${row.lugar.split(',').map((el, i) => {
+                    const ids = row.lugar_data ? JSON.parse(row.lugar_data) : [];
+                    const url = '/imm/' + ids[i].replace('tchi1_', '');
+                    return (
+                        `<a href="${url}" target="_blank">${el}</a>`
+                    )
+                }).join(', ')}
+            
+            
+            </dd>
             `
                     : ""
             }
@@ -399,13 +418,6 @@ var item = {
     },
 
     templateFieldsDefault: function (row) {
-        var lugarData = null;
-        if (row.lugar_data) {
-            try {
-                lugarData = JSON.parse(row.lugar_data)[0];
-            } catch (e) {}
-        }
-
         var ubicationName = null;
         var ubicationId = null;
         if (row.ubicacion && row.ubicacion_data && row.ubicacion_data.includes('ubication1_18')) {
@@ -432,7 +444,14 @@ var item = {
                 row.nombre_bien
                     ? `
             <dt>${tstring.item_object}</dt>
-            <dd>${row.nombre_bien}</dd>
+            <dd>${row.nombre_bien.split(',').map((el, i) => {
+                    const ids = row.nombre_bien_data ? JSON.parse(row.nombre_bien_data) : [];
+                    const url = '/obj/' + ids[i];
+                    return (
+                        `<a href="${url}" target="_blank">${el}</a>`
+                    )
+                }).join(', ')}
+            </dd>
             `
                     : ""
             }
@@ -445,10 +464,17 @@ var item = {
                     : ""
             }
             ${
-                row.lugar && lugarData
+                row.lugar && row.lugar_data
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd><a href="/imm/${lugarData.replace('tchi1_', '')}">${row.lugar.split(',').slice(0,-1).join(',')}</a></dd>
+            <dd>${row.lugar.split(',').slice(0,-1).map((el, i) => {
+                    const ids = row.lugar_data ? JSON.parse(row.lugar_data) : [];
+                    const url = '/imm/' + ids[i].replace('tchi1_', '');
+                    return (
+                        `<a href="${url}" target="_blank">${el}</a>`
+                    )
+                }).join(', ')}
+            </dd>
             `
                     : ""
             }
