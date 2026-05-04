@@ -364,7 +364,8 @@ var catalog = {
         switch (view_mode) {
             case "list":
                 // fix limit again (is removed by map and timeline modes)
-                self.pagination.limit = 15;
+                self.pagination.limit = 18;
+                self.map_results_list_container.innerHTML = "";
                 // launch a new random search
                 return self.form_submit();
                 break;
@@ -893,7 +894,9 @@ var catalog = {
         const has_periodo_data = '(periodo_data IS NOT NULL)';
         const is_destacado = '(destacado = "Sí" OR section_tipo = "tchi1")';
 
-        const filters = [];
+        const filters = [
+            'tipologia_data like "%\\"2\\"%"'
+        ];
         if (parsed_filter) filters.push(`(${parsed_filter})`);
         let sql_filter = filters.join(' AND ');
 
@@ -1097,6 +1100,17 @@ var catalog = {
                     function reset_map_results() {
                         map_gallery.innerHTML = '';
                         appendTemplate(map_gallery, loadResults())
+                        setTimeout(() => {
+                        const el = self.map_results_list_container;
+                        if (el) {
+                            const top = el.getBoundingClientRect().top + window.scrollY - 150;
+
+                            window.scrollTo({
+                            top: top,
+                            behavior: 'smooth'
+                            });
+                        }
+                        }, 0);
                     }
 
                     self.reset_map_results = reset_map_results;
