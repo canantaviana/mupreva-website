@@ -393,8 +393,9 @@ var search = {
         const count = true
         const process_result = null
         const section_tipo_filter = self.ref_section_tipo_selected ? ` AND ref_section_tipo='${self.ref_section_tipo_selected}'` : '';
+        const keywords_escaped = self.keywords.trim().split(/\s+/).map(word => `+${word}`).join(' ');
         const sql_filter = self.keywords
-            ? `MATCH (search_data) AGAINST ('${self.keywords}' IN BOOLEAN MODE)${section_tipo_filter}`
+            ? `MATCH (search_data) AGAINST ('${keywords_escaped}' IN BOOLEAN MODE)${section_tipo_filter}`
             : null;
 
         // request

@@ -686,9 +686,9 @@ var catalog = {
                 id: "titulo",
                 name: "titulo",
                 q_column: "titulo",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
+                eq: "MATCH",
+                eq_in: "",
+                eq_out: "",
                 node_input: currentForm.querySelector("#title"),
                 /*callback: function (form_item) {
                     self.form.activate_autocomplete({
@@ -852,9 +852,9 @@ var catalog = {
                 id: "lugar",
                 name: "lugar",
                 q_column: "lugar",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
+                eq: "MATCH",
+                eq_in: "",
+                eq_out: "",
                 node_input: currentForm.querySelector("#field"),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({

@@ -381,9 +381,9 @@ var biblio = {
                 id: "titulo",
                 name: "titulo",
                 q_column: "titulo",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
+                eq: "MATCH",
+                eq_in: "",
+                eq_out: "",
                 node_input: currentForm.querySelector('#title'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
@@ -402,9 +402,9 @@ var biblio = {
                 id: "autor",
                 name: "autor",
                 q_column: "autor",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
+                eq: "MATCH",
+                eq_in: "",
+                eq_out: "",
                 node_input: currentForm.querySelector('#authors'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
@@ -443,9 +443,9 @@ var biblio = {
                 id: "transcripcion",
                 name: "transcripcion",
                 q_column: "transcripcion",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
+                eq: "MATCH",
+                eq_in: "",
+                eq_out: "",
                 node_input: currentForm.querySelector('#text'),
                 callback: function (form_item) {
                     /*self.form.activate_autocomplete({
@@ -463,9 +463,9 @@ var biblio = {
                 id: "tipologia_bibliografica",
                 name: "tipologia_bibliografica",
                 q_column: "tipologia_bibliografica",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
+                eq: "MATCH",
+                eq_in: "",
+                eq_out: "",
                 node_input: currentForm.querySelector('#tipologia_bibliografica'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
@@ -483,9 +483,9 @@ var biblio = {
                 id: "serie",
                 name: "serie",
                 q_column: "serie",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
+                eq: "MATCH",
+                eq_in: "",
+                eq_out: "",
                 node_input: currentForm.querySelector('#serie'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({

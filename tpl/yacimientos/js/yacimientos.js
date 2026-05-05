@@ -535,9 +535,9 @@ var catalog = {
                 id: "titulo",
                 name: "titulo",
                 q_column: "titulo",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
+                eq: "MATCH",
+                eq_in: "",
+                eq_out: "",
                 node_input: currentForm.querySelector("#title"),
                 /*callback: function (form_item) {
                     self.form.activate_autocomplete({

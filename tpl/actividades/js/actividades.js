@@ -398,9 +398,9 @@ var actividades = {
                 id: "type",
                 name: "type",
                 q_column: "type",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
+                eq: "MATCH",
+                eq_in: "",
+                eq_out: "",
                 node_input: currentForm.querySelector("#type"),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
@@ -424,9 +424,9 @@ var actividades = {
                 id: "place",
                 name: "place",
                 q_column: "place",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
+                eq: "MATCH",
+                eq_in: "",
+                eq_out: "",
                 node_input: currentForm.querySelector("#place"),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
