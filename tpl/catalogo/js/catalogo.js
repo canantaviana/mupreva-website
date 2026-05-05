@@ -392,7 +392,8 @@ var catalog = {
         switch (view_mode) {
             case "list":
                 // fix limit again (is removed by map and timeline modes)
-                self.pagination.limit = 15;
+                self.pagination.limit = 18;
+                self.map_results_list_container.innerHTML = "";
                 // launch a new random search
                 return self.form_submit();
                 break;
@@ -685,9 +686,9 @@ var catalog = {
                 id: "titulo",
                 name: "titulo",
                 q_column: "titulo",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
+                eq: "MATCH",
+                eq_in: "",
+                eq_out: "",
                 node_input: currentForm.querySelector("#title"),
                 /*callback: function (form_item) {
                     self.form.activate_autocomplete({
@@ -851,9 +852,9 @@ var catalog = {
                 id: "lugar",
                 name: "lugar",
                 q_column: "lugar",
-                eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
+                eq: "MATCH",
+                eq_in: "",
+                eq_out: "",
                 node_input: currentForm.querySelector("#field"),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
@@ -1244,7 +1245,8 @@ var catalog = {
 
         const filters = [];
         if (parsed_filter) filters.push(`(${parsed_filter})`);
-        if (dates_filter && !parsed_filter.includes("section_id")) filters.push(dates_filter);
+        if (dates_filter && (parsed_filter && !parsed_filter.includes("section_id"))) filters.push(dates_filter);
+
         let sql_filter = filters.join(' AND ');
 
         // prev_filter fix
@@ -1494,6 +1496,17 @@ var catalog = {
                     function reset_map_results() {
                         map_gallery.innerHTML = '';
                         appendTemplate(map_gallery, loadResults())
+                        setTimeout(() => {
+                        const el = self.map_results_list_container;
+                        if (el) {
+                            const top = el.getBoundingClientRect().top + window.scrollY - 150;
+
+                            window.scrollTo({
+                            top: top,
+                            behavior: 'smooth'
+                            });
+                        }
+                        }, 0);
                     }
 
                     self.reset_map_results = reset_map_results;

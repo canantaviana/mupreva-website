@@ -369,18 +369,6 @@ var item = {
                     )
                 }).join(', ')}
             </dd>
-            
-            
-            ${row.lugar.split(',').map((el, i) => {
-                    const ids = row.lugar_data ? JSON.parse(row.lugar_data) : [];
-                    const url = '/imm/' + ids[i].replace('tchi1_', '');
-                    return (
-                        `<a href="${url}" target="_blank">${el}</a>`
-                    )
-                }).join(', ')}
-            
-            
-            </dd>
             `
                     : ""
             }
@@ -1119,7 +1107,6 @@ var item = {
 
         function setCategoryRelations(category) {
             Object.keys(self.relationsData[category]).forEach(tab => {
-
                 const tabData = self.relationsData[category][tab]
 
                 const content = htmlTemplate(`
@@ -1150,6 +1137,7 @@ var item = {
                 `)
                 const container = tabData.container;
                 const buttonContainer = tabData.buttonContainer;
+                if (!container || !buttonContainer) return;
                 container.innerHTML = buttonContainer.innerHTML = '';
 
                 appendTemplate(container, content);
@@ -1254,6 +1242,7 @@ var item = {
         if (typeof row.audiovisuales === "undefined") {
             row.audiovisuales = [];
         }
+
         if (row.documentos.length === 0 && row.audiovisuales.length === 0) {
             return null;
         }
@@ -1285,7 +1274,7 @@ var item = {
                                         data-subtitles-url="${__WEB_MEDIA_ENGINE_URL__ + entry.subtitles}">
                                         <figure>
                                             <img src="${getPosterframe(__WEB_MEDIA_ENGINE_URL__ + entry.video)}" alt="">
-                                            <figcaption>${entry.title}</figcaption>
+                                            <figcaption>${entry.title||''}</figcaption>
                                         </figure>
                                     </button>
                                 </li>
@@ -1313,7 +1302,7 @@ var item = {
                                     <li><a target="_blank" href="${
                                         __WEB_MEDIA_ENGINE_URL__ +
                                         entry.document
-                                    }">${entry.title}</a></li>
+                                    }">${entry.title||tstring.item_document}</a></li>
                                     `;
                                     })
                                     .join("")}
@@ -1343,10 +1332,18 @@ var item = {
                     <table>
                         <tbody>
                         ${
+                            elem.intervention_type
+                                ? `<tr>
+                            <th>${tstring.item_intervention_type}</th>
+                            <td>${elem.intervention_type}</td>
+                        </tr>`
+                                : ""
+                        }
+                        ${
                             elem.titulo
                                 ? `<tr>
                             <th>${tstring.item_restoration_title}</th>
-                            <td>${elem.titulo}</td>
+                            <td><a href="/int/${elem.section_id}" target="_blank">${elem.titulo}</a></td>
                         </tr>`
                                 : ""
                         }
@@ -1377,38 +1374,12 @@ var item = {
                         </tr>`
                                 : ""
                         }
-                        ${
-                            elem.estado_conservacion
-                                ? `<tr>
-                            <th>${tstring.item_restoration}</th>
-                            <td>${elem.estado_conservacion}</td>
-                        </tr>`
-                                : ""
-                        }
                     </tbody>
                     </table>
                     ${
                         elem.imagen_inicial && elem.imagen_inicial.length > 0
                             ? `<ul class="galeria galeria--variable link-dn">
                         ${elem.imagen_inicial
-                            .map(function (entry) {
-                                var image_url = "/assets/img/placeholder.png";
-                                if (entry.image !== null) {
-                                    image_url =
-                                        __WEB_MEDIA_ENGINE_URL__ + entry.image;
-                                }
-                                return `<li>
-                                <img loading="lazy" src="${image_url}" alt="${entry.description}">
-                        </li>`;
-                            })
-                            .join("")}
-                    </ul>`
-                            : ""
-                    }
-                    ${
-                        elem.imagen_final && elem.imagen_final.length > 0
-                            ? `<ul class="galeria galeria--variable link-dn">
-                        ${elem.imagen_final
                             .map(function (entry) {
                                 var image_url = "/assets/img/placeholder.png";
                                 if (entry.image !== null) {
@@ -1454,7 +1425,12 @@ var item = {
             </div>
         `);
         const ul = template[2].querySelector("ul");
+        const titol = template[0];
         api.getElementsFromSet(row.section_id).then(function(results){
+            if (results.length === 0) {
+                titol.remove();
+                return;
+            }
             var content = htmlTemplate(`
                 ${results.map(function(object){
                     return self.template_catalog_elem(object);
@@ -1484,10 +1460,17 @@ var item = {
             </div>
         `);
         const ul = template[2].querySelector("ul");
+        const titol = template[0];
         const parentsArray = JSON.parse(row.parent);
         const parentsIds = (parentsArray != null) ? parentsArray.map(parent => parent.split('_')[1]) : [];
-
+        if(parentsIds.length === 0) {
+            return '';
+        }
         api.getSetsFromElement(parentsIds.join(',')).then(function(results){
+            if (results.length === 0) {
+                titol.remove();
+                return;
+            }
             var content = htmlTemplate(`
                 ${results.map(function(object){
                     return self.template_catalog_elem(object);

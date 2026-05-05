@@ -506,6 +506,10 @@ var item = {
         if (typeof row.audiovisuals_data === "undefined") {
             row.audiovisuals_data = [];
         }
+        //neteja results documents buits
+        row.documents_data = row.documents_data.filter(function (doc) {
+            return doc.document && doc.document.trim() !== "";
+        });
         if (
             row.documents_data.length === 0 &&
             row.audiovisuals_data.length === 0
@@ -568,11 +572,12 @@ var item = {
                                     .map(function (entry) {
                                         const pdfUrl = __WEB_MEDIA_ENGINE_URL__ + entry.document;
                                         const imageUrl = pdfUrl.replace('.pdf', '.jpg').replace('web', 'thumb');
+                                        const  title = entry.title || '';
                                         return `
                                             <li class="document-with-thumbnail">
                                                 <img src="${imageUrl}">
                                                 <div>
-                                                    <p><a target="_blank" href="${pdfUrl}">${entry.title}</a></p>
+                                                    <p><a target="_blank" href="${pdfUrl}">${title}</a></p>
                                                     ${entry.original_lang
                                                         ? `<p>${tstring.original_lang}: ${entry.original_lang}</p>`
                                                         : ''
@@ -709,7 +714,12 @@ var item = {
         if (!row.people) {
             return "";
         }
-        var people = JSON.parse(row.people);
+        var people = JSON.parse(row.people).filter(function (person) {
+            return person && person.trim() !== "";
+        });
+        if (people.length == 0) {
+            return "";
+        } 
         var rols = row.people_role ? JSON.parse(row.people_role) : [];
         return htmlTemplate(`
             <h2 class="accordion-header">

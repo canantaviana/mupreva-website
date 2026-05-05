@@ -198,6 +198,7 @@ var item = {
             13: "dodia_dodia",
             10: "coediciones",
         };
+
         return htmlTemplate(`
 <div class="fitxa-intro columns is-variable is-8">
     <div class="column flow--l">
@@ -254,7 +255,7 @@ var item = {
                 row.num_paginas
                     ? `
             <dt>${tstring.item_pages}</dt>
-            <dd>${row.num_paginas} ${tstring.item_pag}</dd>
+            <dd>${tstring.item_pag} ${row.num_paginas}</dd>
             `
                     : ""
             }
@@ -354,7 +355,7 @@ ${
                                 </button>
                             </div>
                             <div class="column is-narrow">
-                                <a href="${url}">
+                                <a target="_blank" href="${url}">
                                     <img src="/assets/img/ico-lupa-2.svg" width="30" height="30">
                                 </a>
                             </div>

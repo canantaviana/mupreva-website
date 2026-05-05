@@ -1277,13 +1277,17 @@ function formatDateRange(dateRange, iso3) {
     }
 }
 
+
 const formatDate = (dateString) => {
     try {
         const date = new Date(dateString); // Converteix la cadena de text a un objecte Date
+        if (isNaN(date.getTime())) {
+            const [year, month, day] = dateString.split("-");
+            return year;
+        };
         const day = date.getDate(); // Obté el dia del mes
         const month = date.getMonth() + 1; // Obté el mes (0-11, per això s'afegeix 1)
         const year = date.getFullYear(); // Obté l'any
-
         return `${day}/${month}/${year}`; // Crea el format desitjat
     } catch (e) {
         return null;
@@ -1313,3 +1317,4 @@ function respondToVisibility(element, callback) {
 
     observer.observe(element);
 }
+
