@@ -197,7 +197,7 @@ var item = {
                 bibliography_data: "bibliographic_references",
                 documents_data: "documents",
                 children_data: "activities",
-                "children_data.identifying_image": "image",
+                "children_data.identifying_image_data": "image",
                 //people_data: "people",
 
                 //people_data: '',
@@ -772,16 +772,23 @@ var item = {
     },
 
     template_catalog_elem: function (row) {
+        let tpl = '';
+        switch(row.table) {
+            case 'activities': tpl = 'act'; break;
+            case 'exhibitions': tpl = 'exp'; break;
+            default: tpl = row.tpl;
+        }
+
         const url =
             page_globals.__WEB_ROOT_WEB__ +
             "/" +
-            row.tpl +
+            tpl +
             "/" +
             row.section_id;
         var image_url = "/assets/img/placeholder.png";
-        if (row.identifying_image.length > 0) {
+        if (row.identifying_image_data.length > 0) {
             image_url =
-                __WEB_MEDIA_ENGINE_URL__ + row.identifying_image[0].image;
+                __WEB_MEDIA_ENGINE_URL__ + row.identifying_image_data[0].image;
         }
         var date = null;
         if (row.time_frame) {
@@ -809,7 +816,7 @@ var item = {
                         : ""
                 }
                 ${
-                    row.time_start
+                    row.time_start && row.time_start != '00:00:00'
                         ? `<p class="has-text-primary has-text-weight-semibold is-size-6">
                     ${row.time_start}
                 </p>`

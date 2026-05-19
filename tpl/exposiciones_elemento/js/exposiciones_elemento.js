@@ -197,7 +197,7 @@ var item = {
                 bibliography_data: "bibliographic_references",
                 documents_data: "documents",
                 children_data: "activities",
-                "children_data.identifying_image": "image",
+                "children_data.identifying_image_data": "image",
                 //people_data: "people",
 
                 //people_data: '',
