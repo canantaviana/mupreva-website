@@ -543,7 +543,7 @@ var item = {
                                             <img src="${getPosterframe(
                                                 __WEB_MEDIA_ENGINE_URL__ +
                                                     entry.video
-                                            )}" alt="">
+                                            )}" alt="" onerror="this.remove()">
                                             <figcaption>${
                                                 entry.title
                                             }</figcaption>
@@ -625,12 +625,14 @@ var item = {
 
     templateGaleryElem: function (row) {
         var image_url = "/assets/img/placeholder.png";
+        console.log({row})
         if (row.image) {
             image_url = __WEB_MEDIA_ENGINE_URL__ + row.image;
         }
+        const dialogId = `dialog-${row.section_id}`;
         return `
         <li>
-            <a href="${image_url}" target="_blank">
+            <div class="button-like" data-a11y-dialog-show="${dialogId}">
                 <figure>
                     <img loading="lazy" src="${image_url}" alt="">
                     ${
@@ -641,7 +643,27 @@ var item = {
                             : ""
                     }
                 </figure>
-            </a>
+            </div>
+            <div class="dialog-container"
+                data-a11y-dialog="${dialogId}"
+                aria-hidden="true">
+
+                <div class="dialog-overlay" data-a11y-dialog-hide></div>
+
+                <div class="dialog-content" role="document">
+                    <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                        ✕
+                    </button>
+
+                    <img loading="lazy"
+                        src="${image_url.replace('1.5MB','original')}"
+                        alt=""
+                        class="is-block">
+
+                    ${row.footprint ? `<p class="has-text-centered mt-2">${row.footprint}</p>` : ''}
+                    ${row.photographer ? `<p class="has-text-centered is-size-7 mt-2">${row.photographer}</p>` : ''}
+                </div>
+            </div>
         </li>
         `;
     }, //end list_row_builder
@@ -696,7 +718,7 @@ var item = {
         });
         if (people.length == 0) {
             return "";
-        } 
+        }
         var rols = row.people_role ? JSON.parse(row.people_role) : [];
         return htmlTemplate(`
             <h2 class="accordion-header">

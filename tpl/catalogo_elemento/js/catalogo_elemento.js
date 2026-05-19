@@ -1273,7 +1273,7 @@ var item = {
                                         data-video-url="${__WEB_MEDIA_ENGINE_URL__ + entry.video}"
                                         data-subtitles-url="${__WEB_MEDIA_ENGINE_URL__ + entry.subtitles}">
                                         <figure>
-                                            <img src="${getPosterframe(__WEB_MEDIA_ENGINE_URL__ + entry.video)}" alt="">
+                                            <img src="${getPosterframe(__WEB_MEDIA_ENGINE_URL__ + entry.video)}" alt="" onerror="this.remove()">
                                             <figcaption>${entry.title||''}</figcaption>
                                         </figure>
                                     </button>
