@@ -622,6 +622,17 @@ var api = {
         return page.get_records(options);
     },
 
+    getImmovableParents: function(ids) {
+        const section_id = ids.join(',');
+        var options = {
+            table: 'immovables',
+            ar_fields: 'section_id, titulo',
+            section_id: section_id,
+        }
+
+        return page.get_records(options);
+    },
+
     getImagesFromArray: function(ids) {
         const section_id = ids.join(',');
         var options = {

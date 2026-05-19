@@ -496,56 +496,56 @@ var item = {
     template: function (row) {
         const url = this.absUrl(row);
         return htmlTemplate(`
-<div class="fitxa-intro columns is-variable is-8">
-    <div class="column flow--l">
-        ${
-            row.titulo
-                ? `
-        <h1>${row.titulo}</h1>
-        `
-                : ""
-        }
-        <dl>
-            ${this.templateFields(row)}
-        </dl>
-        ${
-            row.descripcion_relevante
-                ? `
-        <div class="flow">
-            ${row.descripcion_relevante}
-        </div>
-        `
-                : ""
-        }
+            <div class="fitxa-intro columns is-variable is-8">
+                <div class="column flow--l">
+                    ${
+                        row.titulo
+                            ? `
+                    <h1>${row.titulo}<span id="parents-breadcrumb" class="is-size-4 has-text-weight-light link-dn"></span></h1>
+                    `
+                            : ""
+                    }
+                    <dl>
+                        ${this.templateFields(row)}
+                    </dl>
+                    ${
+                        row.descripcion_relevante
+                            ? `
+                    <div class="flow">
+                        ${row.descripcion_relevante}
+                    </div>
+                    `
+                            : ""
+                    }
 
-        ${
-            row.analisis
-                ? `
-        <dl>
-            <dt>${tstring.item_analisis}</dt>
-            <dd>${row.analisis}</dd>
-        </dl>
-        `
-                : ""
-        }
+                    ${
+                        row.analisis
+                            ? `
+                    <dl>
+                        <dt>${tstring.item_analisis}</dt>
+                        <dd>${row.analisis}</dd>
+                    </dl>
+                    `
+                            : ""
+                    }
 
 
-        ${
-            row.informacion_publica
-                ? `
-        <div class="flow">
-            ${row.informacion_publica}
-        </div>
-        `
-                : ""
-        }
-        <p> ${tstring.item_url_perm} <br>
-            <a href="${url}">${url}</a>
-        </p>
-    </div>
-    <div class="column is-1 is-hidden-touch is-hidden-desktop-only"></div>
-    ${this.renderImages(row)}
-</div>
+                    ${
+                        row.informacion_publica
+                            ? `
+                    <div class="flow">
+                        ${row.informacion_publica}
+                    </div>
+                    `
+                            : ""
+                    }
+                    <p> ${tstring.item_url_perm} <br>
+                        <a href="${url}">${url}</a>
+                    </p>
+                </div>
+                <div class="column is-1 is-hidden-touch is-hidden-desktop-only"></div>
+                ${this.renderImages(row)}
+            </div>
         `);
     },
 
@@ -1868,6 +1868,24 @@ var item = {
 
         appendTemplate(target, this.templateShare(row));
         appendTemplate(target, this.template(row));
+
+        const parents = JSON.parse(row.parent || "[]").map(el => el.split('_')[1]);
+        if(parents.length > 0) {
+            api.getImmovableParents(parents).then(function(data) {
+                const parentOrder = Object.fromEntries(parents.map((id, i) => [id, i]));
+                const orderedData = data.slice().sort((a, b) =>
+                    parentOrder[String(a.section_id)] - parentOrder[String(b.section_id)]
+                );
+                const parentsTitles = orderedData.map(el => {
+                    const url = page_globals.__WEB_ROOT_WEB__ + '/imm/' + el.section_id;
+                    return (`<a href="${url}" target="_blank">${el.titulo}</a>`);
+                }).join(' / ');
+                const parentsBreadcrumb = document.getElementById('parents-breadcrumb');
+                if (parentsBreadcrumb && orderedData.length > 0) {
+                    parentsBreadcrumb.innerHTML = ` / ${parentsTitles}`;
+                }
+            })
+        }
 
         const acordion = common.create_dom_element({
             element_type: "div",
