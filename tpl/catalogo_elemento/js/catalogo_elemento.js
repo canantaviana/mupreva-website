@@ -579,7 +579,81 @@ var item = {
     renderImages: function (row) {
         const images = row.imagenes_identificativas.concat(row.imagenes);
         //if (this.isMoneda(row) && images.length > 1) {
-        if (row.imagenes_identificativas.length > 1) {
+        if (row.imagenes_identificativas.length > 1 && (row.imagenes || row.imagenes.length > 0)) {
+            const image1 = images[0];
+            const image1FileName = image1.image.split("/").pop();
+            const image2 = images[1];
+            const image2FileName = image2.image.split("/").pop();
+            return `
+            <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
+                <!-- Slider -->
+                <div class="fullscreen__content fullscreen__content--1 swiper swiper--fitxa">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide swiper-slide--double">
+                            <img loading="lazy" class="image-zoom" src="${
+                                __WEB_MEDIA_ENGINE_URL__ + image1.image
+                            }" data-original="${
+                                __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image1.image)
+                            }" alt="${image1.title}" data-caption="${image1.photographer ? image1.photographer : image1FileName}">
+                            <img loading="lazy" class="image-zoom" src="${
+                                __WEB_MEDIA_ENGINE_URL__ + image2.image
+                            }" data-original="${
+                                __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image2.image)
+                            }" alt="${image2.title}" data-caption="${image2.photographer ? image2.photographer : image2FileName}">
+                        </div>
+                        ${images.slice(2)
+                            .map(function (image) {
+                                const imageFileName = image.image.split("/").pop();
+                                return `
+                                <div class="swiper-slide">
+                                    <img src="${
+                                        __WEB_MEDIA_ENGINE_URL__ + image.image
+                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}" data-caption="${image.photographer ? image.photographer : imageFileName}">
+                                </div>
+                            `;
+                            })
+                            .join("")}
+                    </div>
+                </div>
+                <!-- Eines -->
+                <div class="is-flex is-justify-content-center gap-7 is-relative py-4">
+                    <!-- fletxes -->
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                    <!-- /fletxes -->
+                    <div class="btns is-flex gap-5">
+                        ${this.renderImageButtons()}
+                    </div>
+                </div>
+                <!-- /Eines -->
+                <div class="swiper swiper--thumbs">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide swiper-slide--double">
+                            <img src="${
+                                __WEB_MEDIA_ENGINE_URL__ + image1.image
+                            }" alt="${image1.title ? image1.title : ""}">
+                            <img src="${
+                                __WEB_MEDIA_ENGINE_URL__ + image2.image
+                            }" alt="${image2.title ? image2.title : ""}">
+                        </div>
+                        ${images.slice(2)
+                            .map(function (image) {
+                                return `
+                                <div class="swiper-slide">
+                                    <img src="${
+                                        __WEB_MEDIA_ENGINE_URL__ + image.image
+                                    }" alt="${image.title ? image.title : ""}">
+                                </div>
+                            `;
+                            })
+                            .join("")}
+                    </div>
+                </div>
+                <!-- /Slider -->
+                ${this.renderExport()}
+            </div>
+            `;
+        } else if (row.imagenes_identificativas.length > 1 && (!row.imagenes || row.imagenes.length === 0)) {
             //imatges moneda, dos columens
             const image1 = images[0];
             const image1FileName = image1.image.split("/").pop();
