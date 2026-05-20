@@ -205,8 +205,8 @@ var item = {
                 "intervenciones.imagen_inicial": "image",
                 "intervenciones.imagen_final": "image",
                 audiovisuales: "audiovisual",
-                children: "objects",
-                "children.imagenes_identificativas": "image",
+                // children: "objects",
+                // "children.imagenes_identificativas_data": "image",
             };
             //}
             data_manager
@@ -1841,6 +1841,95 @@ var item = {
         `;
     }, //end list_row_builder
 
+    template_thesaurus: function (target, row) {
+        const self = this;
+        if (!row.children) return null;
+
+        const template = htmlTemplate(`
+            <h2 class="accordion-header">
+                <button type="button">${tstring.item_thesaurus_immovable}</button>
+            </h2>
+            <div class="accordion-content">
+                <div class="accordion accordion--secondary">
+                    <div class="tree_wrapper"></div>
+                </div>
+            </div>
+        `);
+
+        const treeWrapper = template[2].querySelector(".tree_wrapper");
+
+        const childrenIds = JSON.parse(row.children || "[]").map(el => el.split('_')[1]);
+
+        if(childrenIds.length > 0) {
+            api.getImmovableRelated(childrenIds).then(function(data) {
+                const parsedData = data.map(el => ({section_id: el.section_id, titulo: el.titulo, parent: Number(JSON.parse(el.parent || "[]")[0].split('_')[1]) || null}));
+
+                const nodeMap = {};
+                const rootNode = {section_id: row.section_id, titulo: row.titulo, children: []};
+                nodeMap[rootNode.section_id] = rootNode;
+
+                parsedData.forEach(el => {
+                    nodeMap[el.section_id] = {section_id: el.section_id, titulo: el.titulo, children: []};
+                });
+                parsedData.forEach(el => {
+                    const parentNode = nodeMap[el.parent];
+                    if (parentNode) {
+                        parentNode.children.push(nodeMap[el.section_id]);
+                    }
+                });
+
+                const thesaurusData = [rootNode];
+
+                function renderTree(node) {
+                    const url = page_globals.__WEB_ROOT_WEB__ + "/imm/" + node.section_id;
+
+                    const tree_node = document.createElement('div');
+                    tree_node.className = 'tree_node';
+
+                    const grouped_children = document.createElement('div');
+                    grouped_children.className = 'grouped_children';
+
+                    const term_span = document.createElement('span');
+                    term_span.className = 'term';
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.target = '_blank';
+                    link.textContent = node.titulo;
+                    term_span.appendChild(link);
+                    grouped_children.appendChild(term_span);
+                    tree_node.appendChild(grouped_children);
+
+                    if (node.children.length > 0) {
+                        const arrow = document.createElement('button');
+                        arrow.className = 'arrow open';
+                        grouped_children.appendChild(arrow);
+
+                        const branch = document.createElement('div');
+                        branch.className = 'branch';
+                        node.children.forEach(child => branch.appendChild(renderTree(child)));
+                        tree_node.appendChild(branch);
+
+                        arrow.addEventListener('click', function () {
+                            if (this.classList.contains('open')) {
+                                branch.classList.add('hide');
+                                this.classList.remove('open');
+                            } else {
+                                branch.classList.remove('hide');
+                                this.classList.add('open');
+                            }
+                        });
+                    }
+
+                    return tree_node;
+                }
+
+                thesaurusData.forEach(node => treeWrapper.appendChild(renderTree(node)));
+            })
+
+        appendTemplate(target, template);
+        }
+    },
+
     /**
      * RENDER
      * @return promise
@@ -1869,10 +1958,10 @@ var item = {
         appendTemplate(target, this.templateShare(row));
         appendTemplate(target, this.template(row));
 
-        const parents = JSON.parse(row.parent || "[]").map(el => el.split('_')[1]);
-        if(parents.length > 0) {
-            api.getImmovableParents(parents).then(function(data) {
-                const parentOrder = Object.fromEntries(parents.map((id, i) => [id, i]));
+        const parentIds = JSON.parse(row.parent || "[]").map(el => el.split('_')[1]);
+        if(parentIds.length > 0) {
+            api.getImmovableRelated(parentIds).then(function(data) {
+                const parentOrder = Object.fromEntries(parentIds.map((id, i) => [id, i]));
                 const orderedData = data.slice().sort((a, b) =>
                     parentOrder[String(a.section_id)] - parentOrder[String(b.section_id)]
                 );
@@ -1926,6 +2015,9 @@ var item = {
 
         //excavacions
         this.templateExcavations(acordion, row);
+
+        //thesaurus
+        this.template_thesaurus(acordion, row);
 
         /*return new Promise(function (resolve) {
 
