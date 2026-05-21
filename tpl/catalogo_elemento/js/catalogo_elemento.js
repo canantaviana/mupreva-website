@@ -205,8 +205,8 @@ var item = {
                 "intervenciones.imagen_inicial": "image",
                 "intervenciones.imagen_final": "image",
                 audiovisuales: "audiovisual",
-                // children: "objects",
-                // "children.imagenes_identificativas_data": "image",
+                children: "objects",
+                "children.imagenes_identificativas_data": "image",
             };
             //}
             data_manager
@@ -1558,7 +1558,7 @@ var item = {
     hasRelated: function (row) {
         return (
             typeof row.tipo_registro !== "undefined" &&
-            row.tipo_registro !== "Conjunto" &&
+            row.tipo_registro !== "Conjunto" && row.children &&
             row.children.length > 0
         );
     },
@@ -1843,7 +1843,9 @@ var item = {
 
     template_thesaurus: function (target, row) {
         const self = this;
-        if (!row.children) return null;
+        if (!row.children || row.children.length === 0 || row.children === "[]") {
+            return null;
+        }
 
         const template = htmlTemplate(`
             <h2 class="accordion-header">
@@ -1901,11 +1903,11 @@ var item = {
 
                     if (node.children.length > 0) {
                         const arrow = document.createElement('button');
-                        arrow.className = 'arrow open';
+                        arrow.className = 'arrow';
                         grouped_children.appendChild(arrow);
 
                         const branch = document.createElement('div');
-                        branch.className = 'branch';
+                        branch.className = 'branch hide';
                         node.children.forEach(child => branch.appendChild(renderTree(child)));
                         tree_node.appendChild(branch);
 
@@ -1958,22 +1960,24 @@ var item = {
         appendTemplate(target, this.templateShare(row));
         appendTemplate(target, this.template(row));
 
-        const parentIds = JSON.parse(row.parent || "[]").map(el => el.split('_')[1]);
-        if(parentIds.length > 0) {
-            api.getImmovableRelated(parentIds).then(function(data) {
-                const parentOrder = Object.fromEntries(parentIds.map((id, i) => [id, i]));
-                const orderedData = data.slice().sort((a, b) =>
-                    parentOrder[String(a.section_id)] - parentOrder[String(b.section_id)]
-                );
-                const parentsTitles = orderedData.map(el => {
-                    const url = page_globals.__WEB_ROOT_WEB__ + '/imm/' + el.section_id;
-                    return (`<a href="${url}" target="_blank">${el.titulo}</a>`);
-                }).join(' / ');
-                const parentsBreadcrumb = document.getElementById('parents-breadcrumb');
-                if (parentsBreadcrumb && orderedData.length > 0) {
-                    parentsBreadcrumb.innerHTML = ` / ${parentsTitles}`;
-                }
-            })
+        if (row.table === 'immovables') {
+            const parentIds = JSON.parse(row.parent || "[]").map(el => el.split('_')[1]);
+            if(parentIds.length > 0) {
+                api.getImmovableRelated(parentIds).then(function(data) {
+                    const parentOrder = Object.fromEntries(parentIds.map((id, i) => [id, i]));
+                    const orderedData = data.slice().sort((a, b) =>
+                        parentOrder[String(a.section_id)] - parentOrder[String(b.section_id)]
+                    );
+                    const parentsTitles = orderedData.map(el => {
+                        const url = page_globals.__WEB_ROOT_WEB__ + '/imm/' + el.section_id;
+                        return (`<a href="${url}" target="_blank">${el.titulo}</a>`);
+                    }).join(' / ');
+                    const parentsBreadcrumb = document.getElementById('parents-breadcrumb');
+                    if (parentsBreadcrumb && orderedData.length > 0) {
+                        parentsBreadcrumb.innerHTML = ` / ${parentsTitles}`;
+                    }
+                })
+            }
         }
 
         const acordion = common.create_dom_element({
@@ -2016,8 +2020,10 @@ var item = {
         //excavacions
         this.templateExcavations(acordion, row);
 
-        //thesaurus
-        this.template_thesaurus(acordion, row);
+        if (row.table === 'immovables') {
+            //thesaurus
+            this.template_thesaurus(acordion, row);
+        }
 
         /*return new Promise(function (resolve) {
 
