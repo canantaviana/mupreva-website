@@ -367,6 +367,9 @@ page.parse_list_data = function (rows) {
         if (row.table == 'exhibitions') {
             row.tpl = 'exp';
         }
+        if (row.table == 'intervention') {
+            row.tpl = 'int';
+        }
 
         /*
         // unify media elements (to easy manage on filmstrip)

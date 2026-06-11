@@ -1395,82 +1395,38 @@ var item = {
         if (!row.intervenciones || row.intervenciones.length < 1) {
             return "";
         }
+
         return htmlTemplate(`
             <h2 class="accordion-header">
                 <button type="button">${tstring.item_restoration}</button>
             </h2>
             <div class="accordion-content block-dedalo">
-            ${row.intervenciones
-                .map(function (elem) {
-                    return `<div class="table-collapsibles">
-                    <table>
-                        <tbody>
-                        ${
-                            elem.intervention_type
-                                ? `<tr>
-                            <th>${tstring.item_intervention_type}</th>
-                            <td>${elem.intervention_type}</td>
-                        </tr>`
-                                : ""
+                <ul class="interventions-list">
+                    ${row.intervenciones.map((elem) => {
+                        const { intervention_type, titulo, fecha_inicio, fecha_fin, imagen_inicial, section_id } = elem;
+                        const fechaInicioString = fecha_inicio ? `<time datetime="${fecha_inicio}">${formatDate(fecha_inicio)}</time>` : "";
+                        const fechaFinString = fecha_fin ? `<time datetime="${fecha_fin}">${formatDate(fecha_fin)}</time>` : "";
+                        const fechaString = [fechaInicioString, fechaFinString].filter(Boolean).join(" - ");
+                        const interventionString = [intervention_type, titulo, fechaString].filter(Boolean).join(" | ");
+
+                        if (!interventionString) {
+                            return "";
                         }
-                        ${
-                            elem.titulo
-                                ? `<tr>
-                            <th>${tstring.item_restoration_title}</th>
-                            <td><a href="/int/${elem.section_id}" target="_blank">${elem.titulo}</a></td>
-                        </tr>`
-                                : ""
-                        }
-                        ${
-                            elem.fecha_inicio && elem.fecha_fin
-                                ? `<tr>
-                            <th>${tstring.item_restoration_date}</th>
-                            <td>
-                                ${
-                                    elem.fecha_inicio
-                                        ? `<time datetime="${
-                                              elem.fecha_inicio
-                                          }">${formatDate(
-                                              elem.fecha_inicio
-                                          )}</time>`
-                                        : ""
-                                }
-                                ${
-                                    elem.fecha_fin
-                                        ? ` - <time datetime="${
-                                              elem.fecha_fin
-                                          }">${formatDate(
-                                              elem.fecha_fin
-                                          )}</time>`
-                                        : ""
-                                }
-                            </td>
-                        </tr>`
-                                : ""
-                        }
-                    </tbody>
-                    </table>
-                    ${
-                        elem.imagen_inicial && elem.imagen_inicial.length > 0
-                            ? `<ul class="galeria galeria--variable link-dn">
-                        ${elem.imagen_inicial
-                            .map(function (entry) {
-                                var image_url = "/assets/img/placeholder.png";
-                                if (entry.image !== null) {
-                                    image_url =
-                                        __WEB_MEDIA_ENGINE_URL__ + entry.image;
-                                }
-                                return `<li>
-                                <img loading="lazy" src="${image_url}" alt="${entry.description}">
-                        </li>`;
-                            })
-                            .join("")}
-                    </ul>`
-                            : ""
-                    }
-                </div>`;
-                })
-                .join("")}
+
+                        const imageEntry = imagen_inicial && imagen_inicial.length > 0 ? imagen_inicial[0] : null;
+                        const image = imageEntry?.image ? `${__WEB_MEDIA_ENGINE_URL__}${imageEntry.image}` : "";
+                        const description = imageEntry?.description || "";
+
+                        return `
+                            <li class="full-link">
+                                <a href="/int/${section_id}" target="_blank">
+                                    ${interventionString}
+                                </a>
+                                ${image ? `<img loading="lazy" src="${image}" alt="${description}" />` : ""}
+                            </li>
+                        `;
+                    }).join("")}
+                </ul>
             </div>
         `);
     },
