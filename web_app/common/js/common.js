@@ -1158,7 +1158,16 @@ var common = {
             '<span style="$2"><a href="$1">$3</a></span>'
         );
         return output;
-    }
+    },
+
+    parseJsonArray: function(raw) {
+        try {
+            const parsed = JSON.parse(raw ?? '[]');
+            return Array.isArray(parsed) ? parsed : [];
+        } catch {
+            return [];
+        }
+    },
 }//end common
 
 
