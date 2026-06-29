@@ -576,10 +576,12 @@ var api = {
     },
 
     getGlobalSearchTypes: function(query) {
+        const queryAnd = query.split(' ').map(word => '+' + word).join(' ');
+
         var options = {
             table: 'global_search',
             ar_fields: 'ref_section_tipo',
-            sql_filter: `MATCH (search_data) AGAINST ('${query}' IN BOOLEAN MODE)`,
+            sql_filter: `MATCH (search_data) AGAINST ('${queryAnd}' IN BOOLEAN MODE)`,
             group: 'ref_section_tipo'
         }
 
