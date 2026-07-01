@@ -161,7 +161,19 @@ var item = {
 
         switch (self.table) {
             case "ts_ubication":
-                default_fields = ["term", "definition", "relations", /*"dd_relations",*/ "children", "tld", "section_id", "imagenes"];
+                default_fields = [
+                    "term",
+                    "definition",
+                    "relations",
+                    /*"dd_relations",*/
+                    "children",
+                    "tld",
+                    "section_id",
+                    "imagenes",
+                    "parents",
+                    "parents_term",
+                    "public_info",
+                ];
                 break;
             default:
                 default_fields = ["term", "definition", "relations", /*"dd_relations",*/ "children", "tld", "section_id"];
@@ -286,6 +298,14 @@ var item = {
     template: function (row) {
         const url = this.absUrl(row);
         const self = this;
+        let parents_parsed = common.extractIdsFromTermsArray(row.parents);
+        let parents_term_parsed = common.parseJsonArray(row.parents_term);
+        if (parents_parsed && parents_term_parsed && parents_parsed.includes(18)) {
+            const cut = parents_parsed.indexOf(18);
+            parents_parsed.splice(cut);
+            parents_term_parsed.splice(cut);
+        }
+
         return htmlTemplate(`
             <div class="fitxa-intro columns is-variable is-8">
                 <div class="column flow--l">
@@ -293,8 +313,22 @@ var item = {
                         ? `<h1>${row.term}</h1>`
                         : ""
                     }
-                    ${row.definition
-                        ? `<div class="flow">${row.definition}</div>`
+                    ${parents_term_parsed && parents_term_parsed.length > 0
+                        ? `
+                        <dl>
+                            <dt>${tstring.item_ubication}</dt>
+                                <dd>
+                                    ${parents_term_parsed.map((term, i) => {
+                                        const id = parents_parsed[i];
+                                        return `<a href="/top/${id}">${term}</a>`
+                                    }).join(', ')}
+                                </dd>
+                            </dl>
+                        `
+                        : ""
+                    }
+                    ${row.public_info
+                        ? `<div class="flow">${row.public_info}</div>`
                         : ""
                     }
                     <p>
