@@ -538,6 +538,16 @@ var api = {
         return page.get_records(options);
     },
 
+    getPatrimonioRelacionado: function(ids) {
+        var options = {
+            table: 'objects',
+            section_id: ids.join(','),
+            ar_fields: 'section_tipo, section_id, imagenes_identificativas, titulo',
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}'
+        }
+        return page.get_records(options);
+    },
+
     getVisitasYacimiento: function() {
         var options = {
             table: 'ts_route',

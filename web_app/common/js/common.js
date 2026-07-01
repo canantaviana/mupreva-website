@@ -1168,6 +1168,17 @@ var common = {
             return [];
         }
     },
+
+    extractIdsFromTermsArray(raw) {
+        if (!raw) return [];
+        try {
+            const parsed = JSON.parse(raw);
+            if (!Array.isArray(parsed)) return [];
+            return parsed.map((ref) => parseInt(ref.split('_')[1], 10)).filter((id) => !isNaN(id));
+        } catch {
+            return [];
+        }
+    },
 }//end common
 
 

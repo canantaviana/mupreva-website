@@ -1634,6 +1634,47 @@ var item = {
         appendTemplate(target, template);
     },
 
+    templatePatrimonio: function (target, row) {
+        const self = this;
+
+        if(!row.patrimonio_relacionado) return;
+
+        const template = htmlTemplate(`
+        <h2 class="accordion-header">
+            <button type="button">${tstring.item_related_heritage}</button>
+        </h2>
+        <div class="accordion-content block-dedalo">
+            <div class="text-base flow">
+                <ul class="galeria galeria--242x242 link-dn">
+                </ul>
+            </div>
+        </div>
+        `);
+        const ul = template[2].querySelector("ul");
+
+        const ids = common.extractIdsFromTermsArray(row.patrimonio_relacionado);
+
+        api.getPatrimonioRelacionado(ids).then(function(results){
+            results.forEach(function (entry) {
+                const {titulo, section_id, imagenes_identificativas} = entry;
+                const imageUrl = imagenes_identificativas && imagenes_identificativas.length > 0 ? __WEB_MEDIA_ENGINE_URL__ + imagenes_identificativas[0].image : '/assets/img/placeholder.png';
+                const content = htmlTemplate(`
+                    <li class="img">
+                        <a href="/cat/${section_id}" target="_blank">
+                            <figure>
+                                <img loading="lazy" src="${imageUrl}" alt="">
+                                <figcaption>${titulo}</figcaption>
+                            </figure>
+                        </a>
+                    </li>
+                `)
+                appendTemplate(ul, content);
+            });
+        });
+        appendTemplate(target, template);
+
+    },
+
     templateExcavations: function (target, row) {
         const self = this;
 
@@ -1947,6 +1988,9 @@ var item = {
             appendTemplate(acordion, this.templateTecnic(row));
             this.getRelations(row);
         }
+
+        //bibliografia
+        this.templatePatrimonio(acordion, row);
 
         //patrimoni relacionat
         appendTemplate(acordion, this.templateRelated(row));
