@@ -164,7 +164,7 @@ var item = {
                 default_fields = [
                     "term",
                     "definition",
-                    "relations",
+                    //"relations",
                     /*"dd_relations",*/
                     "children",
                     "tld",
@@ -176,7 +176,7 @@ var item = {
                 ];
                 break;
             default:
-                default_fields = ["term", "definition", "relations", /*"dd_relations",*/ "children", "tld", "section_id"];
+                default_fields = ["term", /*"definition",*/ "relations", /*"dd_relations",*/ "children", "tld", "section_id", "public_info"];
                 break;
         }
 
