@@ -616,7 +616,7 @@ var item = {
                     </div>
                 </div>
                 <!-- Eines -->
-                <div class="is-flex is-justify-content-center gap-7 is-relative py-4">
+                <div class="is-flex is-justify-content-center gap-7 is-relative py-4" style="height: 60px;">
                     <!-- fletxes -->
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-button-next"></div>
@@ -759,7 +759,7 @@ var item = {
                     </div>
                 </div>
                 <!-- Eines -->
-                <div class="is-flex is-justify-content-center gap-7 is-relative py-4">
+                <div class="is-flex is-justify-content-center gap-7 is-relative py-4" style="height: 60px;">
                     <!-- fletxes -->
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-button-next"></div>
