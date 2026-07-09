@@ -365,6 +365,17 @@ html {
 
 .relations_container {
     flex-basis: 100%;
+    display: block;
+    .public_info {
+        display: block;
+        font-size: var(--step-0);
+        margin-bottom: var(--space-s);
+
+        // hide double <br> in text
+        br + br {
+            display: none;
+        }
+    }
     .relation_item {
         cursor: pointer;
         &:hover,
