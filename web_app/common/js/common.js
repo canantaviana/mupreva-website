@@ -1169,12 +1169,13 @@ var common = {
         }
     },
 
-    extractIdsFromTermsArray(raw) {
+    extractIdsFromTermsArray: function(raw, filter = null) {
         if (!raw) return [];
         try {
             const parsed = JSON.parse(raw);
-            if (!Array.isArray(parsed)) return [];
-            return parsed.map((ref) => parseInt(ref.split('_')[1], 10)).filter((id) => !isNaN(id));
+            const filtered = filter ? parsed.filter((ref) => ref.split('_')[0] === filter) : parsed;
+            if (!Array.isArray(filtered)) return [];
+            return filtered.map((ref) => parseInt(ref.split('_')[1], 10)).filter((id) => !isNaN(id));
         } catch {
             return [];
         }

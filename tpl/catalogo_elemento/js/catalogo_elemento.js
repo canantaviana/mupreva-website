@@ -1637,7 +1637,9 @@ var item = {
     templatePatrimonio: function (target, row) {
         const self = this;
 
-        if(!row.patrimonio_relacionado) return;
+        const ids = common.extractIdsFromTermsArray(row.patrimonio_relacionado, "tch1");
+
+        if(!ids || ids.length === 0) return;
 
         const template = htmlTemplate(`
         <h2 class="accordion-header">
@@ -1652,7 +1654,7 @@ var item = {
         `);
         const ul = template[2].querySelector("ul");
 
-        const ids = common.extractIdsFromTermsArray(row.patrimonio_relacionado);
+
 
         api.getPatrimonioRelacionado(ids).then(function(results){
             results.forEach(function (entry) {
@@ -1678,14 +1680,16 @@ var item = {
     templateExcavations: function (target, row) {
         const self = this;
 
-        if (!row.relations) {
-            return null;
-        }
         const relations = JSON.parse(row.relations).filter(function(value){
             return value.section_tipo == 'excavation1';
         }).map(function(value){
             return value.section_id;
         });
+
+        if (!relations || relations.length === 0) {
+            return null;
+        }
+
         const template = htmlTemplate(`
             <h2 class="accordion-header">
                 <button type="button">${tstring.item_excavations}</button>
