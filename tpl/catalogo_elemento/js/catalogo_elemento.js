@@ -1680,7 +1680,16 @@ var item = {
     templateExcavations: function (target, row) {
         const self = this;
 
-        const relations = JSON.parse(row.relations).filter(function(value){
+        let parsedRelations = [];
+        if (row.relations) {
+            try {
+                parsedRelations = JSON.parse(row.relations);
+            } catch (e) {
+                parsedRelations = [];
+            }
+        }
+
+        const relations = (Array.isArray(parsedRelations) ? parsedRelations : []).filter(function(value){
             return value.section_tipo == 'excavation1';
         }).map(function(value){
             return value.section_id;
