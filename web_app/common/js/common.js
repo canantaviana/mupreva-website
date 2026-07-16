@@ -927,24 +927,25 @@ var common = {
         const urlsToTry = [
             { url: download_url.replace('1.5MB', 'modified'), label: 'modified' },
             { url: download_url.replace('1.5MB', 'original'), label: 'original' },
-            { url: download_url,                              label: '1.5MB'    },
         ].filter(function(entry) { return Boolean(entry.url); });
+
+        const fallback = { url: download_url, label: '1.5MB' };
 
         return new Promise(function (resolve) {
             let idx = 0;
 
             function attempt() {
                 if (idx >= urlsToTry.length) {
-                    resolve(null);
+                    resolve(fallback);
                     return;
                 }
-                const { url, label } = urlsToTry[idx++];
+                const candidate = urlsToTry[idx++];
 
-                fetch(url, { method: 'HEAD' })
+                fetch(candidate.url, { method: 'HEAD' })
                     .then(function (response) {
                         const contentType = response.headers.get('content-type') ?? '';
                         if (response.ok && contentType.startsWith('image/')) {
-                            resolve({ url, label });
+                            resolve(candidate);
                         } else {
                             attempt();
                         }
