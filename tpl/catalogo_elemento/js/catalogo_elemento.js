@@ -601,7 +601,7 @@ var item = {
                                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image2.image)
                             }" alt="${image2.title}" data-caption="${image2.photographer ? image2.photographer : image2FileName}">
                         </div>
-                        ${images.slice(2)
+                        ${images
                             .map(function (image) {
                                 const imageFileName = image.image.split("/").pop();
                                 return `
@@ -636,7 +636,7 @@ var item = {
                                 __WEB_MEDIA_ENGINE_URL__ + image2.image
                             }" alt="${image2.title ? image2.title : ""}">
                         </div>
-                        ${images.slice(2)
+                        ${images
                             .map(function (image) {
                                 return `
                                 <div class="swiper-slide">
