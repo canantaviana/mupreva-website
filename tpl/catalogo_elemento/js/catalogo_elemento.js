@@ -1637,9 +1637,16 @@ var item = {
     templatePatrimonio: function (target, row) {
         const self = this;
 
-        const ids = common.extractIdsFromTermsArray(row.patrimonio_relacionado, "tch1");
+        const ids = common.extractIdsFromTermsArray(row.patrimonio_relacionado);
 
-        if(!ids || ids.length === 0) return;
+        if(Object.keys(ids).length === 0) return;
+
+        // Reserve the DOM position with an invisible marker: the accordion library
+        // requires .accordion-header/.accordion-content to be direct children of
+        // `target`, so we can't wrap them in a container div to control placement.
+        const placeholder = htmlTemplate(`<div style="display:none"></div>`);
+        const marker = placeholder[0];
+        appendTemplate(target, placeholder);
 
         const template = htmlTemplate(`
         <h2 class="accordion-header">
@@ -1653,27 +1660,55 @@ var item = {
         </div>
         `);
         const ul = template[2].querySelector("ul");
+        const templateNodes = Array.from(template);
 
+        const types = Object.keys(ids);
+        const promises = []
+        const typesTableMap = {
+            'tch1': 'objects',
+            'tch100': 'pictures',
+            'tch300': 'documents_catalog',
+        }
+        const typeUrlMap = {
+            'tch1': 'cat',
+            'tch100': 'img',
+            'tch300': 'doc',
+        }
+        types.forEach(function (type) {
+            if (typesTableMap[type]) {
+                promises.push(
+                    api.getPatrimonioRelacionado(ids[type], typesTableMap[type])
+                );
+            }
+        });
 
-
-        api.getPatrimonioRelacionado(ids).then(function(results){
-            results.forEach(function (entry) {
-                const {titulo, section_id, imagenes_identificativas} = entry;
-                const imageUrl = imagenes_identificativas && imagenes_identificativas.length > 0 ? __WEB_MEDIA_ENGINE_URL__ + imagenes_identificativas[0].image : '/assets/img/placeholder.png';
-                const content = htmlTemplate(`
-                    <li class="img">
-                        <a href="/cat/${section_id}" target="_blank">
-                            <figure>
-                                <img loading="lazy" src="${imageUrl}" alt="">
-                                <figcaption>${titulo}</figcaption>
-                            </figure>
-                        </a>
-                    </li>
-                `)
-                appendTemplate(ul, content);
+        Promise.all(promises).then(function (resultsByType) {
+            if(!resultsByType || resultsByType.length === 0 || (resultsByType.flat()).length === 0) {
+                templateNodes.forEach(function (node) { node.remove(); });
+                return;
+            }
+            resultsByType.forEach(function (results) {
+                results.forEach(function (entry) {
+                    const {titulo, section_id, imagenes_identificativas, section_tipo} = entry;
+                    const imageUrl = imagenes_identificativas && imagenes_identificativas.length > 0 ? __WEB_MEDIA_ENGINE_URL__ + imagenes_identificativas[0].image : '/assets/img/placeholder.png';
+                    const content = htmlTemplate(`
+                        <li class="img">
+                            <a href="/${typeUrlMap[section_tipo]}/${section_id}" target="_blank">
+                                <figure>
+                                    <img loading="lazy" src="${imageUrl}" alt="">
+                                    <figcaption>${titulo}</figcaption>
+                                </figure>
+                            </a>
+                        </li>
+                    `)
+                    appendTemplate(ul, content);
+                });
             });
         });
-        appendTemplate(target, template);
+        templateNodes.forEach(function (node) {
+            target.insertBefore(node, marker);
+        });
+        marker.remove();
 
     },
 

@@ -1174,9 +1174,15 @@ var common = {
         if (!raw) return [];
         try {
             const parsed = JSON.parse(raw);
-            const filtered = filter ? parsed.filter((ref) => ref.split('_')[0] === filter) : parsed;
-            if (!Array.isArray(filtered)) return [];
-            return filtered.map((ref) => parseInt(ref.split('_')[1], 10)).filter((id) => !isNaN(id));
+            const types = {};
+            parsed.forEach((ref) => {
+                const [type, id] = ref.split('_');
+                if (!types[type]) types[type] = [];
+                types[type].push(parseInt(id, 10));
+            });
+
+            const result = filter ? types[filter] || [] : types;
+            return result;
         } catch {
             return [];
         }

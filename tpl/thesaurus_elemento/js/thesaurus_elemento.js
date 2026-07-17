@@ -298,7 +298,7 @@ var item = {
     template: function (row) {
         const url = this.absUrl(row);
         const self = this;
-        let parents_parsed = common.extractIdsFromTermsArray(row.parents);
+        let parents_parsed = common.extractIdsFromTermsArray(row.parents, 'ubication1') || [];
         let parents_term_parsed = common.parseJsonArray(row.parents_term);
         if (parents_parsed && parents_term_parsed && parents_parsed.includes(18)) {
             const cut = parents_parsed.indexOf(18);
