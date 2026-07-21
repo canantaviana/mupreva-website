@@ -548,6 +548,20 @@ var api = {
         return page.get_records(options);
     },
 
+    getChildren: function(ids, offset = 0) {
+        var options = {
+            table: "objects",
+            section_id: ids.join(','),
+            ar_fields: 'titulo, imagenes_identificativas, section_id, section_tipo',
+            resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+            limit: 24,
+            count: true,
+            offset: offset,
+            get_count: true,
+        }
+        return page.get_records(options);
+    },
+
     getVisitasYacimiento: function() {
         var options = {
             table: 'ts_route',

@@ -205,8 +205,8 @@ var item = {
                 "intervenciones.imagen_inicial": "image",
                 "intervenciones.imagen_final": "image",
                 audiovisuales: "audiovisual",
-                children: "objects",
-                "children.imagenes_identificativas_data": "image",
+                // children: "objects",
+                // "children.imagenes_identificativas_data": "image",
             };
             //}
             data_manager
@@ -222,14 +222,31 @@ var item = {
                         ) {
                             item.bibliografia_propia = item.bibliografia;
                         }
+                        if (item.children) {
+                            item.children_parsed = common.extractIdsFromTermsArray(item.children, 'tch1');
+                        }
                         return item;
                     });
-                    event_manager.publish("data_request_done", {
-                        request_body: request_body,
-                        result: result,
+
+                    const childrenPromises = result.map(function (item) {
+                        if (!item.children_parsed || item.children_parsed.length === 0) {
+                            return Promise.resolve();
+                        }
+                        return api.getChildren(item.children_parsed).then(function ({data, total}) {
+                            item.children_resolved = data;
+                            item.children_total = total;
+                            item.children_loaded = data.length;
+                        });
                     });
 
-                    resolve(response);
+                    Promise.all(childrenPromises).then(function () {
+                        event_manager.publish("data_request_done", {
+                            request_body: request_body,
+                            result: result,
+                        });
+
+                        resolve(response);
+                    });
                 });
         });
     }, //end load_data
@@ -1513,9 +1530,8 @@ var item = {
 
     hasRelated: function (row) {
         return (
-            typeof row.tipo_registro !== "undefined" &&
-            row.tipo_registro !== "Conjunto" && row.children &&
-            row.children.length > 0
+            row.children_resolved &&
+            row.children_resolved.length > 0
         );
     },
 
@@ -1526,20 +1542,62 @@ var item = {
             return "";
         };
 
-        return htmlTemplate(`
+        const template = htmlTemplate(`
             <h2 class="accordion-header">
                 <button type="button">${tstring.item_rel_content}</button>
             </h2>
             <div class="accordion-content block-dedalo">
-                <ul class="galeria galeria--242x242 link-dn">
-                ${row.children
+                <ul class="galeria galeria--92x92 link-dn">
+                ${row.children_resolved
                     .map(function (object) {
                         return self.template_catalog_elem(object);
                     })
                     .join("")}
                 </ul>
+                <div class="has-text-centered mt-6 button-load-more-children"></div>
             </div>
         `);
+
+        const ul = template[2].querySelector("ul");
+        const buttonContainer = template[2].querySelector(".button-load-more-children");
+
+        function renderLoadMoreButton() {
+            buttonContainer.innerHTML = "";
+            if (row.children_loaded >= row.children_total) {
+                return;
+            }
+            const button = htmlTemplate(`
+                <button type="button" class="button button--icon button--carrega">
+                    ${tstring.load_more} <small>[${row.children_loaded} / ${row.children_total}]</small>
+                </button>
+            `);
+            appendTemplate(buttonContainer, button);
+            buttonContainer.querySelector("button").addEventListener("click", function (e) {
+                e.preventDefault();
+                loadMoreChildren();
+            });
+        }
+
+        function loadMoreChildren() {
+            api.getChildren(row.children_parsed, row.children_loaded).then(function ({data, total}) {
+                row.children_total = total;
+                row.children_loaded += data.length;
+                row.children_resolved = row.children_resolved.concat(data);
+
+                const content = htmlTemplate(
+                    data.map(function (object) {
+                        return self.template_catalog_elem(object);
+                    }).join("")
+                );
+                appendTemplate(ul, content);
+                enableDialogs(ul);
+                renderLoadMoreButton();
+            });
+        }
+
+        renderLoadMoreButton();
+
+        return template;
     },
 
     templateRelatedJaciments: function (row) {
