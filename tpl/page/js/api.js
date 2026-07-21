@@ -648,6 +648,15 @@ var api = {
         return page.get_records(options);
     },
 
+    getImmovablesRelatedByParent: function(section_tipo, section_id) {
+        var options = {
+            table: 'immovables',
+            sql_filter: `parents LIKE '%"${section_id}"%'`,
+            ar_fields: 'section_id, relations',
+        };
+        return page.get_records(options);
+    },
+
     getImmovableRelated: function(ids) {
         const section_id = ids.join(',');
         var options = {
