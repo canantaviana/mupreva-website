@@ -2129,22 +2129,25 @@ var item = {
         appendTemplate(target, this.template(row));
 
         if (row.table === 'immovables') {
-            const parentIds = JSON.parse(row.parent || "[]").map(el => el.split('_')[1]);
-            if(parentIds.length > 0) {
-                api.getImmovableRelated(parentIds).then(function(data) {
-                    const parentOrder = Object.fromEntries(parentIds.map((id, i) => [id, i]));
-                    const orderedData = data.slice().sort((a, b) =>
-                        parentOrder[String(a.section_id)] - parentOrder[String(b.section_id)]
-                    );
-                    const parentsTitles = orderedData.map(el => {
-                        const url = page_globals.__WEB_ROOT_WEB__ + '/imm/' + el.section_id;
-                        return (`<a href="${url}" target="_blank">${el.titulo}</a>`);
-                    }).join(' / ');
-                    const parentsBreadcrumb = document.getElementById('parents-breadcrumb');
-                    if (parentsBreadcrumb && orderedData.length > 0) {
-                        parentsBreadcrumb.innerHTML = ` / ${parentsTitles}`;
-                    }
-                })
+            // parents breadcrumb
+            const parsedIds = common.parseJsonArray(row.parents);
+            const parsedTitles = common.parseJsonArray(row.parents_text);
+            const parentsCutValencia = parsedIds.indexOf('6461') !== -1 ? parsedIds.indexOf('6461') : null;
+            const parentsCutJaciments = parsedIds.indexOf('2') !== -1 ? parsedIds.indexOf('2') : null;
+
+            if (parentsCutValencia || parentsCutJaciments) {
+                const parentsCut = parentsCutValencia || parentsCutJaciments;
+                parsedIds.splice(parentsCut, parsedIds.length - parentsCut);
+                parsedTitles.splice(parentsCut, parsedTitles.length - parentsCut);
+            }
+
+            if (parsedIds.length > 0 && parsedIds.length === parsedTitles.length) {
+                const parentsTitles = parsedIds.map((id, i) => {
+                    const url = page_globals.__WEB_ROOT_WEB__ + '/imm/' + id;
+                    return (`<a href="${url}" target="_blank">${parsedTitles[i]}</a>`);
+                }).join(' / ');
+                const parentsBreadcrumb = document.getElementById('parents-breadcrumb');
+                parentsBreadcrumb.innerHTML = ` / ${parentsTitles}`;
             }
         }
 
