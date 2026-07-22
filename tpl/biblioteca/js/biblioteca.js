@@ -568,6 +568,11 @@ var biblio = {
 
         const self = this
 
+        const form_inputs = document.querySelectorAll('input, select, textarea, button');
+        form_inputs.forEach(function (input) {
+            input.disabled = true;
+        });
+
         if (!self.default_submit) {
             self.used_form = true;
         }
@@ -695,6 +700,9 @@ var biblio = {
                                         rows_list_container.appendChild(list_node)
                                     }
                                     self.form_submit_state = 'done'
+                                    form_inputs.forEach(function (input) {
+                                        input.disabled = false;
+                                    });
                                     event_manager.publish('rendered', {
                                         rows_list_container: rows_list_container
                                     })
