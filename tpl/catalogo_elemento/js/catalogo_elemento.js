@@ -205,6 +205,7 @@ var item = {
                 "intervenciones.imagen_inicial": "image",
                 "intervenciones.imagen_final": "image",
                 audiovisuales: "audiovisual",
+                children_id: "immovables",
                 // children: "objects",
                 // "children.imagenes_identificativas_data": "image",
             };
@@ -2028,76 +2029,72 @@ var item = {
 
         const treeWrapper = template[2].querySelector(".tree_wrapper");
 
-        const childrenIds = JSON.parse(row.children || "[]").map(el => el.split('_')[1]);
+        if(row.children_id && row.children_id.length > 0) {
+            const parsedData = row.children_id.map(el => ({section_id: el.section_id, titulo: el.titulo, parent: Number(JSON.parse(el.parent || "[]")[0].split('_')[1]) || null}));
 
-        if(childrenIds.length > 0) {
-            api.getImmovableRelated(childrenIds).then(function(data) {
-                const parsedData = data.map(el => ({section_id: el.section_id, titulo: el.titulo, parent: Number(JSON.parse(el.parent || "[]")[0].split('_')[1]) || null}));
+            const nodeMap = {};
+            const rootNode = {section_id: row.section_id, titulo: row.titulo, children: []};
+            nodeMap[rootNode.section_id] = rootNode;
 
-                const nodeMap = {};
-                const rootNode = {section_id: row.section_id, titulo: row.titulo, children: []};
-                nodeMap[rootNode.section_id] = rootNode;
+            parsedData.forEach(el => {
+                nodeMap[el.section_id] = {section_id: el.section_id, titulo: el.titulo, children: []};
+            });
+            parsedData.forEach(el => {
+                const parentNode = nodeMap[el.parent];
+                if (parentNode) {
+                    parentNode.children.push(nodeMap[el.section_id]);
+                }
+            });
 
-                parsedData.forEach(el => {
-                    nodeMap[el.section_id] = {section_id: el.section_id, titulo: el.titulo, children: []};
-                });
-                parsedData.forEach(el => {
-                    const parentNode = nodeMap[el.parent];
-                    if (parentNode) {
-                        parentNode.children.push(nodeMap[el.section_id]);
-                    }
-                });
+            const thesaurusData = [rootNode];
 
-                const thesaurusData = [rootNode];
+            function renderTree(node) {
+                const url = page_globals.__WEB_ROOT_WEB__ + "/imm/" + node.section_id;
 
-                function renderTree(node) {
-                    const url = page_globals.__WEB_ROOT_WEB__ + "/imm/" + node.section_id;
+                const tree_node = document.createElement('div');
+                tree_node.className = 'tree_node';
 
-                    const tree_node = document.createElement('div');
-                    tree_node.className = 'tree_node';
+                const grouped_children = document.createElement('div');
+                grouped_children.className = 'grouped_children';
 
-                    const grouped_children = document.createElement('div');
-                    grouped_children.className = 'grouped_children';
+                const term_span = document.createElement('span');
+                term_span.className = 'term';
+                const link = document.createElement('a');
+                link.href = url;
+                link.target = '_blank';
+                link.textContent = node.titulo;
+                term_span.appendChild(link);
+                grouped_children.appendChild(term_span);
+                tree_node.appendChild(grouped_children);
 
-                    const term_span = document.createElement('span');
-                    term_span.className = 'term';
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.target = '_blank';
-                    link.textContent = node.titulo;
-                    term_span.appendChild(link);
-                    grouped_children.appendChild(term_span);
-                    tree_node.appendChild(grouped_children);
+                if (node.children.length > 0) {
+                    const arrow = document.createElement('button');
+                    arrow.className = 'arrow';
+                    grouped_children.appendChild(arrow);
 
-                    if (node.children.length > 0) {
-                        const arrow = document.createElement('button');
-                        arrow.className = 'arrow';
-                        grouped_children.appendChild(arrow);
+                    const branch = document.createElement('div');
+                    branch.className = 'branch hide';
+                    node.children.forEach(child => branch.appendChild(renderTree(child)));
+                    tree_node.appendChild(branch);
 
-                        const branch = document.createElement('div');
-                        branch.className = 'branch hide';
-                        node.children.forEach(child => branch.appendChild(renderTree(child)));
-                        tree_node.appendChild(branch);
-
-                        arrow.addEventListener('click', function () {
-                            if (this.classList.contains('open')) {
-                                branch.classList.add('hide');
-                                this.classList.remove('open');
-                            } else {
-                                branch.classList.remove('hide');
-                                this.classList.add('open');
-                            }
-                        });
-                    }
-
-                    return tree_node;
+                    arrow.addEventListener('click', function () {
+                        if (this.classList.contains('open')) {
+                            branch.classList.add('hide');
+                            this.classList.remove('open');
+                        } else {
+                            branch.classList.remove('hide');
+                            this.classList.add('open');
+                        }
+                    });
                 }
 
-                thesaurusData.forEach(node => treeWrapper.appendChild(renderTree(node)));
-            })
+                return tree_node;
+            }
+
+            thesaurusData.forEach(node => treeWrapper.appendChild(renderTree(node)));
+        }
 
         appendTemplate(target, template);
-        }
     },
 
     /**

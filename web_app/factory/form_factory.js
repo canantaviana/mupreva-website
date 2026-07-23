@@ -868,8 +868,9 @@ function form_factory() {
                 // main column search item
                 filter[op].push({
                     field: form_item.q_column_filter || q_column,
-                    value: `'${safe_value}'`,
-                    op: form_item.eq, // 'LIKE',
+                    value: `'%${safe_value}%'`,
+                    //op: form_item.eq, // 'LIKE',
+                    op: 'LIKE',
                     group: q_column
                 })
 
