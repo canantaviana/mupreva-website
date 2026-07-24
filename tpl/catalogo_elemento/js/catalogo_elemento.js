@@ -893,6 +893,24 @@ var item = {
     templateTecnicDefault: function (row) {
         const datacion = this.datacion(row);
         const tipologyUri = this.getTipologyUri(row);
+
+        let lugar_produccion_parsed = null;
+
+        try {
+            lugar_produccion_parsed = JSON.parse(row.lugar_produccion);
+        } catch {}
+
+        const lugarProduccionId = lugar_produccion_parsed ? lugar_produccion_parsed[0] : null;
+
+        const esImmueble = lugarProduccionId && lugarProduccionId.includes('tchi1');
+        const esToponimia = lugarProduccionId && lugarProduccionId.includes('htoponymy1');
+
+        const lugar = esImmueble
+            ? `<a href="/imm/${lugarProduccionId.replace('tchi1_', '')}" target="_blank">${row.lugar_produccion_literal}</a>`
+            : esToponimia
+                ? `<a href="/htop/${lugarProduccionId.replace('htoponymy1_', '')}" target="_blank">${row.lugar_produccion_literal}</a>`
+                : row.lugar_produccion_literal
+
         return `
             <table class="table-collapsibles">
                 ${
@@ -964,12 +982,12 @@ var item = {
                         : ""
                 }
                 ${
-                    row.lugar_produccion_literal
+                    lugar
                         ? `
                 <tr>
                     <td></td>
                     <th>${tstring.item_production}</th>
-                    <td>${row.lugar_produccion_literal}</td>
+                    <td>${lugar}</td>
                 </tr>
                 `
                         : ""
