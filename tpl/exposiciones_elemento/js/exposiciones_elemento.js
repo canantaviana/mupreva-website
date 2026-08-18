@@ -815,7 +815,7 @@ var item = {
         var image_url = "/assets/img/placeholder.png";
         if (row.identifying_image_url) {
             image_url = row.identifying_image_url;
-        }else if (row.identifying_image.length > 0) {
+        }else if (row.identifying_image && row.identifying_image.length > 0) {
             image_url =
                 __WEB_MEDIA_ENGINE_URL__ + row.identifying_image[0].image;
         }
