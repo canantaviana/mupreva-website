@@ -417,7 +417,7 @@ var item = {
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
-            }" alt="${image.title}" data-caption="${image.photographer ? image.photographer : imageFileName}">
+            }" alt="${image.title}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
                     <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                         ${this.renderImageButtons()}
                     </div>
@@ -439,7 +439,7 @@ var item = {
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}" data-caption="${image.photographer ? image.photographer : imageFileName}">
+                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
                                 </div>
                             `;
                             })

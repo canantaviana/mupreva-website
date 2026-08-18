@@ -612,12 +612,12 @@ var item = {
                                 __WEB_MEDIA_ENGINE_URL__ + image1.image
                             }" data-original="${
                                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image1.image)
-                            }" alt="${image1.title}" data-caption="${image1.photographer ? image1.photographer : image1FileName}">
+                            }" alt="${image1.title}" data-caption="${image1.photographer ? (tstring.author + ": " + image1.photographer) : image1FileName}">
                             <img loading="lazy" class="image-zoom" src="${
                                 __WEB_MEDIA_ENGINE_URL__ + image2.image
                             }" data-original="${
                                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image2.image)
-                            }" alt="${image2.title}" data-caption="${image2.photographer ? image2.photographer : image2FileName}">
+                            }" alt="${image2.title}" data-caption="${image2.photographer ? (tstring.author + ": " + image2.photographer) : image2FileName}">
                         </div>
                         ${images
                             .map(function (image) {
@@ -626,7 +626,7 @@ var item = {
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}" data-caption="${image.photographer ? image.photographer : imageFileName}">
+                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
                                 </div>
                             `;
                             })
@@ -685,7 +685,7 @@ var item = {
                             __WEB_MEDIA_ENGINE_URL__ + image1.image
                         }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image1.image)
-            }" alt="${image1.title}" data-caption="${image1.photographer ? image1.photographer : image1FileName}">
+            }" alt="${image1.title}" data-caption="${image1.photographer ? (tstring.author + ": " + image1.photographer) : image1FileName}">
                         <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                             ${this.renderImageButtons()}
                         </div>
@@ -695,7 +695,7 @@ var item = {
                             __WEB_MEDIA_ENGINE_URL__ + image2.image
                         }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image2.image)
-            }" alt="${image2.title}" data-caption="${image2.photographer ? image2.photographer : image2FileName}">
+            }" alt="${image2.title}" data-caption="${image2.photographer ? (tstring.author + ": " + image2.photographer) : image2FileName}">
                         <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                             ${this.renderImageButtons()}
                         </div>
@@ -715,7 +715,7 @@ var item = {
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
-            }" alt="${image.title}" data-caption="${image.photographer ? image.photographer : imageFileName}">
+            }" alt="${image.title}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
                     ${
                         image.footprint
                             ? `<figcaption>
@@ -747,7 +747,7 @@ var item = {
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
-            }" alt="${image.title}" data-caption="${image.photographer ? image.photographer : imageFileName}">
+            }" alt="${image.title}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
                     <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                         ${this.renderImageButtons()}
                     </div>
@@ -769,7 +769,7 @@ var item = {
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}" data-caption="${image.photographer ? image.photographer : imageFileName}">
+                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
                                 </div>
                             `;
                             })

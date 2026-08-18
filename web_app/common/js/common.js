@@ -927,7 +927,7 @@ var common = {
         const urlsToTry = [
             { url: download_url.replace('1.5MB', 'modified'), label: 'modified' },
             { url: download_url.replace('1.5MB', 'original'), label: 'original' },
-        ].filter(function(entry) { return Boolean(entry.url); });
+        ];
 
         const fallback = { url: download_url, label: '1.5MB' };
 
@@ -940,17 +940,11 @@ var common = {
                     return;
                 }
                 const candidate = urlsToTry[idx++];
+                const probe = new Image();
 
-                fetch(candidate.url, { method: 'HEAD' })
-                    .then(function (response) {
-                        const contentType = response.headers.get('content-type') ?? '';
-                        if (response.ok && contentType.startsWith('image/')) {
-                            resolve(candidate);
-                        } else {
-                            attempt();
-                        }
-                    })
-                    .catch(function () { attempt(); });
+                probe.onload = function () { resolve(candidate); };
+                probe.onerror = function () { attempt(); };
+                probe.src = candidate.url;
             }
 
             attempt();
