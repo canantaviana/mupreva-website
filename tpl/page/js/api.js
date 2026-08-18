@@ -130,7 +130,7 @@ var api = {
             table: 'publications',
             //sql_filter: 'imagen_identificativa is not null',
             sql_filter: `pertenencia_data like 1 AND destacado = 1`,
-            limit: 6,
+            //limit: 6,
             order: 'fecha_publicacion desc',
             ar_fields: "section_tipo,section_id,autor,fecha_publicacion,pdf,titulo",
             parse: page.parse_list_data,
