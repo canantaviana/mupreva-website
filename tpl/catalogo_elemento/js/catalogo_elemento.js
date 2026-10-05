@@ -233,11 +233,12 @@ var item = {
                         if (!item.children_parsed || item.children_parsed.length === 0) {
                             return Promise.resolve();
                         }
-                        return api.getChildren(item.children_parsed).then(function ({data, total}) {
-                            item.children_resolved = data;
-                            item.children_total = total;
-                            item.children_loaded = data.length;
-                        });
+                        // sort ids so pages follow the same order as the API (section_id ASC)
+                        item.children_parsed.sort(function (a, b) { return a - b; });
+                        item.children_total = item.children_parsed.length;
+                        item.children_loaded = 0;
+                        item.children_resolved = [];
+                        return self.loadChildrenPage(item);
                     });
 
                     Promise.all(childrenPromises).then(function () {
@@ -1547,6 +1548,23 @@ var item = {
         appendTemplate(target, template);
     },
 
+    children_page_size: 24,
+
+    // Requests the next page of children ids and appends the results to row.children_resolved.
+    // children_loaded counts consumed ids (some ids may not be published in the objects table)
+    loadChildrenPage: function (row) {
+        const start = row.children_loaded;
+        const ids = row.children_parsed.slice(start, start + this.children_page_size);
+        if (ids.length === 0) {
+            return Promise.resolve([]);
+        }
+        return api.getChildren(ids).then(function (data) {
+            row.children_loaded = start + ids.length;
+            row.children_resolved = row.children_resolved.concat(data);
+            return data;
+        });
+    },
+
     hasRelated: function (row) {
         return (
             row.children_resolved &&
@@ -1598,11 +1616,7 @@ var item = {
         }
 
         function loadMoreChildren() {
-            api.getChildren(row.children_parsed, row.children_loaded).then(function ({data, total}) {
-                row.children_total = total;
-                row.children_loaded += data.length;
-                row.children_resolved = row.children_resolved.concat(data);
-
+            self.loadChildrenPage(row).then(function (data) {
                 const content = htmlTemplate(
                     data.map(function (object) {
                         return self.template_catalog_elem(object);
