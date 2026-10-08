@@ -797,18 +797,15 @@ var actividades = {
 
                     if (self.default_submit || self.didSearchSomething === false) {
                         var content =
-                            templateModules.bloque_exposiciones_actuales();
+                            templateModules.bloque_exposiciones_actuales(null, function (results) {
+                                const actualesFound = !!(results && results.length > 0);
+                                var subtitle = document.getElementById("subtitle");
+                                subtitle.innerHTML = actualesFound
+                                    ? tstring.expositions_title_current
+                                    : "";
+                                templateModules.bloque_exposiciones_anuales(self.rows_list_container, null, actualesFound);
+                            });
                         appendTemplate(self.rows_list_container, content);
-                        let actualesFound = false;
-                        let subtitleText = "";
-                        if (content && content[0]) {
-                            actualesFound = true;
-                            subtitleText = tstring.expositions_title_current;
-
-                        }
-                        var subtitle = document.getElementById("subtitle");
-                        subtitle.innerHTML = subtitleText;
-                        templateModules.bloque_exposiciones_anuales(self.rows_list_container, null, actualesFound);
                         self.default_submit = false;
                         resolve();
                         return;

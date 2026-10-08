@@ -1290,7 +1290,11 @@ function formatDateRange(dateRange, iso3) {
         const options = { day: 'numeric', month: 'long', year: 'numeric' };
         const formatter = new Intl.DateTimeFormat(locale, options);
 
-        return `${formatter.format(start)} - ${formatter.format(end)}`;
+        const startText = formatter.format(start);
+        const endText = formatter.format(end);
+
+        // Si l'inici i el final són el mateix dia, només es mostra una data
+        return startText === endText ? startText : `${startText} - ${endText}`;
     } catch (e) {
         return null;
     }

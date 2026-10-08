@@ -805,17 +805,15 @@ var actividades = {
 
                     if (self.default_submit || self.didSearchSomething === false) {
                         var content =
-                            templateModules.bloque_actividades_actuales();
+                            templateModules.bloque_actividades_actuales(function (results) {
+                                const actualesFound = !!(results && results.length > 0);
+                                var subtitle = document.getElementById("subtitle");
+                                subtitle.innerHTML = actualesFound
+                                    ? tstring.activitis_title_current
+                                    : "";
+                                templateModules.bloque_actividades_anuales(self.rows_list_container, actualesFound);
+                            });
                         appendTemplate(self.rows_list_container, content);
-                        let actualesFound = false;
-                        let subtitleText = "";
-                        if (content && content[0]) {
-                            actualesFound = true;
-                            subtitleText = tstring.activitis_title_current;
-                        }
-                        var subtitle = document.getElementById("subtitle");
-                        subtitle.innerHTML = subtitleText;
-                        templateModules.bloque_actividades_anuales(self.rows_list_container, actualesFound);
                         self.default_submit = false;
                         resolve();
                         return;
@@ -926,7 +924,7 @@ var actividades = {
                 ${
                     row.time_start
                         ? `<p class="has-text-primary has-text-weight-semibold is-size-6">
-                    ${row.time_start}
+                    ${row.time_start.slice(0, 5)}
                 </p>`
                         : ""
                 }

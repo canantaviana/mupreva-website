@@ -328,7 +328,7 @@ var item = {
                 row.time_start && row.time_start != '00:00:00'
                     ? `
             <dt>${tstring.item_hour}</dt>
-            <dd>${row.time_start}</dd>
+            <dd>${row.time_start.slice(0, 5)}</dd>
             `
                     : ""
             }
@@ -688,14 +688,14 @@ var item = {
         `);
     },
 
-    templateActivitiesRelated: function (row) {
+    templateActivitiesList: function (row) {
         if (!row.children_data || row.children_data.length == 0) {
             return "";
         }
         var self = this;
         return htmlTemplate(`
             <h2 class="accordion-header">
-                <button type="button">${tstring.item_rel_activities}</button>
+                <button type="button">${tstring.item_activities_list}</button>
             </h2>
             <div class="accordion-content block-dedalo">
                 <ul class="galeria galeria--242x242 link-dn">
@@ -709,14 +709,88 @@ var item = {
         `);
     },
 
-    templateCredits: function (row) {
-        if (!row.people) {
-            return "";
+    templateRelatedActivities: function (target, row) {
+        const self = this;
+        if (!row.related_data) {
+            return;
         }
-        var people = JSON.parse(row.people).filter(function (person) {
-            return person && person.trim() !== "";
+        // related_data es un array serialitzat, ex: ["activity1_730","exhibition1_19"]
+        // només les activitats, traient el tipus del principi (activity1_730 -> 730), i sense l'activitat actual
+        let related = [];
+        try {
+            related = JSON.parse(row.related_data) || [];
+        } catch (e) {
+            return;
+        }
+        const ids = related
+            .filter(function (item) {
+                return typeof item === "string" && item.indexOf("activity") === 0;
+            })
+            .map(function (item) {
+                return parseInt(item.split("_").pop());
+            })
+            .filter(function (id) {
+                return !isNaN(id) && id != row.section_id;
+            });
+        if (ids.length == 0) {
+            return;
+        }
+
+        // s'afegeix ara per mantenir la posició a l'acordió, i s'omple quan arriben les dades
+        const template = htmlTemplate(`
+            <h2 class="accordion-header">
+                <button type="button">${tstring.item_rel_activities}</button>
+            </h2>
+            <div class="accordion-content block-dedalo">
+                <ul class="galeria galeria--242x242 link-dn">
+                </ul>
+            </div>
+        `);
+        const nodes = Array.from(template).filter(function (node) {
+            return node.nodeType === Node.ELEMENT_NODE;
         });
-        if (people.length == 0) {
+        const ul = nodes[1].querySelector("ul");
+        appendTemplate(target, nodes);
+
+        data_manager
+            .request({
+                body: {
+                    dedalo_get: "records",
+                    db_name: page_globals.WEB_DB,
+                    table: "activities",
+                    ar_fields: ["section_id", "title", "time_frame", "time_start", "type", "identifying_image_data"],
+                    lang: page_globals.WEB_CURRENT_LANG_CODE,
+                    section_id: ids.join(","),
+                    count: false,
+                    resolve_portals_custom: {
+                        identifying_image_data: "image",
+                    },
+                },
+            })
+            .then(function (response) {
+                const rows = (response && response.result) || [];
+                if (rows.length == 0) {
+                    nodes.forEach(function (node) {
+                        node.remove();
+                    });
+                    return;
+                }
+                ul.innerHTML = rows
+                    .map(function (item) {
+                        return self.template_catalog_elem(item);
+                    })
+                    .join("");
+            });
+    },
+
+    templateCredits: function (row) {
+        var people = row.people
+            ? JSON.parse(row.people).filter(function (person) {
+                  return person && person.trim() !== "";
+              })
+            : [];
+        var entity = row.entity ? row.entity.trim() : "";
+        if (people.length == 0 && !entity) {
             return "";
         }
         var rols = row.people_role ? JSON.parse(row.people_role) : [];
@@ -737,6 +811,15 @@ var item = {
                             </tr>`;
                             })
                             .join("")}
+                        ${
+                            entity
+                                ? `
+                            <tr>
+                                <th>${tstring.item_entity}</th>
+                                <td>${entity}</td>
+                            </tr>`
+                                : ""
+                        }
                         </tbody>
                     </table>
                 </div>
@@ -818,7 +901,7 @@ var item = {
                 ${
                     row.time_start && row.time_start != '00:00:00'
                         ? `<p class="has-text-primary has-text-weight-semibold is-size-6">
-                    ${row.time_start}
+                    ${row.time_start.slice(0, 5)}
                 </p>`
                         : ""
                 }
@@ -874,7 +957,10 @@ var item = {
         appendTemplate(acordion, this.templateGaleria(row));
 
         //activitas relacionat
-        appendTemplate(acordion, this.templateActivitiesRelated(row));
+        appendTemplate(acordion, this.templateActivitiesList(row));
+
+        //activitats relacionades (related_data)
+        this.templateRelatedActivities(acordion, row);
 
         //contigut relacionat
         appendTemplate(acordion, this.templateRelated(row));

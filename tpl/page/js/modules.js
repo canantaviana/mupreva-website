@@ -1303,7 +1303,7 @@ var templateModules = {
     },
 
 
-    bloque_actividades_actuales: function(){
+    bloque_actividades_actuales: function(onLoaded = null){
         const content = htmlTemplate(`
             <div class="activities-gallery">
             </div>
@@ -1343,6 +1343,9 @@ var templateModules = {
             `);
             appendTemplate(children_container, content);
             // swiperActividadesActuales();
+            if (typeof onLoaded === 'function') {
+                onLoaded(results);
+            }
         });
 
 
@@ -1465,7 +1468,7 @@ var templateModules = {
         });
     },
 
-    bloque_exposiciones_actuales: function(type = null){
+    bloque_exposiciones_actuales: function(type = null, onLoaded = null){
         const content = htmlTemplate(`<div class="activities-gallery"></div>`);
         const children_container = content[0];
 
@@ -1502,6 +1505,9 @@ var templateModules = {
                 }).join('')}
             `);
             appendTemplate(children_container, content);
+            if (typeof onLoaded === 'function') {
+                onLoaded(results);
+            }
         })
         return content;
     },

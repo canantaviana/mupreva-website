@@ -217,21 +217,30 @@ var api = {
     getActividadesActuales: function() {
         var options = {
             table: 'activities',
-            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
+            // activitats actuals i futures (que no han acabat)
+            sql_filter: "time_frame is not null and STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') >= NOW()",
             //limit: 6,
-            order: 'time_frame desc',
+            order: 'time_frame asc',
             ar_fields: "section_id,identifying_image,time_frame,title,type,type_data",
             parse: page.parse_list_data,
             //resolve_portals_custom: '{"image": "image"}'
         };
-        return page.get_records(options);
+        // ordenar per data final, començant per les properes, i quan acaben al mateix dia ordenar per data d'inici
+        const getStartDate = row => (row.time_frame || '').split(',')[0].trim();
+        const getEndDate = row => (row.time_frame || '').split(',').pop().trim();
+        return page.get_records(options).then(rows =>
+            (rows || []).sort((a, b) =>
+                getEndDate(a).localeCompare(getEndDate(b)) ||
+                getStartDate(a).localeCompare(getStartDate(b))
+            )
+        );
     },
 
     getExposicionesActuales: function(type = null) {
         var options = {
             table: 'exhibitions',
-            sql_filter: "time_frame is not null and NOW() BETWEEN STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', 1), '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s')",
-            limit: 10,
+            // exposicions actuals i futures (que no han acabat)
+            sql_filter: "time_frame is not null and STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') >= NOW()",
             order: 'time_frame asc',
             ar_fields: "section_id,identifying_image,time_frame,title,type",
             parse: page.parse_list_data,
@@ -240,7 +249,17 @@ var api = {
         if (type != null) {
             options.sql_filter += ` AND type_data like '%\"${type}\"%'`
         }
-        return page.get_records(options);
+        // ordenar per data final, començant per les properes, i quan acaben al mateix dia ordenar per data d'inici
+        // el límit s'aplica després d'ordenar, perquè l'API no accepta expressions SQL a 'order'
+        const limit = 10;
+        const getStartDate = row => (row.time_frame || '').split(',')[0].trim();
+        const getEndDate = row => (row.time_frame || '').split(',').pop().trim();
+        return page.get_records(options).then(rows =>
+            (rows || []).sort((a, b) =>
+                getEndDate(a).localeCompare(getEndDate(b)) ||
+                getStartDate(a).localeCompare(getStartDate(b))
+            ).slice(0, limit)
+        );
     },
 
     getActivitiesByYear: function (year) {
@@ -253,6 +272,10 @@ var api = {
             sql_filter: `date_start_year = ${year} AND ${customFilter}`,
             parse: page.parse_list_data
         };
+        // in the current year only the finished ones, the others are already in the current activities block
+        if (year == new Date().getFullYear()) {
+            options.sql_filter += " AND time_frame is not null AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') < NOW()";
+        }
         return page.get_records(options);
     },
 
@@ -278,6 +301,10 @@ var api = {
         };
         if (type != null) {
             options.sql_filter += ` AND type_data like '%\"${type}\"%'`
+        }
+        // a l'any actual només les acabades, les altres ja surten al bloc d'exposicions actuals
+        if (year == new Date().getFullYear()) {
+            options.sql_filter += " AND time_frame is not null AND STR_TO_DATE(SUBSTRING_INDEX(time_frame, ',', -1), '%Y-%m-%d %H:%i:%s') < NOW()";
         }
         return page.get_records(options);
     },

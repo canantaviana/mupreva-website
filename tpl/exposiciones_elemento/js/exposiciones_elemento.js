@@ -360,7 +360,7 @@ var item = {
                 row.time_start && row.time_start != '00:00:00'
                     ? `
             <dt>${tstring.item_hour}</dt>
-            <dd>${row.time_start}</dd>
+            <dd>${row.time_start.slice(0, 5)}</dd>
             `
                     : ""
             }
@@ -743,13 +743,13 @@ var item = {
     },
 
     templateCredits: function (row) {
-        if (!row.people) {
-            return "";
-        }
-        var people = JSON.parse(row.people).filter(function (person) {
-            return person && person.trim() !== "";
-        });
-        if (people.length == 0) {
+        var people = row.people
+            ? JSON.parse(row.people).filter(function (person) {
+                  return person && person.trim() !== "";
+              })
+            : [];
+        var entity = row.entity ? row.entity.trim() : "";
+        if (people.length == 0 && !entity) {
             return "";
         }
         var rols = row.people_role ? JSON.parse(row.people_role) : [];
@@ -770,6 +770,15 @@ var item = {
                             </tr>`;
                             })
                             .join("")}
+                        ${
+                            entity
+                                ? `
+                            <tr>
+                                <th>${tstring.item_entity}</th>
+                                <td>${entity}</td>
+                            </tr>`
+                                : ""
+                        }
                         </tbody>
                     </table>
                 </div>
@@ -848,7 +857,7 @@ var item = {
                 ${
                     row.time_start
                         ? `<p class="has-text-primary has-text-weight-semibold is-size-6">
-                    ${row.time_start}
+                    ${row.time_start.slice(0, 5)}
                 </p>`
                         : ""
                 }
