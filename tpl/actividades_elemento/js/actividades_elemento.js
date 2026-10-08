@@ -701,7 +701,7 @@ var item = {
                 <ul class="galeria galeria--242x242 link-dn">
                 ${row.children_data
                     .map(function (object) {
-                        return self.template_catalog_elem(object);
+                        return self.template_catalog_elem(object, true);
                     })
                     .join("")}
                 </ul>
@@ -715,31 +715,42 @@ var item = {
             return;
         }
         // related_data es un array serialitzat, ex: ["activity1_730","exhibition1_19"]
-        // només les activitats, traient el tipus del principi (activity1_730 -> 730), i sense l'activitat actual
+        // s'agrupen els ids per taula, traient el tipus del principi (activity1_730 -> 730), i sense l'activitat actual
         let related = [];
         try {
             related = JSON.parse(row.related_data) || [];
         } catch (e) {
             return;
         }
-        const ids = related
-            .filter(function (item) {
-                return typeof item === "string" && item.indexOf("activity") === 0;
-            })
-            .map(function (item) {
-                return parseInt(item.split("_").pop());
-            })
-            .filter(function (id) {
-                return !isNaN(id) && id != row.section_id;
-            });
-        if (ids.length == 0) {
+        const tables = {
+            activity: "activities",
+            exhibition: "exhibitions",
+        };
+        const ids_by_table = {};
+        related.forEach(function (item) {
+            if (typeof item !== "string") {
+                return;
+            }
+            const type = item.split("_")[0].replace(/\d+$/, "");
+            const table = tables[type];
+            const id = parseInt(item.split("_").pop());
+            if (!table || isNaN(id)) {
+                return;
+            }
+            if (table === "activities" && id == row.section_id) {
+                return;
+            }
+            ids_by_table[table] = ids_by_table[table] || [];
+            ids_by_table[table].push(id);
+        });
+        if (Object.keys(ids_by_table).length == 0) {
             return;
         }
 
         // s'afegeix ara per mantenir la posició a l'acordió, i s'omple quan arriben les dades
         const template = htmlTemplate(`
             <h2 class="accordion-header">
-                <button type="button">${tstring.item_rel_activities}</button>
+                <button type="button">${tstring.item_rel_activities_exhibitions}</button>
             </h2>
             <div class="accordion-content block-dedalo">
                 <ul class="galeria galeria--242x242 link-dn">
@@ -752,23 +763,35 @@ var item = {
         const ul = nodes[1].querySelector("ul");
         appendTemplate(target, nodes);
 
-        data_manager
-            .request({
-                body: {
-                    dedalo_get: "records",
-                    db_name: page_globals.WEB_DB,
-                    table: "activities",
-                    ar_fields: ["section_id", "title", "time_frame", "time_start", "type", "identifying_image_data"],
-                    lang: page_globals.WEB_CURRENT_LANG_CODE,
-                    section_id: ids.join(","),
-                    count: false,
-                    resolve_portals_custom: {
-                        identifying_image_data: "image",
-                    },
-                },
+        // una crida per taula (primer activitats, després exposicions)
+        const requests = Object.values(tables)
+            .filter(function (table) {
+                return ids_by_table[table];
             })
-            .then(function (response) {
-                const rows = (response && response.result) || [];
+            .map(function (table) {
+                return data_manager
+                    .request({
+                        body: {
+                            dedalo_get: "records",
+                            db_name: page_globals.WEB_DB,
+                            table: table,
+                            ar_fields: ["section_id", "title", "time_frame", "time_start", "type", "identifying_image_data"],
+                            lang: page_globals.WEB_CURRENT_LANG_CODE,
+                            section_id: ids_by_table[table].join(","),
+                            count: false,
+                            resolve_portals_custom: {
+                                identifying_image_data: "image",
+                            },
+                        },
+                    })
+                    .then(function (response) {
+                        return (response && response.result) || [];
+                    });
+            });
+
+        Promise.all(requests)
+            .then(function (results) {
+                const rows = [].concat.apply([], results);
                 if (rows.length == 0) {
                     nodes.forEach(function (node) {
                         node.remove();
@@ -777,7 +800,7 @@ var item = {
                 }
                 ul.innerHTML = rows
                     .map(function (item) {
-                        return self.template_catalog_elem(item);
+                        return self.template_catalog_elem(item, true);
                     })
                     .join("");
             });
@@ -854,11 +877,12 @@ var item = {
         appendTemplate(target, template);
     },
 
-    template_catalog_elem: function (row) {
+    template_catalog_elem: function (row, new_tab = false) {
         let tpl = '';
+        let type_url = '/activitats/';
         switch(row.table) {
             case 'activities': tpl = 'act'; break;
-            case 'exhibitions': tpl = 'exp'; break;
+            case 'exhibitions': tpl = 'exp'; type_url = '/exposiciones/'; break;
             default: tpl = row.tpl;
         }
 
@@ -886,7 +910,7 @@ var item = {
                 ${
                     row.type
                         ? `<p class="has-text-weight-medium is-size-6">
-                    <a href="/activitats/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                    <a href="${type_url}?type=${row.type}" class="link-dn is-relative">${row.type}</a>
                 </p>`
                         : ""
                 }
@@ -906,7 +930,7 @@ var item = {
                         : ""
                 }
                 <h3 class="is-size-6 has-text-weight-semibold">
-                    <a href="${url}">${row.title}</a>
+                    <a href="${url}"${new_tab ? ' target="_blank"' : ''}>${row.title}</a>
                 </h3>
             </div>
         </li>
