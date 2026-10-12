@@ -42,7 +42,28 @@ var item = {
             const data = page.parse_list_data(response.result);
             const row = data[0] || null;
 
-            const parsedRelatedData = common.parseJsonArray(row.related_data).map(el => el.replaceAll('activity1_', ''));
+            // related_data ex: ["activity1_730","exhibition1_38"] -> ids agrupats per taula
+            const related_tables = {
+                activity: { table: "activities", tpl: "act" },
+                exhibition: { table: "exhibitions", tpl: "exp" },
+            };
+            const ids_by_type = {};
+            common.parseJsonArray(row.related_data).forEach(function (item) {
+                if (typeof item !== "string") {
+                    return;
+                }
+                const type = item.split("_")[0].replace(/\d+$/, "");
+                const id = parseInt(item.split("_").pop());
+                if (!related_tables[type] || isNaN(id)) {
+                    return;
+                }
+                if (type === "exhibition" && id == row.section_id) {
+                    return;
+                }
+                ids_by_type[type] = ids_by_type[type] || [];
+                ids_by_type[type].push(id);
+            });
+            const parsedRelatedData = Object.keys(ids_by_type);
 
             const renderPage = function () {
                 self.render({
@@ -56,27 +77,35 @@ var item = {
             };
 
             if (parsedRelatedData.length > 0) {
-                data_manager.request({
-                    body: {
-                        dedalo_get: "records",
-                        db_name: page_globals.WEB_DB,
-                        table: "activities",
-                        ar_fields: ["*"],
-                        lang: page_globals.WEB_CURRENT_LANG_CODE,
-                        section_id: parsedRelatedData.join(","),
-                        limit: 0,
-                        count: false,
-                    },
-                }).then(function (related_response) {
-                    related_response.result.forEach(rel => {
-                        rel.tpl = "act";
-                        const parsed = common.parseJsonArray(rel.identifying_image)
-                        if (parsed.length > 0) {
-                            rel.identifying_image_url = parsed[0] ? (__WEB_MEDIA_ENGINE_URL__ + parsed[0]) : null;
+                const requests = parsedRelatedData.map(function (type) {
+                    return data_manager.request({
+                        body: {
+                            dedalo_get: "records",
+                            db_name: page_globals.WEB_DB,
+                            table: related_tables[type].table,
+                            ar_fields: ["*"],
+                            lang: page_globals.WEB_CURRENT_LANG_CODE,
+                            section_id: ids_by_type[type].join(","),
+                            limit: 0,
+                            count: false,
+                        },
+                    }).then(function (related_response) {
+                        if (!related_response || !Array.isArray(related_response.result)) {
+                            return [];
                         }
+                        related_response.result.forEach(rel => {
+                            rel.tpl = related_tables[type].tpl;
+                            const parsed = common.parseJsonArray(rel.identifying_image)
+                            if (parsed.length > 0) {
+                                rel.identifying_image_url = parsed[0] ? (__WEB_MEDIA_ENGINE_URL__ + parsed[0]) : null;
+                            }
+                        });
+                        return related_response.result;
                     });
-                    row.related_data_resolved = related_response.result || [];
+                });
 
+                Promise.all(requests).then(function (results) {
+                    row.related_data_resolved = [].concat.apply([], results);
                     renderPage();
                 });
             } else {
@@ -728,7 +757,7 @@ var item = {
         var self = this;
         return htmlTemplate(`
             <h2 class="accordion-header">
-                <button type="button">${tstring.item_rel_activities}</button>
+                <button type="button">${tstring.item_rel_activities_exhibitions}</button>
             </h2>
             <div class="accordion-content block-dedalo">
                 <ul class="galeria galeria--242x242 link-dn">
