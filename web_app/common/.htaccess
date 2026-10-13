@@ -34,3 +34,17 @@ RewriteRule ^(.*?)_([0-9]{10})\.css$ $1.css [QSA,L]
         ExpiresByType video/webm "access plus 1 month"
     </IfModule>
 </ifDefine>
+
+# Cache-Control fallback via mod_headers. Works regardless of whether
+# mod_expires happens to be enabled on a given server, so static assets
+# always get a browser-cache header.
+<IfModule mod_headers.c>
+    <FilesMatch "\.(js|css|jpg|jpeg|png|gif|webp|svg|woff|woff2|ttf|eot|mp4|webm|ogg|mp3)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+</IfModule>
+
+# Compress text responses over the wire
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json image/svg+xml
+</IfModule>

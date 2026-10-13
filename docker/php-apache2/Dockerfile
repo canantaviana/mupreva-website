@@ -5,6 +5,22 @@ FROM php:8.2-apache
 RUN a2enmod rewrite
 RUN a2enmod headers
 RUN a2enmod env
+# Needed for the ExpiresByType caching rules in the project's .htaccess files
+RUN a2enmod expires
+# Compress text responses (html/css/js/json) over the wire
+RUN a2enmod deflate
+
+# OPcache ships with the base image but is OFF by default, so every request
+# recompiles every PHP file from source. Enable it for real speedups.
+RUN docker-php-ext-enable opcache
+RUN { \
+		echo 'opcache.enable=1'; \
+		echo 'opcache.memory_consumption=128'; \
+		echo 'opcache.interned_strings_buffer=16'; \
+		echo 'opcache.max_accelerated_files=10000'; \
+		echo 'opcache.validate_timestamps=1'; \
+		echo 'opcache.revalidate_freq=2'; \
+	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 ENV APACHE_DOCUMENT_ROOT /var/www/html
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf

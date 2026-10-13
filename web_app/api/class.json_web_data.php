@@ -57,6 +57,24 @@ class json_web_data
 
 
         #
+        # CACHE
+        # This API is read-only content (records/combi/thesaurus queries), so
+        # identical requests (same url + fields) can be safely served from a
+        # short-lived file cache instead of hitting the remote server again.
+        $cache_enabled = defined('API_CACHE_ENABLED') ? API_CACHE_ENABLED : false;
+        $cache_key      = null;
+        if ($cache_enabled === true) {
+            $cache_key  = sha1($url_base . '|' . $fields_string);
+            $cached     = self::get_cache($cache_key);
+            if ($cached !== false) {
+                $cached->debug = isset($cached->debug) && is_object($cached->debug) ? $cached->debug : new stdClass();
+                $cached->debug->total_time = round(microtime(1) - $start_time, 3);
+                $cached->debug->from_cache = true;
+                return (object)$cached;
+            }
+        }
+
+        #
         # REQUEST CONTENT TO SERVER
         $request_helper = 'curl';    # curl | http_post | file_get_contents
         switch ($request_helper) {
@@ -90,6 +108,9 @@ class json_web_data
                 $dedalo_data->debug = new stdClass();
                 $dedalo_data->debug->info = $info;
             }
+        } else if ($cache_enabled === true && $cache_key !== null) {
+            # Only cache well-formed, successful responses
+            self::set_cache($cache_key, $dedalo_data);
         }
 
         $dedalo_data->debug = isset($dedalo_data->debug) && is_object($dedalo_data->debug) ? $dedalo_data->debug : new stdClass();
@@ -98,6 +119,64 @@ class json_web_data
 
         return (object)$dedalo_data;
     } //end get_data
+
+
+
+    /**
+     * GET_CACHE
+     * Read a cached response if present and still within API_CACHE_TTL
+     * @return object|false
+     */
+    private static function get_cache($cache_key)
+    {
+
+        $cache_file = API_CACHE_DIR . '/' . $cache_key . '.json';
+
+        if (!file_exists($cache_file)) {
+            return false;
+        }
+
+        $ttl = defined('API_CACHE_TTL') ? API_CACHE_TTL : 300;
+        if ((time() - filemtime($cache_file)) > $ttl) {
+            return false;
+        }
+
+        $raw = file_get_contents($cache_file);
+        $data = json_decode($raw, false, 512, JSON_UNESCAPED_UNICODE);
+        if (!is_object($data)) {
+            return false;
+        }
+
+        return $data;
+    } //end get_cache
+
+
+
+    /**
+     * SET_CACHE
+     * Write a response to the file cache
+     * @return bool
+     */
+    private static function set_cache($cache_key, $dedalo_data)
+    {
+
+        if (!is_dir(API_CACHE_DIR)) {
+            @mkdir(API_CACHE_DIR, 0775, true);
+        }
+        if (!is_dir(API_CACHE_DIR) || !is_writable(API_CACHE_DIR)) {
+            return false;
+        }
+
+        $cache_file = API_CACHE_DIR . '/' . $cache_key . '.json';
+        $tmp_file     = $cache_file . '.' . getmypid() . '.tmp';
+
+        # Write to a temp file then rename (atomic) to avoid readers seeing a
+        # partially written cache file under concurrent requests
+        if (file_put_contents($tmp_file, json_encode($dedalo_data, JSON_UNESCAPED_UNICODE)) === false) {
+            return false;
+        }
+        return rename($tmp_file, $cache_file);
+    } //end set_cache
 
 
 
@@ -116,6 +195,11 @@ class json_web_data
         curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+
+        # Timeouts. Without these a slow/unreachable remote API hangs the
+        # whole page request (default is no limit)
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, defined('API_CURL_CONNECT_TIMEOUT') ? API_CURL_CONNECT_TIMEOUT : 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, defined('API_CURL_TIMEOUT') ? API_CURL_TIMEOUT : 15);
 
         # Session managements
         $cookie_path = session_save_path() . '/web_api_cookie';
