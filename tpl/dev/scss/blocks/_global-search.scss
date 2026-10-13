@@ -2,14 +2,17 @@
     .search-types-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 1rem;
+        gap: 0.75rem;
 
         button {
             background: none;
-            border: none;
+            border: 2px solid $primary;
+            border-radius: $radius;
             font-size: var(--step-2);
             font-weight: 600;
-            padding: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            color: $primary;
+            transition: background-color 0.15s ease, color 0.15s ease;
 
             &.selected, &:hover, &:focus {
                 background-color: $primary;
@@ -22,25 +25,108 @@
         }
     }
 
-    .global-search-result {
-        .thumbnail {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
+    // Image-forward card grid for results, replacing the old plain text
+    // list - each card is a single clickable block (image, type badge,
+    // title, metadata, snippet).
+    .global-search-grid {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--space-m);
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            padding-left: 0 !important;
+            margin-top: 0 !important;
+            &::before {
+                display: none !important;
+            }
         }
     }
 
-    .toggle-more, .toggle-less {
-        background: none;
-        border: none;
-        color: $primary;
-        font-size: var(--step-0);
-        font-weight: 600;
-        padding: 0;
+    .global-search-card {
+        background-color: #fff;
+        border: 1px solid $grey-light;
+        border-radius: $radius-large;
+        overflow: hidden;
+        transition: box-shadow 0.15s ease, transform 0.15s ease;
 
-        &:hover {
-            cursor: pointer;
-            text-decoration: underline;
+        &:hover, &:focus-within {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-3px);
+        }
+
+        &__link {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        &__image {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            background-color: $grey-light;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+        }
+
+        &__badge {
+            position: absolute;
+            left: var(--space-xs);
+            bottom: var(--space-xs);
+            background-color: $primary;
+            color: #fff;
+            font-size: var(--step--2);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 0.25rem 0.65rem;
+            border-radius: $radius-rounded;
+        }
+
+        &__body {
+            padding: var(--space-s);
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            flex-grow: 1;
+        }
+
+        &__title {
+            font-size: var(--step-1);
+            font-weight: 600;
+            line-height: 1.25;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        &__meta {
+            font-size: var(--step--1);
+            font-weight: 500;
+            color: $grey;
+            margin: 0;
+        }
+
+        &__desc {
+            font-size: var(--step--1);
+            color: $text;
+            margin: 0.25rem 0 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
     }
 }

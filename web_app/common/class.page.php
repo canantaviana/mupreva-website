@@ -1160,41 +1160,44 @@ class page
         $childrens_template_map->total_records     = count($ar_value);
 
         $html = '';
-        $i = 1;
-        foreach ($ar_value as $key => $current_locator) {
 
-            $section_id = $current_locator->section_id;
+        # Window of section_ids to render, same slicing as the previous
+        # one-at-a-time loop (skip $offset, take $max_records)
+        $ar_section_ids = array();
+        foreach ($ar_value as $current_locator) {
+            $ar_section_ids[] = (int)$current_locator->section_id;
+        }
+        $window_section_ids = array_slice($ar_section_ids, $offset, $max_records);
 
-            # Skip records before offset
-            if ($i <= $offset) {
-                $i++;
-                continue;
-            }
+        if (empty($window_section_ids)) {
+            return $html;
+        }
 
-            $options = new stdClass();
-            $options->dedalo_get    = 'records';
-            $options->lang            = WEB_CURRENT_LANG_CODE;
-            $options->table            = $table_name;
-            $options->ar_fields        = $ar_fields;
-            $options->sql_filter    = "section_id = " . $section_id . "";
-            $options->limit            = 1;
+        # Batch all needed rows into a single request instead of one HTTP
+        # round-trip per child record (N+1)
+        $ar_filter = array_map(function ($section_id) {
+            return '`section_id`=' . $section_id;
+        }, $window_section_ids);
 
-            # HTTP request in php to API
-            $data = json_web_data::get_data($options);
+        $options = new stdClass();
+        $options->dedalo_get    = 'records';
+        $options->lang            = WEB_CURRENT_LANG_CODE;
+        $options->table            = $table_name;
+        $options->ar_fields        = $ar_fields;
+        $options->sql_filter    = implode(' OR ', $ar_filter);
+        $options->order            = 'FIELD(`section_id`, ' . implode(',', $window_section_ids) . ')';
+        $options->limit            = 0;
 
-            foreach ((array)$data->result as $key => $children_row) {
+        # HTTP request in php to API (single batched call)
+        $data = json_web_data::get_data($options);
 
-                $temp_page         = clone ($this);
-                $temp_page->row    = $children_row;
+        foreach ((array)$data->result as $key => $children_row) {
 
-                $html .= $temp_page->get_template_html($childrens_template_map, $temp_page_mode);
-            } //end foreach ((array)$data->result as $key => $children_row)
+            $temp_page         = clone ($this);
+            $temp_page->row    = $children_row;
 
-            # Stop on max_records
-            if ($i >= $max_records + $offset) break;
-
-            $i++;
-        } //end foreach ($ar_value as $key => $section_id)
+            $html .= $temp_page->get_template_html($childrens_template_map, $temp_page_mode);
+        } //end foreach ((array)$data->result as $key => $children_row)
 
 
         return $html;

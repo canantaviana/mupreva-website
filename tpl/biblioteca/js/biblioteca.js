@@ -732,6 +732,15 @@ var biblio = {
 
         const self = this
 
+        // render_data() discards ar_rows entirely when self.default_submit
+        // is true (it renders templateModules.bloque_publicaciones_default()
+        // instead) - so firing the real query here would just be a wasted
+        // round-trip on every single page load. Skip the network call and
+        // resolve with an empty result shape immediately.
+        if (self.default_submit) {
+            return Promise.resolve({ result: [], total: 0 })
+        }
+
         const default_ar_fields = [
             "section_tipo",
             "section_id",
