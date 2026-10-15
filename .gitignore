@@ -52,3 +52,6 @@ config.codekit3
 /tpl/*/css_
 
 /html
+
+# json_web_data file cache (generated at runtime, not source)
+/web_app/cache/api/*.json

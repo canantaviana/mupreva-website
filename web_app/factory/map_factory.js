@@ -81,6 +81,7 @@ function map_factory() {
         // options
         const source_maps = options.source_maps || self.source_maps
         const popup_builder = options.popup_builder || self.build_popup_content
+        const tooltip_builder = options.tooltip_builder || self.build_tooltip_content
         const map_position = options.map_position || self.initial_map_data
         const map_container = options.map_container || self.map_container
         const container = options.container
@@ -123,6 +124,7 @@ function map_factory() {
         self.map_container = map_container
         self.container = container
         self.popup_builder = popup_builder
+        self.tooltip_builder = tooltip_builder
         self.popup_options = popup_options
         self.icon_main = icon_main
         self.legend = legend
@@ -242,15 +244,25 @@ function map_factory() {
                 : self.group_by_place(data)
             const group_data_length = group_data.length
 
-            // create marker. Build marker with custom icon and popup
+            // create marker. Build marker with custom icon, popup (click)
+            // and tooltip (hover - lightweight preview of what's at this
+            // location, built from data already on hand so no extra fetch
+            // is needed just to hover)
             // accessible name of a marker (it is focusable): how many records it holds
             const marker_name = function (element) {
                 const n = (element.group && element.group.length) || 1
                 return (tstring.map_marker || '{n} records here').replace('{n}', n)
             }
 
-            const create_marker = function (element, latlng, marker_icon, popup) {
+            const create_marker = function (element, latlng, marker_icon, popup, tooltip_content) {
                 const marker = L.marker(latlng, { icon: marker_icon, alt: marker_name(element) }).bindPopup(popup)
+                if (tooltip_content) {
+                    marker.bindTooltip(tooltip_content, {
+                        direction: 'top',
+                        offset: [0, -20],
+                        sticky: false
+                    })
+                }
                 marker.on('click', function (e) { // click also fires on Enter (keyboard), unlike mousedown
                     // event publish map_selected_marker
                     event_manager.publish('map_selected_marker', {
@@ -272,6 +284,7 @@ function map_factory() {
                     : self.icon_main // already parsed on init
 
                 const popup_content = self.popup_builder(element)
+                const tooltip_content = self.tooltip_builder ? self.tooltip_builder(element) : null
 
                 const popup = L.popup(self.popupOptions)
                     .setLatLng([element.lat, element.lon])
@@ -290,6 +303,13 @@ function map_factory() {
                             },
                             onEachFeature: function (feature, layer) {
                                 layer.bindPopup(popup)
+                                if (tooltip_content) {
+                                    layer.bindTooltip(tooltip_content, {
+                                        direction: 'top',
+                                        offset: [0, -20],
+                                        sticky: false
+                                    })
+                                }
                             }
                         })
 
@@ -306,7 +326,7 @@ function map_factory() {
 
                 } else {
 
-                    const marker = create_marker(element, [element.lat, element.lon], marker_icon, popup)
+                    const marker = create_marker(element, [element.lat, element.lon], marker_icon, popup, tooltip_content)
                     ar_markers.push(marker)
                 }
             }
@@ -464,6 +484,65 @@ function map_factory() {
 
         return popup_wrapper
     }//end build_popup_content
+
+
+
+    /**
+    * BUILD_TOOLTIP_CONTENT
+    * Lightweight hover preview, built only from data already available at
+    * marker-creation time (title + count of records at this location) -
+    * no extra fetch needed just to hover, unlike the click popup which can
+    * trigger load_marker_details() for richer info.
+    * Send callback option (tooltip_builder) to overwrite current function.
+    */
+    this.build_tooltip_content = function (data) {
+
+        const group = data.group || []
+        const group_length = group.length
+
+        if (group_length < 1) {
+            return ''
+        }
+
+        const max_titles = 2
+        const max_title_length = 70
+
+        const tooltip_wrapper = common.create_dom_element({
+            element_type: "div",
+            class_name: "map_tooltip"
+        })
+
+        const list = common.create_dom_element({
+            element_type: "ul",
+            class_name: "map_tooltip__list",
+            parent: tooltip_wrapper
+        })
+
+        const to = Math.min(max_titles, group_length)
+        for (let i = 0; i < to; i++) {
+            const item = group[i]
+            let title = item.title || item.name || (item.tpl + ' - ' + item.section_id)
+            if (title.length > max_title_length) {
+                title = title.substring(0, max_title_length).trim() + '...'
+            }
+            common.create_dom_element({
+                element_type: "li",
+                inner_html: title,
+                parent: list
+            })
+        }
+
+        if (group_length > max_titles) {
+            common.create_dom_element({
+                element_type: "div",
+                class_name: "map_tooltip__more",
+                inner_html: "+" + (group_length - max_titles),
+                parent: tooltip_wrapper
+            })
+        }
+
+        return tooltip_wrapper
+    }//end build_tooltip_content
 
 
 

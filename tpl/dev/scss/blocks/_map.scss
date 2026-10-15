@@ -15,3 +15,66 @@
 .leaflet-container {
     z-index: 1;
 }
+
+// Hover tooltip (quick preview of what's at a marker's location, shown
+// before the user commits to clicking it)
+.leaflet-tooltip {
+    // Leaflet's own default forces white-space:nowrap and has no width
+    // constraint, assuming short single-line labels - our content is full
+    // record titles, so without this override the box stretches to fit an
+    // entire unbroken sentence instead of wrapping and overflowing the map.
+    white-space: normal;
+    width: 190px;
+    padding: 0.6rem 0.7rem;
+    // No border: Leaflet's directional arrow is a separate pseudo-element
+    // that stays white regardless of this box's border-color, so a visible
+    // border here would create a mismatched seam at the arrow. A soft
+    // shadow alone reads cleaner anyway.
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+}
+
+.map_tooltip {
+    font-size: var(--step--2);
+    overflow-wrap: break-word;
+
+    &__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+
+        li {
+            position: relative;
+            font-weight: 600;
+            line-height: 1.3;
+            padding-left: 0.8rem;
+            color: $text;
+
+            &::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0.4em;
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background-color: $primary;
+            }
+        }
+    }
+
+    &__more {
+        display: inline-block;
+        margin-top: 0.45rem;
+        padding: 0.15rem 0.55rem;
+        border-radius: $radius-rounded;
+        background-color: rgba($primary, 0.1);
+        font-size: var(--step--3);
+        font-weight: 700;
+        color: $primary;
+    }
+}

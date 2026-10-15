@@ -457,7 +457,7 @@ var search = {
                 data: list_data,
                 fn_row_builder: self.list_row_builder,
                 pagination: pagination,
-                container_class: 'pub-text-results flow--l',
+                container_class: 'global-search-grid',
                 caller: self
             })
             self.list.render_list()
@@ -505,80 +505,40 @@ var search = {
         const identifyingImageUrl = row.identifying_image ? __WEB_MEDIA_ENGINE_URL__ + row.identifying_image : null;
         const searchImage = row.image ? JSON.parse(row.image)[0] : null;
         const searchImageUrl = searchImage ? __WEB_MEDIA_ENGINE_URL__ + searchImage : null;
+        // Every card gets an image slot, even with no real photo, so the
+        // grid stays visually aligned instead of some cards being
+        // image+text and others text-only at a different height.
+        const finalImage = searchImageUrl || identifyingImageUrl || '/assets/img/placeholder.png';
 
         const title = row.title || null;
         const place = row.place ? `[${row.place}]` : null;
         const startDate = row.start_date || null;
         const endDate = row.end_date || null;
-        const header = [title, place, startDate, endDate].filter(Boolean).join(', ');
-        const finalImage = searchImageUrl || identifyingImageUrl || null;
+        const subheader = [place, startDate, endDate].filter(Boolean).join(', ');
 
-        const searchData = row.search_data || '';
-        const isTruncated = searchData.length > 160;
-        const shortDescription = searchData.substring(0, 160) + (isTruncated ? '...' : '');
-        // the link shows the record reference; its name also says which record it is
-        const linkLabel = (title ? title + ' (' + row.tpl + '/' + row.ref_section_id + ')' : '').replace(/"/g, '&quot;');
+        const typeLabel = tstring[row.ref_section_tipo] || tstring[row.tpl] || row.tpl;
+
+        const shortDescription = row.search_data
+            ? row.search_data.substring(0, 140) + (row.search_data.length > 140 ? '...' : '')
+            : '';
 
         const content = parser.parseFromString(`
-            <li class="pb-6 global-search-result">
-                <div class="columns is-mobile">
-                    <div class="column flow--2xs">
-                        <div class="flow--2xs">
-                            ${header ?
-                                `<h3 class="is-size-3 has-text-weight-normal">
-                                    ${header}
-                                </h3>`
-                            : ''}
-                            ${row.search_data ?
-                                `
-                                <p class="short-desc">${shortDescription} ${isTruncated ? `<button type="button" class="toggle-more" aria-expanded="false">${(tstring.mas).toLowerCase()}</button>` : ''}</p>
-                                ${isTruncated ? `<p class="full-desc" style="display:none">${row.search_data} <button type="button" class="toggle-less" aria-expanded="true">${(tstring.menos).toLowerCase()}</button></p>` : ''}
-                                `
-                            : ''}
-                            <p class="is-size-5 has-text-weight-medium">
-                            <a href="${url}" target="_blank"${linkLabel ? ` aria-label="${linkLabel}"` : ''}>
-                                ${row.tpl}/${row.ref_section_id}
-                            </a>
-                            </p>
-                        </div>
+            <li class="global-search-card">
+                <a href="${url}" target="_blank" class="global-search-card__link">
+                    <div class="global-search-card__image">
+                        <img src="${finalImage}" alt="" loading="lazy">
+                        ${typeLabel ? `<span class="global-search-card__badge">${typeLabel}</span>` : ''}
                     </div>
-                    ${finalImage
-                        ? `<div class="column is-2-desktop is-3-touch thumbnail">
-                            <img src="${finalImage}" alt="" />
-                        </div>`
-                        : '<div class="column is-2 is-hidden-mobile"></div>'
-                    }
-                </div>
+                    <div class="global-search-card__body">
+                        ${title ? `<h3 class="global-search-card__title">${title}</h3>` : ''}
+                        ${subheader ? `<p class="global-search-card__meta">${subheader}</p>` : ''}
+                        ${shortDescription ? `<p class="global-search-card__desc">${shortDescription}</p>` : ''}
+                    </div>
+                </a>
             </li>
         `, "text/html");
 
-        const node = content.body.firstChild;
-        const shortEl = node.querySelector('.short-desc');
-        const fullEl = node.querySelector('.full-desc');
-        const btnMore = node.querySelector('.toggle-more');
-        const btnLess = node.querySelector('.toggle-less');
-
-        if (btnMore) {
-            btnMore.addEventListener('click', function () {
-                if (shortEl && fullEl) {
-                    shortEl.style.display = 'none';
-                    fullEl.style.display = 'block';
-                    // the pressed button is hidden: keep the focus on its pair
-                    btnLess.focus();
-                }
-            });
-        }
-        if (btnLess) {
-            btnLess.addEventListener('click', function () {
-                if (shortEl && fullEl) {
-                    shortEl.style.display = 'block';
-                    fullEl.style.display = 'none';
-                    btnMore.focus();
-                }
-            });
-        }
-
-        return node;
+        return content.body.firstChild;
 
     },
 

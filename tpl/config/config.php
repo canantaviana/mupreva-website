@@ -76,6 +76,18 @@ define('JSON_TRIGGER_URL', ($environment === 'prod') //quart
     : 'https://pre-dedalo.mupreva.org/dedalo6-pre/publication/server_api/v1/json/');
 
 
+// api_cache. File cache for json_web_data responses (read-only content API,
+// so caching is safe). Avoids re-fetching near-static data (menu, templates...)
+// on every single page load. Set API_CACHE_ENABLED to false to disable.
+define('API_CACHE_ENABLED', true);
+define('API_CACHE_TTL', 300); // seconds
+define('API_CACHE_DIR', __WEB_BASE_PATH__ . '/' . WEB_APP_DIR . '/cache/api');
+
+// api curl timeouts (seconds). Prevents a slow/unreachable remote API from
+// hanging a page request indefinitely.
+define('API_CURL_CONNECT_TIMEOUT', 5);
+define('API_CURL_TIMEOUT', 15);
+
 // json_web_data collector. PHP version HTTP request manager (via CURL)
 include(__WEB_BASE_PATH__ . '/' . WEB_APP_DIR . '/api/class.json_web_data.php');
 
@@ -118,7 +130,9 @@ define('WEB_LANG_BASE_PATH', __WEB_TEMPLATE_PATH__ . '/lang/');
 
 
 // debug . Show / hide debug messages
-$SHOW_DEBUG = true;
+// Tied to $environment: never run with debug on in prod (extra error
+// reporting/logging overhead and information disclosure on a live site).
+$SHOW_DEBUG = ($environment !== 'prod');
 if ($SHOW_DEBUG) {
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
