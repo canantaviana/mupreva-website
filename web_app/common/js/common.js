@@ -1125,11 +1125,278 @@ var common = {
     spinner: function(target) {
         const spinner = htmlTemplate(`
             <div class="has-text-centered">
-                <span class="loader"></span>
+                <span class="loader" aria-hidden="true"></span>
+                <span class="is-sr-only">${tstring.loading}</span>
             </div>
         `)[0];
         target.appendChild(spinner);
+        common.announce(tstring.loading);
         return spinner;
+    },
+
+    /**
+    * ANNOUNCE
+    * Reads a short status message (results count, loading…) to screen reader users
+    * through a single live region that stays in the page
+    */
+    get_status_region: function () {
+        let region = document.getElementById('a11y-status')
+        if (!region && document.body) {
+            region = document.createElement('div')
+            region.id = 'a11y-status'
+            region.className = 'is-sr-only'
+            region.setAttribute('role', 'status')
+            document.body.appendChild(region)
+        }
+        return region
+    },
+    /**
+    * MAKE_DIALOG
+    * Turns a custom modal into an accessible dialog: name, focus moved inside and kept there,
+    * Escape to close and the focus given back to the control that opened it.
+    * Returns a close() function; the caller removes or hides the modal in on_close.
+    */
+    make_dialog: function (dialog, options) {
+        const label = options.label || ''
+        const initial_focus = options.initial_focus || null
+        const on_close = options.on_close || function () {}
+        const opener = document.activeElement
+
+        dialog.setAttribute('role', 'dialog')
+        dialog.setAttribute('aria-modal', 'true')
+        if (options.labelledby) {
+            dialog.setAttribute('aria-labelledby', options.labelledby)
+        } else if (label) {
+            dialog.setAttribute('aria-label', label)
+        }
+        if (!dialog.hasAttribute('tabindex')) {
+            dialog.setAttribute('tabindex', '-1')
+        }
+
+        const focusables = function () {
+            return Array.from(dialog.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select, textarea, video[controls], [tabindex]:not([tabindex="-1"])'))
+                .filter(function (el) { return el.offsetParent !== null })
+        }
+
+        const on_keydown = function (e) {
+            if (e.key === 'Escape') {
+                e.preventDefault()
+                close()
+                return
+            }
+            if (e.key !== 'Tab') {
+                return
+            }
+            const items = focusables()
+            if (items.length === 0) {
+                e.preventDefault()
+                return
+            }
+            const first = items[0]
+            const last = items[items.length - 1]
+            if (e.shiftKey && (document.activeElement === first || document.activeElement === dialog)) {
+                e.preventDefault()
+                last.focus()
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault()
+                first.focus()
+            }
+        }
+        dialog.addEventListener('keydown', on_keydown)
+
+        let closed = false
+        const close = function () {
+            if (closed) return
+            closed = true
+            dialog.removeEventListener('keydown', on_keydown)
+            on_close()
+            if (opener && typeof opener.focus === 'function' && document.contains(opener)) {
+                opener.focus()
+            }
+        }
+
+        // move the focus inside once the dialog is in the page
+        setTimeout(function () {
+            (initial_focus || dialog).focus()
+        }, 0)
+
+        return close
+    },
+
+    /**
+    * OPEN_VIDEO_MODAL
+    * Plays a video in an accessible dialog, with its captions when there are any
+    */
+    open_video_modal: function (options) {
+        const url = options.url
+        const title = options.title || ''
+        const subtitles = options.subtitles
+        const has_subtitles = !!subtitles && !/(undefined|null)$/.test(subtitles)
+
+        const modal = document.createElement('div')
+        modal.className = 'modal is-active'
+        modal.innerHTML = `
+            <div class="modal-content">
+                <button type="button" class="modal-close" aria-label="${common.attr(tstring.close_window)}">
+                    <svg width="44" height="44" aria-hidden="true" focusable="false">
+                        <g fill="none" fill-rule="evenodd">
+                            <path d="M0 0h44v44H0z" />
+                            <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
+                        </g>
+                    </svg>
+                </button>
+                <video controls>
+                    <source src="${common.attr(url)}" type="video/mp4">
+                    ${has_subtitles
+                        ? `<track kind="captions" src="${common.attr(subtitles)}" srclang="${common.attr(document.documentElement.lang)}" label="${common.attr(tstring.subtitles || 'Subtitles')}" default>`
+                        : ''}
+                </video>
+                <p id="video-modal-title">${common.attr(title)}</p>
+            </div>`
+        document.body.appendChild(modal)
+
+        const video = modal.querySelector('video')
+        const close = common.make_dialog(modal, {
+            labelledby: title ? 'video-modal-title' : null,
+            label: tstring.ver_video,
+            initial_focus: video,
+            on_close: function () {
+                video.pause()
+                modal.remove()
+            }
+        })
+        modal.querySelector('.modal-close').addEventListener('click', close)
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                close()
+            }
+        })
+        return close
+    },
+
+    /**
+    * SET_RECORD_TITLE
+    * Detail pages: "Record title | Kind of page | Site" (WCAG 2.4.2)
+    */
+    set_record_title: function (title) {
+        const text = new DOMParser().parseFromString(String(title || ''), 'text/html').body.textContent.trim()
+        if (!text) {
+            return
+        }
+        if (!common.base_document_title) {
+            common.base_document_title = document.title
+        }
+        document.title = text + ' | ' + common.base_document_title
+    },
+
+    /**
+    * VALIDATE_YEAR
+    * Year filter fields: an empty field is fine, otherwise a 4-digit year.
+    * A wrong value shows a message tied to the field instead of being ignored (WCAG 3.3.1)
+    * @return bool true when the value can be used
+    */
+    validate_year: function (input) {
+        if (!input) {
+            return true
+        }
+        const value = input.value.trim()
+        // a number field with letters gives an empty value and validity.badInput
+        const valid = !input.validity.badInput && (value === '' || /^\d{4}$/.test(value))
+        const error_id = input.id + '-error'
+        let error_node = document.getElementById(error_id)
+        if (valid) {
+            input.removeAttribute('aria-invalid')
+            if (error_node) {
+                error_node.textContent = ''
+                error_node.hidden = true
+            }
+            return true
+        }
+        if (!error_node) {
+            error_node = document.createElement('p')
+            error_node.id = error_id
+            error_node.className = 'field-error'
+            const control = input.closest('.control') || input
+            control.insertAdjacentElement('afterend', error_node)
+            const describedby = input.getAttribute('aria-describedby')
+            input.setAttribute('aria-describedby', describedby ? describedby + ' ' + error_id : error_id)
+        }
+        error_node.textContent = tstring.year_error || 'Enter a 4-digit year'
+        error_node.hidden = false
+        input.setAttribute('aria-invalid', 'true')
+        return false
+    },
+
+    /**
+    * SQL_STRING
+    * Escapes a value to go inside a quoted SQL string ('...') of a sql_filter
+    */
+    sql_string: function (value) {
+        return String(value == null ? '' : value)
+            .replace(/\\/g, '\\\\')
+            .replace(/'/g, "''")
+    },
+
+    /**
+    * FULLTEXT_QUERY
+    * Turns what the user typed into a MySQL boolean full-text query where every word is required.
+    * - the full-text operators (+ - < > ( ) ~ * " @) and backslashes are not taken from the user:
+    *   they become spaces, so "Sant-Joan" searches "Sant" and "Joan"
+    * - quotes are escaped for the SQL string (l'Alcúdia used to break the query)
+    * @return string|null null when nothing is left to search
+    */
+    fulltext_query: function (text) {
+        const words = String(text == null ? '' : text)
+            .replace(/[+\-<>()~*"@\\]/g, ' ')
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean)
+        return words.length > 0
+            ? words.map(function (word) { return '+' + common.sql_string(word) }).join(' ')
+            : null
+    },
+
+    /**
+    * ATTR
+    * Escapes a value to put it inside a quoted HTML attribute of a template (alt, aria-label…)
+    */
+    attr: function (value) {
+        return String(value == null ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+    },
+
+    /**
+    * REMEMBER_FOCUSABLES
+    * Before a "load more" adds items (and removes its button), remember what could take the focus;
+    * the returned function moves the focus to the first new item, so keyboard users don't lose their place
+    */
+    remember_focusables: function (container) {
+        const selector = 'a[href], button, [tabindex="0"]'
+        const before = new Set(container.querySelectorAll(selector))
+        return function focus_first_new() {
+            const first_new = Array.from(container.querySelectorAll(selector)).find(function (el) {
+                return !before.has(el)
+            })
+            if (first_new) {
+                first_new.focus()
+            }
+        }
+    },
+
+    announce: function (message) {
+        const region = common.get_status_region()
+        if (!region) {
+            return
+        }
+        region.textContent = ''
+        // a short delay so the same message is read again
+        clearTimeout(common.announce_timer)
+        common.announce_timer = setTimeout(function () {
+            region.textContent = message
+        }, 150)
     },
 
     convertText: function(input) {
@@ -1341,3 +1608,9 @@ function respondToVisibility(element, callback) {
     observer.observe(element);
 }
 
+
+
+// the live region must exist before the first message, or it is not read
+document.addEventListener('DOMContentLoaded', function () {
+    common.get_status_region()
+});

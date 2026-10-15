@@ -641,14 +641,19 @@ var biblio_row_fields = {
             ? JSON.parse(biblio_object.publications_data)[0]
             : null
 
-        const publication_link = common.create_dom_element({
-            element_type	: "a",
-            href            : '/pub/' + section_id,
-            parent          : li
-        })
-		publication_link.setAttribute('target', '_blank');
+        // only a link when the publication exists (otherwise it would go to /pub/null)
+        const publication_link = section_id
+            ? common.create_dom_element({
+                element_type	: "a",
+                href            : '/pub/' + section_id,
+                parent          : li
+            })
+            : null
+		if (publication_link) {
+			publication_link.setAttribute('target', '_blank');
+		}
 
-        const line = section_id ? publication_link : li
+        const line = publication_link || li
 
 		// authors
 			const authors = (biblio_object.ref_publications_authors)
@@ -839,10 +844,11 @@ var biblio_row_fields = {
 			const link = (url)
 				? " | <a href=\"" + url +"\">"+url_title+" </a> "
 				: ""
+			// outside the publication link: a link can't contain another link
 			common.create_dom_element({
 				element_type	: "span",
 				inner_html		: link,
-				parent			: line
+				parent			: li
 			})
 
 		//parse bibliography data with Zenon references for extract only the first one

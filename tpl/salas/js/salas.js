@@ -1029,6 +1029,7 @@ var salas = {
                     const button_template = htmlTemplate(`
                         <button type="button" class="button ${is_expanded ? 'is-active' : ''} ${item.hilite ? 'hilite' : ''}" aria-controls="${panel_id}" aria-expanded="${is_expanded ? 'true' : 'false'}">
                             <span class="term-title is-size-7">${tstring.zones}</span>
+                            <span class="is-sr-only"> (${item.term})</span>
                         </button>
                     `)
                     appendTemplate(header, button_template)
@@ -1149,7 +1150,9 @@ var salas = {
                         load_more_btn.textContent = tstring.load_more + ' (' + offset + ' ' + tstring.of + ' ' + total + ')'
                     }
 
-                    const render_batch = () => {
+                    const render_batch = (e) => {
+                        // only when the user asked for more (not on the first batch)
+                        const focus_first_new = e ? common.remember_focusables(galeria_div) : null
                         const batch = all_relations.slice(offset, offset + page_size)
                         batch.forEach(image => {
                             const relationUrl = page_globals.__WEB_ROOT_WEB__ + '/' + image.path + '/' + image.section_id
@@ -1174,6 +1177,9 @@ var salas = {
                             content.querySelector('#button_load_more_' + item.term_id).remove()
                         } else {
                             update_btn_text()
+                        }
+                        if (focus_first_new) {
+                            focus_first_new()
                         }
                     }
 

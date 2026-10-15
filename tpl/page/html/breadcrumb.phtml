@@ -1,20 +1,23 @@
 
 <div>
     <div class="wrapper py-6">
-        <nav class="breadcrumb-nav link-dn is-size-6 has-text-weight-light" aria-label="Molla de pa">
+        <nav class="breadcrumb-nav link-dn is-size-6 has-text-weight-light" aria-label="<?php echo tstring('breadcrumb') ?>">
             <ol itemscope="" itemtype="https://schema.org/BreadcrumbList">
                 <?php
                 $breadCount = 0;
                 foreach ($this->breadcrumb as $entry) :
-                    $class = '';
-                    if (count($this->breadcrumb) == $breadCount + 1) {
-                        $class = 'is-hidden';
-                    }
+                    // the current page is not shown, but screen readers get it (as the current page, not a link)
+                    $is_current = count($this->breadcrumb) == $breadCount + 1;
+                    $class = $is_current ? 'is-sr-only' : '';
                 ?>
                 <li itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem" class="<?php echo $class ?>">
+                    <?php if ($is_current) : ?>
+                    <span itemprop="name" aria-current="page"><?php echo $entry->term ?></span>
+                    <?php else : ?>
                     <a itemprop="item" href="/<?php echo $entry->web_path ?>">
                         <span itemprop="name"><?php echo $entry->term ?></span>
                     </a>
+                    <?php endif ?>
                     <meta itemprop="position" content="<?php echo $breadCount + 2 ?>">
                 </li>
                 <?php
@@ -31,7 +34,7 @@
             <?php endif ?>
 
             <?php if (!empty($this->menu_title_html)) : ?>
-                <nav class="navigation-sub mx-auto" aria-label="Menú secundari">
+                <nav class="navigation-sub mx-auto" aria-label="<?php echo tstring('submenu_nav') ?>">
                 <?php echo $this->menu_title_html ?>
                 </nav>
             <?php endif ?>

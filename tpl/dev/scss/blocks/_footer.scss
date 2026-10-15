@@ -35,3 +35,9 @@ footer {
         }
     }
 }
+
+// links inside the footer text (CMS): footer has link-dn, but links in running text must
+// not rely on colour alone (1.4.1)
+footer .flow--m a {
+    text-decoration: underline;
+}

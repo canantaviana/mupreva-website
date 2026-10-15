@@ -15,7 +15,7 @@
     --fluid-200-350: clamp(12.5rem, 9.2391rem + 16.3043vw, 21.875rem);
 }
 
-// color focus
-$focus-color: #e67300;
+// color focus (≥ 3:1 on #fff, #f6f6f6 and #fff5e8; on dark backgrounds the outline is white)
+$focus-color: #c45f00;
 // $focus-color: currentColor;
 $small-breakpoint: 450px;

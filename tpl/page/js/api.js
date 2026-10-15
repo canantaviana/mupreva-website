@@ -118,7 +118,7 @@ var api = {
             sql_filter: "imagenes_identificativas is not null and destacado = 'Sí'",
             limit: 16,
             order: 'RAND()',
-            ar_fields: 'section_tipo,section_id, imagenes_identificativas',
+            ar_fields: 'section_tipo,section_id, imagenes_identificativas, titulo',
             parse: page.parse_list_data,
             resolve_portals_custom: '{"imagenes_identificativas": "image"}'
         };
@@ -624,7 +624,11 @@ var api = {
     },
 
     getGlobalSearchTypes: function(query) {
-        const queryAnd = query.split(' ').map(word => '+' + word).join(' ');
+        // same escaping as the search itself (common.fulltext_query)
+        const queryAnd = common.fulltext_query(query);
+        if (!queryAnd) {
+            return Promise.resolve([]);
+        }
 
         var options = {
             table: 'global_search',

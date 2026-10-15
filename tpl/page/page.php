@@ -22,7 +22,6 @@ page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/assets/lib/lz-string/lz-string.min
 page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/assets/js/browser.min.js';
 page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/assets/js/breakpoints.min.js';
 page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/assets/js/util.js';
-page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/assets/js/main.js';
 //app-min
 //page::$js_ar_url[] = __WEB_TEMPLATE_WEB__ . '/page/js/app-min.js';
 page::$js_ar_url[] = __WEB_ROOT_WEB__ . '/' . WEB_APP_DIR . '/common/js/common.js';
@@ -72,7 +71,7 @@ $li_drawer = function ($menu_element, $embed_html = '', $current = null) {
     $web_path = $menu_element->web_path === 'main_home' ? '' : $menu_element->web_path;
 
     $html  = '';
-    $html .= PHP_EOL . ' <li class="'.((!empty($embed_html))?'has-submenu':'').'" role="' . $menu_element->web_path . '">';
+    $html .= PHP_EOL . ' <li class="'.((!empty($embed_html))?'has-submenu':'').'" data-path="' . $menu_element->web_path . '">';
 
     $url = __WEB_ROOT_WEB__ . '/' . $web_path;
     $active = (isset($menu_element->active) && $menu_element->active !== 'no')
@@ -89,7 +88,7 @@ $li_drawer = function ($menu_element, $embed_html = '', $current = null) {
     if ($active === true) {
         $html .= '<a href="' . $url . '" '.$currentAria.' class="is-relative '.$currentClass.'">' . $menu_element->term . '</a>';
     } else {
-        $html .= '<a href="#" '.$currentAria.' class="is-relative '.$currentClass.'">' . $menu_element->term . '</a>';
+        $html .= '<span class="is-relative '.$currentClass.'">' . $menu_element->term . '</span>';
     }
 
     $html .= $embed_html;
@@ -123,7 +122,7 @@ $li_title_drawer = function ($menu_element, $embed_html = '', $current = null) {
     $web_path = $menu_element->web_path === 'main_home' ? '' : $menu_element->web_path;
 
     $html  = '';
-    $html .= PHP_EOL . ' <li role="' . $menu_element->web_path . '">';
+    $html .= PHP_EOL . ' <li data-path="' . $menu_element->web_path . '">';
 
     $url = __WEB_ROOT_WEB__ . '/' . $web_path;
     $active = (isset($menu_element->active) && $menu_element->active !== 'no')
@@ -140,7 +139,7 @@ $li_title_drawer = function ($menu_element, $embed_html = '', $current = null) {
     if ($active === true) {
         $html .= '<a href="' . $url . '" '.$currentAria.' class="'.$currentClass.'">' . $menu_element->term . '</a>';
     } else {
-        $html .= '<a href="#" '.$currentAria.' class="'.$currentClass.'">' . $menu_element->term . '</a>';
+        $html .= '<span class="'.$currentClass.'">' . $menu_element->term . '</span>';
     }
     $html .= '</li>';
 

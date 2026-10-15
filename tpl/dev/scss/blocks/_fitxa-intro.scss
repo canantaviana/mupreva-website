@@ -1,4 +1,9 @@
 .fitxa-intro {
+    // Bulma's gap is in rem: with enlarged text the negative margins pushed the row past the page
+    // and made it scroll sideways (1.4.4). Same 32px as before with the default text size.
+    &.columns.is-variable.is-8 {
+        --columnGap: min(2rem, 32px);
+    }
     h1 {
         font-size: var(--step-4);
         font-family: $family-secondary;

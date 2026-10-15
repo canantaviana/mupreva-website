@@ -29,6 +29,8 @@
         display: inline;
         &::after {
             content: "\00B7";
+            // decorative separator: not read by screen readers
+            content: "\00B7" / "";
             padding-left: var(--space-3xs);
             padding-right: var(--space-3xs);
         }

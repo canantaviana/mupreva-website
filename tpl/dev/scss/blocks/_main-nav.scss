@@ -25,6 +25,12 @@
         top: 100%;
         padding: 0 var(--space-l) var(--space-l) var(--space-l);
         z-index: 10;
+        // the header is sticky: a menu taller than the screen (zoom, small phones) scrolls
+        // inside itself, or its last items could never be reached (1.4.10, 2.1.1)
+        max-height: calc(100vh - var(--header-height, 5rem));
+        max-height: calc(100dvh - var(--header-height, 5rem));
+        overflow-y: auto;
+        overscroll-behavior: contain;
         > ul {
             > li {
                 border-bottom: 1px solid #000;
@@ -79,7 +85,8 @@
                 &:hover > a,
                 &:has([aria-current="page"]) > a {
                     &::after {
-                        background-color: getColor(secondary);
+                        // the current/open item mark needs 3:1 (1.4.11): secondary was 2.3:1
+                        background-color: $primary;
                         // .home:not(.slider-out) & {
                         //     background-color: #fff;
                         // }

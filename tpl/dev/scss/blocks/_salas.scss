@@ -18,6 +18,11 @@
         }
         .button {
             width: fit-content;
+            // long labels wrap instead of overflowing on small screens (1.4.10)
+            max-width: 100%;
+            height: auto;
+            white-space: normal;
+            text-align: left;
             background-color: $primary;
             border: 0;
             padding-left: 1em;

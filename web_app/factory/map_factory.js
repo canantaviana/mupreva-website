@@ -243,9 +243,15 @@ function map_factory() {
             const group_data_length = group_data.length
 
             // create marker. Build marker with custom icon and popup
+            // accessible name of a marker (it is focusable): how many records it holds
+            const marker_name = function (element) {
+                const n = (element.group && element.group.length) || 1
+                return (tstring.map_marker || '{n} records here').replace('{n}', n)
+            }
+
             const create_marker = function (element, latlng, marker_icon, popup) {
-                const marker = L.marker(latlng, { icon: marker_icon }).bindPopup(popup)
-                marker.on('mousedown', function (e) {
+                const marker = L.marker(latlng, { icon: marker_icon, alt: marker_name(element) }).bindPopup(popup)
+                marker.on('click', function (e) { // click also fires on Enter (keyboard), unlike mousedown
                     // event publish map_selected_marker
                     event_manager.publish('map_selected_marker', {
                         item: element,
@@ -280,14 +286,14 @@ function map_factory() {
                         const marker = L.geoJSON(geojsonFeature, {
                             pointToLayer: function (feature, latlng) {
                                 // return create_marker(element, latlng, marker_icon, popup)
-                                return L.marker(latlng, { icon: marker_icon })
+                                return L.marker(latlng, { icon: marker_icon, alt: marker_name(element) })
                             },
                             onEachFeature: function (feature, layer) {
                                 layer.bindPopup(popup)
                             }
                         })
 
-                        marker.on('mousedown', function (e) {
+                        marker.on('click', function (e) { // click also fires on Enter (keyboard), unlike mousedown
                             // event publish map_selected_marker
                             event_manager.publish('map_selected_marker', {
                                 item: element,

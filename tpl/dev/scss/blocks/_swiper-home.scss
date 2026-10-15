@@ -6,14 +6,25 @@
     --swiper-pagination-bullet-size: 15px;
     --swiper-pagination-bullet-horizontal-gap: 1rem;
     width: 100%;
-    height: 70vh;
-    @include widescreen {
-        height: 80vh;
-    }
-    @include fullhd {
-        height: 50.625rem;
+    // minimum heights instead of fixed ones: with a 400% zoom the title needs more than 70vh,
+    // and the slide grows with it instead of cutting it (1.4.10). The tallest slide sets the height.
+    .swiper-wrapper {
+        height: auto;
     }
     .swiper-slide {
+        height: auto;
+        min-height: 70vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        box-sizing: border-box;
+        padding-bottom: var(--space-3xl);
+        @include widescreen {
+            min-height: 80vh;
+        }
+        @include fullhd {
+            min-height: 50.625rem;
+        }
         &::before {
             content: "";
             position: absolute;
@@ -21,17 +32,21 @@
             height: 100%;
             left: 0;
             top: 0;
+            // never lighter than 45% black where the title can be: white large text keeps
+            // at least 3.4:1 even on a white photo (1.4.3); it was transparent between 37% and 60%
             background: linear-gradient(
                 180deg,
                 rgba(0, 0, 0, 0.7) 0%,
-                rgba(0, 0, 0, 0.12) 37%,
-                rgba(0, 0, 0, 0) 60%,
+                rgba(0, 0, 0, 0.45) 30%,
+                rgba(0, 0, 0, 0.45) 60%,
                 rgba(0, 0, 0, 1) 100%
             );
             z-index: 10;
         }
         img {
             display: block;
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -42,11 +57,8 @@
         }
     }
     .wrapper:has(h2) {
-        position: absolute;
-        left: 50%;
+        position: relative;
         width: 100%;
-        transform: translateX(-50%);
-        bottom: var(--space-3xl);
         z-index: 10;
         box-sizing: border-box;
     }

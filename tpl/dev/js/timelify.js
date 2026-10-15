@@ -24,6 +24,12 @@ function timelify(elements, options) {
 
     var timelineItems = elements.querySelectorAll('.timeline-items li');
 
+    // Items hidden until scrolled into view can't be reached with the keyboard or read by
+    // screen readers (WCAG 1.3.2, 2.1.1): show them all from the start
+    timelineItems.forEach(function(item) {
+        item.classList.remove('is-hidden');
+    });
+
     window.addEventListener('scroll', function() {
         var scrollPos = window.scrollY || document.documentElement.scrollTop;
         if (document.querySelectorAll('.timeline-items li.is-hidden').length > 0) {

@@ -6,6 +6,10 @@
     top: 0;
     z-index: 10000;
     backdrop-filter: blur(20px);
+    // very low windows (400% zoom, landscape phones): a fixed header would take a quarter of the screen
+    @media (max-height: 30em) {
+        position: relative;
+    }
     &:not(:has(+ main > .has-background-grey-light:first-child)) {
         margin-bottom: var(--space-m);
     }

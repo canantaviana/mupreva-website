@@ -1,6 +1,7 @@
 .galeria {
     display: grid!important;
-    grid-template-columns: repeat(auto-fill, minmax(var(--colWidth), 1fr));
+    // a column never wider than the screen (1.4.10 reflow at 320px)
+    grid-template-columns: repeat(auto-fill, minmax(min(var(--colWidth), 100%), 1fr));
     column-gap: var(--space-m);
     row-gap: var(--space-l);
     li {

@@ -19,6 +19,20 @@ module.exports = (gulp) => {
   const favicons = require('gulp-favicons');
   const downloader = require('goog-webfont-dl');
   const merge = require('merge-stream');
+  const { Transform } = require('stream');
+
+  // The page links app.css as app_<file mtime>.css to bust browser caches. gulp keeps the
+  // mtime of the source (app.scss, which rarely changes), so new CSS never reached the
+  // browsers: give the written file the build time.
+  const touch = () => new Transform({
+    objectMode: true,
+    transform(file, enc, callback) {
+      if (file.stat) {
+        file.stat.mtime = file.stat.atime = new Date();
+      }
+      callback(null, file);
+    }
+  });
 
   const config = require('./config.js')();
 
@@ -64,6 +78,7 @@ module.exports = (gulp) => {
           }))
           .pipe(concat(file))
           .pipe(sourcemaps.write('maps'))
+          .pipe(touch())
           .pipe(gulp.dest('assets/css/'))
           .on('end', () => {
             log('write css ' + file);

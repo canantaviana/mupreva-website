@@ -65,8 +65,8 @@ ol {
     list-style-type: "" !important; /*https://www.matuzo.at/blog/2023/removing-list-styles-without-affecting-semantics*/
 }
 
-u,
-s {
+// <u> without underline, so it isn't taken for a link; <s> keeps its line-through (it means "removed")
+u {
     text-decoration: none;
 }
 
@@ -233,7 +233,8 @@ canvas {
 // }
 :focus {
     @include focus;
-    .has-background-black:not(.error) & {
+    .has-background-black:not(.error) &,
+    .has-background-primary & {
         outline-color: #fff;
     }
 }
@@ -378,6 +379,15 @@ dd {
     scroll-margin-block: 5ex;
 }
 
+// keep focused elements and skip-link targets clear of the sticky header
+html {
+    scroll-padding-top: min(var(--header-height, 8rem), 40vh);
+    // the header stops being sticky on very low windows (see _main-header.scss)
+    @media (max-height: 30em) {
+        scroll-padding-top: 0;
+    }
+}
+
 // // A11y toggle (http://edenspiekermann.github.io/a11y-toggle/)
 // [aria-hidden="true"],
 // [data-a11y-toggle]:not([aria-controls]) {
@@ -405,6 +415,23 @@ dd {
 //     // display: initial;
 // }
 
-@view-transition {
-    navigation: auto;
+@media (prefers-reduced-motion: no-preference) {
+    @view-transition {
+        navigation: auto;
+    }
+}
+
+// people who ask their system for less motion get no animations or smooth scrolling (2.3.3)
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

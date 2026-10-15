@@ -296,11 +296,11 @@ var search = {
                                     ar_rows: rowsWithImages
                                 })
                                     .then(function (list_node) {
-                                        const searchTitle = document.createElement('h2');
-                                        searchTitle.textContent = self.keywords
-                                            ? `"${self.keywords}"`
-                                            : '';
-                                        rows_list_container.appendChild(searchTitle);
+                                        if (self.keywords) {
+                                            const searchTitle = document.createElement('h2');
+                                            searchTitle.textContent = `"${self.keywords}"`;
+                                            rows_list_container.appendChild(searchTitle);
+                                        }
 
                                         const typesContainerId = 'search_types_container'
                                         let typesContainer = document.getElementById(typesContainerId)
@@ -316,8 +316,10 @@ var search = {
                                         const types = self.search_types || []
                                         types.forEach(function (tipo) {
                                             const btn = document.createElement('button')
+                                            btn.type = 'button'
                                             btn.textContent = tstring[tipo] || tipo
                                             btn.dataset.tipo = tipo
+                                            btn.setAttribute('aria-pressed', self.ref_section_tipo_selected === tipo ? 'true' : 'false')
                                             if (self.ref_section_tipo_selected === tipo) btn.className = 'selected'
                                             btn.addEventListener('click', function () {
                                                 if (self.ref_section_tipo_selected === tipo) return
@@ -331,6 +333,7 @@ var search = {
                                         const resultsCountNode = document.createElement('p');
                                         resultsCountNode.className = 'has-text-right';
                                         resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
+                                        common.announce(resultsCountNode.textContent);
                                         rows_list_container.appendChild(resultsCountNode);
 
                                         if (common.is_node(list_node)) {
@@ -388,15 +391,18 @@ var search = {
         const table = 'global_search'
         const ar_fields = "*"
         const order = 'section_id asc'
-        const limit = 10
+        // same page size as the paginator, or pages skip results
+        const limit = self.pagination.limit
         const offset = self.pagination.offset;
         const count = true
         const process_result = null
-        const section_tipo_filter = self.ref_section_tipo_selected ? ` AND ref_section_tipo='${self.ref_section_tipo_selected}'` : '';
-        const keywords_escaped = self.keywords.trim().split(/\s+/).map(word => `+${word}`).join(' ');
-        const sql_filter = self.keywords
-            ? `MATCH (search_data) AGAINST ('${keywords_escaped}' IN BOOLEAN MODE)${section_tipo_filter}`
-            : null;
+        const section_tipo_filter = self.ref_section_tipo_selected ? ` AND ref_section_tipo='${common.sql_string(self.ref_section_tipo_selected)}'` : '';
+        // the user's text never goes into the SQL as it is (quotes, full-text operators)
+        const keywords_escaped = common.fulltext_query(self.keywords);
+        if (!keywords_escaped) {
+            return Promise.resolve({ result: [], total: 0})
+        }
+        const sql_filter = `MATCH (search_data) AGAINST ('${keywords_escaped}' IN BOOLEAN MODE)${section_tipo_filter}`;
 
         // request
         const js_promise = data_manager.request({
@@ -507,7 +513,11 @@ var search = {
         const header = [title, place, startDate, endDate].filter(Boolean).join(', ');
         const finalImage = searchImageUrl || identifyingImageUrl || null;
 
-        const shortDescription = row.search_data.substring(0, 160) + (row.search_data.length > 160 ? '...' : '');
+        const searchData = row.search_data || '';
+        const isTruncated = searchData.length > 160;
+        const shortDescription = searchData.substring(0, 160) + (isTruncated ? '...' : '');
+        // the link shows the record reference; its name also says which record it is
+        const linkLabel = (title ? title + ' (' + row.tpl + '/' + row.ref_section_id + ')' : '').replace(/"/g, '&quot;');
 
         const content = parser.parseFromString(`
             <li class="pb-6 global-search-result">
@@ -521,12 +531,12 @@ var search = {
                             : ''}
                             ${row.search_data ?
                                 `
-                                <p class="short-desc">${shortDescription} <button type="button" class="toggle-more">${(row.search_data.length>200) ? (tstring.mas).toLowerCase() : ''}</button></p>
-                                <p class="full-desc" style="display:none">${row.search_data} <button type="button" class="toggle-less">${(tstring.menos).toLowerCase()}</button></p>
+                                <p class="short-desc">${shortDescription} ${isTruncated ? `<button type="button" class="toggle-more" aria-expanded="false">${(tstring.mas).toLowerCase()}</button>` : ''}</p>
+                                ${isTruncated ? `<p class="full-desc" style="display:none">${row.search_data} <button type="button" class="toggle-less" aria-expanded="true">${(tstring.menos).toLowerCase()}</button></p>` : ''}
                                 `
                             : ''}
                             <p class="is-size-5 has-text-weight-medium">
-                            <a href="${url}" target="_blank">
+                            <a href="${url}" target="_blank"${linkLabel ? ` aria-label="${linkLabel}"` : ''}>
                                 ${row.tpl}/${row.ref_section_id}
                             </a>
                             </p>
@@ -553,6 +563,8 @@ var search = {
                 if (shortEl && fullEl) {
                     shortEl.style.display = 'none';
                     fullEl.style.display = 'block';
+                    // the pressed button is hidden: keep the focus on its pair
+                    btnLess.focus();
                 }
             });
         }
@@ -561,6 +573,7 @@ var search = {
                 if (shortEl && fullEl) {
                     shortEl.style.display = 'block';
                     fullEl.style.display = 'none';
+                    btnMore.focus();
                 }
             });
         }

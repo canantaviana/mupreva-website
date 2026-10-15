@@ -12,13 +12,17 @@
 
             <?php if (isset($ar_image) && !empty($ar_image) && is_array($ar_image) && count($ar_image) > 0 ) : ?>
             <div class="text-base">
-                <?php if (count($ar_image) === 1) {
+                <?php
+                // the images have no description of their own: name them after the page
+                $image_alt_base = isset($title) ? htmlspecialchars(strip_tags($title)) : '';
+                $image_count = count($ar_image);
+                if (count($ar_image) === 1) {
                     $image = $ar_image[0];
                     // una imatge
                     echo '
                     <div class="images-group fullscreen__fullheight column is-7-tablet is-half-desktop">
                         <figure class="fullscreen__content fullscreen__content--3 has-text-left">
-                            <img loading="lazy" class="active" src="' . __WEB_MEDIA_ENGINE_URL__ . $image . '">
+                            <img loading="lazy" class="active" src="' . __WEB_MEDIA_ENGINE_URL__ . $image . '" alt="' . $image_alt_base . '">
                         </figure>
                     </div>
                     ';
@@ -29,10 +33,11 @@
                             <!-- Slider -->
                             <div class="fullscreen__content fullscreen__content--1 swiper swiper--fitxa">
                                 <div class="swiper-wrapper">';
-                                    foreach ($ar_image as $image) {
+                                    foreach ($ar_image as $image_index => $image) {
+                                        $image_alt = trim($image_alt_base . ' (' . str_replace(['{n}', '{total}'], [$image_index + 1, $image_count], tstring('image_n_of')) . ')');
                                         echo '
                                         <div class="swiper-slide">
-                                            <img loading="lazy" src="' . __WEB_MEDIA_ENGINE_URL__ . $image . '">
+                                            <img loading="lazy" src="' . __WEB_MEDIA_ENGINE_URL__ . $image . '" alt="' . $image_alt . '">
                                         </div>
                                         ';
                                     }
@@ -50,7 +55,7 @@
                                     foreach ($ar_image as $image) {
                                         echo '
                                         <div class="swiper-slide">
-                                            <img loading="lazy" src="' . __WEB_MEDIA_ENGINE_URL__ . $image . '">
+                                            <img loading="lazy" src="' . __WEB_MEDIA_ENGINE_URL__ . $image . '" alt="">
                                         </div>
                                         ';
                                     }
@@ -71,9 +76,9 @@
                     <div class="columns is-flex-direction-row-reverse">
                         <div class="column flow--2xs">
                             <div class="flow--2xs">
-                                <h3 class="is-size-3 has-text-weight-normal">
+                                <h2 class="is-size-3 has-text-weight-normal">
                                     <a href="<?php echo $value['pdf'] ?>" target="_blank"><?php echo $value['title'] ?></a>
-                                </h3>
+                                </h2>
                             </div>
 
                         </div>
