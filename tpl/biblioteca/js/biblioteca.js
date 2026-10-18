@@ -249,6 +249,7 @@ var biblio = {
                                     <label class="label is-sr-only" for="authors">${tstring.documents_author_label}</label>
                                     <div class="control">
                                         <input type="search" name="cercaAutor" id="authors" placeholder="${tstring.documents_author_label}" value="" class="input">
+                                        <div class="container_values"></div>
                                     </div>
                                 </div>
                             </div>
@@ -405,7 +406,17 @@ var biblio = {
                 eq: "MATCH",
                 eq_in: "",
                 eq_out: "",
+                // the autor column stores every co-author of a publication joined
+                // as "Surname, Name; Surname, Name" (see biblio_row_fields.js
+                // author(): ar.join(", ") per author, then ar_final_authors.join("; ")).
+                // Splitting on "; " indexes each author individually instead of the
+                // whole joined string, and q_selected_eq LIKE matches a chosen
+                // author regardless of where they appear in that joined string.
+                q_splittable: true,
+                value_split: '; ',
+                q_selected_eq: 'LIKE',
                 node_input: currentForm.querySelector('#authors'),
+                node_values: currentForm.querySelector('#authors').closest('.control').querySelector('.container_values'),
                 callback: function (form_item) {
                     self.form.activate_autocomplete({
                         form_item: form_item,

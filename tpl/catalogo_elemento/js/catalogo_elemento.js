@@ -1233,7 +1233,7 @@ var item = {
                             <li>
                                 <a href="${page_globals.__WEB_ROOT_WEB__}/${elementsDic[self.table]}/${item.section_id}" target="_blank">
                                     <figure>
-                                        <img src="${imageUrl}" crossorigin="Anonymous" loading="lazy">
+                                        <img src="${imageUrl}" loading="lazy">
                                         <figcaption>${item.titulo}</figcaption>
                                     </figure>
                                 </a>
@@ -1584,7 +1584,7 @@ var item = {
                 <button type="button">${tstring.item_rel_content}</button>
             </h2>
             <div class="accordion-content block-dedalo">
-                <ul class="galeria galeria--92x92 link-dn">
+                <ul class="galeria galeria--185x185 link-dn">
                 ${row.children_resolved
                     .map(function (object) {
                         return self.template_catalog_elem(object);
@@ -1715,7 +1715,7 @@ var item = {
                     <li>
                         <a href="${page_globals.__WEB_ROOT_WEB__}/${page.section_tipo_to_template(key)}/${item.section_id}" target="_blank">
                             <figure>
-                                <img src=${image} alt=""  crossorigin="Anonymous" loading="lazy" />
+                                <img src=${image} alt="" loading="lazy" />
                                 ${item.title
                                     ? `<figcaption>${item.title}</figcaption>`
                                 : ''}

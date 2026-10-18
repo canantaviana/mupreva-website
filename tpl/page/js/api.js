@@ -372,7 +372,7 @@ var api = {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'objects',
-            sql_filter: 'imagenes_identificativas is not null and destacado is not null',
+            sql_filter: "imagenes_identificativas is not null and destacado = 'Sí'",
             limit: 12,
             order: seed ? `RAND(${seed})` : null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
@@ -388,7 +388,7 @@ var api = {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'objects',
-            sql_filter: 'imagenes_identificativas is not null and destacado is not null AND tipo_registro = "Conjunto"',
+            sql_filter: 'imagenes_identificativas is not null and destacado = \'Sí\' AND tipo_registro = "Conjunto"',
             limit: 12,
             order: seed ? `RAND(${seed})` : null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
@@ -404,7 +404,7 @@ var api = {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'pictures',
-            sql_filter: 'imagenes_identificativas is not null and destacado is not null',
+            sql_filter: "imagenes_identificativas is not null and destacado = 'Sí'",
             limit: 12,
             order: seed ? `RAND(${seed})` : null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
@@ -420,7 +420,7 @@ var api = {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'immovables',
-            sql_filter: 'imagenes_identificativas is not null and destacado is not null',
+            sql_filter: "imagenes_identificativas is not null and destacado = 'Sí'",
             limit: 12,
             order: seed ? `RAND(${seed})` : null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
@@ -436,7 +436,7 @@ var api = {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'documents_catalog',
-            sql_filter: 'imagenes_identificativas is not null and destacado is not null',
+            sql_filter: "imagenes_identificativas is not null and destacado = 'Sí'",
             limit: 12,
             order: seed ? `RAND(${seed})` : null,
             ar_fields: 'section_tipo,section_id,imagenes_identificativas,titulo',
@@ -453,7 +453,7 @@ var api = {
         var options = {
             //table: 'objects,pictures,immovables,documents_catalog',
             table: 'documents_catalog',
-            sql_filter: 'imagenes_identificativas is not null and destacado is not null',
+            sql_filter: "imagenes_identificativas is not null and destacado = 'Sí'",
             limit: 12,
             order: seed ? `RAND(${seed})` : null,
             //ar_fields: '*',
