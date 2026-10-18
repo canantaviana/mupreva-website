@@ -60,7 +60,7 @@ var templateModules = {
                             <div class="dialog-overlay" data-a11y-dialog-hide></div>
 
                             <div class="dialog-content" role="document">
-                                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close_window}">
                                     <svg width="44" height="44">
                                         <g fill="none" fill-rule="evenodd">
                                             <path d="M0 0h44v44H0z" />
@@ -119,7 +119,7 @@ var templateModules = {
                                 ${info.image.map(image => `
                                     <div class="swiper-slide">
                                         <img src="${image.image}"
-                                            alt="${image.title ? image.title : ""}">
+                                            alt="">
                                     </div>
                                 `).join("")}
                             </div>
@@ -135,7 +135,7 @@ var templateModules = {
                             <div class="dialog-overlay" data-a11y-dialog-hide></div>
 
                             <div class="dialog-content" role="document">
-                                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close_window}">
                                     ✕
                                 </button>
 
@@ -183,7 +183,7 @@ var templateModules = {
                             <div class="dialog-overlay" data-a11y-dialog-hide></div>
 
                             <div class="dialog-content" role="document">
-                                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close_window}">
                                     <svg width="44" height="44">
                                         <g fill="none" fill-rule="evenodd">
                                             <path d="M0 0h44v44H0z" />
@@ -240,7 +240,7 @@ var templateModules = {
                                 ${info.image.map(image => `
                                     <div class="swiper-slide">
                                         <img src="${image.image}"
-                                            alt="${image.title ? image.title : ""}">
+                                            alt="">
                                     </div>
                                 `).join("")}
                             </div>
@@ -256,7 +256,7 @@ var templateModules = {
                             <div class="dialog-overlay" data-a11y-dialog-hide></div>
 
                             <div class="dialog-content" role="document">
-                                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close_window}">
                                     ✕
                                 </button>
 
@@ -305,7 +305,7 @@ var templateModules = {
                                 <div class="dialog-overlay" data-a11y-dialog-hide></div>
 
                                 <div class="dialog-content" role="document">
-                                    <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                    <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close_window}">
                                         <svg width="44" height="44">
                                             <g fill="none" fill-rule="evenodd">
                                                 <path d="M0 0h44v44H0z" />
@@ -364,7 +364,7 @@ var templateModules = {
                                     ${info.image.map(image => `
                                         <div class="swiper-slide">
                                             <img src="${image.image}"
-                                                alt="${image.title ? image.title : ""}">
+                                                alt="">
                                         </div>
                                     `).join("")}
                                 </div>
@@ -380,7 +380,7 @@ var templateModules = {
                                 <div class="dialog-overlay" data-a11y-dialog-hide></div>
 
                                 <div class="dialog-content" role="document">
-                                    <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                    <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close_window}">
                                         ✕
                                     </button>
 
@@ -433,7 +433,7 @@ var templateModules = {
                                     <div class="dialog-overlay" data-a11y-dialog-hide></div>
 
                                     <div class="dialog-content" role="document">
-                                        <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                        <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close_window}">
                                             <svg width="44" height="44">
                                                 <g fill="none" fill-rule="evenodd">
                                                     <path d="M0 0h44v44H0z" />
@@ -490,7 +490,7 @@ var templateModules = {
                                         ${info.image.map(image => `
                                             <div class="swiper-slide">
                                                 <img src="${image.image}"
-                                                    alt="${image.title ? image.title : ""}">
+                                                    alt="">
                                             </div>
                                         `).join("")}
                                     </div>
@@ -506,7 +506,7 @@ var templateModules = {
                                     <div class="dialog-overlay" data-a11y-dialog-hide></div>
 
                                     <div class="dialog-content" role="document">
-                                        <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                        <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close_window}">
                                             ✕
                                         </button>
 
@@ -679,7 +679,7 @@ var templateModules = {
                         <div class="dialog-container" data-a11y-dialog="dialog-${info.section_id}" aria-hidden="true" aria-labelledby="dialog-${info.section_id}-title">
                             <div class="dialog-overlay" data-a11y-dialog-hide></div>
                             <div class="dialog-content" role="document">
-                                <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                                <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close_window}">
                                     <svg width="44" height="44">
                                         <g fill="none" fill-rule="evenodd">
                                             <path d="M0 0h44v44H0z" />
@@ -822,7 +822,7 @@ var templateModules = {
                         return `
                             <div class="masonry-grid-item ${extraClass}">
                                 <a href="${url}" target="_blank">
-                                    <img src="${image_url}" alt="">
+                                    <img src="${image_url}" alt="${common.attr(elem.titulo)}">
                                 </a>
                             </div>
                         `;
@@ -1585,7 +1585,16 @@ var templateModules = {
                 // Afegim l'event listener al botó de carregar més
                 container.querySelector(`#button_load_more_${type}`).addEventListener('click', function(){
                     if (data[type].loaded < data[type].total) {
-                        load_items(type);
+                        // the gallery is rebuilt: move the focus to the first new item
+                        const gallery = container.querySelector('.galeria');
+                        const previous = gallery.querySelectorAll('li').length;
+                        load_items(type).then(function () {
+                            const first_new = gallery.querySelectorAll('li')[previous];
+                            const link = first_new && first_new.querySelector('a[href]');
+                            if (link) {
+                                link.focus();
+                            }
+                        });
                     }
                 });
             }
@@ -1594,7 +1603,7 @@ var templateModules = {
             var gallery_children = container.querySelector('.galeria');
 
             // Crida a la api per carregar més elements
-            apiCall({offset: data[type].loaded, seed}).then(function({data: results, total}){
+            return apiCall({offset: data[type].loaded, seed}).then(function({data: results, total}){
                 if (!results || results.length == 0) {
                     return;
                 }
@@ -1882,7 +1891,7 @@ var templateModules = {
                         <div class="column is-5-widescreen">
                             <div class="has-background-black h-100 has-text-white flow--l p-8">
                                 ${(logo_url)?`
-                                <img src="${logo_url}" width="157" height="78">
+                                <img src="${logo_url}" alt="${common.attr(info.title || '')}" width="157" height="78">
                                 `:''}
                                 ${(info.summary)?`
                                 ${common.convertText(info.summary)}
@@ -1905,7 +1914,7 @@ var templateModules = {
                 <h2 class="is-flex is-align-items-center gap-2 mb-7 has-text-black">${tstring.route_sites}</h2>
                 <div class="tabs-2">
                     <div class="tab-control">
-                        <ul class="tab-list" role="tablist">
+                        <ul class="tab-list" role="tablist" aria-label="${tstring.route_sites}">
                         ${info.children_data.map(function(elem){
                             return `<li class="tab-item">
                                 <button role="tab" aria-controls="route-tab-${elem.section_id}">${elem.title}</button>

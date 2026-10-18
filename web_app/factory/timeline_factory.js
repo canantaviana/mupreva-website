@@ -126,7 +126,9 @@ function timeline_factory() {
                     "cd-timeline__content"
                 );
                 this.offset = 0.8; //0.8;
-                this.hideBlocks();
+                // Blocks are no longer hidden until scrolled into view: visibility:hidden content
+                // can't be reached with the keyboard or read by screen readers (WCAG 1.3.2, 2.1.1)
+                // this.hideBlocks();
             }
 
             VerticalTimeline.prototype.hideBlocks = function () {

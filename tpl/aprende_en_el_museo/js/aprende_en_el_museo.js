@@ -169,7 +169,7 @@ var biblio = {
 <form action="#" class="search-form">
     <div class="is-flex is-flex-wrap-wrap gap-6">
         <div class="field is-flex is-flex-wrap-wrap is-align-items-center mb-0 gap-2">
-            <label class="label mb-0" for="categories">${tstring.activitis_filter_category}:</label>
+            <label class="label mb-0" for="type">${tstring.activitis_filter_category}:</label>
             <div class="control">
                 <div class="select select--simple is-flex is-align-items-center">
                     <select id="type" name="type">
@@ -628,7 +628,7 @@ var biblio = {
                 ${
                     row.type
                         ? `<p class="has-text-weight-medium is-size-6 mb-1">
-                    <a href="/activitats/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                    <a href="/actividades/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
                 </p>`
                         : ""
                 }

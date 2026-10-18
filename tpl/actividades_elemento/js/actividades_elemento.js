@@ -34,7 +34,7 @@ var item = {
         // load and render
         self.load_data({}).then(function (response) {
             if (!response.result || response.result.length < 1) {
-                self.target.innerHTML = `<div class="not_found">Sorry, record not available (${self.section_id})</div>`;
+                self.target.innerHTML = `<div class="not_found">${tstring.record_not_available} (${self.section_id})</div>`;
                 console.warn("self.target:", self.target);
                 return;
             }
@@ -247,7 +247,7 @@ var item = {
             <button type="button" class="button button--copiar" data-copy-url="${url}">${
             tstring.share_copy_link
         }</button>
-            <p class="copy-message"></p>
+            <p class="copy-message" role="status"></p>
         </div>
         <div class="flow">
             <p>${tstring.share_other_desc}</p>
@@ -303,7 +303,7 @@ var item = {
             ${
                 row.type
                     ? `
-            <dt><dt>${tstring.item_tipology}</dt></dt>
+            <dt>${tstring.item_tipology}</dt>
             <dd>${row.type}</dd>
             `
                     : ""
@@ -345,6 +345,8 @@ var item = {
 
     template: function (row) {
         const url = this.absUrl(row);
+        // the page title names the record, not just the kind of page
+        common.set_record_title(row.title);
         return htmlTemplate(`
 <div class="fitxa-intro columns is-variable is-8">
     <div class="column flow--l">
@@ -389,13 +391,13 @@ var item = {
     renderImageButtons: function () {
         return `
             <button type="button" class="button button--icon image-action-zoom">
-                <img src="/assets/img/ico-lupa-ampliar.svg" title="${tstring.item_image_zoom}" width="30" height="30">
+                <img src="/assets/img/ico-lupa-ampliar.svg" alt="${tstring.item_image_zoom}" title="${tstring.item_image_zoom}" width="30" height="30">
             </button>
             <button type="button" class="button button--icon image-action-download">
-                <img src="/assets/img/ico-descarregar.svg" title="${tstring.item_image_download}" width="30" height="30">
+                <img src="/assets/img/ico-descarregar.svg" alt="${tstring.item_image_download}" title="${tstring.item_image_download}" width="30" height="30">
             </button>
             <button type="button" class="button button--icon is-hidden-mobile image-action-fullscreen">
-                <img src="/assets/img/ico-pantalla-completa.svg" title="${tstring.item_image_fullscreen}" width="30" height="30">
+                <img src="/assets/img/ico-pantalla-completa.svg" alt="${tstring.item_image_fullscreen}" title="${tstring.item_image_fullscreen}" width="30" height="30">
             </button>
         `;
     },
@@ -417,7 +419,7 @@ var item = {
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
-            }" alt="${image.title}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
+            }" alt="${image.title || ""}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
                     <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                         ${this.renderImageButtons()}
                     </div>
@@ -465,7 +467,7 @@ var item = {
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" alt="${image.title ? image.title : ""}">
+                                    }" alt="">
                                 </div>
                             `;
                             })
@@ -651,7 +653,7 @@ var item = {
                 <div class="dialog-overlay" data-a11y-dialog-hide></div>
 
                 <div class="dialog-content" role="document">
-                    <button data-a11y-dialog-hide class="dialog-close" aria-label="Tanca aquesta finestra">
+                    <button data-a11y-dialog-hide class="dialog-close" aria-label="${tstring.close_window}">
                         ✕
                     </button>
 
@@ -829,7 +831,7 @@ var item = {
                             .map(function (object, index) {
                                 return `
                             <tr>
-                                ${rols.length > 0 ? `<th>${rols[index] || ''}</th>` : ''}
+                                ${rols.length > 0 ? `<th scope="row">${rols[index] || ''}</th>` : ''}
                                 <td>${object}</td>
                             </tr>`;
                             })
@@ -838,7 +840,7 @@ var item = {
                             entity
                                 ? `
                             <tr>
-                                <th>${tstring.item_entity}</th>
+                                <th scope="row">${tstring.item_entity}</th>
                                 <td>${entity}</td>
                             </tr>`
                                 : ""
@@ -879,7 +881,7 @@ var item = {
 
     template_catalog_elem: function (row, new_tab = false) {
         let tpl = '';
-        let type_url = '/activitats/';
+        let type_url = '/actividades/';
         switch(row.table) {
             case 'activities': tpl = 'act'; break;
             case 'exhibitions': tpl = 'exp'; type_url = '/exposiciones/'; break;

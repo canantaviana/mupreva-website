@@ -579,7 +579,12 @@ var biblio = {
 
         const self = this
 
-        const form_inputs = document.querySelectorAll('input, select, textarea, button');
+        // block a second search while this one runs: only the controls of the page content that are
+        // enabled now, and never the one with the focus (disabling it would drop the keyboard focus)
+        const form_inputs = Array.from(document.querySelectorAll('main input, main select, main textarea, main button'))
+            .filter(function (input) {
+                return !input.disabled && input !== document.activeElement;
+            });
         form_inputs.forEach(function (input) {
             input.disabled = true;
         });
@@ -705,6 +710,7 @@ var biblio = {
                                         const resultsCountNode = document.createElement('p');
                                         resultsCountNode.className = 'has-text-right';
                                         resultsCountNode.textContent = `${total_found} ${(tstring.entries_found).toLowerCase()}`;
+                                        common.announce(resultsCountNode.textContent);
                                         self.rows_list_container.appendChild(resultsCountNode);
                                     }
                                     if (common.is_node(list_node)) {
@@ -961,9 +967,9 @@ var biblio = {
                 <div class="columns is-flex-direction-row-reverse">
                     <div class="column flow--2xs">
                         <div class="flow--2xs">
-                            <h3 class="is-size-3 has-text-weight-normal">
+                            <h2 class="is-size-3 has-text-weight-normal">
                                 ${title}
-                            </h3>
+                            </h2>
                             <p class="is-size-5 has-text-weight-medium">
                             ${infoHead}<br>
                             ${row.autor}<br>

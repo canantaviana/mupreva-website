@@ -161,11 +161,12 @@ define('WEB_FOOT_LOGOS', 'www1_227');
 
 
 define('WEB_AR_LANGS', json_encode([
-    "lg-spa" => ['name' => 'Castellano', 'code' => 'es'],
-    "lg-vlca" => ['name' => 'Valencià', 'code' => 'va'],
+    // code: visible abbreviation; lang: BCP 47 tag for lang/hreflang attributes
+    "lg-spa" => ['name' => 'Castellano', 'code' => 'es', 'lang' => 'es'],
+    "lg-vlca" => ['name' => 'Valencià', 'code' => 'va', 'lang' => 'ca'],
     //"lg-glg" => "Galego",
-    "lg-eng" => ['name' => 'English', 'code' => 'en'],
-    "lg-fra" => ['name' => 'French', 'code' => 'fr']
+    "lg-eng" => ['name' => 'English', 'code' => 'en', 'lang' => 'en'],
+    "lg-fra" => ['name' => 'Français', 'code' => 'fr', 'lang' => 'fr']
 ]));
 
 

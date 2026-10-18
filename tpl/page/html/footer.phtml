@@ -1,4 +1,23 @@
 <?php
+/**
+ * Accessible name for a footer link without a CMS title (social network icons)
+ */
+if (!function_exists('footer_link_name')) {
+    function footer_link_name($url) {
+        $host = preg_replace('/^www\./', '', (string)parse_url($url, PHP_URL_HOST));
+        $networks = [
+            'twitter.com'   => 'X',
+            'x.com'         => 'X',
+            'instagram.com' => 'Instagram',
+            'youtube.com'   => 'YouTube',
+            'facebook.com'  => 'Facebook',
+            'linkedin.com'  => 'LinkedIn',
+            'tiktok.com'    => 'TikTok',
+            'flickr.com'    => 'Flickr'
+        ];
+        return $networks[$host] ?? $host;
+    }
+}
 $images = null;
 if ($this->web_foot->identify_image != null) {
     $images = json_decode($this->web_foot->identify_image, true);
@@ -37,7 +56,7 @@ if (is_array($images) && count($images) > 0) {
                     </div> -->
                     <?php endif ?>
                     <?php if (!empty($column->title)) : ?>
-                    <p class="is-size-5 mb-4"><strong><?php echo $column->title ?></strong></p>
+                    <h2 class="is-size-5 mb-4 has-text-weight-bold has-text-white"><?php echo $column->title ?></h2>
                     <?php endif ?>
                     <?php if (!empty($column->abstract)) : ?>
                     <div class="flow--m">
@@ -56,8 +75,13 @@ if (is_array($images) && count($images) > 0) {
                         if (!empty($subcolumn->identify_image)) {
                             $images = json_decode($subcolumn->identify_image, true);
                             if (is_array($images) && count($images) > 0) {
-                                $img = '<img src="'.__WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.svg', $images[0])).'" alt="'.$subcolumn->title.'">';
+                                // the link text names the link, so the icon is decorative unless there is no text
+                                $img_alt = empty($subcolumn->title) ? footer_link_name($subcolumn->web_path) : '';
+                                $img = '<img src="'.__WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', str_replace('.jpg', '.svg', $images[0])).'" alt="'.htmlspecialchars($img_alt).'">';
                             }
+                        }
+                        if ($img === '' && empty($subcolumn->title)) {
+                            continue;
                         }
                         $links[] = '<a href="'.$subcolumn->web_path.'">'.$img.$subcolumn->title.'</a>';
                     endforeach ?>
@@ -82,10 +106,16 @@ if (is_array($images) && count($images) > 0) {
                     if (!empty($logo->identify_image)) {
                         $images = json_decode($logo->identify_image, true);
                         if (is_array($images) && count($images) > 0) {
-                            $img = '<img src="'.__WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', $images[0]).'" alt="'.$subcolumn->title.'" class="mr-2">';
+                            // the link text names the link, so the logo is decorative unless there is no text
+                            $img_alt = empty($logo->title) ? footer_link_name($logo->web_path) : '';
+                            $img = '<img src="'.__WEB_MEDIA_ENGINE_URL__.str_replace('1.5MB', 'original', $images[0]).'" alt="'.htmlspecialchars($img_alt).'" class="mr-2">';
                         }
                     }
-                    $links[] = '<a href="'.__WEB_ROOT_WEB__.'/'.$logo->web_path.'">'.$img.$logo->title.'</a>';
+                    if ($img === '' && empty($logo->title)) {
+                        continue;
+                    }
+                    $logo_href = preg_match('/^https?:\/\//', $logo->web_path) ? $logo->web_path : __WEB_ROOT_WEB__.'/'.$logo->web_path;
+                    $links[] = '<a href="'.$logo_href.'">'.$img.$logo->title.'</a>';
                 endforeach ?>
                 <?php
                 if (count($links) > 0) : ?>
@@ -95,13 +125,18 @@ if (is_array($images) && count($images) > 0) {
                 <?php endif ?>
 
 
-                <ul class="is-flex is-flex-wrap-wrap gap-6 is-justify-content-center mx-auto is-size-7 has-text-weight-medium">
-                <?php foreach ($this->menu_footer as $entry) : ?>
+                <nav class="mx-auto" aria-label="<?php echo tstring('footer_nav') ?>">
+                <ul class="is-flex is-flex-wrap-wrap gap-6 is-justify-content-center is-size-7 has-text-weight-medium">
+                <?php foreach ($this->menu_footer as $entry) :
+                    if (empty($entry->title)) {
+                        continue;
+                    } ?>
                     <li>
                         <a href="<?php echo __WEB_ROOT_WEB__ . '/'.$entry->web_path ?>"><?php echo $entry->title ?></a>
                     </li>
                     <?php endforeach ?>
                 </ul>
+                </nav>
             </div>
             <a href="#top" aria-label="<?php echo tstring('footer_to_top') ?>" class="scrolltop is-flex is-justify-content-center is-align-items-center ml-auto">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28.299"><g><g fill="none" stroke="#8b5b48"><rect width="28" height="28.299" stroke="none" rx="14"/><rect width="27" height="27.299" x=".5" y=".5" rx="13.5"/></g><g><path fill="#8b5b48" d="m6 14.149 1.436 1.436 5.695-5.687v12.4h2.037v-12.4l5.694 5.684 1.438-1.433-8.151-8.151Z"/></g></g></svg>

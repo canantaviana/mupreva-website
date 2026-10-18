@@ -172,6 +172,9 @@
 // -------------------------
 @import "blocks/block-dedalo";
 
+// Colors forçats (contrast alt del sistema): ha d'anar l'últim
+@import "base/forced-colors";
+
 // només utilitzar pels exemples:
 .box {
     color: #fff;

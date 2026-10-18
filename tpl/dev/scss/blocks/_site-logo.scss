@@ -1,4 +1,11 @@
 .site-logo {
+    // the logo shrinks so the header controls fit at 320px (1.4.10)
+    min-width: 0;
+    svg {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
     @include mobile {
         margin-left: auto;
         margin-right: auto;

@@ -6,7 +6,8 @@
 
 .modal {
     position: fixed;
-    z-index: 10;
+    // above the sticky header (z-index 10000)
+    z-index: 10001;
     top: 0;
     left: 0;
     width: 100%;

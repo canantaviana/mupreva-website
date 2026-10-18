@@ -1,4 +1,4 @@
-/*global tstring, page_globals, SHOW_DEBUG, row_fields, common, page*/
+/*global tstring, page_globals, SHOW_DEBUG, row_fields, common, page, event_manager*/
 /*eslint no-undef: "error"*/
 
 /**
@@ -98,6 +98,16 @@ function list_factory() {
                 parent: fragment
             })
 
+            // after paginating, move the focus to the new results (the paginator that had it is gone)
+            if (list_factory.focus_after_paginate === true) {
+                list_factory.focus_after_paginate = false
+                rows_list.setAttribute('tabindex', '-1')
+                event_manager.when_in_dom(rows_list, function () {
+                    rows_list.focus({ preventScroll: true })
+                    rows_list.scrollIntoView({ block: 'start' })
+                })
+            }
+
 
             // masonry grid case add grid-sizer
             if (self.caller && self.caller.view_mode && self.caller.view_mode === 'list_images') {
@@ -147,6 +157,7 @@ function list_factory() {
             element_type: 'nav',
             class_name: 'pagination is-centered mt-8 ' + (options.class_name ? (' ' + options.class_name) : '')
         })
+        pagination.setAttribute('aria-label', tstring.pagination || 'Pagination')
 
         // navigator
         const full_paginator_node = self.paginator.get_full_paginator(options)
@@ -357,6 +368,25 @@ function list_factory() {
                     text_content: node.label,
                     parent: li
                 })
+                // only links that go somewhere keep an href (and so the keyboard focus)
+                if (node.active !== true) {
+                    link.removeAttribute('href')
+                }
+                if (node.selected === true) {
+                    link.setAttribute('aria-current', 'page')
+                }
+                if (node.id == 'previous' || node.id == 'next') {
+                    if (node.active === true) {
+                        link.setAttribute('aria-label', node.id == 'previous'
+                            ? (tstring.pagination_previous || 'Previous page')
+                            : (tstring.pagination_next || 'Next page'))
+                    } else {
+                        // an arrow that goes nowhere: only a visual cue
+                        link.setAttribute('aria-hidden', 'true')
+                    }
+                } else if (node.type === 'page' && node.active === true) {
+                    link.setAttribute('aria-label', (tstring.pagination_page || 'Page {n}').replace('{n}', node.label))
+                }
                 if (node.id == 'previous') {
                     appendTemplate(link, htmlTemplate(`<svg aria-hidden="true" focusable="false" width="30" height="30" xmlns="http://www.w3.org/2000/svg">
                         <g stroke="#FFF" stroke-width="2" fill="none" fill-rule="evenodd">
@@ -375,7 +405,9 @@ function list_factory() {
                 }
                 // event publish on click
                 if (node.active === true) {
-                    link.addEventListener("click", function () {
+                    link.addEventListener("click", function (e) {
+                        e.preventDefault()
+                        list_factory.focus_after_paginate = true
                         event_manager.publish('paginate', node.offset_value)
                     })
                 }

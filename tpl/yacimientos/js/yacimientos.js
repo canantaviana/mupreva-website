@@ -355,10 +355,12 @@ var catalog = {
         const active = list_mode_group.querySelector(".active");
         if (active) {
             active.classList.remove("active");
+            active.setAttribute("aria-pressed", "false");
             const imgActive = active.querySelector("img");
             imgActive.src = imgActive.dataset.srcOff;
         }
         element.classList.add("active");
+        element.setAttribute("aria-pressed", "true");
         const imgElement = element.querySelector("img");
         imgElement.src = imgElement.dataset.srcOn;
 
@@ -392,7 +394,7 @@ var catalog = {
             <div class="columns">
                 <div class="column">
                     <div class="field">
-                        <label class="label is-sr-only" for="cercaPub">${tstring.immovable_seach_placeholder}</label>
+                        <label class="label is-sr-only" for="global_search">${tstring.immovable_seach_placeholder}</label>
                         <div class="control">
                             <input type="search" name="cercaPub" id="global_search" placeholder="${tstring.immovable_seach_placeholder}" value="" class="input">
                         </div>
@@ -459,13 +461,13 @@ var catalog = {
             </div>
             <ul class="is-flex gap-5" id="mode_group">
                 <li>
-                    <button type="button" id="button_list" class="button button--icon">
-                        <img src="/assets/img/galeria-inactiu.svg" data-src-on="/assets/img/galeria-actiu.svg" data-src-off="/assets/img/galeria-inactiu.svg" title="${tstring.show_list}" width="34" height="34">
+                    <button type="button" id="button_list" class="button button--icon" aria-label="${tstring.show_list}" aria-pressed="false">
+                        <img src="/assets/img/galeria-inactiu.svg" data-src-on="/assets/img/galeria-actiu.svg" data-src-off="/assets/img/galeria-inactiu.svg" alt="" width="34" height="34">
                     </button>
                 </li>
                 <li>
-                    <button type="button" id="button_map" class="button button--icon">
-                        <img src="/assets/img/mapa-inactiu.svg" data-src-on="/assets/img/mapa-actiu.svg" data-src-off="/assets/img/mapa-inactiu.svg" title="${tstring.show_map}" width="34" height="34">
+                    <button type="button" id="button_map" class="button button--icon" aria-label="${tstring.show_map}" aria-pressed="false">
+                        <img src="/assets/img/mapa-inactiu.svg" data-src-on="/assets/img/mapa-actiu.svg" data-src-off="/assets/img/mapa-inactiu.svg" alt="" width="34" height="34">
                     </button>
                 </li>
             </ul>
@@ -657,6 +659,7 @@ var catalog = {
             const button_list_mode = currentForm.querySelector("#button_list");
             if (self.view_mode === "list") {
                 button_list_mode.classList.add("active");
+                button_list_mode.setAttribute("aria-pressed", "true");
                 const imgElement = button_list_mode.querySelector("img");
                 imgElement.src = imgElement.dataset.srcOn;
             }
@@ -670,6 +673,7 @@ var catalog = {
                 currentForm.querySelector("#button_map");
             if (self.view_mode === "map") {
                 button_view_map_mode.classList.add("active");
+                button_view_map_mode.setAttribute("aria-pressed", "true");
                 const imgElement = button_view_map_mode.querySelector("img");
                 imgElement.src = imgElement.dataset.srcOn;
             }
@@ -765,7 +769,12 @@ var catalog = {
         const self = this;
         self.map_legend.innerHTML = '';
 
-        const form_inputs = document.querySelectorAll('input, select, textarea, button');
+        // block a second search while this one runs: only the controls of the page content that are
+        // enabled now, and never the one with the focus (disabling it would drop the keyboard focus)
+        const form_inputs = Array.from(document.querySelectorAll('main input, main select, main textarea, main button'))
+            .filter(function (input) {
+                return !input.disabled && input !== document.activeElement;
+            });
         form_inputs.forEach(function (input) {
             input.disabled = true;
         });
@@ -819,6 +828,7 @@ var catalog = {
                     const resultsCountNode = document.createElement('p');
                     resultsCountNode.className = 'has-text-right';
                     resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
+                    common.announce(resultsCountNode.textContent);
                     rows_list_container.appendChild(resultsCountNode);
                 }
 
@@ -1092,7 +1102,7 @@ var catalog = {
 
                     var legendContent = htmlTemplate(`
                         <p>
-                            <img src="${page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/point_orange.png"}" style="width: 27px; height: 23px;">
+                            <img src="${page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/point_orange.png"}" alt="" style="width: 27px; height: 23px;">
                             ${tstring.location}
                         </p>`)
                     self.map_legend.innerHTML = '';

@@ -296,11 +296,11 @@ var search = {
                                     ar_rows: rowsWithImages
                                 })
                                     .then(function (list_node) {
-                                        const searchTitle = document.createElement('h2');
-                                        searchTitle.textContent = self.keywords
-                                            ? `"${self.keywords}"`
-                                            : '';
-                                        rows_list_container.appendChild(searchTitle);
+                                        if (self.keywords) {
+                                            const searchTitle = document.createElement('h2');
+                                            searchTitle.textContent = `"${self.keywords}"`;
+                                            rows_list_container.appendChild(searchTitle);
+                                        }
 
                                         const typesContainerId = 'search_types_container'
                                         let typesContainer = document.getElementById(typesContainerId)
@@ -316,8 +316,10 @@ var search = {
                                         const types = self.search_types || []
                                         types.forEach(function (tipo) {
                                             const btn = document.createElement('button')
+                                            btn.type = 'button'
                                             btn.textContent = tstring[tipo] || tipo
                                             btn.dataset.tipo = tipo
+                                            btn.setAttribute('aria-pressed', self.ref_section_tipo_selected === tipo ? 'true' : 'false')
                                             if (self.ref_section_tipo_selected === tipo) btn.className = 'selected'
                                             btn.addEventListener('click', function () {
                                                 if (self.ref_section_tipo_selected === tipo) return
@@ -331,6 +333,7 @@ var search = {
                                         const resultsCountNode = document.createElement('p');
                                         resultsCountNode.className = 'has-text-right';
                                         resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
+                                        common.announce(resultsCountNode.textContent);
                                         rows_list_container.appendChild(resultsCountNode);
 
                                         if (common.is_node(list_node)) {
@@ -388,15 +391,18 @@ var search = {
         const table = 'global_search'
         const ar_fields = "*"
         const order = 'section_id asc'
-        const limit = 10
+        // same page size as the paginator, or pages skip results
+        const limit = self.pagination.limit
         const offset = self.pagination.offset;
         const count = true
         const process_result = null
-        const section_tipo_filter = self.ref_section_tipo_selected ? ` AND ref_section_tipo='${self.ref_section_tipo_selected}'` : '';
-        const keywords_escaped = self.keywords.trim().split(/\s+/).map(word => `+${word}`).join(' ');
-        const sql_filter = self.keywords
-            ? `MATCH (search_data) AGAINST ('${keywords_escaped}' IN BOOLEAN MODE)${section_tipo_filter}`
-            : null;
+        const section_tipo_filter = self.ref_section_tipo_selected ? ` AND ref_section_tipo='${common.sql_string(self.ref_section_tipo_selected)}'` : '';
+        // the user's text never goes into the SQL as it is (quotes, full-text operators)
+        const keywords_escaped = common.fulltext_query(self.keywords);
+        if (!keywords_escaped) {
+            return Promise.resolve({ result: [], total: 0})
+        }
+        const sql_filter = `MATCH (search_data) AGAINST ('${keywords_escaped}' IN BOOLEAN MODE)${section_tipo_filter}`;
 
         // request
         const js_promise = data_manager.request({

@@ -31,7 +31,7 @@ var item = {
         // load and render
         self.load_data({}).then(function (response) {
             if (!response.result || response.result.length < 1) {
-                self.target.innerHTML = `<div class="not_found">Sorry, record not available (${self.section_id})</div>`;
+                self.target.innerHTML = `<div class="not_found">${tstring.record_not_available} (${self.section_id})</div>`;
                 console.warn("self.target:", self.target);
                 return;
             }
@@ -187,6 +187,8 @@ var item = {
 
     template: function (row) {
         const url = this.absUrl(row);
+        // the page title names the record, not just the kind of page
+        common.set_record_title(row.titulo);
         const seriesDict = {
             3: "serie_de_trabajos_varios",
             1: "revista_apl",
@@ -351,12 +353,12 @@ ${
                                 <button type="button" class="button button--icon js-download-pdf" data-download-url="${
                                     __WEB_MEDIA_ENGINE_URL__ + value.pdf
                                 }" data-download-filename="${value.pdf ? value.pdf.split('/').pop() : ''}">
-                                    <img src="/assets/img/ico-descarregar.svg" width="30" height="30">
+                                    <img src="/assets/img/ico-descarregar.svg" alt="${tstring.download}" width="30" height="30">
                                 </button>
                             </div>
                             <div class="column is-narrow">
                                 <a target="_blank" href="${url}">
-                                    <img src="/assets/img/ico-lupa-2.svg" width="30" height="30">
+                                    <img src="/assets/img/ico-lupa-2.svg" alt="${tstring.item_show_online}" width="30" height="30">
                                 </a>
                             </div>
                         </div>

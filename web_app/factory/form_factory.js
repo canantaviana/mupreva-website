@@ -173,6 +173,9 @@ function form_factory() {
                         console.log("form_item:", form_item);
                     }
                 })
+                if (form_item.label) {
+                    node_select.setAttribute('aria-label', form_item.label)
+                }
                 form_item.node_input = node_select
                 break;
 
@@ -187,6 +190,10 @@ function form_factory() {
                     value: form_item.q || '',
                     parent: group
                 })
+                // the placeholder disappears when typing: give the field a name of its own
+                if (form_item.label) {
+                    node_input.setAttribute('aria-label', form_item.label)
+                }
                 node_input.addEventListener("keyup", function (e) {
                     // assign value
                     form_item.q = e.target.value
@@ -340,9 +347,12 @@ function form_factory() {
         // awesome font 5 <i class="far fa-trash-alt"></i>
         const trash = common.create_dom_element({
             element_type: "button",
+            type: "button",
             class_name: "icon remove fal far fa-trash fa-trash-alt", //  fa-trash awesome font 4
             parent: line
         })
+        const label_text = new DOMParser().parseFromString(label, 'text/html').body.textContent
+        trash.setAttribute('aria-label', (tstring.filter_remove || 'Remove «{label}»').replace('{label}', label_text))
         trash.addEventListener("click", function () {
 
             // remove from form_item q_selected
@@ -351,8 +361,11 @@ function form_factory() {
                 // remove array element
                 form_item.q_selected.splice(index, 1);
 
-                // remove DOM node
+                // remove DOM node and give the focus back to the field
                 this.parentNode.remove()
+                if (form_item.node_input) {
+                    form_item.node_input.focus()
+                }
 
                 // debug
                 if (SHOW_DEBUG === true) {

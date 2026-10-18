@@ -198,3 +198,15 @@ ul.field {
 //         display: block;
 //     }
 // }
+
+// message of a field with a wrong value (#b3261e: 6.5:1 on white; Bulma's danger red is 3.5:1)
+.field-error {
+    color: #b3261e;
+    font-size: var(--step--1);
+    font-weight: 600;
+    margin-top: var(--space-3xs);
+}
+[aria-invalid="true"] {
+    border-color: #b3261e !important;
+    border-width: 2px;
+}

@@ -407,10 +407,12 @@ var catalog = {
         const active = list_mode_group.querySelector(".active");
         if (active) {
             active.classList.remove("active");
+            active.setAttribute("aria-pressed", "false");
             const imgActive = active.querySelector("img");
             imgActive.src = imgActive.dataset.srcOff;
         }
         element.classList.add("active");
+        element.setAttribute("aria-pressed", "true");
         const imgElement = element.querySelector("img");
         imgElement.src = imgElement.dataset.srcOn;
 
@@ -451,7 +453,7 @@ var catalog = {
             <div class="columns">
                 <div class="column">
                     <div class="field">
-                        <label class="label is-sr-only" for="cercaPub">${tstring.collection_seach_label}</label>
+                        <label class="label is-sr-only" for="global_search">${tstring.collection_seach_label}</label>
                         <div class="control">
                             <input type="search" name="cercaPub" id="global_search" placeholder="${tstring.collection_seach_placeholder}" value="" class="input">
                         </div>
@@ -542,14 +544,15 @@ var catalog = {
                         </div>
                     </div>
                     <div  class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
-                        <div class="date-slider-labels mb-2">
-                            <input type="number" id="date-slider-min" />
-                            <span class="is-size-6 has-text-weight-medium">${tstring.collection_period_label}</span>
-                            <input type="number" id="date-slider-max" />
+                        <div class="date-slider-labels mb-2" role="group" aria-labelledby="date-slider-label">
+                            <input type="number" id="date-slider-min" aria-label="${tstring.date_from}" />
+                            <span class="is-size-6 has-text-weight-medium" id="date-slider-label">${tstring.collection_period_label}</span>
+                            <input type="number" id="date-slider-max" aria-label="${tstring.date_to}" />
                         </div>
-                        <div class="date-slider-container">
-                            <input type="range" id="date-slider-left" />
-                            <input type="range" id="date-slider-right" />
+                        <!-- the year fields above do the same as the sliders, so the sliders are mouse-only -->
+                        <div class="date-slider-container" aria-hidden="true">
+                            <input type="range" id="date-slider-left" tabindex="-1" />
+                            <input type="range" id="date-slider-right" tabindex="-1" />
                             <div class="date-slider-track"></div>
                             <div class="date-slider-range" id="date-slider-range"></div>
                         </div>
@@ -598,19 +601,19 @@ var catalog = {
             </div>
             <ul class="is-flex gap-5" id="mode_group">
                 <li>
-                    <button type="button" id="button_list" class="button button--icon">
-                        <img src="/assets/img/galeria-inactiu.svg" data-src-on="/assets/img/galeria-actiu.svg" data-src-off="/assets/img/galeria-inactiu.svg" title="${tstring.show_list}" width="34" height="34">
+                    <button type="button" id="button_list" class="button button--icon" aria-label="${tstring.show_list}" aria-pressed="false">
+                        <img src="/assets/img/galeria-inactiu.svg" data-src-on="/assets/img/galeria-actiu.svg" data-src-off="/assets/img/galeria-inactiu.svg" alt="" width="34" height="34">
                     </button>
                 </li>
                 <li>
-                    <button type="button" id="button_timeline" class="button button--icon">
-                        <img src="/assets/img/linia-temps-inactiu.svg" data-src-on="/assets/img/linia-temps-actiu.svg" data-src-off="/assets/img/linia-temps-inactiu.svg" title="${tstring.show_timeline}" width="34" height="34">
+                    <button type="button" id="button_timeline" class="button button--icon" aria-label="${tstring.show_timeline}" aria-pressed="false">
+                        <img src="/assets/img/linia-temps-inactiu.svg" data-src-on="/assets/img/linia-temps-actiu.svg" data-src-off="/assets/img/linia-temps-inactiu.svg" alt="" width="34" height="34">
 
                     </button>
                 </li>
                 <li>
-                    <button type="button" id="button_map" class="button button--icon">
-                        <img src="/assets/img/mapa-inactiu.svg" data-src-on="/assets/img/mapa-actiu.svg" data-src-off="/assets/img/mapa-inactiu.svg" title="${tstring.show_map}" width="34" height="34">
+                    <button type="button" id="button_map" class="button button--icon" aria-label="${tstring.show_map}" aria-pressed="false">
+                        <img src="/assets/img/mapa-inactiu.svg" data-src-on="/assets/img/mapa-actiu.svg" data-src-off="/assets/img/mapa-inactiu.svg" alt="" width="34" height="34">
                     </button>
                 </li>
             </ul>
@@ -1004,6 +1007,7 @@ var catalog = {
             const button_list_mode = currentForm.querySelector("#button_list");
             if (self.view_mode === "list") {
                 button_list_mode.classList.add("active");
+                button_list_mode.setAttribute("aria-pressed", "true");
                 const imgElement = button_list_mode.querySelector("img");
                 imgElement.src = imgElement.dataset.srcOn;
             }
@@ -1017,6 +1021,7 @@ var catalog = {
                 currentForm.querySelector("#button_map");
             if (self.view_mode === "map") {
                 button_view_map_mode.classList.add("active");
+                button_view_map_mode.setAttribute("aria-pressed", "true");
                 const imgElement = button_view_map_mode.querySelector("img");
                 imgElement.src = imgElement.dataset.srcOn;
             }
@@ -1030,6 +1035,7 @@ var catalog = {
                 currentForm.querySelector("#button_timeline");
             if (self.view_mode === "timeline") {
                 button_view_timeline_mode.classList.add("active");
+                button_view_timeline_mode.setAttribute("aria-pressed", "true");
                 const imgElement =
                     button_view_timeline_mode.querySelector("img");
                 imgElement.src = imgElement.dataset.srcOn;
@@ -1175,7 +1181,16 @@ var catalog = {
                     const resultsCountNode = document.createElement('p');
                     resultsCountNode.className = 'has-text-right';
                     resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
+                    common.announce(resultsCountNode.textContent);
                     rows_list_container.appendChild(resultsCountNode);
+                } else if (self.no_results_query) {
+                    // the search found nothing and random items are shown instead
+                    const noResultsNode = document.createElement('p');
+                    noResultsNode.className = 'has-text-weight-semibold';
+                    noResultsNode.textContent = tstring.search_no_results_random.replace('{q}', self.no_results_query);
+                    rows_list_container.appendChild(noResultsNode);
+                    common.announce(noResultsNode.textContent);
+                    self.no_results_query = null;
                 }
 
                 // fix response in each call
@@ -1475,6 +1490,8 @@ var catalog = {
                         // clean form q item value
                         const global_search_form_item =
                             self.form.form_items.global_search;
+                        // remember the search to tell the user it found nothing
+                        self.no_results_query = global_search_form_item.node_input.value;
                         global_search_form_item.node_input.value = "";
                         global_search_form_item.q = "";
 
@@ -1569,9 +1586,9 @@ var catalog = {
 
                     var legendContent = htmlTemplate(`
                         <p>
-                            <img src="${page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/point_orange.png"}" style="width: 27px; height: 23px;">
+                            <img src="${page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/point_orange.png"}" alt="" style="width: 27px; height: 23px;">
                             ${tstring.location_discovery}
-                            <img src="${page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/point_blue.png"}" style="width: 27px; height: 23px;">
+                            <img src="${page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/map/point_blue.png"}" alt="" style="width: 27px; height: 23px;">
                             ${tstring.location_production}
                         </p>`)
                     self.map_legend.innerHTML = '';
@@ -1906,9 +1923,11 @@ var catalog = {
                 more_node.addEventListener("click", function () {
                     const _from = parseInt(this.offset);
                     const _to = data_group_length; // view all in one click
+                    const focus_first_new = common.remember_focusables(block_content);
                     iterate(_from, _to);
 
                     this.remove();
+                    focus_first_new();
                 });
             }
 

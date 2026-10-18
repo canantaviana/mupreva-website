@@ -118,6 +118,10 @@
     a:has(span[style="background-color:hsl(0,75%,60%);"]:only-child),
     span[style="background-color:hsl(0,75%,60%);"] a:only-child {
         @extend .button;
+        // long button texts wrap on small screens (1.4.10)
+        max-width: 100%;
+        height: auto;
+        white-space: normal;
     }
 
     // Llista amb dues columnes

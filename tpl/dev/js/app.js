@@ -12,6 +12,119 @@ function removeParam(param) {
     window.history.replaceState({}, document.title, window.location.pathname + (params.toString() ? '?' + params.toString() : ''));
 }
 
+// ---------------------------------------------------------------
+// Vídeos d'activitats i exposicions: reproductor accessible amb subtítols
+// ---------------------------------------------------------------
+document.addEventListener("click", function (event) {
+    const link = event.target.closest("a.video-popup");
+    if (!link) {
+        return;
+    }
+    event.preventDefault();
+    const caption = link.querySelector("figcaption");
+    common.open_video_modal({
+        url: link.href,
+        subtitles: link.dataset.subtitles,
+        title: caption ? caption.textContent.trim() : ""
+    });
+});
+
+// ----------------
+// Div com a button (quan no podem posar un element figure dins un button (ja que no valida) posem el div com si fos un button)
+// ----------------
+// delegated, so it also works for items added later (galleries loaded from the API)
+document.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+        return;
+    }
+    const divButton = event.target.closest(".button-like, [data-a11y-dialog-show][role='button']");
+    if (divButton && divButton === event.target) {
+        event.preventDefault();
+        divButton.click();
+    }
+});
+
+// ---------------------------------------------------------------
+// Iframes del CMS sense title: un nom de reserva segons el contingut
+// ---------------------------------------------------------------
+function titleIframes(root) {
+    (root || document).querySelectorAll("iframe:not([title])").forEach(function (iframe) {
+        let host = "";
+        try {
+            host = new URL(iframe.src, location.href).hostname.replace(/^www\./, "");
+        } catch (e) {}
+        let title = host;
+        if (/google\.[a-z.]+$/.test(host) && /maps/.test(iframe.src)) {
+            title = tstring.iframe_map;
+        } else if (/youtube|vimeo/.test(host)) {
+            title = tstring.iframe_video;
+        }
+        if (title) {
+            iframe.setAttribute("title", title);
+        }
+    });
+}
+document.addEventListener("DOMContentLoaded", function () {
+    titleIframes(document);
+});
+
+// ---------------------------------------------------------------
+// Enllaços que s'obren en una finestra nova: s'avisa als lectors de pantalla
+// (també el contingut del CMS i el que es carrega després)
+// ---------------------------------------------------------------
+function markNewWindowLinks(root) {
+    if (typeof tstring === "undefined" || !tstring.new_window || !root.querySelectorAll) {
+        return;
+    }
+    const note = " (" + tstring.new_window + ")";
+    const links = root.matches && root.matches('a[target="_blank"]') ? [root] : [];
+    links.concat(Array.from(root.querySelectorAll('a[target="_blank"]'))).forEach(function (link) {
+        if (link.hasAttribute("data-new-window")) {
+            return;
+        }
+        link.setAttribute("data-new-window", "");
+        const label = link.getAttribute("aria-label");
+        if (label !== null) {
+            // aria-label replaces the content: the note goes in the label
+            link.setAttribute("aria-label", label + note);
+            return;
+        }
+        const hidden = document.createElement("span");
+        hidden.className = "is-sr-only";
+        hidden.textContent = note;
+        link.appendChild(hidden);
+    });
+}
+document.addEventListener("DOMContentLoaded", function () {
+    markNewWindowLinks(document.body);
+    new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            mutation.addedNodes.forEach(function (node) {
+                if (node.nodeType === 1) {
+                    markNewWindowLinks(node);
+                }
+            });
+            // a link that gets target="_blank" later
+            if (mutation.type === "attributes" && mutation.target.matches && mutation.target.matches('a[target="_blank"]')) {
+                markNewWindowLinks(mutation.target);
+            }
+        });
+    }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["target"] });
+});
+
+// Missatges d'accessibilitat de Swiper en l'idioma de la pàgina
+if (typeof Swiper !== "undefined" && typeof tstring !== "undefined") {
+    Swiper.extendDefaults({
+        a11y: {
+            prevSlideMessage: tstring.slider_prev,
+            nextSlideMessage: tstring.slider_next,
+            firstSlideMessage: tstring.slider_first,
+            lastSlideMessage: tstring.slider_last,
+            paginationBulletMessage: tstring.slider_goto
+        }
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     // --------------
     // Tancar pàgina
@@ -21,6 +134,16 @@ document.addEventListener("DOMContentLoaded", function () {
         close.addEventListener("click", function () {
             window.close();
         });
+    }
+
+    // -----------------------------------------------------------
+    // Alçada de la capçalera sticky (scroll-padding-top del focus)
+    // -----------------------------------------------------------
+    const mainHeader = document.getElementById("header");
+    if (mainHeader && "ResizeObserver" in window) {
+        new ResizeObserver(function () {
+            document.documentElement.style.setProperty("--header-height", mainHeader.offsetHeight + "px");
+        }).observe(mainHeader);
     }
 
     // ----------
@@ -130,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
     button.setAttribute("aria-expanded", "false");
     button.setAttribute("aria-controls", "menu");
     button.innerHTML =
-        '<span class="hamburger-box"><span class="hamburger-inner"></span></span><span class="is-sr-only">Menú</span>';
+        '<span class="hamburger-box"><span class="hamburger-inner"></span></span><span class="is-sr-only">' + tstring.menu + '</span>';
 
     var menu = document.getElementById("menu");
 
@@ -193,17 +316,17 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     Array.prototype.forEach.call(menuItems1, function (el, i) {
-        var activatingA = el.querySelector("a");
+        // first child is the item link (or a span when the item has no page)
+        var activatingA = el.firstElementChild;
         var btn =
-            '<button type="button"><span class="is-sr-only">Mostra el submenú de “' +
-            activatingA.text +
-            "”</span></button>";
+            '<button type="button" aria-expanded="false"><span class="is-sr-only">' +
+            tstring.submenu_show.replace("{label}", activatingA.textContent.trim()) +
+            "</span></button>";
         activatingA.insertAdjacentHTML("afterend", btn);
 
         // Handle hover event for non-touch devices
         el.addEventListener("mouseover", function (event) {
             this.classList.add("open");
-            this.querySelector("a").setAttribute("aria-expanded", "true");
             this.querySelector("button").setAttribute("aria-expanded", "true");
             clearTimeout(timer1);
         });
@@ -212,9 +335,6 @@ document.addEventListener("DOMContentLoaded", function () {
             timer1 = setTimeout(function () {
                 var openMenu = document.querySelector(".has-submenu.open");
                 if (openMenu) {
-                    openMenu
-                        .querySelector("a")
-                        .setAttribute("aria-expanded", "false");
                     openMenu
                         .querySelector("button")
                         .setAttribute("aria-expanded", "false");
@@ -251,9 +371,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (openNav) {
                         openNav.className = "has-submenu";
                         openNav
-                            .querySelector("a")
-                            .setAttribute("aria-expanded", "false");
-                        openNav
                             .querySelector("button")
                             .setAttribute("aria-expanded", "false");
                     }
@@ -269,20 +386,58 @@ document.addEventListener("DOMContentLoaded", function () {
         var allMenus = document.querySelectorAll("li.has-submenu");
         Array.prototype.forEach.call(allMenus, function (item) {
             item.classList.remove("open");
-            item.querySelector("a").setAttribute("aria-expanded", "false");
             item.querySelector("button").setAttribute("aria-expanded", "false");
         });
 
         // Open the clicked/touched submenu if it was not already open
         if (!isOpen) {
             el.classList.add("open");
-            el.querySelector("a").setAttribute("aria-expanded", "true");
             el.querySelector("button").setAttribute("aria-expanded", "true");
         }
     }
 
-    var menuItems = document.querySelectorAll("li.has-submenu");
-    Array.prototype.forEach.call(menuItems, function (el, i) {});
+    // ------------------------------------------------
+    // Escape tanca submenú, menú mòbil, idiomes i cerca
+    // ------------------------------------------------
+    document.addEventListener("keydown", function (event) {
+        if (event.key !== "Escape" || event.defaultPrevented) {
+            return;
+        }
+        // a dialog handles its own Escape
+        if (document.activeElement && document.activeElement.closest('[role="dialog"], [aria-modal="true"]')) {
+            return;
+        }
+
+        var openSubmenu = document.querySelector("li.has-submenu.open");
+        if (openSubmenu) {
+            var focusInside = openSubmenu.contains(document.activeElement);
+            toggleSubmenu(openSubmenu);
+            if (focusInside) {
+                openSubmenu.querySelector("button").focus();
+            }
+            return;
+        }
+
+        var disclosures = [
+            [searchExpandButton, searchExpandContent],
+            [langExpandButton, langExpandContent]
+        ];
+        for (var i = 0; i < disclosures.length; i++) {
+            var discButton = disclosures[i][0];
+            var discContent = disclosures[i][1];
+            if (discButton && discContent && discButton.getAttribute("aria-expanded") === "true") {
+                discButton.click();
+                discButton.focus();
+                return;
+            }
+        }
+
+        // mobile menu (the toggle is only visible below the desktop breakpoint)
+        if (toggleMenu && toggleMenu.offsetParent !== null && toggleMenu.getAttribute("aria-expanded") === "true") {
+            toggleMenu.click();
+            toggleMenu.focus();
+        }
+    });
 
     // --------
     // timeline
@@ -369,8 +524,8 @@ async function dateSliderSetup(form_dates_range) {
         rightSlider.max = MAX_DATE;
         rightSlider.value = MAX_DATE;
 
-        minLabel.textContent = MIN_DATE;
-        maxLabel.textContent = MAX_DATE;
+        minLabel.min = maxLabel.min = MIN_DATE;
+        minLabel.max = maxLabel.max = MAX_DATE;
 
         function clamp(val, min, max) {
             return Math.max(min, Math.min(max, val));
@@ -428,7 +583,6 @@ async function dateSliderSetup(form_dates_range) {
             minLabel.addEventListener("keydown", function(e) {
             if (e.key === "Enter") {
                 handleMinLabelInput();
-                minLabel.blur(); // Optionally remove focus
             }
         });
 
@@ -436,7 +590,6 @@ async function dateSliderSetup(form_dates_range) {
             maxLabel.addEventListener("keydown", function(e) {
             if (e.key === "Enter") {
                 handleMaxLabelInput();
-                maxLabel.blur(); // Optionally remove focus
             }
         });
 
@@ -458,8 +611,13 @@ function swiperHome() {
         pagination: {
             el: ".swiper-pagination",
         },
-        mousewheel: true,
         keyboard: true,
+        a11y: {
+            // the slides are links: Swiper's role="group" and "1 / 6" label would hide the link
+            // and replace its name (the title)
+            slideRole: "",
+            slideLabelMessage: "",
+        },
     });
 };
 
@@ -739,6 +897,7 @@ function massonryEnable() {
 }
 
 function viewInit() {
+    titleIframes(document.getElementById("main"));
     // enable A11y Dialogs
     enableDialogs(document.getElementById("main"));
 
@@ -826,19 +985,12 @@ function viewInit() {
         // }
     });
 
-    // ----------------
-    // Div com a button (quan no podem posar un element figure dins un button (ja que no valida) posem el div com si fos un button)
-    // ----------------
-    const divButtons = document.querySelectorAll(".button-like");
-
-    divButtons.forEach((divButton) => {
-        divButton.addEventListener("keydown", (event) => {
-            if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                divButton.click();
-            }
-        });
+    // accordion panels named by their header are regions (aria-labelledby is not allowed on a plain div)
+    document.querySelectorAll('.accordion-content[aria-labelledby]:not([role])').forEach(function (panel) {
+        panel.setAttribute("role", "region");
     });
+
+
 
     /*
     images-group
@@ -846,7 +998,7 @@ function viewInit() {
     image-action-download
     image-action-fullscreen
     */
-    const images = document.getElementsByClassName("images-group");
+    const images = document.querySelectorAll(".images-group");
     if (images.length > 0) {
         images.forEach(function (group) {
             const zoomBase = group.querySelectorAll(".image-zoom");
@@ -856,7 +1008,8 @@ function viewInit() {
                         event.preventDefault();
                         const activeImage = this;
                         const urlImg = activeImage.dataset.original;
-                        const caption = activeImage.dataset.caption || null;
+                        // viewer title: the image description, not the file name
+                        const caption = activeImage.alt || activeImage.dataset.caption || null;
                         common.get_best_image_url(urlImg).then(function (result) {
                             hiresViewer(result.url, caption);
                         });
@@ -872,7 +1025,7 @@ function viewInit() {
                         "img.active, div.active img"
                     );
                     const urlImg = activeImage.dataset.original;
-                    const caption = activeImage.dataset.caption || null;
+                    const caption = activeImage.alt || activeImage.dataset.caption || null;
                     common.get_best_image_url(urlImg).then(function (result) {
                         hiresViewer(result.url, caption);
                     });
@@ -948,8 +1101,6 @@ function showDownloadModal(urlImg, fileName) {
         element_type: 'div',
         class_name: 'download-modal-overlay'
     });
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-modal', 'true');
 
     const modal = common.create_dom_element({
         element_type: 'div',
@@ -960,8 +1111,9 @@ function showDownloadModal(urlImg, fileName) {
         element_type: 'div',
         id: 'download_license_text',
         class_name: 'download-modal__content',
-        inner_html: '<p>Loading...</p>'
+        inner_html: '<p>' + tstring.loading + '</p>'
     });
+    content.setAttribute('tabindex', '-1');
 
     const footer = common.create_dom_element({
         element_type: 'div',
@@ -990,9 +1142,14 @@ function showDownloadModal(urlImg, fileName) {
 
     document.body.appendChild(overlay);
 
-    function closeModal() {
-        if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
-    }
+    const closeModal = common.make_dialog(overlay, {
+        label: tstring.download,
+        // long licence text: start reading at its top (WAI-ARIA dialog pattern)
+        initial_focus: content,
+        on_close: function () {
+            if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        }
+    });
 
     btnCancel.addEventListener('click', closeModal);
     btnDownload.addEventListener('click', function () {
@@ -1019,17 +1176,54 @@ function showDownloadModal(urlImg, fileName) {
 function hiresViewer(hires_url, caption) {
     const new_image = new Image();
     new_image.src = hires_url;
+    new_image.alt = caption || "";
+    // give the focus back to the button that opened the viewer
+    const opener = document.activeElement;
+
+    // names of the icon-only viewer controls
+    const toolbar_names = {
+        "zoom-in": tstring.viewer_zoom_in,
+        "zoom-out": tstring.viewer_zoom_out,
+        "one-to-one": tstring.viewer_one_to_one,
+        "reset": tstring.viewer_reset,
+        "rotate-left": tstring.viewer_rotate_left,
+        "rotate-right": tstring.viewer_rotate_right,
+        "flip-horizontal": tstring.viewer_flip_horizontal,
+        "flip-vertical": tstring.viewer_flip_vertical,
+        "mix": tstring.close,
+        // thumbnail of the image in the (hidden) navbar
+        "view": caption || tstring.viewer_image
+    };
 
     const viewer = new Viewer(new_image, {
+        // above the sticky header (z-index 10000), which otherwise covers the toolbar and close button
+        zIndex: 10002,
         title() {
             return caption ? caption : "";
         },
         // inline: true,
+        shown() {
+            const container = viewer.viewer;
+            container.querySelectorAll("[data-viewer-action]").forEach(function (control) {
+                const name = toolbar_names[control.dataset.viewerAction];
+                if (name) {
+                    control.setAttribute("aria-label", name);
+                }
+            });
+            const close_button = container.querySelector(".viewer-close");
+            if (close_button) {
+                close_button.setAttribute("aria-label", tstring.close);
+                close_button.focus();
+            }
+        },
         viewed() {
             // viewer.zoomTo(1);
         },
         hidden: function () {
             viewer.destroy();
+            if (opener && document.contains(opener)) {
+                opener.focus();
+            }
         },
         navbar: false,
         toolbar: {
@@ -1101,17 +1295,70 @@ function toggle(btnID, eID) {
 }
 
 function enableDialogs(elem) {
-    var dialogs = $(elem).find('.dialog-container');
-    dialogs.each(function(){
-        var dialog = new A11yDialog(this);
-        dialog.on("show", function (event) {
-            const container = event.target;
+    if (!elem) {
+        return;
+    }
 
-            const target = event.detail.target;
-            const opener = target.closest("[data-a11y-dialog-show]");
+    // triggers that are not buttons (div.button-like with a figure inside) must work as buttons
+    elem.querySelectorAll("[data-a11y-dialog-show]").forEach(function (trigger) {
+        if (!trigger.matches("button, a[href]")) {
+            trigger.setAttribute("role", "button");
+            if (!trigger.hasAttribute("tabindex")) {
+                trigger.setAttribute("tabindex", "0");
+            }
+        }
+    });
 
-            console.log(container, target, opener);
-        });
+    elem.querySelectorAll(".dialog-container").forEach(function (container) {
+        // enableDialogs can run more than once on the same content
+        if (container.dataset.a11yDialogReady) {
+            return;
+        }
+        container.dataset.a11yDialogReady = "true";
+
+        // name: aria-labelledby must point to a title inside this dialog
+        const labelledby = container.getAttribute("aria-labelledby");
+        if (!labelledby || !container.querySelector("#" + CSS.escape(labelledby))) {
+            const heading = container.querySelector("h1, h2, h3, figcaption");
+            if (heading) {
+                heading.id = heading.id && !document.querySelectorAll("#" + CSS.escape(heading.id))[1]
+                    ? heading.id
+                    : "dialog-title-" + Math.random().toString(36).slice(2, 9);
+                container.setAttribute("aria-labelledby", heading.id);
+            } else {
+                // no title: the image description, or what the trigger says
+                container.removeAttribute("aria-labelledby");
+                const trigger = document.querySelector('[data-a11y-dialog-show="' + container.getAttribute("data-a11y-dialog") + '"]');
+                const img = container.querySelector("img[alt]:not([alt=''])")
+                    || (trigger && trigger.querySelector("img[alt]:not([alt=''])"));
+                // (while the dialog is still inside its trigger, the trigger text would include it)
+                const trigger_text = trigger && !trigger.contains(container) ? trigger.textContent.trim() : "";
+                container.setAttribute("aria-label", img ? img.alt : (trigger_text || tstring.viewer_image));
+            }
+        }
+
+        // a trigger with no text or image description is named like its dialog (4.1.2)
+        const opener = document.querySelector('[data-a11y-dialog-show="' + container.getAttribute("data-a11y-dialog") + '"]');
+        if (opener && opener !== container && !opener.getAttribute("aria-label")) {
+            const own_text = Array.from(opener.childNodes)
+                .filter(function (node) { return !(node.nodeType === 1 && node.contains(container)); })
+                .map(function (node) { return node.textContent; }).join("").trim();
+            const own_img = Array.from(opener.querySelectorAll("img[alt]:not([alt=''])"))
+                .find(function (img) { return !container.contains(img); });
+            if (!own_text && !own_img) {
+                const dialog_label = container.getAttribute("aria-label")
+                    || (document.getElementById(container.getAttribute("aria-labelledby")) || {}).textContent;
+                if (dialog_label) {
+                    opener.setAttribute("aria-label", dialog_label.trim());
+                }
+            }
+        }
+
+        // a dialog can't live inside its role=button trigger (its content would be flattened and
+        // every click inside would reach the trigger), and it must sit above the sticky header
+        document.body.appendChild(container);
+
+        new A11yDialog(container);
     });
 }
 
@@ -1121,24 +1368,8 @@ function enableDialogs(elem) {
 var dialogEl = document.getElementById("dialog-01");
 
 if (dialogEl) {
-    var dialog = new A11yDialog(dialogEl);
-
-    dialog.on("show", function (event) {
-        const container = event.target;
-
-        // And if the event is the result of a UI interaction (i.e. was not triggered
-        // programmatically via `.show(..)`), the `detail` prop contains the original
-        // event
-        const target = event.detail.target;
-        const opener = target.closest("[data-a11y-dialog-show]");
-
-        console.log(container, target, opener);
-    });
-
-    // To manually control the dialog:
-    // dialog.show()
-    // dialog.hide()
-    // dialog.destroy()
+    // same setup as the other dialogs (name, out of its trigger, only once)
+    enableDialogs(dialogEl.parentNode);
 }
 
 // ------------------------------------------------------------------------------

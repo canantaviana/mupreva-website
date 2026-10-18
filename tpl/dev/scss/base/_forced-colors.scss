@@ -1,0 +1,156 @@
+// ------------------------------------------------------------------------------
+// Colors forçats (Windows contrast alt i similars) · WCAG 1.1.1, 1.4.11
+// ------------------------------------------------------------------------------
+// The system theme replaces text and background colours, but not the colours inside images:
+// black icons vanish on dark themes and white ones on light themes, and anything drawn only
+// with a background colour (menu lines, slider dots) takes the background colour and vanishes.
+// Nothing here changes the normal design.
+
+// icons drawn as SVG/PNG backgrounds or <img>: shown in one solid colour that follows the theme
+$forced-icons: (
+    // header
+    ".lang button::after",
+    ".main-nav .has-submenu button",
+    ".header-search .js-expandmore button",
+    // accordions, details, selects
+    "details summary::after",
+    ".primary-accordion__header::after",
+    ".secondary-accordion__header::before",
+    ".accordion--primary > .accordion-header button::after",
+    ".accordion--secondary > .accordion-header button::before",
+    ".select::after",
+    ".is-checkradio[type=checkbox] + label::after",
+    // slider arrows
+    ".swiper--fitxa + div .swiper-button-prev::after",
+    ".swiper--fitxa + div .swiper-button-next::after",
+    ".swiper--activitats__btns .swiper-button-prev::after",
+    ".swiper--activitats__btns .swiper-button-next::after",
+    "[class^=swiper--activitats-][class$=__btns] .swiper-button-prev::after",
+    "[class^=swiper--activitats-][class$=__btns] .swiper-button-next::after",
+    ".swiper--exposiciones-destacadas__btns .swiper-button-prev::after",
+    ".swiper--exposiciones-destacadas__btns .swiper-button-next::after",
+    "[class^=swiper--expos-][class$=__btns] .swiper-button-prev::after",
+    "[class^=swiper--expos-][class$=__btns] .swiper-button-next::after",
+    ".swiper--publicacions__btns .swiper-button-prev::after",
+    ".swiper--publicacions__btns .swiper-button-next::after",
+    // buttons with an icon
+    ".button--carrega::before",
+    ".button--compartir::before",
+    ".button--linia-temps::before",
+    ".button--copiar::before",
+    ".container_values .remove",
+    ".simple-tooltip-tooltip .js-tooltip-close",
+    // thesaurus tree
+    ".tree_wrapper .grouped_children > .arrow",
+    ".tree_wrapper .grouped_children > .btn_scope_note",
+    ".tree_wrapper .grouped_children > .btn_relations",
+    ".tree_wrapper .grouped_children > .btn_chain",
+    // lists and links
+    ".block-dedalo ul > li::before",
+    ".text-base ul > li::before",
+    ".card li::before",
+    ".more-link::after",
+    ".highlighted-link a::after",
+    ".navigation-sub .current::after",
+    ".download-doc a::before",
+    ".download-doc a::after",
+    ".related-docs a::before",
+    ".related-docs a::after",
+    ".actions-list a::after",
+    ".block-dedalo :not(li) > a[href$='.pdf']::before",
+    ".block-dedalo a:has(span[style='background-color:hsl(0,75%,60%);']:only-child)::after",
+    ".dedalo-link::after",
+    // image viewer
+    ".viewer-toolbar > ul > li::before",
+    ".viewer-button::before",
+    // <img> icons (black, white or brown) and the white logos of the footer
+    "img[src*='/assets/img/ico-']",
+    "img[src*='/assets/img/galeria-']",
+    "img[src*='/assets/img/linia-temps-']",
+    "img[src*='/assets/img/mapa-']",
+    "footer img"
+);
+
+@media (forced-colors: active) {
+    // dark themes: the icons become white (the theme's text colour)
+    // !important: several icons already have a more specific filter (white icons on dark bars)
+    #{$forced-icons} {
+        filter: brightness(0) invert(1) !important;
+    }
+
+    // elements drawn only with a background colour: system colours instead
+    .hamburger-inner,
+    .hamburger-inner::before,
+    .hamburger-inner::after,
+    .main-nav > ul > li > a::after {
+        forced-color-adjust: none;
+        background-color: CanvasText !important;
+    }
+    // the current/hovered menu item mark only shows when it should (as in the normal design)
+    .main-nav > ul > li:not(.open):not(:hover):not(:has([aria-current="page"])) > a::after {
+        background-color: transparent !important;
+    }
+    .swiper-pagination-bullet {
+        forced-color-adjust: none;
+        background: CanvasText;
+        opacity: 0.5;
+    }
+    .swiper-pagination-bullet-active {
+        background: Highlight;
+        opacity: 1;
+    }
+    .date-slider-track {
+        forced-color-adjust: none;
+        background-color: CanvasText;
+    }
+    .date-slider-range {
+        forced-color-adjust: none;
+        background-color: Highlight;
+    }
+    .date-slider-container input[type="range"]::-webkit-slider-thumb {
+        forced-color-adjust: none;
+        background: Highlight;
+    }
+    .date-slider-container input[type="range"]::-moz-range-thumb {
+        forced-color-adjust: none;
+        background: Highlight;
+    }
+
+    // inline SVGs with fixed colours (header logo, white close crosses of the dialogs)
+    .site-logo svg g,
+    .site-logo svg path {
+        fill: CanvasText;
+    }
+    .dialog-close svg path[stroke],
+    .modal-close svg path[stroke] {
+        stroke: CanvasText;
+    }
+
+    // view buttons: the active one is also outlined
+    .button--icon[aria-pressed="true"] {
+        outline: 2px solid Highlight;
+        outline-offset: 2px;
+    }
+
+    // the mobile menu loses its white background: a border separates it from the page
+    @include until-fullhd {
+        .main-nav {
+            border: 1px solid CanvasText;
+        }
+    }
+}
+
+// light themes: the icons become black
+@media (forced-colors: active) and (prefers-color-scheme: light) {
+    #{$forced-icons} {
+        filter: brightness(0) !important;
+    }
+}
+
+@media (forced-colors: active) {
+    // active view button: its icon is white on a brown square, and a single colour would turn it
+    // into a plain square. In grey the icon stays visible on both themes.
+    .button--icon[aria-pressed="true"] img {
+        filter: grayscale(1) !important;
+    }
+}

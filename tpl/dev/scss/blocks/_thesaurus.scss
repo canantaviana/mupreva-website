@@ -154,7 +154,7 @@ html {
                     font-family: monospace;
                     font-size: 11px;
                     letter-spacing: unset;
-                    color: #c0c0c0;
+                    color: #666; // #c0c0c0 was 1.8:1 on white (1.4.3)
                 }
                 a {
                     text-decoration: none;
@@ -166,7 +166,7 @@ html {
 
             > .nd {
                 font-size: var(--step--1);
-                color: $grey;
+                color: $grey-dark; // $grey was 4.3:1 on white (1.4.3)
                 margin-right: auto;
             }
 

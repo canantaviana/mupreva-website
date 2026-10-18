@@ -792,6 +792,12 @@ var thesaurus = {
                             })
                                 .then(function () {
                                     spinner.remove()
+                                    // say how many terms were found and take the keyboard to the first one
+                                    const matches = rows_list_node.querySelectorAll('.term.hilite a')
+                                    common.announce((tstring.search_matches || '{n}').replace('{n}', matches.length))
+                                    if (matches.length > 0) {
+                                        matches[0].focus()
+                                    }
                                 })
                         })
 

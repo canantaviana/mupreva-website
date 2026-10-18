@@ -37,7 +37,7 @@ var item = {
         // load and render
         self.load_data({}).then(function (response) {
             if (!response.result || response.result.length < 1) {
-                self.target.innerHTML = `<div class="not_found">Sorry, record not available (${self.section_id})</div>`;
+                self.target.innerHTML = `<div class="not_found">${tstring.record_not_available} (${self.section_id})</div>`;
                 console.warn("self.target:", self.target);
                 return;
             }
@@ -277,7 +277,7 @@ var item = {
             <button type="button" class="button button--copiar" data-copy-url="${url}">${
             tstring.share_copy_link
         }</button>
-            <p class="copy-message"></p>
+            <p class="copy-message" role="status"></p>
         </div>
         <div class="flow">
             <p>${tstring.share_other_desc}</p>
@@ -340,7 +340,7 @@ var item = {
             ${
                 row.section_id
                     ? `
-            <dt><dt>${tstring.item_id}</dt></dt>
+            <dt>${tstring.item_id}</dt>
             <dd>${row.section_id}</dd>
             `
                     : ""
@@ -442,7 +442,7 @@ var item = {
             ${
                 row.section_id
                     ? `
-            <dt><dt>${tstring.item_id}</dt></dt>
+            <dt>${tstring.item_id}</dt>
             <dd>${row.section_id}</dd>
             `
                     : ""
@@ -514,6 +514,8 @@ var item = {
 
     template: function (row) {
         const url = this.absUrl(row);
+        // the page title names the record, not just the kind of page
+        common.set_record_title(row.titulo);
         return htmlTemplate(`
             <div class="fitxa-intro columns is-variable is-8">
                 <div class="column flow--l">
@@ -580,13 +582,13 @@ var item = {
     renderImageButtons: function () {
         return `
             <button type="button" class="button button--icon image-action-zoom">
-                <img src="/assets/img/ico-lupa-ampliar.svg" title="${tstring.item_image_zoom}" width="30" height="30">
+                <img src="/assets/img/ico-lupa-ampliar.svg" alt="${tstring.item_image_zoom}" title="${tstring.item_image_zoom}" width="30" height="30">
             </button>
             <button type="button" class="button button--icon image-action-download">
-                <img src="/assets/img/ico-descarregar.svg" title="${tstring.item_image_download}" width="30" height="30">
+                <img src="/assets/img/ico-descarregar.svg" alt="${tstring.item_image_download}" title="${tstring.item_image_download}" width="30" height="30">
             </button>
             <button type="button" class="button button--icon is-hidden-mobile image-action-fullscreen">
-                <img src="/assets/img/ico-pantalla-completa.svg" title="${tstring.item_image_fullscreen}" width="30" height="30">
+                <img src="/assets/img/ico-pantalla-completa.svg" alt="${tstring.item_image_fullscreen}" title="${tstring.item_image_fullscreen}" width="30" height="30">
             </button>
         `;
     },
@@ -597,6 +599,20 @@ var item = {
 
     renderImages: function (row) {
         const images = row.imagenes_identificativas.concat(row.imagenes);
+        // text alternative of each photo: its own title or, when Dédalo has none, the object name
+        // (with "image N of M" when there are several), never an empty alt for the object (1.1.1)
+        const imageAlt = function (image, index) {
+            if (image && image.title) {
+                return common.attr(image.title);
+            }
+            const base = new DOMParser().parseFromString(row.titulo || "", "text/html").body.textContent.trim();
+            if (!base) {
+                return "";
+            }
+            return common.attr(images.length > 1
+                ? base + " (" + tstring.image_n_of.replace("{n}", index + 1).replace("{total}", images.length) + ")"
+                : base);
+        };
         //if (this.isMoneda(row) && images.length > 1) {
         if (row.imagenes_identificativas.length > 1 && (row.imagenes || row.imagenes.length > 0)) {
             const image1 = images[0];
@@ -613,21 +629,21 @@ var item = {
                                 __WEB_MEDIA_ENGINE_URL__ + image1.image
                             }" data-original="${
                                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image1.image)
-                            }" alt="${image1.title}" data-caption="${image1.photographer ? (tstring.author + ": " + image1.photographer) : image1FileName}">
+                            }" alt="${imageAlt(image1, 0)}" data-caption="${image1.photographer ? (tstring.author + ": " + image1.photographer) : image1FileName}">
                             <img loading="lazy" class="image-zoom" src="${
                                 __WEB_MEDIA_ENGINE_URL__ + image2.image
                             }" data-original="${
                                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image2.image)
-                            }" alt="${image2.title}" data-caption="${image2.photographer ? (tstring.author + ": " + image2.photographer) : image2FileName}">
+                            }" alt="${imageAlt(image2, 1)}" data-caption="${image2.photographer ? (tstring.author + ": " + image2.photographer) : image2FileName}">
                         </div>
                         ${images
-                            .map(function (image) {
+                            .map(function (image, index) {
                                 const imageFileName = image.image.split("/").pop();
                                 return `
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
+                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${imageAlt(image, index)}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
                                 </div>
                             `;
                             })
@@ -650,10 +666,10 @@ var item = {
                         <div class="swiper-slide swiper-slide--double">
                             <img src="${
                                 __WEB_MEDIA_ENGINE_URL__ + image1.image
-                            }" alt="${image1.title ? image1.title : ""}">
+                            }" alt="">
                             <img src="${
                                 __WEB_MEDIA_ENGINE_URL__ + image2.image
-                            }" alt="${image2.title ? image2.title : ""}">
+                            }" alt="">
                         </div>
                         ${images
                             .map(function (image) {
@@ -661,7 +677,7 @@ var item = {
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" alt="${image.title ? image.title : ""}">
+                                    }" alt="">
                                 </div>
                             `;
                             })
@@ -686,7 +702,7 @@ var item = {
                             __WEB_MEDIA_ENGINE_URL__ + image1.image
                         }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image1.image)
-            }" alt="${image1.title}" data-caption="${image1.photographer ? (tstring.author + ": " + image1.photographer) : image1FileName}">
+            }" alt="${imageAlt(image1, 0)}" data-caption="${image1.photographer ? (tstring.author + ": " + image1.photographer) : image1FileName}">
                         <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                             ${this.renderImageButtons()}
                         </div>
@@ -696,7 +712,7 @@ var item = {
                             __WEB_MEDIA_ENGINE_URL__ + image2.image
                         }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image2.image)
-            }" alt="${image2.title}" data-caption="${image2.photographer ? (tstring.author + ": " + image2.photographer) : image2FileName}">
+            }" alt="${imageAlt(image2, 1)}" data-caption="${image2.photographer ? (tstring.author + ": " + image2.photographer) : image2FileName}">
                         <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                             ${this.renderImageButtons()}
                         </div>
@@ -716,7 +732,7 @@ var item = {
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
-            }" alt="${image.title}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
+            }" alt="${imageAlt(image, 0)}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
                     ${
                         image.footprint
                             ? `<figcaption>
@@ -748,7 +764,7 @@ var item = {
                         __WEB_MEDIA_ENGINE_URL__ + image.image
                     }" data-original="${
                 __WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)
-            }" alt="${image.title}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
+            }" alt="${imageAlt(image, 0)}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
                     <div class="btns is-flex is-justify-content-flex-end gap-5 mt-1">
                         ${this.renderImageButtons()}
                     </div>
@@ -764,13 +780,13 @@ var item = {
                 <div class="fullscreen__content fullscreen__content--1 swiper swiper--fitxa">
                     <div class="swiper-wrapper">
                         ${images
-                            .map(function (image) {
+                            .map(function (image, index) {
                                 const imageFileName = image.image.split("/").pop();
                                 return `
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${image.title ? image.title : ""}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
+                                    }" data-original="${__WEB_MEDIA_ENGINE_URL__ + imgOriginal(image.image)}" class="image-zoom" alt="${imageAlt(image, index)}" data-caption="${image.photographer ? (tstring.author + ": " + image.photographer) : imageFileName}">
                                 </div>
                             `;
                             })
@@ -796,7 +812,7 @@ var item = {
                                 <div class="swiper-slide">
                                     <img src="${
                                         __WEB_MEDIA_ENGINE_URL__ + image.image
-                                    }" alt="${image.title ? image.title : ""}">
+                                    }" alt="">
                                 </div>
                             `;
                             })
@@ -822,7 +838,7 @@ var item = {
                         ? `
                 <tr>
                     <td></td>
-                    <th>${tstring.item_tipology}</th>
+                    <th scope="row">${tstring.item_tipology}</th>
                     <td>
                         ${(tipologyUri)?`<a target="_blank" href="${tipologyUri}">${row.tipologia}</a>`:row.tipologia}
                     </td>
@@ -835,7 +851,7 @@ var item = {
                         ? `
                 <tr>
                     <td></td>
-                    <th>${tstring.item_data}</th>
+                    <th scope="row">${tstring.item_data}</th>
                     <td>${row.datacion_ini}</td>
                 </tr>
                 `
@@ -846,7 +862,7 @@ var item = {
                         ? `
                 <tr>
                     <td></td>
-                    <th>${tstring.item_material}</th>
+                    <th scope="row">${tstring.item_material}</th>
                     <td>${row.materia}</td>
                 </tr>
                 `
@@ -857,7 +873,7 @@ var item = {
                         ? `
                 <tr>
                     <td></td>
-                    <th>${tstring.item_tecnica}</th>
+                    <th scope="row">${tstring.item_tecnica}</th>
                     <td>${row.tecnica}</td>
                 </tr>
                 `
@@ -868,14 +884,14 @@ var item = {
                         ? `
                 <tr>
                     <td></td>
-                    <th>${tstring.item_sizes}</th>
+                    <th scope="row">${tstring.item_sizes}</th>
                     <td>
                         <table>
                             ${row.medidas
                                 .map(function (medida) {
                                     return `
                                 <tr>
-                                    <th>${medida.tipo}</th>
+                                    <th scope="row">${medida.tipo}</th>
                                     <td>${medida.tamanyo}${medida.unidad}</td>
                                 </tr>
                                 `;
@@ -919,7 +935,7 @@ var item = {
                         ? `
                 <tr>
                     <td></td>
-                    <th>${tstring.item_num_cat}</th>
+                    <th scope="row">${tstring.item_num_cat}</th>
                     <td>${row.section_id}</td>
                 </tr>
                 `
@@ -930,7 +946,7 @@ var item = {
                         ? `
                 <tr>
                     <td></td>
-                    <th>${tstring.item_title}</th>
+                    <th scope="row">${tstring.item_title}</th>
                     <td>${row.titulo}</td>
                 </tr>
                 `
@@ -941,7 +957,7 @@ var item = {
                         ? `
                 <tr>
                     <td></td>
-                    <th>${tstring.item_datacion}</th>
+                    <th scope="row">${tstring.item_datacion}</th>
                     <td>${datacion}</td>
                 </tr>
                 `
@@ -952,14 +968,14 @@ var item = {
                         ? `
                 <tr>
                     <td></td>
-                    <th>${tstring.item_sizes}</th>
+                    <th scope="row">${tstring.item_sizes}</th>
                     <td>
                         <table>
                             ${row.medidas
                                 .map(function (medida) {
                                     return `
                                 <tr>
-                                    <th>${medida.tipo}</th>
+                                    <th scope="row">${medida.tipo}</th>
                                     <td>${medida.tamanyo}${medida.unidad}</td>
                                 </tr>
                                 `;
@@ -976,7 +992,7 @@ var item = {
                         ? `
                 <tr>
                     <td></td>
-                    <th>${tstring.item_adquisicion}</th>
+                    <th scope="row">${tstring.item_adquisicion}</th>
                     <td>${common.timestamp_to_fecha(row.fecha_ingreso)} | ${row.fuente_ingreso} | ${row.forma_ingreso} | ${row.tipo_recuperacion}</td>
                 </tr>
                 `
@@ -987,7 +1003,7 @@ var item = {
                         ? `
                 <tr>
                     <td></td>
-                    <th>${tstring.item_production}</th>
+                    <th scope="row">${tstring.item_production}</th>
                     <td>${lugar}</td>
                 </tr>
                 `
@@ -998,7 +1014,7 @@ var item = {
                         ? `
                 <tr>
                     <td></td>
-                    <th>${tstring.item_tipology}</th>
+                    <th scope="row">${tstring.item_tipology}</th>
                     <td>${(tipologyUri)?`<a target="_blank" href="${tipologyUri}">${row.tipologia}</a>`:row.tipologia}</td>
                 </tr>
                 `
@@ -1010,10 +1026,10 @@ var item = {
                 <tr>
                     <td>
                         <button type="button" class="button button--icon" id="btnTableCollapse01" aria-controls="TableCollapse01More" aria-expanded="false" onclick="toggle(this.id,'TableCollapse01More');">
-                            <img src="/assets/img/ico-mes.svg" width="17" height="17">
+                            <img src="/assets/img/ico-mes.svg" alt="${tstring.item_show_more_info}" title="${tstring.item_show_more_info}" width="17" height="17">
                         </button>
                     </td>
-                    <th>${tstring.item_periodo}</th>
+                    <th scope="row">${tstring.item_periodo}</th>
                     <td>${row.periodo}</td>
                 </tr>
                 <tr style="display:none;" id="TableCollapse01More">
@@ -1021,7 +1037,7 @@ var item = {
                         <div class="has-background-grey-light p-5 mb-5">
                             <div class="tabs-2 mb-6">
                                 <div class="tab-control">
-                                    <ul class="tab-list" role="tablist">
+                                    <ul class="tab-list" role="tablist" aria-label="${tstring.item_periodo}">
                                         ${row.periodo.split(',').map((el, i) => (
                                             `<li class="tab-item">
                                                 <button role="tab" aria-controls="periodo-tab${i}">${el.trim()}</button>
@@ -1057,10 +1073,10 @@ var item = {
                 <tr>
                     <td>
                         <button type="button" class="button button--icon" id="btnTableCollapse03" aria-controls="TableCollapse03More" aria-expanded="false" onclick="toggle(this.id,'TableCollapse03More');">
-                            <img src="/assets/img/ico-mes.svg" title="${tstring.item_show_more_info}" width="17" height="17">
+                            <img src="/assets/img/ico-mes.svg" alt="${tstring.item_show_more_info}" title="${tstring.item_show_more_info}" width="17" height="17">
                         </button>
                     </td>
-                    <th>${tstring.item_object}</th>
+                    <th scope="row">${tstring.item_object}</th>
                     <td>${row.nombre_bien}</td>
                 </tr>
                 <tr style="display:none;" id="TableCollapse03More">
@@ -1068,7 +1084,7 @@ var item = {
                         <div class="has-background-grey-light p-5 mb-5">
                             <div class="tabs-2 mb-6">
                                 <div class="tab-control">
-                                    <ul class="tab-list" role="tablist">
+                                    <ul class="tab-list" role="tablist" aria-label="${tstring.item_object}">
                                         ${row.nombre_bien.split(',').map((el, i) => (
                                             `<li class="tab-item">
                                                 <button role="tab" aria-controls="nombre_bien-tab${i}">${el.trim()}</button>
@@ -1103,10 +1119,10 @@ var item = {
                 <tr>
                     <td>
                         <button type="button" class="button button--icon" id="btnTableCollapse04" aria-controls="TableCollapse04More" aria-expanded="false" onclick="toggle(this.id,'TableCollapse04More');">
-                            <img src="/assets/img/ico-mes.svg" title="${tstring.item_show_more_info}" width="17" height="17">
+                            <img src="/assets/img/ico-mes.svg" alt="${tstring.item_show_more_info}" title="${tstring.item_show_more_info}" width="17" height="17">
                         </button>
                     </td>
-                    <th>${tstring.item_material}</th>
+                    <th scope="row">${tstring.item_material}</th>
                     <td>${row.materia}</td>
                 </tr>
                 <tr style="display:none;" id="TableCollapse04More">
@@ -1114,7 +1130,7 @@ var item = {
                         <div class="has-background-grey-light p-5 mb-5">
                             <div class="tabs-2 mb-6">
                                 <div class="tab-control">
-                                    <ul class="tab-list" role="tablist">
+                                    <ul class="tab-list" role="tablist" aria-label="${tstring.item_material}">
                                         ${row.materia.split(',').map((el, i) => (
                                             `<li class="tab-item">
                                                 <button role="tab" aria-controls="materia-tab${i}">${el.trim()}</button>
@@ -1149,10 +1165,10 @@ var item = {
                 <tr>
                     <td>
                         <button type="button" class="button button--icon" id="btnTableCollapse05" aria-controls="TableCollapse05More" aria-expanded="false" onclick="toggle(this.id,'TableCollapse05More');">
-                            <img src="/assets/img/ico-mes.svg" title="${tstring.item_show_more_info}" width="17" height="17">
+                            <img src="/assets/img/ico-mes.svg" alt="${tstring.item_show_more_info}" title="${tstring.item_show_more_info}" width="17" height="17">
                         </button>
                     </td>
-                    <th>${tstring.item_tecnica}</th>
+                    <th scope="row">${tstring.item_tecnica}</th>
                     <td>${row.tecnica}</td>
                 </tr>
                 <tr style="display:none;" id="TableCollapse05More">
@@ -1160,7 +1176,7 @@ var item = {
                         <div class="has-background-grey-light p-5 mb-5">
                             <div class="tabs-2 mb-6">
                                 <div class="tab-control">
-                                    <ul class="tab-list" role="tablist">
+                                    <ul class="tab-list" role="tablist" aria-label="${tstring.item_tecnica}">
                                         ${row.tecnica.split(',').map((el, i) => (
                                             `<li class="tab-item">
                                                 <button role="tab" aria-controls="tecnica-tab${i}">${el.trim()}</button>
@@ -1213,6 +1229,12 @@ var item = {
                 tabData.result.push(...data)
                 tabData.loaded = tabData.loaded + data.length;
                 setCategoryRelations(category);
+                // the list is rebuilt and the button may be gone: focus the first new item
+                const first_new = tabData.container && tabData.container.querySelectorAll('li')[offset];
+                const link = first_new && first_new.querySelector('a[href]');
+                if (link) {
+                    link.focus();
+                }
             })
         }
 
@@ -1233,7 +1255,7 @@ var item = {
                             <li>
                                 <a href="${page_globals.__WEB_ROOT_WEB__}/${elementsDic[self.table]}/${item.section_id}" target="_blank">
                                     <figure>
-                                        <img src="${imageUrl}" loading="lazy">
+                                        <img src="${imageUrl}" loading="lazy" alt="">
                                         <figcaption>${item.titulo}</figcaption>
                                     </figure>
                                 </a>
@@ -1242,7 +1264,7 @@ var item = {
                         }).join('')}
                     </ul>`);
                 const button = htmlTemplate(`
-                    <button class="button button--carrega button--icon">
+                    <button type="button" class="button button--carrega button--icon">
                         ${tstring.load_more} <small>[${tabData.loaded} / ${tabData.total}]</small>
                     </button>
                 `)
@@ -1312,7 +1334,8 @@ var item = {
         </h2>
         <div class="accordion-content block-dedalo">
             <div class="accordion accordion--secondary">
-                <div class="table-responsive">
+                <!-- it scrolls sideways on small screens: keyboard users must be able to reach it (2.1.1) -->
+                <div class="table-responsive" tabindex="0" role="region" aria-label="${tstring.item_tecnic_sheet}">
                 ${
                     row.tpl === "img"
                         ? this.templateTecnicPicture(row)
@@ -1616,6 +1639,7 @@ var item = {
         }
 
         function loadMoreChildren() {
+            const focus_first_new = common.remember_focusables(ul);
             self.loadChildrenPage(row).then(function (data) {
                 const content = htmlTemplate(
                     data.map(function (object) {
@@ -1625,6 +1649,7 @@ var item = {
                 appendTemplate(ul, content);
                 enableDialogs(ul);
                 renderLoadMoreButton();
+                focus_first_new();
             });
         }
 
@@ -1679,7 +1704,7 @@ var item = {
                 <div class="accordion-content block-dedalo">
                     <div id="${tabsId}" class="tabs-2 mb-6">
                         <div class="tab-control">
-                            <ul class="tab-list" role="tablist">
+                            <ul class="tab-list" role="tablist" aria-label="${tstring.immovables_relations_title}">
                                 ${Object.keys(relationsData).map((key) => {
                                     return `<li class="tab-item">
                                         <button role="tab" aria-controls="${key}-tab">${relationsData[key].type}</button>
@@ -1745,16 +1770,21 @@ var item = {
                     appendTemplate(buttonContainer, button);
                     buttonContainer.querySelector("button").addEventListener("click", function (e) {
                         e.preventDefault();
-                        loadMoreRelations();
+                        loadMoreRelations(true);
                     });
                 }
 
-                function loadMoreRelations() {
+                function loadMoreRelations(asked_by_user) {
+                    // only when the user pressed "load more": keep the focus on the new items
+                    const focus_first_new = asked_by_user ? common.remember_focusables(ul) : null;
                     const nextItems = tabData.result.slice(tabData.loaded, tabData.loaded + RELATIONS_PAGE_SIZE);
                     const content = htmlTemplate(nextItems.map((item) => templateRelationItem(item, key)).join(''));
                     appendTemplate(ul, content);
                     tabData.loaded += nextItems.length;
                     renderLoadMoreButton();
+                    if (focus_first_new) {
+                        focus_first_new();
+                    }
                 }
 
                 loadMoreRelations();
@@ -1950,60 +1980,16 @@ var item = {
         appendTemplate(target, template);
     },
 
-    template_modal: function () {
-        return htmlTemplate(`
-            <div id="video-modal" class="modal">
-                <div class="modal-content">
-                    <button class="modal-close">
-                        <svg width="44" height="44">
-                            <g fill="none" fill-rule="evenodd">
-                                <path d="M0 0h44v44H0z" />
-                                <path stroke="#FFF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M33 11 11 33M11 11l22 22" />
-                            </g>
-                        </svg>
-                    </button>
-                    <video controls>
-                        <source id="video-source" src="" type="video/mp4">
-                        <track id="video-track" kind="subtitles" src="">
-                    </video>
-                    <p id="modal-title"></p>
-                </div>
-            </div>`);
-    },
-
     load_modal: function () {
-        const modal = document.getElementById('video-modal');
-        const title = modal.querySelector('#modal-title');
-        const video = modal.querySelector('video');
-        const videoSource = modal.querySelector('#video-source');
-        const videoTrack = modal.querySelector('#video-track');
-
         document.querySelectorAll('.video-button').forEach((button) => {
             button.addEventListener('click', function() {
-                // afegir titol, src, subtitols
-                title.textContent = this.dataset.videoTitle;
-                videoSource.src = this.dataset.videoUrl;
-                videoTrack.src = this.dataset.subtitlesUrl;
-
-                video.load();
-
-                modal.classList.add('is-active');
+                common.open_video_modal({
+                    url: this.dataset.videoUrl,
+                    subtitles: this.dataset.subtitlesUrl,
+                    title: this.dataset.videoTitle
+                });
             });
         });
-
-        modal.querySelectorAll('.modal-close').forEach((element) => {
-            element.addEventListener('click', function(e) {
-                video.pause();
-                modal.classList.remove('is-active');
-            });
-        });
-
-        modal.addEventListener('click', (e) => {
-            if(e.target === modal) {
-                video.pause();
-                modal.classList.remove('is-active');
-            }
-        })
     },
 
     /**
@@ -2206,7 +2192,7 @@ var item = {
 
         //recursos
         appendTemplate(acordion, this.templateResources(row));
-        appendTemplate(acordion, this.template_modal());
+        // the video modal is created by common.open_video_modal when needed
         this.load_modal();
 
         //restauració

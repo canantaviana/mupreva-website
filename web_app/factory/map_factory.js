@@ -248,8 +248,14 @@ function map_factory() {
             // and tooltip (hover - lightweight preview of what's at this
             // location, built from data already on hand so no extra fetch
             // is needed just to hover)
+            // accessible name of a marker (it is focusable): how many records it holds
+            const marker_name = function (element) {
+                const n = (element.group && element.group.length) || 1
+                return (tstring.map_marker || '{n} records here').replace('{n}', n)
+            }
+
             const create_marker = function (element, latlng, marker_icon, popup, tooltip_content) {
-                const marker = L.marker(latlng, { icon: marker_icon }).bindPopup(popup)
+                const marker = L.marker(latlng, { icon: marker_icon, alt: marker_name(element) }).bindPopup(popup)
                 if (tooltip_content) {
                     marker.bindTooltip(tooltip_content, {
                         direction: 'top',
@@ -257,7 +263,7 @@ function map_factory() {
                         sticky: false
                     })
                 }
-                marker.on('mousedown', function (e) {
+                marker.on('click', function (e) { // click also fires on Enter (keyboard), unlike mousedown
                     // event publish map_selected_marker
                     event_manager.publish('map_selected_marker', {
                         item: element,
@@ -293,7 +299,7 @@ function map_factory() {
                         const marker = L.geoJSON(geojsonFeature, {
                             pointToLayer: function (feature, latlng) {
                                 // return create_marker(element, latlng, marker_icon, popup)
-                                return L.marker(latlng, { icon: marker_icon })
+                                return L.marker(latlng, { icon: marker_icon, alt: marker_name(element) })
                             },
                             onEachFeature: function (feature, layer) {
                                 layer.bindPopup(popup)
@@ -307,7 +313,7 @@ function map_factory() {
                             }
                         })
 
-                        marker.on('mousedown', function (e) {
+                        marker.on('click', function (e) { // click also fires on Enter (keyboard), unlike mousedown
                             // event publish map_selected_marker
                             event_manager.publish('map_selected_marker', {
                                 item: element,

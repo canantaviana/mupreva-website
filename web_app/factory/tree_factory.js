@@ -177,6 +177,15 @@ function tree_factory() {
             parent: term_span,
             target: "_blank"
         });
+        // a search match is shown with a background: say it to screen readers too
+        if (to_hilite === true) {
+            common.create_dom_element({
+                element_type: "span",
+                class_name: "is-sr-only",
+                text_content: " (" + (tstring.search_match || "search result") + ")",
+                parent: term_span
+            })
+        }
 
         // Element per al nd
         if (row.nd && row.nd.length > 0) {
@@ -208,6 +217,20 @@ function tree_factory() {
                 src: __WEB_MEDIA_ENGINE_URL__ + row.illustration,
                 parent: tree_node
             });
+            // the term name is right next to it
+            illustrationEl.alt = "";
+        }
+
+        // icon-only toggles: give them a name and keep aria-expanded in step with their "open" class
+        const term_text = new DOMParser().parseFromString(row.term || '', 'text/html').body.textContent
+        const name_toggle = function (button, label_key) {
+            button.type = "button"
+            button.setAttribute("aria-label", (tstring[label_key] || '{term}').replace('{term}', term_text))
+            const sync = function () {
+                button.setAttribute("aria-expanded", button.classList.contains("open") ? "true" : "false")
+            }
+            sync()
+            new MutationObserver(sync).observe(button, { attributes: true, attributeFilter: ["class"] })
         }
 
         // Botó per a scope_note
@@ -217,6 +240,7 @@ function tree_factory() {
                 class_name: "btn_scope_note",
                 parent: tree_node
             })
+            name_toggle(btn_scope_note, "tree_scope_note")
             btn_scope_note.addEventListener("click", function () {
                 if (this.classList.contains("open")) {
                     scope_note.classList.add("hide")
@@ -256,6 +280,7 @@ function tree_factory() {
             parent: tree_node,
             style: {"display": has_public_info ? "inline-block" : "none"}
         })
+        name_toggle(btn_relations, "tree_relations")
 
         /*let btn_relations
         if (row.relations && row.relations.length > 0) {
@@ -293,6 +318,7 @@ function tree_factory() {
                 class_name: "btn_indexation",
                 parent: tree_node
             })
+            name_toggle(btn_indexation, "tree_indexation")
             btn_indexation.addEventListener("click", function () {
                 if (this.classList.contains("open")) {
                     indexation_container.classList.add("hide")
@@ -312,6 +338,7 @@ function tree_factory() {
                 class_name: "arrow" + open_style,
                 parent: tree_node
             })
+            name_toggle(arrow, "tree_children")
             arrow.addEventListener("click", function () {
                 let new_state
                 if (this.classList.contains("open")) {
@@ -633,7 +660,7 @@ function tree_factory() {
                         })
                     )
                 }
-                Promise.all(ar_promises).then((values) => {
+                return Promise.all(ar_promises).then((values) => {
                     for (let i = 0; i < values.length; i++) {
                         const relation_item = values[i]
                         fragment.appendChild(relation_item)
@@ -641,11 +668,14 @@ function tree_factory() {
                     if (view_in_context === true) {
                         const view_in_context = relations_container.querySelector('.view_in_context') || common.create_dom_element({
                             element_type: "a",
-                            href: page_globals.__WEB_ROOT_WEB__ + '/thesaurus/' + row.term_id,
+                            href: page_globals.__WEB_ROOT_WEB__ + '/tesauro/' + row.term_id,
                             class_name: "relation_item view_in_context",
                             target: "_blank",
                             title: "Thesaurus " + row.term
                         })
+                        // icon-only link: its name says where it goes
+                        view_in_context.setAttribute('aria-label', (tstring.tree_view_in_context || '{term}')
+                            .replace('{term}', new DOMParser().parseFromString(row.term || '', 'text/html').body.textContent))
                         fragment.appendChild(view_in_context)
                     }
                     if (to < (relations_length - 1)) {
@@ -659,7 +689,8 @@ function tree_factory() {
                         more_node.addEventListener("click", function () {
                             const _from = parseInt(this.offset)
                             const _to = ((_from + limit) < relations_length) ? (_from + limit) : relations_length
-                            iterate(_from, _to)
+                            const focus_first_new = common.remember_focusables(relations_container)
+                            iterate(_from, _to).then(focus_first_new)
                             this.remove()
                         })
                         const label = (tstring['load_more'] || "Load more..") + " <small>[" + vieved + " " + tstring.of + " " + relations_length + "]</small>"

@@ -253,10 +253,12 @@ var actividades = {
         const active = list_mode_group.querySelector(".active");
         if (active) {
             active.classList.remove("active");
+            active.setAttribute("aria-pressed", "false");
             const imgActive = active.querySelector("img");
             imgActive.src = imgActive.dataset.srcOff;
         }
         element.classList.add("active");
+        element.setAttribute("aria-pressed", "true");
         const imgElement = element.querySelector("img");
         imgElement.src = imgElement.dataset.srcOn;
 
@@ -287,7 +289,7 @@ var actividades = {
 
                 <div class="column is-half-tablet is-one-fifth-widescreen is-4-fullhd">
                     <div class="field">
-                        <label class="label is-sr-only" for="cercaPub">${tstring.expositions_seach_label}</label>
+                        <label class="label is-sr-only" for="global_search">${tstring.expositions_seach_label}</label>
                         <div class="control">
                             <input type="search" name="cercaPub" id="global_search" placeholder="${tstring.expositions_seach_label}" value="" class="input">
                         </div>
@@ -295,7 +297,7 @@ var actividades = {
                 </div>
                 <div class="column is-half-tablet is-one-quarter-desktop is-one-fifth-widescreen is-2-fullhd">
                     <div class="field">
-                        <label class="label is-sr-only" for="cercaType">${tstring.expositions_category_label}</label>
+                        <label class="label is-sr-only" for="type">${tstring.expositions_category_label}</label>
                         <div class="control">
                             <input type="search" name="cercaType" id="type" placeholder="${tstring.expositions_category_label}" value="" class="input">
                         </div>
@@ -303,7 +305,7 @@ var actividades = {
                 </div>
                 <div class="column is-half-tablet is-one-quarter-desktop is-one-fifth-widescreen is-2-fullhd">
                     <div class="field">
-                        <label class="label is-sr-only" for="cercaData">${tstring.expositions_date_label}</label>
+                        <label class="label is-sr-only" for="time_frame">${tstring.expositions_date_label}</label>
                         <div class="control">
                             <input type="number" name="cercaData" id="time_frame" value="" class="input" min="1000" max="9999" step="1" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="${tstring.expositions_date_label}">
                         </div>
@@ -311,7 +313,7 @@ var actividades = {
                 </div>
                 <div class="column is-half-tablet is-one-quarter-desktop is-one-fifth-widescreen is-2-fullhd">
                     <div class="field">
-                        <label class="label is-sr-only" for="cercaUbicacio">${tstring.expositions_site_label}</label>
+                        <label class="label is-sr-only" for="place">${tstring.expositions_site_label}</label>
                         <div class="control">
                             <input type="search" name="cercaLloc" id="place" placeholder="${tstring.expositions_site_label}" value="" class="input">
                         </div>
@@ -331,13 +333,13 @@ var actividades = {
 
             <ul class="is-flex gap-5" id="mode_group">
                 <li>
-                    <button type="button" id="button_list" class="button button--icon">
-                        <img src="/assets/img/galeria-inactiu.svg" data-src-on="/assets/img/galeria-actiu.svg" data-src-off="/assets/img/galeria-inactiu.svg" title="${tstring.show_list}" width="34" height="34">
+                    <button type="button" id="button_list" class="button button--icon" aria-label="${tstring.show_list}" aria-pressed="false">
+                        <img src="/assets/img/galeria-inactiu.svg" data-src-on="/assets/img/galeria-actiu.svg" data-src-off="/assets/img/galeria-inactiu.svg" alt="" width="34" height="34">
                     </button>
                 </li>
                 <li>
-                    <button type="button" id="button_timeline" class="button button--icon">
-                        <img src="/assets/img/linia-temps-inactiu.svg" data-src-on="/assets/img/linia-temps-actiu.svg" data-src-off="/assets/img/linia-temps-inactiu.svg" title="${tstring.show_timeline}" width="34" height="34">
+                    <button type="button" id="button_timeline" class="button button--icon" aria-label="${tstring.show_timeline}" aria-pressed="false">
+                        <img src="/assets/img/linia-temps-inactiu.svg" data-src-on="/assets/img/linia-temps-actiu.svg" data-src-off="/assets/img/linia-temps-inactiu.svg" alt="" width="34" height="34">
                     </button>
                 </li>
             </ul>
@@ -386,6 +388,12 @@ var actividades = {
 
             submit_button.addEventListener("click", function (e) {
                 e.preventDefault();
+                // a wrong year is not searched silently: say it and go back to the field
+                const year_input = currentForm.querySelector("#time_frame");
+                if (!common.validate_year(year_input)) {
+                    year_input.focus();
+                    return;
+                }
                 self.pagination.offset = 0; // reset pagination always
                 self.form_submit();
             });
@@ -470,6 +478,7 @@ var actividades = {
                     dateHandler();
                     node_input.addEventListener("change", function (event) {
                         event.preventDefault();
+                        common.validate_year(node_input);
                         dateHandler();
                     });
                 },
@@ -480,6 +489,7 @@ var actividades = {
             const button_list_mode = currentForm.querySelector("#button_list");
             if (self.view_mode === "list") {
                 button_list_mode.classList.add("active");
+                button_list_mode.setAttribute("aria-pressed", "true");
                 const imgElement = button_list_mode.querySelector("img");
                 imgElement.src = imgElement.dataset.srcOn;
             }
@@ -492,6 +502,7 @@ var actividades = {
                 currentForm.querySelector("#button_timeline");
             if (self.view_mode === "timeline") {
                 button_view_timeline_mode.classList.add("active");
+                button_view_timeline_mode.setAttribute("aria-pressed", "true");
                 const imgElement =
                     button_view_timeline_mode.querySelector("img");
                 imgElement.src = imgElement.dataset.srcOn;
@@ -573,7 +584,12 @@ var actividades = {
     form_submit: function (options) {
         const self = this;
 
-        const form_inputs = document.querySelectorAll('input, select, textarea, button');
+        // block a second search while this one runs: only the controls of the page content that are
+        // enabled now, and never the one with the focus (disabling it would drop the keyboard focus)
+        const form_inputs = Array.from(document.querySelectorAll('main input, main select, main textarea, main button'))
+            .filter(function (input) {
+                return !input.disabled && input !== document.activeElement;
+            });
         form_inputs.forEach(function (input) {
             input.disabled = true;
         });
@@ -630,6 +646,7 @@ var actividades = {
                     const resultsCountNode = document.createElement('p');
                     resultsCountNode.className = 'has-text-right';
                     resultsCountNode.textContent = `${total} ${(tstring.entries_found).toLowerCase()}`;
+                    common.announce(resultsCountNode.textContent);
                     rows_list_container.appendChild(resultsCountNode);
                 }
 
@@ -915,7 +932,7 @@ var actividades = {
                 ${
                     row.type
                         ? `<p class="has-text-weight-medium is-size-6 mb-1">
-                    <a href="/activitats/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
+                    <a href="/exposiciones/?type=${row.type}" class="link-dn is-relative">${row.type}</a>
                 </p>`
                         : ""
                 }
