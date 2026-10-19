@@ -164,6 +164,10 @@
 @import "blocks/tooltip";
 @import "blocks/viewer";
 
+// Animacions CSS3 (després dels blocks, perquè en sobreescriu algunes transicions)
+// ---------------
+@import "blocks/animations";
+
 // Blocks per pàgines de Dédalo
 // ----------------------------
 // @import "blocks/block-text-img-dreta";

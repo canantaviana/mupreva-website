@@ -1,0 +1,170 @@
+// Animacions CSS3
+// ---------------
+// Totes les animacions del web es fan només amb CSS (@keyframes, transition, transform i
+// animation-timeline), sense JavaScript.
+// Només s'apliquen si l'usuari no ha demanat reduir el moviment al sistema (WCAG 2.3.3) i
+// només en pantalla: sense elles, el web es veu i funciona exactament igual.
+
+// Durada i corba comunes dels efectes de hover, perquè els que passen alhora vagin sincronitzats
+$hover-duration: 0.4s;
+$hover-easing: cubic-bezier(0.2, 0.6, 0.2, 1);
+
+@keyframes mupreva-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(3rem) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+// Només amb les propietats individuals opacity i translate: no trepitja ni escala el transform
+// que ja tingui l'element (els anys de la línia del temps estan centrats amb translateX)
+@keyframes mupreva-soft-in {
+    from {
+        opacity: 0;
+        translate: 0 3.5rem;
+    }
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+@keyframes mupreva-draw-line {
+    from {
+        scale: 1 0;
+    }
+    to {
+        scale: 1 1;
+    }
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+    // 1. Aparició dels elements dels llistats en entrar al viewport
+    // -------------------------------------------------------------
+    // L'animació és CSS3 (@keyframes). L'única cosa que fa el JS (dev/js/app.js) és canviar
+    // .js-reveal per .is-revealed quan l'element entra a la pantalla. Sense JS cap element
+    // rep .js-reveal, així que no queda res amagat.
+    .js-reveal {
+        opacity: 0;
+    }
+    .is-revealed {
+        animation: mupreva-fade-up 0.7s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+    }
+
+    // 1b. Línia del temps (vista "línia del temps" d'activitats, exposicions, catàleg...)
+    // -----------------------------------------------------------------------------------
+    // Els anys entren suaument quan arriben al viewport (mateix detonant que els llistats).
+    .cd-timeline__date.is-revealed {
+        animation: mupreva-soft-in 1s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+    }
+    // La línia vertical es dibuixa a mesura que es fa scroll: la punta sempre queda al
+    // centre de la pantalla (des que l'inici de la línia hi arriba fins que hi arriba el
+    // final). Scroll-driven animation, només CSS; sense suport, la línia es veu sencera.
+    @supports (view-timeline: --a) {
+        // la llibreria hi posa overflow: hidden, que el converteix en contenidor de scroll i
+        // la línia no avançaria mai; clip retalla igual però no és contenidor de scroll
+        .cd-timeline {
+            overflow: clip;
+        }
+        .cd-timeline__container {
+            view-timeline: --mupreva-timeline block;
+            &::before {
+                transform-origin: top;
+                animation: mupreva-draw-line linear both;
+                animation-timeline: --mupreva-timeline;
+                animation-range: entry 50% exit 50%;
+            }
+        }
+    }
+
+    // 2. Entrada del títol del slider de la portada en carregar la pàgina
+    // --------------------------------------------------------------------
+    .swiper--home .wrapper:has(h2) {
+        animation: mupreva-fade-up 0.8s 0.2s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+    }
+
+    // 3. Zoom suau de les imatges en passar-hi el ratolí o amb el focus
+    // ------------------------------------------------------------------
+    // El contenidor retalla la imatge perquè el zoom no en surti, i el zoom parteix de la vora
+    // inferior perquè no tapi el text que hi ha a sota (figcaption, text de la card).
+    // Queden fora les figures amb la imatge i el text de costat (is-flex-tablet).
+    .galeria figure:not(.is-flex-tablet),
+    .card.full-link,
+    .grid a,
+    .masonry-grid-item {
+        // al mosaic, l'<a> és inline i no pot retallar: ho fa el div de l'item
+        overflow: hidden;
+    }
+    .galeria figure:not(.is-flex-tablet) img,
+    .card.full-link img,
+    .grid img,
+    .masonry-grid-item img {
+        transform-origin: bottom;
+        transition:
+            opacity 0.125s ease-in,
+            transform $hover-duration $hover-easing;
+    }
+    .galeria a:is(:hover, :focus) figure:not(.is-flex-tablet) img,
+    .card.full-link:is(:hover, :focus-within) img,
+    .grid a:is(:hover, :focus) img,
+    .masonry-grid-item a:is(:hover, :focus) img {
+        transform: scale(1.05);
+    }
+
+    // Caixa de text de la card (passa a fons negre en hover): mateixa durada i corba que el
+    // zoom de la imatge, perquè els dos canvis vagin sincronitzats.
+    .card > div:first-child {
+        transition:
+            background-color $hover-duration $hover-easing,
+            color $hover-duration $hover-easing;
+        a {
+            transition: color $hover-duration $hover-easing;
+        }
+        .more-link::after,
+        li::before {
+            // el transform és el desplaçament de la fletxa (punt 4)
+            transition:
+                filter $hover-duration $hover-easing,
+                transform $hover-duration $hover-easing;
+        }
+    }
+
+    // 4. La fletxa dels botons i enllaços avança cap a la dreta en hover
+    // -------------------------------------------------------------------
+    // Botons (.button), "Veure més" de les targetes (s'activa amb el hover de tota la
+    // targeta, que és un enllaç sencer) i enllaços destacats.
+    .button::after,
+    .more-link::after,
+    .highlighted-link a::after {
+        transition: transform $hover-duration $hover-easing;
+    }
+    .button:is(:hover, :focus)::after,
+    .card.full-link:is(:hover, :focus-within) .more-link::after,
+    .highlighted-link a:is(:hover, :focus)::after {
+        transform: translateX(6px);
+    }
+
+    // 5. Subratllat del menú principal que creix d'esquerra a dreta
+    // --------------------------------------------------------------
+    @include fullhd {
+        .main-nav > ul > li {
+            > a::after {
+                background-color: $primary;
+                transform: scaleX(0);
+                transform-origin: left;
+                transition: transform 0.25s ease-out;
+            }
+            &.open > a,
+            &:hover > a,
+            &:has([aria-current="page"]) > a {
+                &::after {
+                    transform: scaleX(1);
+                }
+            }
+        }
+    }
+}
