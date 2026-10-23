@@ -19,6 +19,9 @@ var catalog = {
     map_marker_results: null,
     reset_map_results: null,
 
+    // marker_details_cache. In-memory cache of fetched marker detail data, keyed by section_id
+    marker_details_cache: {},
+
     // export_data_container
     export_data_container: null,
 
@@ -223,7 +226,12 @@ var catalog = {
         function selected_marker(data) {
             //console.log(" selected_marker data:", data);
             self.map_marker_results = data.item.group;
+            // render immediately with lightweight data (title + placeholder thumb)
             self.reset_map_results();
+            // then fetch full detail (images) for this marker's records and re-render
+            self.load_marker_details(data.item.group).then(function () {
+                self.reset_map_results();
+            });
         }
         // event map_popup_selected_item
         event_manager.subscribe(
@@ -1003,6 +1011,56 @@ var catalog = {
     }, //end get_tables
 
     /**
+     * LOAD_MARKER_DETAILS
+     * The map only loads lightweight marker data (section_id, tpl, title -
+     * see page.parse_map_data), so the "results below the map" gallery has
+     * no image to show until this batch-fetches the full record (title +
+     * identifying image) for a clicked marker's group of records. Results
+     * are cached in marker_details_cache so repeated clicks on the same
+     * marker are instant. Sites are always table 'immovables' here, so
+     * unlike catalogo.js's equivalent this doesn't need to dispatch by tpl.
+     * @param array group - array of {section_id, tpl, title} lightweight records
+     * @return promise
+     */
+    load_marker_details: function (group) {
+        const self = this;
+
+        const to_fetch = group.filter(
+            (item) => !self.marker_details_cache[item.section_id]
+        );
+        if (to_fetch.length < 1) {
+            return Promise.resolve();
+        }
+
+        const ids = to_fetch.map((item) => item.section_id);
+
+        return page.get_records({
+            table: 'immovables',
+            ar_fields: "section_id, titulo, imagenes_identificativas, relations",
+            section_id: ids.join(','),
+            resolve_portals_custom: {
+                imagenes_identificativas: "image",
+            },
+        }).then(function (rows) {
+            rows = rows || [];
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const identifying_images = row.imagenes_identificativas || [];
+                // same priority as list_row_builder: the site's own
+                // identifying image first, then a related tch1/tch100
+                // image when it has none of its own
+                const image_url = typeof identifying_images[0] !== "undefined"
+                    ? common.get_media_engine_url(identifying_images[0].image)
+                    : self.resolve_relations_fallback_image(row.relations);
+                self.marker_details_cache[row.section_id] = {
+                    title: row.titulo,
+                    image_url: image_url,
+                };
+            }
+        });
+    }, //end load_marker_details
+
+    /**
      * RENDER_DATA
      * Render received DB data based on 'view_mode' (list, map, timeline)
      * @return bool
@@ -1138,9 +1196,12 @@ var catalog = {
                         return htmlTemplate(`
                             ${self.map_marker_results.map(function(data){
                                 const url = page_globals.__WEB_ROOT_WEB__ + '/' + data.tpl + '/' + data.section_id;
-                                var image_url = '/assets/img/placeholder.png';
-                                if (data.identifying_images !== null && data.identifying_images !== '') {
-                                    image_url = data.identifying_images;
+                                var image_url = page_globals.__WEB_TEMPLATE_WEB__ + '/assets/img/placeholder.png';
+                                // populated asynchronously by load_marker_details() - may not
+                                // be in the cache yet on the first (lightweight) render
+                                const details = self.marker_details_cache[data.section_id];
+                                if (details && details.image_url) {
+                                    image_url = details.image_url;
                                 }
                                 return `
                                 <li class="${data.tpl}">
@@ -1215,26 +1276,70 @@ var catalog = {
     }, //end render_data
 
     /**
+     * RESOLVE_RELATIONS_FALLBACK_IMAGE
+     * Shared by list_row_builder and load_marker_details: relations
+     * entries already carry their own resolved image (not just type/id
+     * references) - priority is tch1 (objects) first, tch100 (pictures)
+     * only when no tch1 relation has a usable image, and any other
+     * related type (tch300 documents, etc.) is never used as a fallback
+     * image source. A relation existing doesn't guarantee it has an image
+     * (some entries carry image: null), so both lists are filtered down
+     * to the ones that actually resolved to an image before picking.
+     * @param string relations_raw - raw JSON string from the 'relations' field
+     * @return string|null absolute image url, or null if none available
+     */
+    resolve_relations_fallback_image: function (relations_raw) {
+        if (!relations_raw) {
+            return null;
+        }
+
+        let relations = [];
+        try {
+            relations = JSON.parse(relations_raw) || [];
+        } catch (e) {
+            return null;
+        }
+
+        const tch1_with_image = relations.filter(function (relation) {
+            return relation && relation.section_tipo === "tch1" && relation.image;
+        });
+        const tch100_with_image = relations.filter(function (relation) {
+            return relation && relation.section_tipo === "tch100" && relation.image;
+        });
+        const candidates = tch1_with_image.length > 0 ? tch1_with_image : tch100_with_image;
+
+        if (candidates.length < 1) {
+            return null;
+        }
+
+        const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+        return __WEB_MEDIA_ENGINE_URL__ + chosen.image;
+    }, //end resolve_relations_fallback_image
+
+    /**
      * LIST_ROW_BUILDER
      * Build DOM nodes to insert into list pop-up
      */
     list_row_builder: function (row, view_mode) {
+        // NOTE: this is called by list_factory as a bare function reference
+        // (fn_row_builder), not as a catalog.list_row_builder(...) method
+        // call, so `this` is not reliably bound to catalog here - reference
+        // sibling helpers through the global `catalog` identifier instead.
         const url =
             page_globals.__WEB_ROOT_WEB__ +
             "/" +
             row.tpl +
             "/" +
             row.section_id;
-        var image_url = "/assets/img/placeholder.png";
+        var image_url = page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/placeholder.png";
         if (row.imagenes_identificativas.length > 0) {
             image_url =
                 __WEB_MEDIA_ENGINE_URL__ +
                 row.imagenes_identificativas[0].image;
-        } else if (row.relations) {
-            const relations = JSON.parse(row.relations);
-            const randomImg = relations[Math.floor(Math.random() * relations.length)].image;
-            if (randomImg) {
-                image_url = __WEB_MEDIA_ENGINE_URL__ + randomImg;
+        } else {
+            const fallback_image = catalog.resolve_relations_fallback_image(row.relations);
+            if (fallback_image) {
+                image_url = fallback_image;
             }
         }
         return htmlTemplate(`

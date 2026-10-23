@@ -270,7 +270,17 @@ var search = {
                                     let img = null;
 
                                     if (row.ref_table === 'publications') {
-                                        img = imgRes[0].pdf.replace('.pdf', '.jpg').replace('web', 'thumb') || null
+                                        // 'thumb' renders are too low quality for the search
+                                        // results grid - try the '1.5MB' render first, and if
+                                        // that file doesn't exist on the media server, the img
+                                        // fallback chain in list_row_builder steps down through
+                                        // 'modified' then 'original'.
+                                        const basePath = imgRes[0].pdf.replace('.pdf', '.jpg')
+                                        img = basePath.replace('web', '1.5MB') || null
+                                        row.identifying_image_fallbacks = [
+                                            basePath.replace('web', 'modified'),
+                                            basePath.replace('web', 'original'),
+                                        ]
                                     } else if (['exhibitions', 'activities'].includes(row.ref_table)) {
                                         const imgArr = JSON.parse(imgRes[0].identifying_image)
                                         img = Array.isArray(imgArr) ? imgArr[0] : null
@@ -537,6 +547,27 @@ var search = {
                 </a>
             </li>
         `, "text/html");
+
+        // publication thumbnails: if the shown image is the one built from
+        // the pdf render (not the search table's own 'image' field, which
+        // always wins when present), step down through the remaining
+        // quality tiers on load failure instead of showing a broken image
+        if (finalImage === identifyingImageUrl && Array.isArray(row.identifying_image_fallbacks)) {
+            const imgEl = content.querySelector('img');
+            if (imgEl) {
+                const fallbackQueue = row.identifying_image_fallbacks
+                    .map(function (path) { return __WEB_MEDIA_ENGINE_URL__ + path; })
+                    .concat('/assets/img/placeholder.png');
+                imgEl.addEventListener('error', function onImageError() {
+                    const next = fallbackQueue.shift();
+                    if (next) {
+                        imgEl.src = next;
+                    } else {
+                        imgEl.removeEventListener('error', onImageError);
+                    }
+                });
+            }
+        }
 
         return content.body.firstChild;
 

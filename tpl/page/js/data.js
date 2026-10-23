@@ -23,51 +23,57 @@ page.parse_map_data = function (rows) {
         // clone row object to preserve it as immutable
         const row = Object.assign({}, rows[i]);
 
-        let geolocation_data_geojson
-        if (row.geolocalizacion !== null) {
-            geolocation_data_geojson = (typeof row.geolocalizacion === 'string' || row.geolocalizacion instanceof String)
-            ? JSON.parse(row.geolocalizacion)
-            : row.geolocalizacion
-        }
-        if (typeof row.geolocalizacion_produccion !== 'undefined' && row.geolocalizacion_produccion !== null) {
-            geolocation_data_geojson = (typeof row.geolocalizacion_produccion === 'string' || row.geolocalizacion_produccion instanceof String)
-            ? JSON.parse(row.geolocalizacion_produccion)
-            : row.geolocalizacion_produccion
-        }
-        if (geolocation_data_geojson && geolocation_data_geojson.length > 0) {
+        const tpl = page.section_tipo_to_template(row.section_tipo)
 
-            const tpl = page.section_tipo_to_template(row.section_tipo)
+        // lightweight marker data only. Images/description are fetched on
+        // demand when a marker is clicked - see catalog.load_marker_details
+        const item_data = {
+            section_id: row.section_id,
+            tpl: tpl,
+            title: row.titulo
+        }
 
-            // lightweight marker data only. Images/description are fetched on
-            // demand when a marker is clicked - see catalog.load_marker_details
-            const item_data = {
-                section_id: row.section_id,
-                tpl: tpl,
-                title: row.titulo
+        // a record can carry a recovery point (geolocalizacion) and a
+        // production point (geolocalizacion_produccion) at the same time -
+        // each is independent and both must become their own marker, so
+        // they are handled as separate entries instead of one overwriting
+        // the other
+        const location_fields = [
+            { field: 'geolocalizacion', marker_name: 'hallazgo' },
+            { field: 'geolocalizacion_produccion', marker_name: 'produccion' }
+        ]
+
+        for (let f = 0; f < location_fields.length; f++) {
+            const field = location_fields[f].field
+            const raw = row[field]
+
+            // typeof guard first: the field may be entirely absent on the
+            // row (undefined), not just explicitly null - without this,
+            // JSON.parse(undefined) throws and aborts parsing for every
+            // remaining row in this batch, not just this one
+            if (typeof raw === 'undefined' || raw === null) {
+                continue;
             }
 
-            const marker_icon = (function (section_tipo) {
-                let name
-                // switch (section_tipo) {
-                //     case 'tch1': name = 'objects'; break;
-                //     case 'tch100': name = 'pictures'; break;
-                //     case 'tchi1': name = 'immovable'; break;
-                //     case 'tch300': name = 'document'; break;
-                // }
-                if (row.geolocalizacion !== null) name = 'hallazgo'
-                if (row.geolocalizacion_produccion !== null) name = 'produccion'
-                return page.maps_config.markers[name]
-            })(row.section_tipo);
-
-            const item = {
-                lat: null,
-                lon: null,
-                geojson: geolocation_data_geojson,
-                marker_icon: marker_icon,
-                data: item_data
+            let geolocation_data_geojson
+            try {
+                geolocation_data_geojson = (typeof raw === 'string' || raw instanceof String)
+                    ? JSON.parse(raw)
+                    : raw
+            } catch (e) {
+                console.warn("! parse_map_data: invalid geojson in", field, "for row", row.section_id, e);
+                continue;
             }
 
-            data.push(item)
+            if (geolocation_data_geojson && geolocation_data_geojson.length > 0) {
+                data.push({
+                    lat: null,
+                    lon: null,
+                    geojson: geolocation_data_geojson,
+                    marker_icon: page.maps_config.markers[location_fields[f].marker_name],
+                    data: item_data
+                })
+            }
         }
     }
 
