@@ -29,6 +29,61 @@ document.addEventListener("click", function (event) {
     });
 });
 
+// ---------------------------------------------------------------
+// Aparició dels elements dels llistats en entrar al viewport
+// L'animació és CSS3 (dev/scss/blocks/_animations.scss): aquest codi només
+// canvia la classe .js-reveal per .is-revealed quan l'element entra a la pantalla.
+// Sense JS, o amb el moviment reduït activat, els elements es mostren directament.
+// ---------------------------------------------------------------
+(function () {
+    const selector = ".galeria > li, .global-search-card, .cd-timeline__date";
+    if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+    }
+    const observer = new IntersectionObserver(function (entries) {
+        // els que entren alhora (una fila sencera) es mostren escalonats
+        let delay = 0;
+        entries.forEach(function (entry) {
+            if (!entry.isIntersecting) {
+                return;
+            }
+            entry.target.style.animationDelay = Math.min(delay, 800) + "ms";
+            delay += 80;
+            entry.target.classList.replace("js-reveal", "is-revealed");
+            observer.unobserve(entry.target);
+        });
+    }, { rootMargin: "0px 0px -5% 0px" });
+
+    const prepare = function (element) {
+        if (element.classList.contains("js-reveal") || element.classList.contains("is-revealed")) {
+            return;
+        }
+        element.classList.add("js-reveal");
+        observer.observe(element);
+    };
+    const scan = function (root) {
+        if (root.matches(selector)) {
+            prepare(root);
+        }
+        root.querySelectorAll(selector).forEach(prepare);
+    };
+
+    // els llistats es pinten després de cridar l'API: cal vigilar els elements nous
+    new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            mutation.addedNodes.forEach(function (node) {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    scan(node);
+                }
+            });
+        });
+    }).observe(document.documentElement, { childList: true, subtree: true });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        scan(document.body);
+    });
+})();
+
 // ----------------
 // Div com a button (quan no podem posar un element figure dins un button (ja que no valida) posem el div com si fos un button)
 // ----------------
