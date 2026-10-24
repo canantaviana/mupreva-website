@@ -41,23 +41,34 @@ data_manager.prototype.request = async function (options) {
     const MAX_GET_URL_LENGTH = 6000
     const requested_method = options.method || 'GET'
 
-    // A '*' wildcard in ar_fields (used by *_elemento.js detail pages to
-    // fetch a full record) lands unescaped in the GET query string and
-    // gets flagged by the WAF in front of the API as a suspected
-    // injection attempt, blocking the request outright. POST keeps the
-    // same payload inside the JSON body instead, where it isn't
-    // pattern-matched the same way.
+    // KEEP IN SYNC WITH web_app/utils/request_method_policy.mjs (is_get_safe).
+    // This file has no module loader (classic IIFE-bundled script, no
+    // import/export), so the same decision logic is duplicated here by
+    // necessity - the .mjs file is the canonical, tested version; this is
+    // a plain inlined copy of it.
+    //
+    // Some request shapes get flagged by the WAF in front of the API and
+    // blocked outright when sent as GET: a '*' wildcard in ar_fields (full-
+    // record detail fetches), a literal '"' in sql_filter (Dedalo's
+    // JSON-array-contains-value filters), a populated resolve_portals_custom
+    // (always quote-bearing once serialized), or a populated ar_calls
+    // (dedalo_get:'combi' sub-calls, always a JSON.stringify()'d string).
+    // POST keeps the same payload inside the JSON body instead, where it
+    // isn't pattern-matched the same way.
     const has_wildcard_fields = Array.isArray(body.ar_fields)
         ? body.ar_fields.indexOf('*') !== -1
         : body.ar_fields === '*'
 
-    // Dedalo's "JSON array field contains this value" filters look like
-    // field LIKE '%"value"%' - that literal quote-inside-percent-wildcards
-    // shape (used by getRelatedElements for the periodo/nombre_bien/
-    // materia/tecnica relation tabs, among others) reads as a quote-escape
-    // attempt to the same WAF and gets blocked the same way as the
-    // ar_fields wildcard above.
     const has_risky_filter = typeof body.sql_filter === 'string' && body.sql_filter.indexOf('"') !== -1
+
+    const rpc = body.resolve_portals_custom
+    const has_populated_portals = typeof rpc === 'string'
+        ? rpc.trim().length > 0
+        : !!(rpc && typeof rpc === 'object' && Object.keys(rpc).length > 0)
+
+    const has_combi_calls = typeof body.ar_calls === 'string' && body.ar_calls.trim().length > 0
+
+    const get_body_is_safe = !(has_wildcard_fields || has_risky_filter || has_populated_portals || has_combi_calls)
 
     let fetch_url = url
     let fetch_options = {
@@ -67,7 +78,7 @@ data_manager.prototype.request = async function (options) {
         referrer: referrer,
     }
 
-    let use_get = requested_method === 'GET' && !has_wildcard_fields && !has_risky_filter
+    let use_get = requested_method === 'GET' && get_body_is_safe
     if (use_get) {
         const params = new URLSearchParams()
         for (const key in body) {

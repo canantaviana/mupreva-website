@@ -92,7 +92,7 @@ var api = {
             }
         ];
 
-        return new Promise(function (resolve) {
+        return new Promise(function (resolve, reject) {
             data_manager.request({
                 body: {
                     dedalo_get: 'combi',
@@ -102,11 +102,20 @@ var api = {
                 }
             })
                 .then(function (response) {
-                    const data = (typeof parse === "function")
-                        ? parse(response.result)
-                        : response.result
+                    // data_manager.request never rejects - on a failed fetch
+                    // it resolves {result:false, msg, error} instead (see
+                    // data_manager.js). A successful combi response's result
+                    // is always an array of per-call results; anything else
+                    // means the request failed upstream (network/WAF/server),
+                    // and must not be handed to callers that index into it
+                    // (portada.js reads rows[0].result / rows[1].result).
+                    if (!Array.isArray(response.result)) {
+                        console.error("getSliderPortada: combi request failed:", response.msg || response)
+                        reject(response.error || new Error(response.msg || "getSliderPortada: invalid combi response"))
+                        return
+                    }
 
-                    resolve(data)
+                    resolve(response.result)
                 })
         })
     },

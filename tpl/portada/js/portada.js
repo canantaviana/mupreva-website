@@ -81,6 +81,13 @@ var portada = {
                 appendTemplate(options.swiper_container, content);
                 swiperHome();
             })
+            .catch(function (error) {
+                // getSliderPortada() rejects (instead of resolving malformed
+                // data) when the underlying request fails - log it so the
+                // failure is still visible, but leave the slider section
+                // absent rather than crashing the rest of the homepage.
+                console.error("portada: slider failed to load:", error)
+            })
 
         return true
     },//end set_up
