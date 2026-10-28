@@ -1,3 +1,8 @@
+# Security headers. Prevent MIME type sniffing (applies to static files and PHP pages)
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>
+
 <IfModule mod_rewrite.c>
 
 # Project : web
