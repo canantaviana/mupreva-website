@@ -107,6 +107,16 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+// web_ar_langs. Available web langs
+define('WEB_AR_LANGS', json_encode([
+    // code: visible abbreviation; lang: BCP 47 tag for lang/hreflang attributes
+    "lg-spa" => ['name' => 'Castellano', 'code' => 'es', 'lang' => 'es'],
+    "lg-vlca" => ['name' => 'Valencià', 'code' => 'va', 'lang' => 'ca'],
+    //"lg-glg" => "Galego",
+    "lg-eng" => ['name' => 'English', 'code' => 'en', 'lang' => 'en'],
+    "lg-fra" => ['name' => 'Français', 'code' => 'fr', 'lang' => 'fr']
+]));
+
 // lang cascade set
 define('WEB_DEFAULT_LANG_CODE', 'lg-vlca');
 if (isset($_GET['lang'])) {
@@ -117,8 +127,15 @@ if (isset($_GET['lang'])) {
 } else {
     $lang = WEB_DEFAULT_LANG_CODE;
 }
-if (strpos($lang, 'lg-') === false) {
+if (!is_string($lang)) {
+    $lang = WEB_DEFAULT_LANG_CODE;
+} elseif (strpos($lang, 'lg-') === false) {
     $lang = lang2iso3($lang);
+}
+// only accept available langs (lang is used in file paths and html output)
+if (!array_key_exists($lang, json_decode(WEB_AR_LANGS, true))) {
+    $lang = WEB_DEFAULT_LANG_CODE;
+    $_SESSION['web']['lang'] = $lang;
 }
 
 // web_current_lang_code
@@ -160,14 +177,6 @@ define('WEB_FOOT_LOGOS', 'www1_227');
 
 
 
-define('WEB_AR_LANGS', json_encode([
-    // code: visible abbreviation; lang: BCP 47 tag for lang/hreflang attributes
-    "lg-spa" => ['name' => 'Castellano', 'code' => 'es', 'lang' => 'es'],
-    "lg-vlca" => ['name' => 'Valencià', 'code' => 'va', 'lang' => 'ca'],
-    //"lg-glg" => "Galego",
-    "lg-eng" => ['name' => 'English', 'code' => 'en', 'lang' => 'en'],
-    "lg-fra" => ['name' => 'Français', 'code' => 'fr', 'lang' => 'fr']
-]));
 
 
 # Web template file json

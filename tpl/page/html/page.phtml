@@ -52,7 +52,7 @@ require($base_path . '/' . $cwd . '.php');
                     echo __WEB_TEMPLATE_WEB__ . '/page/js/environment.js.php';
                     ?>"></script>
     <script>
-        WEB_AREA = '<?php echo $this->area_name ?>';
+        WEB_AREA = <?php echo json_encode($this->area_name, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
         IS_PRODUCTION = <?php echo json_encode(IS_PRODUCTION) ?>
     </script>
     <?php include $base_path . '/html/google_analytics.inc' ?>

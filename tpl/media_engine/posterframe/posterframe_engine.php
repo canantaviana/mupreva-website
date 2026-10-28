@@ -12,6 +12,13 @@
 		exit();
 	}
 
+	// id format: 'section_id[-rscNNN][/quality]' like '670', '670-rsc228/1.5MB'. Avoid path traversal
+	if (!is_string($id) || !preg_match('/^\d+(-rsc\d+)?(\/[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)*)?$/', $id)) {
+		header("HTTP/1.0 400 Bad Request");
+		echo "Invalid id";
+		exit();
+	}
+
 	$ar_parts	= explode('/', $id);
 	$section_id	= $ar_parts[0];
 	$quality	= isset($ar_parts[1]) ? $ar_parts[1] : 'default';

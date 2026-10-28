@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 1);
+
 // Version. Important!
 $version = "1.0.8"; // 29-00-2021
 
@@ -6,6 +8,14 @@ $version = "1.0.8"; // 29-00-2021
 // area_name check get var
 if (!isset($_GET['area_name'])) {
     exit("Sorry, bad url requested. Please, review your rewrite config");
+}
+
+// get vars. Only plain strings are accepted (rejects arrays like 'area_name[]=x')
+foreach ($_GET as $get_value) {
+    if (!is_string($get_value)) {
+        http_response_code(400);
+        die("Ops.. Invalid request!");
+    }
 }
 
 

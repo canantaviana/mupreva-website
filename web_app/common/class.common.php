@@ -140,8 +140,13 @@ class common
     public static function validate_area_name($area_name)
     {
         if (
-            strpos($area_name, ';') !== false ||
-            strpos($area_name, ',') !== false
+            !is_string($area_name) ||
+            strlen($area_name) > 255 ||
+            !mb_check_encoding($area_name, 'UTF-8') ||
+            // control chars and chars used to inject html, js, sql or shell code
+            preg_match('/[\x00-\x1F\x7F;,<>"`\\\\{}$]/', $area_name) ||
+            // path traversal
+            preg_match('/(^|\/)\.\.(\/|$)/', $area_name)
         ) {
             return false;
         } else {
