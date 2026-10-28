@@ -104,6 +104,13 @@ include(__WEB_BASE_PATH__ . '/' . WEB_APP_DIR . '/common/class.lang.php');
 // web_current_lang_code. If received lang use it, else use default lg-ell (Greek)
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_name('web_' . WEB_ENTITY);
+    // session cookie security flags (only sent over https, not readable from js, not sent on cross-site requests)
+    session_set_cookie_params([
+        'path'     => '/',
+        'secure'   => true,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
     session_start();
 }
 

@@ -10,6 +10,17 @@ RUN a2enmod expires
 # Compress text responses (html/css/js/json) over the wire
 RUN a2enmod deflate
 
+# HTTPS with a self-signed certificate for localhost (development only).
+# Needed because the session cookie is 'secure' (only sent over https)
+RUN apt-get update && apt-get install -y --no-install-recommends openssl \
+	&& rm -rf /var/lib/apt/lists/*
+RUN openssl req -x509 -nodes -newkey rsa:2048 -days 3650 \
+		-subj "/CN=localhost" \
+		-addext "subjectAltName=DNS:localhost,IP:127.0.0.1" \
+		-keyout /etc/ssl/private/ssl-cert-snakeoil.key \
+		-out /etc/ssl/certs/ssl-cert-snakeoil.pem
+RUN a2enmod ssl && a2ensite default-ssl
+
 # OPcache ships with the base image but is OFF by default, so every request
 # recompiles every PHP file from source. Enable it for real speedups.
 RUN docker-php-ext-enable opcache
