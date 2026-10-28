@@ -37,6 +37,25 @@ if (!empty($ar_output[2])) {
 $site_safe_path = dirname(dirname(dirname($_SERVER["SCRIPT_FILENAME"]))) . '/tpl/config/config.php';
 include($site_safe_path);
 
+// security headers. Content Security Policy
+// 'unsafe-inline' is required by the inline <script> blocks of the templates (tpl/*/html/*.phtml)
+// img-src allows any https source because of the map tile providers (OSM, maptiler, arcgis...)
+$csp = [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https:",
+    "font-src 'self' data:",
+    "media-src 'self' blob: " . __WEB_MEDIA_ENGINE_URL__,
+    "connect-src 'self' " . __WEB_MEDIA_ENGINE_URL__ . " https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
+    "frame-src 'self' " . __WEB_MEDIA_ENGINE_URL__,
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'self'"
+];
+header('Content-Security-Policy: ' . implode('; ', $csp));
+
 
 
 // unlock session concurrence
