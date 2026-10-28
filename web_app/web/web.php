@@ -4,6 +4,8 @@ ini_set('display_errors', 1);
 // Version. Important!
 $version = "1.0.8"; // 29-00-2021
 
+// security headers. Prevent clickjacking (only same origin can frame this page)
+header('X-Frame-Options: SAMEORIGIN');
 
 // area_name check get var
 if (!isset($_GET['area_name'])) {
