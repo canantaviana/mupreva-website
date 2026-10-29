@@ -74,3 +74,37 @@
         }
     }
 }
+
+// Inline 'PDF' link next to a bibliography reference, opens the PDF (catalogo_elemento.render_pdf_link)
+.biblio-pdf {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    margin-left: var(--space-2xs);
+    padding: 0.1em 0.45em;
+    vertical-align: text-bottom;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    color: inherit;
+    font-size: var(--step--2);
+    font-weight: 600;
+    line-height: 1.2;
+    // not underlined like the reference link it follows
+    text-decoration: none;
+
+    img {
+        width: 1.2em;
+        height: 1.2em;
+    }
+
+    &:hover,
+    &:focus-visible {
+        background-color: #000;
+        color: #fff;
+        text-decoration: none;
+
+        img {
+            filter: invert(1);
+        }
+    }
+}

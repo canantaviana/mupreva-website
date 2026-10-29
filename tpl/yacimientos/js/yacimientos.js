@@ -86,8 +86,16 @@ var catalog = {
         "periodo_data",
         "periodo",
         "geolocalizacion",
-        "relations"
+        "lugar", // place hierarchy of the site: gallery place line (page.place_label) and map hover fallback
+        "lugar_data", // ids of the place hierarchy (see page.place_label)
+        "relations",
+        // related objects/pictures and sub-sites, to find an image (see load_related_image)
+        "patrimonio_mueble",
+        "children_id"
     ],
+
+    // related_image_cache. Promise of the image url found by load_related_image, keyed by site section_id
+    related_image_cache: {},
 
     // catalog loaded items
     loaded_items: null,
@@ -1036,7 +1044,7 @@ var catalog = {
 
         return page.get_records({
             table: 'immovables',
-            ar_fields: "section_id, titulo, imagenes_identificativas, relations",
+            ar_fields: "section_id, titulo, imagenes_identificativas, relations, lugar, lugar_data",
             section_id: ids.join(','),
             resolve_portals_custom: {
                 imagenes_identificativas: "image",
@@ -1055,6 +1063,7 @@ var catalog = {
                 self.marker_details_cache[row.section_id] = {
                     title: row.titulo,
                     image_url: image_url,
+                    place: page.place_label(row),
                 };
             }
         });
@@ -1146,8 +1155,13 @@ var catalog = {
                             source_maps: page.maps_config.source_maps,
                             map_position: null,
                             container: target,
-                            popup_builder: page.map_popup_builder,
-                            popup_options: page.maps_config.popup_options,
+                            popup_builder: false, // click shows the sites below the map, hover the site name
+                            // the place of a site record is the site itself: its title,
+                            // or its town (lugar) when the title is empty
+                            tooltip_builder: function (element) {
+                                return page.map_place_tooltip_builder(element, ["title", "place"]);
+                            },
+                            tooltip_options: { className: "map_place_tooltip" },
                         })
                         .then(function (leaflet_map) {
                             // parse data points
@@ -1203,13 +1217,15 @@ var catalog = {
                                 if (details && details.image_url) {
                                     image_url = details.image_url;
                                 }
+                                // place line, same as in the list view (see page.place_label)
+                                const place = details && details.place ? details.place : '';
                                 return `
                                 <li class="${data.tpl}">
                                     <a href="${url}" target="_blank">
                                         <figure>
                                             <img loading="lazy" src="${image_url}" alt="">
-                                            ${(data.title)?`
-                                            <figcaption>${data.title}</figcaption>
+                                            ${(data.title || place)?`
+                                            <figcaption>${data.title || ''}${place ? `<span class="galeria__place">${common.attr(place)}</span>` : ''}</figcaption>
                                             `:''}
                                         </figure>
                                     </a>
@@ -1317,6 +1333,80 @@ var catalog = {
     }, //end resolve_relations_fallback_image
 
     /**
+     * LOAD_RELATED_IMAGE
+     * Last image fallback for a site without its own image nor a related one in 'relations'.
+     * Looks for one published record with an identifying image among, in this order:
+     * objects (tch1), pictures (tch100) and sub-sites (tchi1). Objects and pictures can be
+     * related to the site through its 'patrimonio_mueble' list or through their own place
+     * ('lugar_data' holds the whole place hierarchy, so it also finds those of its sub-places).
+     * Most related records are not published on the web, so usually nothing is found
+     * @param object row - site row (needs section_id, patrimonio_mueble, children_id)
+     * @return promise string|null absolute image url, or null when none is found
+     */
+    load_related_image: function (row) {
+        const self = this;
+
+        const site_id = parseInt(row.section_id, 10);
+        if (!(site_id > 0)) {
+            return Promise.resolve(null);
+        }
+        if (self.related_image_cache[site_id]) {
+            return self.related_image_cache[site_id];
+        }
+
+        // section_ids from a list of locators like ["tch1_35995","tch100_12"]
+        const ids_with_prefix = function (raw, prefix) {
+            return common
+                .parseJsonArray(raw)
+                .filter((id) => typeof id === "string" && id.indexOf(prefix) === 0)
+                .map((id) => parseInt(id.slice(prefix.length), 10))
+                .filter((id) => id > 0);
+        };
+        const object_ids = ids_with_prefix(row.patrimonio_mueble, "tch1_");
+        const picture_ids = ids_with_prefix(row.patrimonio_mueble, "tch100_");
+        const children_ids = common
+            .parseJsonArray(row.children_id)
+            .map((id) => parseInt(id, 10))
+            .filter((id) => id > 0);
+
+        const related = [`lugar_data LIKE '%"tchi1_${site_id}"%'`];
+        if (object_ids.length > 0) {
+            related.push(`(section_tipo = 'tch1' AND section_id IN (${object_ids.join(",")}))`);
+        }
+        if (picture_ids.length > 0) {
+            related.push(`(section_tipo = 'tch100' AND section_id IN (${picture_ids.join(",")}))`);
+        }
+        if (children_ids.length > 0) {
+            related.push(`(section_tipo = 'tchi1' AND section_id IN (${children_ids.join(",")}))`);
+        }
+
+        const request = page
+            .get_records({
+                table: "objects,pictures,immovables",
+                ar_fields: ["section_id", "section_tipo", "imagenes_identificativas"],
+                sql_filter: `imagenes_identificativas IS NOT NULL AND (${related.join(" OR ")})`,
+                limit: 1,
+                order: "section_tipo ASC", // tch1, tch100, tchi1
+                resolve_portals_custom: '{"imagenes_identificativas": "image"}',
+                parse: (result) => result,
+            })
+            .then((rows) => {
+                const images = Array.isArray(rows) && rows[0] ? rows[0].imagenes_identificativas : null;
+                return Array.isArray(images) && images[0] && images[0].image
+                    ? __WEB_MEDIA_ENGINE_URL__ + images[0].image
+                    : null;
+            })
+            .catch((error) => {
+                console.warn("load_related_image: not loaded for site", site_id, error);
+                return null;
+            });
+
+        self.related_image_cache[site_id] = request;
+
+        return request;
+    }, //end load_related_image
+
+    /**
      * LIST_ROW_BUILDER
      * Build DOM nodes to insert into list pop-up
      */
@@ -1332,6 +1422,7 @@ var catalog = {
             "/" +
             row.section_id;
         var image_url = page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/placeholder.png";
+        let needs_related_image = false;
         if (row.imagenes_identificativas.length > 0) {
             image_url =
                 __WEB_MEDIA_ENGINE_URL__ +
@@ -1340,17 +1431,20 @@ var catalog = {
             const fallback_image = catalog.resolve_relations_fallback_image(row.relations);
             if (fallback_image) {
                 image_url = fallback_image;
+            } else {
+                needs_related_image = true;
             }
         }
-        return htmlTemplate(`
+        const place = page.place_label(row);
+        const node = htmlTemplate(`
         <li class="${row.tpl}">
             <a href="${url}" target="_blank">
                 <figure>
                     <img loading="lazy" src="${image_url}" alt="">
                     ${
-                        row.titulo
+                        row.titulo || place
                             ? `
-                    <figcaption>${row.titulo}</figcaption>
+                    <figcaption>${row.titulo || ""}${place ? `<span class="galeria__place">${common.attr(place)}</span>` : ""}</figcaption>
                     `
                             : ""
                     }
@@ -1358,6 +1452,18 @@ var catalog = {
             </a>
         </li>
         `)[0];
+
+        // placeholder is replaced when an image is found in the site's related records
+        if (needs_related_image) {
+            catalog.load_related_image(row).then(function (related_image_url) {
+                const img = related_image_url && node.querySelector("img");
+                if (img) {
+                    img.src = related_image_url;
+                }
+            });
+        }
+
+        return node;
     }, //end list_row_builder
 
     /**

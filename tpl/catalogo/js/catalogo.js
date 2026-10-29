@@ -88,16 +88,24 @@ var catalog = {
         "periodo_data",
         "periodo",
         "geolocalizacion",
-        "geolocalizacion_produccion"
+        "geolocalizacion_produccion",
+        // place hierarchy and its ids: gallery place line (page.place_label)
+        "lugar",
+        "lugar_data"
     ],
 
     // fields (lightweight set used for map view - markers only, no images/metadata)
+    // lugar / lugar_produccion_literal: place name shown on marker hover
+    // lugar_produccion: production place id, to get its name when the literal is empty
     ar_fields_map: [
         "section_id",
         "titulo",
         "section_tipo",
         "geolocalizacion",
-        "geolocalizacion_produccion"
+        "geolocalizacion_produccion",
+        "lugar",
+        "lugar_produccion",
+        "lugar_produccion_literal"
     ],
 
     // marker_details_cache. In-memory cache of fetched marker detail data, keyed by section_id
@@ -1405,7 +1413,7 @@ var catalog = {
             return page
                 .get_records({
                     table: table,
-                    ar_fields: "section_id, titulo, imagenes_identificativas",
+                    ar_fields: "section_id, titulo, imagenes_identificativas, lugar, lugar_data",
                     section_id: by_table[table].join(","),
                     resolve_portals_custom: {
                         imagenes_identificativas: "image",
@@ -1427,6 +1435,7 @@ var catalog = {
                         self.marker_details_cache[row.section_id] = {
                             title: row.titulo,
                             image_url: image_url,
+                            place: page.place_label(row),
                         };
                     }
                 });
@@ -1434,6 +1443,70 @@ var catalog = {
 
         return Promise.all(requests);
     }, //end load_marker_details
+
+    /**
+     * RESOLVE_PRODUCTION_PLACES
+     * Some records point to their production place ('lugar_produccion', like ["tchi1_351"]) without
+     * its name ('lugar_produccion_literal'), so their marker would have no hover label.
+     * Fetches those names from the places table (immovables) in one request and fills them in.
+     * On failure the rows are returned unchanged: the map is drawn anyway, only without those labels
+     * @param array rows - map rows from search_rows
+     * @return promise array rows - same rows, with a filled copy for each one whose name was found
+     */
+    resolve_production_places: function (rows) {
+        const place_prefix = "tchi1_"; // section_tipo of places (immovables)
+
+        // place section_ids of each row that needs them
+        const ids_by_row = new Map();
+        rows.forEach((row) => {
+            if (!row.geolocalizacion_produccion || row.lugar_produccion_literal) {
+                return;
+            }
+            const ids = common
+                .parseJsonArray(row.lugar_produccion)
+                .filter((id) => typeof id === "string" && id.indexOf(place_prefix) === 0)
+                .map((id) => parseInt(id.slice(place_prefix.length), 10))
+                .filter((id) => id > 0);
+            if (ids.length > 0) {
+                ids_by_row.set(row, ids);
+            }
+        });
+
+        if (ids_by_row.size < 1) {
+            return Promise.resolve(rows);
+        }
+
+        const all_ids = Array.from(new Set([].concat(...ids_by_row.values())));
+
+        return page
+            .get_records({
+                table: "immovables",
+                ar_fields: ["section_id", "titulo"],
+                sql_filter: "section_id IN (" + all_ids.join(",") + ")",
+                parse: (result) => result,
+            })
+            .then((places) => {
+                if (!Array.isArray(places)) {
+                    return rows;
+                }
+                const names = new Map(
+                    places.map((place) => [parseInt(place.section_id, 10), place.titulo])
+                );
+                return rows.map((row) => {
+                    const ids = ids_by_row.get(row);
+                    const literal = ids
+                        ? ids.map((id) => names.get(id)).filter(Boolean).join(" | ")
+                        : "";
+                    return literal
+                        ? Object.assign({}, row, { lugar_produccion_literal: literal })
+                        : row;
+                });
+            })
+            .catch((error) => {
+                console.warn("resolve_production_places: names not loaded", error);
+                return rows;
+            });
+    }, //end resolve_production_places
 
     /**
      * GET_TABLES
@@ -1563,7 +1636,8 @@ var catalog = {
                     }
                     break;
                 case "map":
-                    const map_data = page.parse_map_data(ar_rows); // prepares data to use in map
+                    // missing production place names, fetched while the base map is built
+                    const map_rows_ready = self.resolve_production_places(ar_rows);
                     //TODO: millorar mantenint el mapa anterior si ja n'hi ha, per evitar instanciar multiples mapes sense esborrar els anteriors event listeners i evitar memory leak
                     // self.map = self.map || new map_factory(); // creates / get existing instance of map
                     self.map = new map_factory(); // creates / get existing instance of map
@@ -1572,11 +1646,16 @@ var catalog = {
                             source_maps: page.maps_config.source_maps,
                             map_position: null,
                             container: target,
-                            popup_builder: page.map_popup_builder,
-                            popup_options: page.maps_config.popup_options,
+                            popup_builder: false, // click shows the records below the map, hover the place name
+                            tooltip_builder: page.map_place_tooltip_builder, // place of each record (lugar...)
+                            tooltip_options: { className: "map_place_tooltip" },
                         })
                         .then(function (leaflet_map) {
+                            return map_rows_ready;
+                        })
+                        .then(function (map_rows) {
                             // parse data points
+                            const map_data = page.parse_map_data(map_rows); // prepares data to use in map
                             self.map
                                 .parse_data_to_map(map_data)
                                 .then(function (map_node) {
@@ -1631,13 +1710,15 @@ var catalog = {
                                     image_url = details.image_url;
                                 }
                                 const title = (details && details.title) ? details.title : data.title;
+                                // place line, same as in the list view (see page.place_label)
+                                const place = details && details.place ? details.place : '';
                                 return `
                                 <li class="${data.tpl}">
                                     <a href="${url}" target="_blank">
                                         <figure>
                                             <img loading="lazy" src="${image_url}" alt="">
-                                            ${(title)?`
-                                            <figcaption>${title}</figcaption>
+                                            ${(title || place)?`
+                                            <figcaption>${title || ''}${place ? `<span class="galeria__place">${common.attr(place)}</span>` : ''}</figcaption>
                                             `:''}
                                         </figure>
                                     </a>
@@ -1725,15 +1806,16 @@ var catalog = {
                 __WEB_MEDIA_ENGINE_URL__ +
                 row.imagenes_identificativas[0].image;
         }
+        const place = page.place_label(row);
         return htmlTemplate(`
         <li class="${row.tpl}">
             <a href="${url}" target="_blank">
                 <figure>
                     <img loading="lazy" src="${image_url}" alt="">
                     ${
-                        row.titulo
+                        row.titulo || place
                             ? `
-                    <figcaption>${row.titulo}</figcaption>
+                    <figcaption>${row.titulo || ""}${place ? `<span class="galeria__place">${common.attr(place)}</span>` : ""}</figcaption>
                     `
                             : ""
                     }
