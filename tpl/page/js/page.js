@@ -871,6 +871,149 @@ var page = {
 
 
     /**
+    * MAP_PLACE_TOOLTIP_BUILDER
+    * Marker hover label: only the name of the place, styled by the 'map_place_tooltip' tooltip class.
+    * Many records can share the same point (a town, a site) while naming different places,
+    * so the label shows the most common name and how many other names share the point ('Llíria +23')
+    * Use as map_factory tooltip_builder (directly, or wrapped to choose other name properties)
+    * @param object element - grouped marker data, with its records in element.group
+    * @param string|array name_properties - record properties holding the name, the first one with a value is used.
+    *  Default 'place' (see page.parse_map_data)
+    * @return node|null null when no record has a name (no tooltip is bound)
+    */
+    map_place_tooltip_builder: function (element, name_properties) {
+
+        const properties = [].concat(name_properties || 'place')
+
+        // records per name
+        const name_counts = new Map()
+        const group = element.group || []
+        for (let i = 0; i < group.length; i++) {
+            const record = group[i]
+            const property = properties.find(function (el) { return record[el] })
+            const name = property ? record[property] : null
+            if (name) {
+                name_counts.set(name, (name_counts.get(name) || 0) + 1)
+            }
+        }
+
+        if (name_counts.size < 1) {
+            return null
+        }
+
+        const main_name = Array.from(name_counts.keys()).reduce(function (a, b) {
+            return name_counts.get(b) > name_counts.get(a) ? b : a
+        })
+
+        const label = common.create_dom_element({
+            element_type: 'span',
+            class_name: 'map_place_tooltip__name',
+            text_content: main_name
+        })
+
+        const other_names = name_counts.size - 1
+        if (other_names > 0) {
+            common.create_dom_element({
+                element_type: 'span',
+                class_name: 'map_place_tooltip__more',
+                text_content: ' +' + other_names,
+                parent: label
+            })
+        }
+
+        return label
+    },//end map_place_tooltip_builder
+
+
+
+    /**
+    * PLACE_LABEL
+    * Short geographical reference of a record, shown under its name in the galleries.
+    * 'lugar' is the place hierarchy, most specific first, and 'lugar_data' the ids of its levels.
+    * Two hierarchies are used in Dédalo:
+    *  - official toponymy (sites): municipality (province), plus the country outside Spain
+    *    'Quart de Poblet, L'Horta Sud, València, Comunitat Valenciana, Espanya' -> 'Quart de Poblet (València)'
+    *    'Abbeville, Somme, Picardie, França' -> 'Abbeville (Somme, França)'
+    *  - places tree (catalogue records): place (municipality, province)
+    *    'El Tossal de Sant Miquel, Llíria, València, Comunitat Valenciana, Jaciments' -> 'El Tossal de Sant Miquel (Llíria, València)'
+    * Records with several places ('A | B') show the first one and how many more: 'A (...) +1'
+    * @param object row - record with lugar and lugar_data
+    * @return string empty when the record has no (known) place
+    */
+    place_label: function (row) {
+
+        if (!row.lugar) {
+            return ''
+        }
+
+        const places = row.lugar.split(' | ')
+        const names = places[0].split(', ')
+        const ids = common.parseJsonArray(row.lugar_data)
+        const more = places.length > 1 ? ' +' + (places.length - 1) : ''
+
+        // places tree ids: root ('Jaciments' / 'Llocs'), unknown place, and the levels above Spain
+        const tree_root_id = 'tchi1_2'
+        const unknown_id = 'tchi1_1'
+        const above_province_ids = ['tchi1_6216', 'tchi1_6217'] // España, Europa
+
+        const format = function (place, details) {
+            const unique = details.filter(function (el, i) {
+                return el && el !== place && details.indexOf(el) === i
+            })
+            return (unique.length > 0 ? place + ' (' + unique.join(', ') + ')' : place) + more
+        }
+
+        // places tree. Its names don't always match its ids one to one (names with commas, levels without name),
+        // but the top levels do, so the levels are counted from the end
+        if (ids.indexOf(tree_root_id) !== -1) {
+            if (ids[0] === unknown_id) {
+                return ''
+            }
+            let top_levels = 1 // root
+            if (above_province_ids.every(function (id) { return ids.indexOf(id) !== -1 })) {
+                top_levels += 2 // country, continent
+            }
+            // place, (sub-places,) municipality, province, region
+            const levels = names.slice(0, names.length - top_levels)
+            if (levels.length < 1) {
+                return ''
+            }
+            const municipality = levels.length >= 4 ? levels[levels.length - 3] : null
+            const province = levels.length >= 3 ? levels[levels.length - 2] : null
+            return format(levels[0], [municipality, province])
+        }
+
+        // official toponymy
+        const spain_id = 'es1_1'
+        const unofficial_id = 'utoponymy1_1' // 'Toponimia no oficial': a grouping, not a place
+        const country_id = /^[a-z]+1_1$/ // root term of each country toponymy, like 'es1_1', 'fr1_1'
+
+        // levels can't be told apart without their ids: just the most specific place
+        if (ids.length !== names.length) {
+            return names[0] + more
+        }
+        if (ids[ids.length - 1] === unofficial_id) {
+            names.pop()
+            ids.pop()
+        }
+        if (names.length < 1) {
+            return ''
+        }
+
+        const last_id = ids[ids.length - 1]
+        if (country_id.test(last_id)) {
+            // municipality, (comarca,) province, region, country
+            const province = names.length >= 4 ? names[names.length - 3] : null
+            const country = last_id !== spain_id ? names[names.length - 1] : null
+            return format(names[0], [province, country])
+        }
+
+        return format(names[0], [names[1]])
+    },//end place_label
+
+
+
+    /**
     * SECTION_TIPO_TO_TEMPLATE
     */
     section_tipo_to_template: function (section_tipo) {

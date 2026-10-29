@@ -1,32 +1,56 @@
+// Intervencions block of the catalogue item page (catalogo_elemento.templateRestoration):
+// excavations of a site, restorations of an object. Cards on the .galeria grid
 .interventions-list {
-    display: grid;
-    grid-template-columns: max-content auto;
-    align-items: center;
-    column-gap: var(--space-s);
-    row-gap: var(--space-s);
-    font-size: var(--step--1);
+    --colWidth: 220px;
 
-    @include mobile {
-        grid-template-columns: auto auto;
-    }
+    a {
+        height: 100%;
+        text-align: left;
 
-    li {
-        display: grid;
-        grid-template-columns: subgrid;
-        grid-column: 1 / -1;
-        margin-top: 0;
-
-        a {
-            grid-column: 1;
-        }
-        img {
-            grid-column: 2;
-            width: 7rem;
-
-            @include mobile {
-                grid-column: 1 / -1;
-                margin-top: var(--space-xs);
+        &:hover,
+        &:focus-visible {
+            .interventions-list__title {
+                text-decoration: underline;
             }
         }
+    }
+
+    img,
+    &__no-image {
+        display: block;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+    }
+
+    // no image: an empty tile keeps all the cards aligned
+    &__no-image {
+        background-color: rgba($primary, 0.08);
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3xs);
+        margin-top: var(--space-xs);
+    }
+
+    &__type {
+        font-size: var(--step--2);
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: $primary;
+    }
+
+    &__title {
+        font-size: var(--step--1);
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    &__dates {
+        font-size: var(--step--2);
+        color: $grey-darker;
     }
 }

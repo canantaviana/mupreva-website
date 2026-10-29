@@ -17,8 +17,11 @@ function map_factory() {
     // source_maps
     this.source_maps = {}
 
-    // popup_builder. Use custom options popup_builder function or fallback to default
+    // popup_builder. Use custom options popup_builder function or fallback to default. false: markers without popup
     this.popup_builder = null
+
+    // tooltip_options. Optional custom Leaflet tooltip options (like className), merged over the defaults
+    this.tooltip_options = null
 
     // default map vars set
     this.map = null
@@ -80,8 +83,11 @@ function map_factory() {
 
         // options
         const source_maps = options.source_maps || self.source_maps
-        const popup_builder = options.popup_builder || self.build_popup_content
+        const popup_builder = options.popup_builder === false
+            ? null
+            : (options.popup_builder || self.build_popup_content)
         const tooltip_builder = options.tooltip_builder || self.build_tooltip_content
+        const tooltip_options = options.tooltip_options || {}
         const map_position = options.map_position || self.initial_map_data
         const map_container = options.map_container || self.map_container
         const container = options.container
@@ -125,6 +131,7 @@ function map_factory() {
         self.container = container
         self.popup_builder = popup_builder
         self.tooltip_builder = tooltip_builder
+        self.tooltip_options = tooltip_options
         self.popup_options = popup_options
         self.icon_main = icon_main
         self.legend = legend
@@ -254,14 +261,20 @@ function map_factory() {
                 return (tstring.map_marker || '{n} records here').replace('{n}', n)
             }
 
+            // tooltip options. Defaults, plus the optional custom ones received on init (like a className)
+            const tooltip_options = Object.assign({
+                direction: 'top',
+                offset: [0, -20],
+                sticky: false
+            }, self.tooltip_options)
+
             const create_marker = function (element, latlng, marker_icon, popup, tooltip_content) {
-                const marker = L.marker(latlng, { icon: marker_icon, alt: marker_name(element) }).bindPopup(popup)
+                const marker = L.marker(latlng, { icon: marker_icon, alt: marker_name(element) })
+                if (popup) {
+                    marker.bindPopup(popup)
+                }
                 if (tooltip_content) {
-                    marker.bindTooltip(tooltip_content, {
-                        direction: 'top',
-                        offset: [0, -20],
-                        sticky: false
-                    })
+                    marker.bindTooltip(tooltip_content, tooltip_options)
                 }
                 marker.on('click', function (e) { // click also fires on Enter (keyboard), unlike mousedown
                     // event publish map_selected_marker
@@ -283,12 +296,14 @@ function map_factory() {
                     ? L.icon(element.marker_icon)
                     : self.icon_main // already parsed on init
 
-                const popup_content = self.popup_builder(element)
                 const tooltip_content = self.tooltip_builder ? self.tooltip_builder(element) : null
 
-                const popup = L.popup(self.popupOptions)
-                    .setLatLng([element.lat, element.lon])
-                    .setContent(popup_content)
+                // popup (click). None when the caller disabled it (popup_builder: false)
+                const popup = self.popup_builder
+                    ? L.popup(self.popupOptions)
+                        .setLatLng([element.lat, element.lon])
+                        .setContent(self.popup_builder(element))
+                    : null
 
                 if (element.geojson) {
 
@@ -302,13 +317,11 @@ function map_factory() {
                                 return L.marker(latlng, { icon: marker_icon, alt: marker_name(element) })
                             },
                             onEachFeature: function (feature, layer) {
-                                layer.bindPopup(popup)
+                                if (popup) {
+                                    layer.bindPopup(popup)
+                                }
                                 if (tooltip_content) {
-                                    layer.bindTooltip(tooltip_content, {
-                                        direction: 'top',
-                                        offset: [0, -20],
-                                        sticky: false
-                                    })
+                                    layer.bindTooltip(tooltip_content, tooltip_options)
                                 }
                             }
                         })

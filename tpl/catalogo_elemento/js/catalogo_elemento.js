@@ -1461,15 +1461,14 @@ var item = {
                 <button type="button">${tstring.item_restoration}</button>
             </h2>
             <div class="accordion-content block-dedalo">
-                <ul class="interventions-list">
+                <ul class="galeria interventions-list link-dn">
                     ${row.intervenciones.map((elem) => {
                         const { intervention_type, titulo, fecha_inicio, fecha_fin, imagen_inicial, section_id } = elem;
                         const fechaInicioString = fecha_inicio ? `<time datetime="${fecha_inicio}">${formatDate(fecha_inicio)}</time>` : "";
                         const fechaFinString = fecha_fin ? `<time datetime="${fecha_fin}">${formatDate(fecha_fin)}</time>` : "";
-                        const fechaString = [fechaInicioString, fechaFinString].filter(Boolean).join(" - ");
-                        const interventionString = [intervention_type, titulo, fechaString].filter(Boolean).join(" | ");
+                        const fechaString = [fechaInicioString, fechaFinString].filter(Boolean).join(" – ");
 
-                        if (!interventionString) {
+                        if (!intervention_type && !titulo && !fechaString) {
                             return "";
                         }
 
@@ -1477,12 +1476,19 @@ var item = {
                         const image = imageEntry?.image ? `${__WEB_MEDIA_ENGINE_URL__}${imageEntry.image}` : "";
                         const description = imageEntry?.description || "";
 
+                        // card: image (or an empty tile, so all the cards line up), type, title and dates
                         return `
-                            <li class="full-link">
+                            <li>
                                 <a href="/int/${section_id}" target="_blank">
-                                    ${interventionString}
+                                    ${image
+                                        ? `<img loading="lazy" src="${image}" alt="${common.attr(description)}">`
+                                        : `<span class="interventions-list__no-image" aria-hidden="true"></span>`}
+                                    <div class="interventions-list__body">
+                                        ${intervention_type ? `<span class="interventions-list__type">${intervention_type}</span>` : ""}
+                                        ${titulo ? `<span class="interventions-list__title">${titulo}</span>` : ""}
+                                        ${fechaString ? `<span class="interventions-list__dates">${fechaString}</span>` : ""}
+                                    </div>
                                 </a>
-                                ${image ? `<img loading="lazy" src="${image}" alt="${description}" />` : ""}
                             </li>
                         `;
                     }).join("")}
@@ -1818,6 +1824,71 @@ var item = {
             ul.appendChild(self.templateBibliografyEntry(entry));
         });
         appendTemplate(target, template);
+        self.add_bibliography_pdf_links(ul);
+    },
+
+    /**
+     * ADD_BIBLIOGRAPHY_PDF_LINKS
+     * Bibliography references link to their publication page (/pub/<section_id>).
+     * This adds a link that opens the publication PDF next to each reference whose publication has one,
+     * with one request for the whole list. Nothing is added when the request fails
+     * @param node container - rendered references (see biblio_row_fields.render_row_bibliography)
+     * @return promise
+     */
+    add_bibliography_pdf_links: function (container) {
+        const self = this;
+
+        const publication_path = "/pub/";
+        const links = Array.from(container.querySelectorAll(`a[href^="${publication_path}"]`));
+        const publication_id = (link) => parseInt(link.getAttribute("href").slice(publication_path.length), 10);
+        const ids = Array.from(new Set(links.map(publication_id).filter((id) => id > 0)));
+
+        if (ids.length < 1) {
+            return Promise.resolve();
+        }
+
+        return page
+            .get_records({
+                table: "publications",
+                ar_fields: ["section_id", "pdf", "titulo"],
+                sql_filter: `section_id IN (${ids.join(",")}) AND pdf IS NOT NULL`,
+                parse: (result) => result,
+            })
+            .then((publications) => {
+                if (!Array.isArray(publications)) {
+                    return;
+                }
+                const by_id = new Map(
+                    publications.map((publication) => [parseInt(publication.section_id, 10), publication])
+                );
+                links.forEach((link) => {
+                    const publication = by_id.get(publication_id(link));
+                    if (publication && publication.pdf) {
+                        link.after(self.render_pdf_link(publication.pdf, publication.titulo || link.textContent));
+                    }
+                });
+            });
+    },
+
+    /**
+     * RENDER_PDF_LINK
+     * Small inline 'PDF' link that opens the PDF in a new tab (like 'Veure en línia' in the publication page)
+     * @param string pdf - media path of the PDF, like '/dedalo6/media/pdf/web/0/rsc209_rsc205_102.pdf'
+     * @param string title - publication title, to name the link for screen readers
+     * @return node a
+     */
+    render_pdf_link: function (pdf, title) {
+        const link = common.create_dom_element({
+            element_type: "a",
+            class_name: "biblio-pdf",
+            href: __WEB_MEDIA_ENGINE_URL__ + pdf,
+            inner_html: `<img src="/assets/img/ico-lupa-2.svg" alt="" width="20" height="20"><span>PDF</span>`,
+        });
+        link.setAttribute("target", "_blank");
+        link.setAttribute("rel", "noopener");
+        link.setAttribute("aria-label", `PDF: ${title.trim()} (${tstring.item_show_online})`);
+
+        return link;
     },
 
     templatePatrimonio: function (target, row) {
