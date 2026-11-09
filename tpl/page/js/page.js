@@ -927,6 +927,27 @@ var page = {
 
 
     /**
+    * PLACE_CONFIG
+    * Dédalo thesaurus terms that place_label needs to recognise. If the thesaurus is restructured
+    * (terms renumbered, levels added), update them here
+    */
+    place_config: {
+        // places tree (section tchi1), used by catalogue records
+        places_root_id      : 'tchi1_2', // root, named 'Jaciments' or 'Llocs'. Ends every place of the tree
+        unknown_place_id    : 'tchi1_1', // 'Desconegut', directly under the root
+        // levels between the regions or countries and the root, not shown. Each one is optional:
+        // '..., Comunitat Valenciana, España, Llocs', '..., França, Europa, Llocs', or neither
+        places_spain_id     : 'tchi1_6216', // España
+        places_europe_id    : 'tchi1_6217', // Europa. Without España, the level under it is a foreign country
+        // official toponymy (sections es1, fr1...), used by sites
+        spain_id            : 'es1_1', // country not shown, it's the default
+        unofficial_id       : 'utoponymy1_1', // 'Toponimia no oficial': a grouping, not a place
+        country_root_pattern: /^[a-z]+1_1$/ // root term of each country toponymy, like 'es1_1', 'fr1_1'
+    },
+
+
+
+    /**
     * PLACE_LABEL
     * Short geographical reference of a record, shown under its name in the galleries.
     * 'lugar' is the place hierarchy, most specific first, and 'lugar_data' the ids of its levels.
@@ -936,7 +957,12 @@ var page = {
     *    'Abbeville, Somme, Picardie, França' -> 'Abbeville (Somme, França)'
     *  - places tree (catalogue records): place (municipality, province)
     *    'El Tossal de Sant Miquel, Llíria, València, Comunitat Valenciana, Jaciments' -> 'El Tossal de Sant Miquel (Llíria, València)'
-    * Records with several places ('A | B') show the first one and how many more: 'A (...) +1'
+    * Records with several places ('A | B') show the first known one and how many more: 'A (...) +1'
+    *
+    * Names and ids can't be paired one to one: names may contain commas ('Gandia (La Safor), Gandia'),
+    * some levels have no name, and with several places (or mixed hierarchies) 'lugar_data' holds the ids
+    * of all of them in no reliable order. So the ids are only used as signals (which hierarchy, is a
+    * level present) and the levels are read from the names, counted from the end, where they are reliable.
     * @param object row - record with lugar and lugar_data
     * @return string empty when the record has no (known) place
     */
@@ -946,69 +972,85 @@ var page = {
             return ''
         }
 
-        const places = row.lugar.split(' | ')
-        const names = places[0].split(', ')
+        const config = page.place_config
         const ids = common.parseJsonArray(row.lugar_data)
-        const more = places.length > 1 ? ' +' + (places.length - 1) : ''
+        const has_id = function (id) { return ids.indexOf(id) !== -1 }
 
-        // places tree ids: root ('Jaciments' / 'Llocs'), unknown place, and the levels above Spain
-        const tree_root_id = 'tchi1_2'
-        const unknown_id = 'tchi1_1'
-        const above_province_ids = ['tchi1_6216', 'tchi1_6217'] // España, Europa
+        // each place: its level names, most specific first. Levels are separated by ', ' (comma and space),
+        // so names like '4,5 - 4,75 m' stay whole; stray spaces ('Utiel , Plana de Utiel') are trimmed
+        const places = row.lugar.split('|').map(function (place) {
+            return place.split(/,\s+/).map(function (name) { return name.trim() }).filter(Boolean)
+        }).filter(function (names) { return names.length > 0 })
 
-        const format = function (place, details) {
+        // details: names shown in brackets after the place, skipping empty and repeated ones
+        // more: how many other places the record has
+        const format = function (place, details, more) {
             const unique = details.filter(function (el, i) {
                 return el && el !== place && details.indexOf(el) === i
             })
-            return (unique.length > 0 ? place + ' (' + unique.join(', ') + ')' : place) + more
+            return (unique.length > 0 ? place + ' (' + unique.join(', ') + ')' : place)
+                + (more > 0 ? ' +' + more : '')
         }
 
-        // places tree. Its names don't always match its ids one to one (names with commas, levels without name),
-        // but the top levels do, so the levels are counted from the end
-        if (ids.indexOf(tree_root_id) !== -1) {
-            if (ids[0] === unknown_id) {
+        // places tree
+        if (has_id(config.places_root_id)) {
+            // 'Desconegut, Jaciments': the unknown place, right under the root. Skipped, so
+            // 'Desconegut | Eivissa, ...' shows Eivissa
+            const known = places.filter(function (names) {
+                return !(names.length === 2 && has_id(config.unknown_place_id))
+            })
+            if (known.length < 1) {
                 return ''
             }
-            let top_levels = 1 // root
-            if (above_province_ids.every(function (id) { return ids.indexOf(id) !== -1 })) {
-                top_levels += 2 // country, continent
-            }
-            // place, (sub-places,) municipality, province, region
+            const names = known[0]
+            const more = known.length - 1
+            // levels not shown: the root, plus España and Europa when present.
+            // (With several places their ids are mixed, so this assumes they share these top levels)
+            const in_spain = has_id(config.places_spain_id)
+            const in_europe = has_id(config.places_europe_id)
+            const top_levels = 1 + (in_spain ? 1 : 0) + (in_europe ? 1 : 0)
             const levels = names.slice(0, names.length - top_levels)
             if (levels.length < 1) {
                 return ''
             }
+            if (in_europe && !in_spain) {
+                // place, (sub-places,) country: 'Grand Pressigny, Loches, França' -> 'Grand Pressigny (Loches, França)'
+                const country = levels.length >= 2 ? levels[levels.length - 1] : null
+                const area = levels.length >= 3 ? levels[levels.length - 2] : null
+                return format(levels[0], [area, country], more)
+            }
+            // place, (sub-places,) municipality, province, region
             const municipality = levels.length >= 4 ? levels[levels.length - 3] : null
             const province = levels.length >= 3 ? levels[levels.length - 2] : null
-            return format(levels[0], [municipality, province])
+            return format(levels[0], [municipality, province], more)
         }
 
         // official toponymy
-        const spain_id = 'es1_1'
-        const unofficial_id = 'utoponymy1_1' // 'Toponimia no oficial': a grouping, not a place
-        const country_id = /^[a-z]+1_1$/ // root term of each country toponymy, like 'es1_1', 'fr1_1'
+        let names = places[0] || []
+        let toponymy_ids = ids
+        const more = places.length - 1
 
         // levels can't be told apart without their ids: just the most specific place
-        if (ids.length !== names.length) {
-            return names[0] + more
+        if (toponymy_ids.length !== names.length) {
+            return names.length > 0 ? format(names[0], [], more) : ''
         }
-        if (ids[ids.length - 1] === unofficial_id) {
-            names.pop()
-            ids.pop()
+        if (toponymy_ids[toponymy_ids.length - 1] === config.unofficial_id) {
+            names = names.slice(0, -1)
+            toponymy_ids = toponymy_ids.slice(0, -1)
         }
         if (names.length < 1) {
             return ''
         }
 
-        const last_id = ids[ids.length - 1]
-        if (country_id.test(last_id)) {
+        const last_id = toponymy_ids[toponymy_ids.length - 1]
+        if (config.country_root_pattern.test(last_id)) {
             // municipality, (comarca,) province, region, country
             const province = names.length >= 4 ? names[names.length - 3] : null
-            const country = last_id !== spain_id ? names[names.length - 1] : null
-            return format(names[0], [province, country])
+            const country = last_id !== config.spain_id ? names[names.length - 1] : null
+            return format(names[0], [province, country], more)
         }
 
-        return format(names[0], [names[1]])
+        return format(names[0], [names[1]], more)
     },//end place_label
 
 
