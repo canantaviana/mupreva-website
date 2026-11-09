@@ -78,3 +78,32 @@
         color: $primary;
     }
 }
+
+// Catalogue map: the marker hover shows only the name of the place (catalog.build_place_tooltip).
+// A compact, sharp label, scoped to its own class so the other maps keep the tooltip above
+.leaflet-tooltip.map_place_tooltip {
+    width: max-content;
+    max-width: 260px;
+    white-space: normal;
+    padding: 0.3rem 0.6rem;
+    // transparent: invisible normally, drawn by the system in forced colours mode
+    border: 1px solid transparent;
+    border-radius: 2px;
+    background-color: $grey-darker;
+    color: $white;
+    font-size: var(--step--2);
+    font-weight: 600;
+    line-height: 1.3;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+
+    // arrow, same colour as the label
+    &.leaflet-tooltip-top::before {
+        border-top-color: $grey-darker;
+    }
+
+    // '+N' other places on the same point, secondary to the name
+    .map_place_tooltip__more {
+        font-weight: 400;
+        opacity: 0.7;
+    }
+}

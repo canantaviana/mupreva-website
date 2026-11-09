@@ -38,9 +38,20 @@ page.parse_map_data = function (rows) {
         // each is independent and both must become their own marker, so
         // they are handled as separate entries instead of one overwriting
         // the other
+        // place: name of each point's place, null when the caller doesn't request the place fields.
+        // 'lugar' is a hierarchy, most specific first ('La Bastida de les Alcusses, Moixent, València, ...')
+        // and 'lugar_produccion_literal' can hold several places ('Bilbao | Llanes')
         const location_fields = [
-            { field: 'geolocalizacion', marker_name: 'hallazgo' },
-            { field: 'geolocalizacion_produccion', marker_name: 'produccion' }
+            {
+                field: 'geolocalizacion',
+                marker_name: 'hallazgo',
+                place: row.lugar ? row.lugar.split(',')[0].trim() : null
+            },
+            {
+                field: 'geolocalizacion_produccion',
+                marker_name: 'produccion',
+                place: common.clean_gaps(row.lugar_produccion_literal) || null
+            }
         ]
 
         for (let f = 0; f < location_fields.length; f++) {
@@ -71,7 +82,7 @@ page.parse_map_data = function (rows) {
                     lon: null,
                     geojson: geolocation_data_geojson,
                     marker_icon: page.maps_config.markers[location_fields[f].marker_name],
-                    data: item_data
+                    data: Object.assign({}, item_data, { place: location_fields[f].place })
                 })
             }
         }

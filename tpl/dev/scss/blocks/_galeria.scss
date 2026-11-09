@@ -112,3 +112,11 @@
         }
     }
 }
+
+// Geographical reference under the name in a gallery caption (yacimientos.place_label)
+.galeria__place {
+    display: block;
+    margin-top: 0.15em;
+    font-weight: 400;
+    color: $grey-darker;
+}
