@@ -108,7 +108,8 @@ var catalog = {
         "lugar_produccion_literal"
     ],
 
-    // marker_details_cache. In-memory cache of fetched marker detail data, keyed by section_id
+    // marker_details_cache. In-memory cache of fetched marker detail data, keyed by tpl + section_id
+    // (see marker_details_key): objects, pictures... can share the same section_id
     marker_details_cache: {},
 
     // tpl_to_table. Maps a template code (tpl) back to its Dedalo table name, mirrors catalogo_elemento.php's area_name switch
@@ -1392,7 +1393,7 @@ var catalog = {
         const self = this;
 
         const to_fetch = group.filter(
-            (item) => !self.marker_details_cache[item.section_id]
+            (item) => !self.marker_details_cache[self.marker_details_key(item.tpl, item.section_id)]
         );
         if (to_fetch.length < 1) {
             return Promise.resolve();
@@ -1404,8 +1405,8 @@ var catalog = {
             const item = to_fetch[i];
             const table = self.tpl_to_table[item.tpl];
             if (!table) continue;
-            by_table[table] = by_table[table] || [];
-            by_table[table].push(item.section_id);
+            by_table[table] = by_table[table] || { tpl: item.tpl, ids: [] };
+            by_table[table].ids.push(item.section_id);
         }
 
         // one batched request per table present in the group
@@ -1414,7 +1415,7 @@ var catalog = {
                 .get_records({
                     table: table,
                     ar_fields: "section_id, titulo, imagenes_identificativas, lugar, lugar_data",
-                    section_id: by_table[table].join(","),
+                    section_id: by_table[table].ids.join(","),
                     resolve_portals_custom: {
                         imagenes_identificativas: "image",
                     },
@@ -1432,7 +1433,7 @@ var catalog = {
                             typeof identifying_images[0] !== "undefined"
                                 ? common.get_media_engine_url(identifying_images[0].image)
                                 : null;
-                        self.marker_details_cache[row.section_id] = {
+                        self.marker_details_cache[self.marker_details_key(by_table[table].tpl, row.section_id)] = {
                             title: row.titulo,
                             image_url: image_url,
                             place: page.place_label(row),
@@ -1443,6 +1444,16 @@ var catalog = {
 
         return Promise.all(requests);
     }, //end load_marker_details
+
+    /**
+     * MARKER_DETAILS_KEY
+     * Key of marker_details_cache. section_id alone is not unique across tables
+     * (e.g. object tch1 22213 and picture tch100 22213), so the template is part of the key
+     * @return string
+     */
+    marker_details_key: function (tpl, section_id) {
+        return tpl + '_' + section_id;
+    }, //end marker_details_key
 
     /**
      * RESOLVE_PRODUCTION_PLACES
@@ -1704,7 +1715,7 @@ var catalog = {
                             ${self.map_marker_results.map(function(data){
                                 const url = page_globals.__WEB_ROOT_WEB__ + '/' + data.tpl + '/' + data.section_id;
                                 // full detail (title + thumbnail), populated after load_marker_details() resolves
-                                const details = self.marker_details_cache[data.section_id];
+                                const details = self.marker_details_cache[self.marker_details_key(data.tpl, data.section_id)];
                                 var image_url = '/assets/img/placeholder.png';
                                 if (details && details.image_url) {
                                     image_url = details.image_url;
