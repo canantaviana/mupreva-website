@@ -408,7 +408,7 @@ var item = {
                 element_type : "a",
                 class_name : "section_id dedalo-link",
                 text_content : `${row.section_id} (exhibition1)`,
-                href : `https://pre-dedalo.mupreva.org/dedalo6-pre/core/page/?tipo=exhibition1&id=${row.section_id}`,
+                href : `${DEDALO_EDIT_URL}?tipo=exhibition1&id=${row.section_id}`,
                 parent : target
             })
 

@@ -60,7 +60,7 @@ define('__WEB_HOME_URL__',    __WEB_ROOT_WEB__);
 define(
     '__WEB_MEDIA_ENGINE_URL__',
     ($environment === 'prod')
-        ? 'https://dedalo.mupreva.org'
+        ? 'https://dedalo.map.museum'
         : 'https://pre-dedalo.mupreva.org'
 );
 
@@ -72,8 +72,13 @@ include(__WEB_TEMPLATE_PATH__ . '/version.inc');
 
 // json_trigger_url data source url
 define('JSON_TRIGGER_URL', ($environment === 'prod') //quart
-    ? 'https://dedalo.mupreva.org/dedalo6/publication/server_api/v1/json/'
+    ? 'https://dedalo.map.museum/dedalo6/publication/server_api/v1/json/'
     : 'https://pre-dedalo.mupreva.org/dedalo6-pre/publication/server_api/v1/json/');
+
+// dedalo_edit_url. Dédalo back-office record page, linked from detail pages when logged in to Dédalo
+define('DEDALO_EDIT_URL', ($environment === 'prod')
+    ? 'https://dedalo.map.museum/dedalo6/core/page/'
+    : 'https://pre-dedalo.mupreva.org/dedalo6-pre/core/page/');
 
 
 // api_cache. File cache for json_web_data responses (read-only content API,

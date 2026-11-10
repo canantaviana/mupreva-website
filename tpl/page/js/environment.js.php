@@ -36,6 +36,7 @@ SHOW_DEBUG=page_globals.SHOW_DEBUG;
 var tstring=<?php echo $titles; ?>;
 __WEB_TEMPLATE_WEB__='<?php echo __WEB_TEMPLATE_WEB__ ?>';
 __WEB_MEDIA_ENGINE_URL__='<?php echo __WEB_MEDIA_ENGINE_URL__ ?>';
+DEDALO_EDIT_URL='<?php echo DEDALO_EDIT_URL ?>';
 BASE_LINKS='<?php echo '' . BASE_LINKS ?>';
 IS_PRODUCTION=<?php echo json_encode(IS_PRODUCTION) ?>;
 const dedalo_logged = document.cookie.indexOf('dedalo_logged')!==-1 ? true : false;

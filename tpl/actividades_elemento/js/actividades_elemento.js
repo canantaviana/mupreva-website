@@ -956,7 +956,7 @@ var item = {
                 element_type : "a",
                 class_name : "section_id dedalo-link",
                 text_content : `${row.section_id} (activity1)`,
-                href : `https://pre-dedalo.mupreva.org/dedalo6-pre/core/page/?tipo=activity1&id=${row.section_id}`,
+                href : `${DEDALO_EDIT_URL}?tipo=activity1&id=${row.section_id}`,
                 parent : target
             })
 
