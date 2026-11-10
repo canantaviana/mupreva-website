@@ -927,10 +927,9 @@ var catalog = {
         // const parsed_filter	= page.parse_sql_filter(filter, group)
         const parsed_filter = self.form.parse_sql_filter(filter, group);
         const has_periodo_data = '(periodo_data IS NOT NULL)';
-        const is_destacado = '(destacado = "Sí" OR section_tipo = "tchi1")';
-
+        // only highlighted sites are listed
         const filters = [
-            'tipologia_data like "%\\"2\\"%"'
+            'Highlight = "Sí"'
         ];
         if (parsed_filter) filters.push(`(${parsed_filter})`);
         let sql_filter = filters.join(' AND ');
@@ -943,9 +942,7 @@ var catalog = {
 
         // timeline case
         if (self.view_mode === "timeline") {
-            sql_filter = sql_filter
-                ? `${sql_filter} AND ${is_destacado} AND ${has_periodo_data}`
-                : `${is_destacado} AND ${has_periodo_data}`;
+            sql_filter = `${sql_filter} AND ${has_periodo_data}`;
             limit = 0;
             offset = 0;
             count = false;
