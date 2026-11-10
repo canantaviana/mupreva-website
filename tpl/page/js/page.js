@@ -21,12 +21,14 @@ var page = {
         // source maps. Used on catalog and item maps
         source_maps: [
             {
-                name: "OSM lab",
-                url: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+                // greyscale OSM: standard OSM tiles with a CSS grayscale filter (class map-tiles-grey, _map.scss).
+                // Replaces the black and white tiles.wmflabs.org/bw-mapnik, whose server no longer exists
+                name: "OSM B&W",
+                url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 options: {
-                    maxZoom: 18,
-                    id: "e-osmlab-osm-mapnik-black_and_white",
-                    type: "tms",
+                    maxZoom: 19,
+                    className: 'map-tiles-grey',
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
                 },
                 default: false
             },

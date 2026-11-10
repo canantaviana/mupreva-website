@@ -56,6 +56,12 @@ var catalog = {
     // pagination
     pagination: null,
 
+    // page_limit. Fixed number of sites per page in list mode
+    page_limit: 18,
+
+    // list_order. Stable order so pagination does not repeat or skip sites
+    list_order: "titulo ASC, section_id ASC",
+
     // prev_filter. Stores search filter to compare with the new one
     prev_filter: false,
 
@@ -153,14 +159,8 @@ var catalog = {
             self.catalog_config.ar_tables = params.get('filter').split(',');
         }
 
-        // limit (read cookie 'catalog_config' for possible previous values)
-        const limit =
-            self.catalog_config.pagination &&
-            self.catalog_config.pagination.limit
-                ? self.catalog_config.pagination.limit
-                : self.view_mode === "map"
-                ? 0
-                : 18;
+        // limit. Fixed page size in list mode (the whole list is paginated); map loads all
+        const limit = self.view_mode === "map" ? 0 : self.page_limit;
 
         // q case
         if (q && q.length > 0) {
@@ -199,7 +199,7 @@ var catalog = {
                 case "map":
                     return "section_id ASC";
                 default:
-                    return "RAND()";
+                    return self.list_order;
             }
         })();
 
@@ -215,7 +215,7 @@ var catalog = {
                 limit: limit,
             });
         } else {
-            // defaul random search
+            // default search: the whole list, paginated
             self.default_submit = true;
             self.form_submit({
                 order: order,
@@ -383,7 +383,8 @@ var catalog = {
         switch (view_mode) {
             case "list":
                 // fix limit again (is removed by map and timeline modes)
-                self.pagination.limit = 18;
+                self.pagination.limit = self.page_limit;
+                self.pagination.offset = 0;
                 self.map_results_list_container.innerHTML = "";
                 // launch a new random search
                 return self.form_submit();
@@ -420,61 +421,8 @@ var catalog = {
                     <button type="submit" class="button">${tstring.search_button}</button>
                 </div>
             </div>
-            <details>
-                <summary>${tstring.advanced_search}</summary>
-                <div class="columns is-multiline">
-                    <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
-                        <div class="field">
-                            <label class="label is-sr-only" for="section_id">${tstring.collection_id_label}</label>
-                            <div class="control">
-                                <input type="search" name="cercaNum" id="section_id" placeholder="${tstring.collection_id_label}" value="" class="input is-small">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
-                        <div class="field">
-                            <label class="label is-sr-only" for="title">${tstring.collection_title_label}</label>
-                            <div class="control">
-                                <input type="search" name="cercaTitol" id="title" placeholder="${tstring.collection_title_label}" value="" class="input is-small">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
-                        <div class="field">
-                            <label class="label is-sr-only" for="period">${tstring.collection_period_label}</label>
-                            <div class="control">
-                                <input type="input" name="cercaPeriode" id="period" placeholder="${tstring.collection_period_label}" value="" class="input is-small">
-                                <div class="container_values"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
-                        <div class="field">
-                            <label class="label is-sr-only" for="typology">${tstring.collection_typology_label}</label>
-                            <div class="control">
-                                <input type="input" name="cercaTipologia" id="typology" placeholder="${tstring.collection_typology_label}" value="" class="input is-small">
-                                <div class="container_values"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </details>
         </div>
-        <div class="is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap gap-3">
-            <div class="field is-flex is-align-items-center mb-0 gap-2" id="limit_container">
-                <label class="label mb-0" for="input_limit">${tstring.collection_input_limit}</label>
-                <div class="control">
-                    <div class="select select--simple is-flex is-align-items-center">
-                        <select id="input_limit" name="registres">
-                            <option value="18">18</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                            <option value="80">80</option>
-                            <option value="100">100</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+        <div class="is-flex is-justify-content-flex-end is-align-items-center is-flex-wrap-wrap gap-3">
             <ul class="is-flex gap-5" id="mode_group">
                 <li>
                     <button type="button" id="button_list" class="button button--icon" aria-label="${tstring.show_list}" aria-pressed="false">
@@ -538,107 +486,6 @@ var catalog = {
                 self.form_submit();
             });
 
-            // ID
-            self.form.item_factory({
-                id: "section_id",
-                name: "section_id",
-                q_column: "section_id",
-                eq: "=",
-                eq_in: "",
-                eq_out: "",
-                node_input: currentForm.querySelector("#section_id"),
-            });
-
-            // title
-            self.form.item_factory({
-                id: "titulo",
-                name: "titulo",
-                q_column: "titulo",
-                eq: "MATCH",
-                eq_in: "",
-                eq_out: "",
-                node_input: currentForm.querySelector("#title"),
-                /*callback: function (form_item) {
-                    self.form.activate_autocomplete({
-                        form_item: form_item,
-                        table: self.get_tables,
-                        limit: 60,
-                        parse_result: function (ar_result, term) {
-                            return self.parse_autocomplete_result(
-                                ar_result,
-                                term,
-                                false
-                            );
-                        },
-                    });
-                },*/
-            });
-
-            // periodo
-            self.form.item_factory({
-                id: "periodo",
-                name: "periodo",
-                q_column: "periodo",
-                q_splittable: true,
-                value_split: ', ',
-                eq: "LIKE",
-                q_selected_eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
-                node_input: currentForm.querySelector("#period"),
-                node_values: currentForm.querySelector('#period').closest('.control').querySelector('.container_values'),
-                callback: function (form_item) {
-                    self.form.activate_autocomplete({
-                        form_item: form_item,
-                        table: self.get_tables,
-                        limit: 60,
-                        parse_result: function (ar_result, term) {
-                            return self.parse_autocomplete_result(
-                                ar_result,
-                                term,
-                                false
-                            );
-                        },
-                    });
-                },
-            });
-
-            // tipologia
-            self.form.item_factory({
-                id: "tipologia",
-                name: "tipologia",
-                q_column: "tipologia",
-                q_splittable: true,
-                value_split: ', ',
-                eq: "LIKE",
-                q_selected_eq: "LIKE",
-                eq_in: "%",
-                eq_out: "%",
-                node_input: currentForm.querySelector("#typology"),
-                node_values: currentForm.querySelector('#typology').closest('.control').querySelector('.container_values'),
-                callback: function (form_item) {
-                    self.form.activate_autocomplete({
-                        form_item: form_item,
-                        table: self.get_tables,
-                        limit: 60,
-                        parse_result: function (ar_result, term) {
-                            return self.parse_autocomplete_result(
-                                ar_result,
-                                term,
-                                false
-                            );
-                        },
-                    });
-                },
-            });
-
-            const limit = currentForm.querySelector("#input_limit");
-            limit.addEventListener("change", function () {
-                self.pagination.limit = this.value;
-                self.set_config({
-                    pagination: self.pagination,
-                });
-            });
 
             const table_selector_container =
                 currentForm.querySelector("#table_selector");
@@ -702,18 +549,6 @@ var catalog = {
             // add node
             self.form.node = currentForm;
 
-            const input_limit_container =
-                currentForm.querySelector("#limit_container");
-
-            // set_view_mode event. Triggered when catalog instance property 'view_mode' changes its value across self.proxy
-            event_manager.subscribe("set_view_mode", set_view_mode);
-            function set_view_mode(mode) {
-                if (mode === "list") {
-                    input_limit_container.classList.remove("hide");
-                } else {
-                    input_limit_container.classList.add("hide");
-                }
-            }
 
             resolve(self.form.node);
         });
@@ -801,7 +636,7 @@ var catalog = {
             // options
             options = typeof options !== "undefined" ? options : {};
 
-            const order = options.order || "section_id ASC";
+            const order = options.order || (self.view_mode === "map" ? "section_id ASC" : self.list_order);
             const limit = options.limit || self.pagination.limit;
             const offset = options.offset || self.pagination.offset;
 
@@ -839,7 +674,7 @@ var catalog = {
                 //order: (self.view_mode === 'map') ? null : order
                 order: order,
             }).then((response) => {
-                if(!self.default_submit) {
+                if (self.view_mode === "list") {
                     const total = response.total || response.result.length || 0;
                     const resultsCountNode = document.createElement('p');
                     resultsCountNode.className = 'has-text-right';
@@ -1098,10 +933,8 @@ var catalog = {
 
                         // exec default random search
                         self.default_submit = true;
-                        self.form_submit({
-                            order: "RAND()",
-                            limit: self.limit,
-                        });
+                        self.pagination.offset = 0;
+                        self.form_submit();
                         resolve();
                         return;
                     }
@@ -1112,10 +945,7 @@ var catalog = {
                         self.export_data_container.classList.remove("is-hidden");
                     }
 
-                    const pagination =
-                        self.default_submit === true
-                            ? false
-                            : self.pagination;
+                    const pagination = self.pagination;
                     const list_data = page.parse_list_data(ar_rows); // prepares data to use in list
                     self.list = self.list || new list_factory(); // creates / get existing instance of list
                     self.list.init({

@@ -16,6 +16,11 @@
     z-index: 1;
 }
 
+// "OSM B&W" base layer: standard OSM tiles shown in greyscale (see page.maps_config.source_maps)
+.map-tiles-grey {
+    filter: grayscale(100%);
+}
+
 // Hover tooltip (quick preview of what's at a marker's location, shown
 // before the user commits to clicking it)
 .leaflet-tooltip {
