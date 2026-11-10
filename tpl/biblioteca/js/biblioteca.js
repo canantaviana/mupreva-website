@@ -956,9 +956,9 @@ var biblio = {
         }
         infoHead = infoHead.length > 0 ? infoHead.join(' | ') : '';
 
-        let title = `${row.titulo}`;
+        let title = `${row.titulo || ''}`;
         if (row.pertenencia_data  && row.pertenencia_data === 1) {
-            title = `<a href=${url} target="_blank">${row.titulo}</a>`;
+            title = `<a href=${url} target="_blank">${row.titulo || ''}</a>`;
         }
 
 
@@ -972,7 +972,7 @@ var biblio = {
                             </h2>
                             <p class="is-size-5 has-text-weight-medium">
                             ${infoHead}<br>
-                            ${row.autor}<br>
+                            ${row.autor ? `${row.autor}<br>` : ''}
                             ${infoSerie}
                             </p>
                         </div>

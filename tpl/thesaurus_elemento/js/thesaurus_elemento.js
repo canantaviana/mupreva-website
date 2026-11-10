@@ -246,7 +246,8 @@ var item = {
 
     templateShare: function (row) {
         const url = this.absUrl(row);
-        const title = row.titulo;
+        // thesaurus terms have 'term', not 'titulo'
+        const title = row.term || row.titulo || '';
         return htmlTemplate(`
 <div class="has-text-right-tablet mb-3">
     <span class="simple-tooltip-container"><button type="button" class="js-tooltip button button--icon button--compartir" data-tooltip-prefix-class="simple-tooltip" data-tooltip-content-id="compartir" data-tooltip-title="Compartir URL" data-tooltip-close-text="${
@@ -375,7 +376,8 @@ var item = {
     },
 
     renderImages: function (row) {
-        const images = row.imagenes;
+        // only images with a file: Dédalo can return image records whose 'image' is null (no file uploaded)
+        const images = common.images_with_file(row.imagenes);
 
         if (images.length === 1) {
             const image = images[0];
@@ -455,11 +457,12 @@ var item = {
 
 
     hasRelated: function (row) {
-        return row.relations !== null && JSON.parse(row.relations).length > 0;
+        // ts_ubication records are requested without 'relations' (undefined), others can have null
+        return common.parseJsonArray(row.relations).length > 0;
     },
 
     templateRelated: function (row) {
-        var relations = JSON.parse(row.relations);
+        var relations = common.parseJsonArray(row.relations);
         var self = this;
         if (!this.hasRelated(row)) {
             return "";

@@ -216,7 +216,8 @@ var item = {
                 })
                 .then((response) => {
                     //correccions de dades
-                    const result = response.result.map(function (item) {
+                    // API error: result is not an array, so fall through to the 'record not available' message
+                    const result = (Array.isArray(response.result) ? response.result : []).map(function (item) {
                         if (
                             typeof item.bibliografia_propia === "undefined" &&
                             typeof item.bibliografia !== "undefined"
@@ -328,11 +329,38 @@ var item = {
         if (typeof row.external_typological_uri == 'undefined') {
             return null;
         }
-        const uri = JSON.parse(row.external_typological_uri);
-        if (!uri || uri.length == 0) {
+        // can be several JSON lists joined with ' | ' (not valid JSON as a whole)
+        const uri = String(row.external_typological_uri || '')
+            .split(' | ')
+            .flatMap((part) => common.parseJsonArray(part))
+            .filter((entry) => entry && entry.iri);
+        if (uri.length == 0) {
             return null;
         }
         return uri[0].iri;
+    },
+
+    /**
+     * LINKED_TERMS
+     * Names joined in one text field plus a parallel JSON list of their ids (like nombre_bien +
+     * nombre_bien_data). A name is linked only when it has an id: names can contain commas or have no id,
+     * so names and ids can be out of step
+     * @param string names - joined names
+     * @param string ids_raw - JSON list of ids
+     * @param function url_of - id => url
+     * @param RegExp|string separator - names separator
+     * @param bool drop_last - remove the last name (lugar ends with the country, which has no id)
+     * @return string html
+     */
+    linked_terms: function (names, ids_raw, url_of, separator = ',', drop_last = false) {
+        const ids = common.parseJsonArray(ids_raw);
+        let parts = (names || '').split(separator);
+        if (drop_last) parts = parts.slice(0, -1);
+        return parts.map(function (name, i) {
+            return ids[i]
+                ? `<a href="${url_of(String(ids[i]))}" target="_blank">${name}</a>`
+                : name;
+        }).join(', ');
     },
 
     templateFieldsPicture: function (row) {
@@ -357,13 +385,7 @@ var item = {
                 row.nombre_bien
                     ? `
             <dt>${tstring.item_object}</dt>
-            <dd>${row.nombre_bien.split(',').map((el, i) => {
-                    const ids = row.nombre_bien_data ? JSON.parse(row.nombre_bien_data) : [];
-                    const url = '/obj/' + ids[i];
-                    return (
-                        `<a href="${url}" target="_blank">${el}</a>`
-                    )
-                }).join(', ')}
+            <dd>${item.linked_terms(row.nombre_bien, row.nombre_bien_data, (id) => '/obj/' + id)}
             </dd>
             `
                     : ""
@@ -380,13 +402,7 @@ var item = {
                 row.lugar && row.lugar_data
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd>${row.lugar.split(',').slice(0,-1).map((el, i) => {
-                    const ids = row.lugar_data ? JSON.parse(row.lugar_data) : [];
-                    const url = '/imm/' + ids[i].replace('tchi1_', '');
-                    return (
-                        `<a href="${url}" target="_blank">${el}</a>`
-                    )
-                }).join(', ')}
+            <dd>${item.linked_terms(row.lugar, row.lugar_data, (id) => '/imm/' + id.replace('tchi1_', ''), /,\s+/, true)}
             </dd>
             `
                     : ""
@@ -451,13 +467,7 @@ var item = {
                 row.nombre_bien
                     ? `
             <dt>${tstring.item_object}</dt>
-            <dd>${row.nombre_bien.split(',').map((el, i) => {
-                    const ids = row.nombre_bien_data ? JSON.parse(row.nombre_bien_data) : [];
-                    const url = '/obj/' + ids[i];
-                    return (
-                        `<a href="${url}" target="_blank">${el}</a>`
-                    )
-                }).join(', ')}
+            <dd>${item.linked_terms(row.nombre_bien, row.nombre_bien_data, (id) => '/obj/' + id)}
             </dd>
             `
                     : ""
@@ -474,13 +484,7 @@ var item = {
                 row.lugar && row.lugar_data
                     ? `
             <dt>${tstring.item_immovable}</dt>
-            <dd>${row.lugar.split(',').slice(0,-1).map((el, i) => {
-                    const ids = row.lugar_data ? JSON.parse(row.lugar_data) : [];
-                    const url = '/imm/' + ids[i].replace('tchi1_', '');
-                    return (
-                        `<a href="${url}" target="_blank">${el}</a>`
-                    )
-                }).join(', ')}
+            <dd>${item.linked_terms(row.lugar, row.lugar_data, (id) => '/imm/' + id.replace('tchi1_', ''), /,\s+/, true)}
             </dd>
             `
                     : ""
@@ -598,7 +602,10 @@ var item = {
     },
 
     renderImages: function (row) {
-        const images = row.imagenes_identificativas.concat(row.imagenes);
+        // only images with a file: Dédalo can return image records whose 'image' is null (no file uploaded)
+        const identifying_images = common.images_with_file(row.imagenes_identificativas);
+        const other_images = common.images_with_file(row.imagenes);
+        const images = identifying_images.concat(other_images);
         // text alternative of each photo: its own title or, when Dédalo has none, the object name
         // (with "image N of M" when there are several), never an empty alt for the object (1.1.1)
         const imageAlt = function (image, index) {
@@ -614,7 +621,7 @@ var item = {
                 : base);
         };
         //if (this.isMoneda(row) && images.length > 1) {
-        if (row.imagenes_identificativas.length > 1 && (row.imagenes || row.imagenes.length > 0)) {
+        if (identifying_images.length > 1 && other_images.length > 0) {
             const image1 = images[0];
             const image1FileName = image1.image.split("/").pop();
             const image2 = images[1];
@@ -688,7 +695,7 @@ var item = {
                 ${this.renderExport()}
             </div>
             `;
-        } else if (row.imagenes_identificativas.length > 1 && (!row.imagenes || row.imagenes.length === 0)) {
+        } else if (identifying_images.length > 1 && other_images.length === 0) {
             //imatges moneda, dos columens
             const image1 = images[0];
             const image1FileName = image1.image.split("/").pop();
@@ -888,11 +895,14 @@ var item = {
                     <td>
                         <table>
                             ${row.medidas
+                                .filter(function (medida) {
+                                    return medida && medida.tamanyo !== null && medida.tamanyo !== undefined && medida.tamanyo !== '';
+                                })
                                 .map(function (medida) {
                                     return `
                                 <tr>
-                                    <th scope="row">${medida.tipo}</th>
-                                    <td>${medida.tamanyo}${medida.unidad}</td>
+                                    <th scope="row">${medida.tipo ?? ''}</th>
+                                    <td>${medida.tamanyo}${medida.unidad ?? ''}</td>
                                 </tr>
                                 `;
                                 })
@@ -922,7 +932,9 @@ var item = {
         const esImmueble = lugarProduccionId && lugarProduccionId.includes('tchi1');
         const esToponimia = lugarProduccionId && lugarProduccionId.includes('htoponymy1');
 
-        const lugar = esImmueble
+        const lugar = !row.lugar_produccion_literal
+            ? ''
+            : esImmueble
             ? `<a href="/imm/${lugarProduccionId.replace('tchi1_', '')}" target="_blank">${row.lugar_produccion_literal}</a>`
             : esToponimia
                 ? `<a href="/htop/${lugarProduccionId.replace('htoponymy1_', '')}" target="_blank">${row.lugar_produccion_literal}</a>`
@@ -972,11 +984,14 @@ var item = {
                     <td>
                         <table>
                             ${row.medidas
+                                .filter(function (medida) {
+                                    return medida && medida.tamanyo !== null && medida.tamanyo !== undefined && medida.tamanyo !== '';
+                                })
                                 .map(function (medida) {
                                     return `
                                 <tr>
-                                    <th scope="row">${medida.tipo}</th>
-                                    <td>${medida.tamanyo}${medida.unidad}</td>
+                                    <th scope="row">${medida.tipo ?? ''}</th>
+                                    <td>${medida.tamanyo}${medida.unidad ?? ''}</td>
                                 </tr>
                                 `;
                                 })
@@ -1049,11 +1064,13 @@ var item = {
 
                             <div class="tab-group">
                                 ${row.periodo.split(',').map((el, i) => {
-                                    const ids = row.periodo_data ? JSON.parse(row.periodo_data) : [];
+                                    const ids = common.parseJsonArray(row.periodo_data);
                                     const url = '/cro/' + ids[i];
                                     return (
                                         `<div class="tab-content" id="periodo-tab${i}" role="tabpanel">
-                                            <a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>
+                                            ${ids[i]
+                                                ? `<a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>`
+                                                : `<p class="is-flex mb-5 is-size-3">${el}</p>`}
                                             <div id="periodo-relations${i}"></div>
                                             <div id="periodo-load-more${i}"></div>
                                         </div>`
@@ -1096,11 +1113,13 @@ var item = {
 
                             <div class="tab-group">
                                 ${row.nombre_bien.split(',').map((el, i) => {
-                                    const ids = row.nombre_bien_data ? JSON.parse(row.nombre_bien_data) : [];
+                                    const ids = common.parseJsonArray(row.nombre_bien_data);
                                     const url = '/obj/' + ids[i];
                                     return (
                                         `<div class="tab-content" id="nombre_bien-tab${i}" role="tabpanel">
-                                            <a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>
+                                            ${ids[i]
+                                                ? `<a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>`
+                                                : `<p class="is-flex mb-5 is-size-3">${el}</p>`}
                                             <div id="nombre_bien-relations${i}"></div>
                                             <div id="nombre_bien-load-more${i}"></div>
                                         </div>`
@@ -1142,11 +1161,13 @@ var item = {
 
                             <div class="tab-group">
                                 ${row.materia.split(',').map((el, i) => {
-                                    const ids = row.materia_data ? JSON.parse(row.materia_data) : [];
+                                    const ids = common.parseJsonArray(row.materia_data);
                                     const url = '/mat/' + ids[i];
                                     return (
                                         `<div class="tab-content" id="materia-tab${i}" role="tabpanel">
-                                            <a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>
+                                            ${ids[i]
+                                                ? `<a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>`
+                                                : `<p class="is-flex mb-5 is-size-3">${el}</p>`}
                                             <div id="materia-relations${i}"></div>
                                             <div id="materia-load-more${i}"></div>
                                         </div>`
@@ -1188,11 +1209,13 @@ var item = {
 
                             <div class="tab-group">
                                 ${row.tecnica.split(',').map((el, i) => {
-                                    const ids = row.tecnica_data ? JSON.parse(row.tecnica_data) : [];
+                                    const ids = common.parseJsonArray(row.tecnica_data);
                                     const url = '/tec/' + ids[i];
                                     return (
                                         `<div class="tab-content" id="tecnica-tab${i}" role="tabpanel">
-                                            <a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>
+                                            ${ids[i]
+                                                ? `<a href="${url}" class="is-flex mb-5 is-size-3" target="_blank">${el}</a>`
+                                                : `<p class="is-flex mb-5 is-size-3">${el}</p>`}
                                             <div id="tecnica-relations${i}"></div>
                                             <div id="tecnica-load-more${i}"></div>
                                         </div>`
@@ -1245,12 +1268,7 @@ var item = {
                 const content = htmlTemplate(`
                     <ul class="galeria galeria--185x185 link-dn">
                         ${tabData.result.map(item => {
-                            let imageUrl
-                            if (item.imagenes_identificativas.length) {
-                                imageUrl = __WEB_MEDIA_ENGINE_URL__ + item.imagenes_identificativas[0].image;
-                            } else {
-                                imageUrl = '/assets/img/placeholder.png';
-                            }
+                            const imageUrl = common.first_image_url(item.imagenes_identificativas);
                             return `
                             <li>
                                 <a href="${page_globals.__WEB_ROOT_WEB__}/${elementsDic[self.table]}/${item.section_id}" target="_blank">
@@ -1288,8 +1306,8 @@ var item = {
         }
 
         function getCategoryRelations(category) {
-            const promises = JSON.parse(row[category+'_data']).map((relationId, i) => {
-                const tab = row[category].split(',')[i].trim();
+            const promises = common.parseJsonArray(row[category+'_data']).map((relationId, i) => {
+                const tab = ((row[category] || '').split(',')[i] || '').trim();
 
                 return api.getRelatedElements({table: self.table, relation: category+'_data', relationId, seed: self.catalog_seed}).then(({data, total}) => {
                     self.relationsData[category] = self.relationsData[category] || {};
@@ -1359,7 +1377,8 @@ var item = {
 
         const self = this;
         api.getVisitaYacimientoCatalog(row.titulo).then(function(result) {
-            if(result && result.length > 0 && result[0].summary) {
+            // api.getVisitaYacimientoCatalog returns one record (or [] on error)
+            if (result && result.summary) {
                 const target = document.querySelector(".visit-jaciment-content");
                 target.innerHTML = common.convertText(result.summary);
 
@@ -1947,7 +1966,7 @@ var item = {
             resultsByType.forEach(function (results) {
                 results.forEach(function (entry) {
                     const {titulo, section_id, imagenes_identificativas, section_tipo} = entry;
-                    const imageUrl = imagenes_identificativas && imagenes_identificativas.length > 0 ? __WEB_MEDIA_ENGINE_URL__ + imagenes_identificativas[0].image : '/assets/img/placeholder.png';
+                    const imageUrl = common.first_image_url(imagenes_identificativas);
                     const content = htmlTemplate(`
                         <li class="img">
                             <a href="/${typeUrlMap[section_tipo]}/${section_id}" target="_blank">
@@ -2005,8 +2024,9 @@ var item = {
             var content = htmlTemplate(`
                 ${results.map(function(row, index){
                     var image_url = '/assets/img/placeholder.png';
-                    if (row.identifying_image !== null) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+JSON.parse(row.identifying_image)[0];
+                    const identifying_image = common.parseJsonArray(row.identifying_image)[0];
+                    if (identifying_image) {
+                        image_url = __WEB_MEDIA_ENGINE_URL__ + identifying_image;
                     }
 
                     return `
@@ -2075,12 +2095,7 @@ var item = {
             row.tpl +
             "/" +
             row.section_id;
-        var image_url = "/assets/img/placeholder.png";
-        if (row.imagenes_identificativas.length > 0) {
-            image_url =
-                __WEB_MEDIA_ENGINE_URL__ +
-                row.imagenes_identificativas[0].image;
-        }
+        var image_url = common.first_image_url(row.imagenes_identificativas);
         return `
         <li class="${row.tpl}">
             <a href="${url}" target="_blank">

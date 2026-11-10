@@ -441,16 +441,22 @@ function map_factory() {
         for (let i = 0; i < data_length; i++) {
 
             const element = data[i]
-            const geojson = element.geojson
+            // skip malformed geodata instead of breaking the whole map
+            const geojson = Array.isArray(element.geojson) ? element.geojson : []
             const geojson_length = geojson.length
 
             for (let k = 0; k < geojson_length; k++) {
 
-                const features = geojson[k].layer_data.features
+                const features = geojson[k] && geojson[k].layer_data && Array.isArray(geojson[k].layer_data.features)
+                    ? geojson[k].layer_data.features
+                    : []
 
                 for (let g = 0; g < features.length; g++) {
 
-                    const coordinates = features[g].geometry.coordinates
+                    const coordinates = features[g] && features[g].geometry ? features[g].geometry.coordinates : null
+                    if (!Array.isArray(coordinates) || coordinates.length < 2) {
+                        continue
+                    }
                     const lat = coordinates[0]
                     const lon = coordinates[1]
 

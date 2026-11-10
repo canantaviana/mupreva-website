@@ -124,8 +124,14 @@ function list_factory() {
             // iterate all rows
             for (let i = 0; i < ar_rows_length; i++) {
 
-                // row_builder. node is rendered in caller class function defined when init
-                const row_node = self.fn_row_builder(self.data[i], self.caller.view_mode)
+                // row_builder. node is rendered in caller class function defined when init.
+                // one record with unexpected data must not stop the whole list rendering: skip it
+                let row_node = null
+                try {
+                    row_node = self.fn_row_builder(self.data[i], self.caller.view_mode)
+                } catch (error) {
+                    console.error("[list_factory.render_list] row skipped, error rendering:", self.data[i], error)
+                }
                 if (row_node) {
                     rows_list.appendChild(row_node)
                 }

@@ -135,8 +135,9 @@ var catalog = {
         // set config
         self.set_config();
 
-        // fix mode
-        self.view_mode = self.catalog_config.view_mode
+        // fix mode. catalog_config is shared with /catalogo, which can save modes this page does not
+        // have (timeline): only list and map are valid here
+        self.view_mode = ["list", "map"].includes(self.catalog_config.view_mode)
             ? self.catalog_config.view_mode
             : "list";
 
@@ -1250,10 +1251,9 @@ var catalog = {
             row.section_id;
         var image_url = page_globals.__WEB_TEMPLATE_WEB__ + "/assets/img/placeholder.png";
         let needs_related_image = false;
-        if (row.imagenes_identificativas.length > 0) {
-            image_url =
-                __WEB_MEDIA_ENGINE_URL__ +
-                row.imagenes_identificativas[0].image;
+        const images_with_file = common.images_with_file(row.imagenes_identificativas);
+        if (images_with_file.length > 0) {
+            image_url = __WEB_MEDIA_ENGINE_URL__ + images_with_file[0].image;
         } else {
             const fallback_image = catalog.resolve_relations_fallback_image(row.relations);
             if (fallback_image) {

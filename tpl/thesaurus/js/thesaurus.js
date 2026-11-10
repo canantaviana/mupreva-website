@@ -657,10 +657,11 @@ var thesaurus = {
                 if (q && q.length > 0) {
 
                     // remove accents from text
-                    const text_normalized = row[q_column].normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    const text_normalized = String(row[q_column] || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                     const q_normalized = q.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
 
-                    const regex = RegExp(q_normalized, 'i')
+                    // escape the user text: characters like '(' or '[' are not a valid regular expression
+                    const regex = RegExp(q_normalized.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
                     find = regex.test(text_normalized)
 
                     // try with nd

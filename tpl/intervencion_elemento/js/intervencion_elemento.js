@@ -118,9 +118,7 @@ var item = {
     absUrl: function (row) {
         return (
             page_globals.__WEB_MEDIA_BASE_URL__ +
-            "/" +
-            row.tpl +
-            "/" +
+            "/int/" + // intervention rows have no section_tipo, so row.tpl is undefined
             row.section_id
         );
     },
@@ -233,7 +231,8 @@ var item = {
         const url = this.absUrl(row);
         // the page title names the record, not just the kind of page
         common.set_record_title(row.titulo);
-        const safeDesc = common.sanitizeTextBr(row.description) || row.description;
+        // sanitizeTextBr returns "" for an empty description (the old "|| row.description" printed "null")
+        const safeDesc = common.sanitizeTextBr(row.description);
 
         return htmlTemplate(`
 <div class="fitxa-intro columns is-variable is-8">
@@ -253,9 +252,9 @@ var item = {
             <a href="${url}">${url}</a>
         </p>
 
-        <div class="mt-8">
+        ${safeDesc ? `<div class="mt-8">
             ${safeDesc}
-        </div>
+        </div>` : ''}
     </div>
     <div class="column is-1 is-hidden-touch is-hidden-desktop-only"></div>
     ${this.renderImages(row)}
@@ -287,16 +286,10 @@ var item = {
     },
 
     renderImages: function (row) {
-        var images = [];
-        if (row.imagen_inicial && row.imagen_inicial.length > 0) {
-            images = images.concat(row.imagen_inicial);
-        }
-        if (row.imagen_final && row.imagen_final.length > 0) {
-            images = images.concat(row.imagen_final);
-        }
-        if (row.images && row.images.length > 0) {
-            images = images.concat(row.images);
-        }
+        // only images with a file: Dédalo can return image records whose 'image' is null (no file uploaded)
+        const images = common.images_with_file(row.imagen_inicial)
+            .concat(common.images_with_file(row.imagen_final))
+            .concat(common.images_with_file(row.images));
         if (images.length === 1) {
             const image = images[0];
             const imageFileName = image.image.split("/").pop();
@@ -377,7 +370,7 @@ var item = {
         if (!row.description || row.description == "") {
             return null;
         }
-        const safeDesc = common.sanitizeTextBr(row.description) || row.description;
+        const safeDesc = common.sanitizeTextBr(row.description);
         return htmlTemplate(`
             <h2 class="accordion-header">
                 <button type="button">${tstring.item_general_info}</button>

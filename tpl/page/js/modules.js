@@ -815,10 +815,7 @@ var templateModules = {
                             extraClass = 'masonry-grid-item--width-2';
                         }
                         const url = page_globals.__WEB_ROOT_WEB__ + '/' + elem.tpl + '/' + elem.section_id;
-                        var image_url = '/assets/img/placeholder.png';
-                        if (elem.imagenes_identificativas.length > 0) {
-                            image_url = __WEB_MEDIA_ENGINE_URL__+elem.imagenes_identificativas[0].image;
-                        }
+                        var image_url = common.first_image_url(elem.imagenes_identificativas);
                         return `
                             <div class="masonry-grid-item ${extraClass}">
                                 <a href="${url}" target="_blank">
@@ -890,7 +887,7 @@ var templateModules = {
                             <div class="swiper-slide">
                                 <div class="is-flex is-flex-direction-column full-link gap-2">
                                     <h3 class="is-size-6">
-                                        <a href="${url}" target="_blank">${row.titulo}</a>
+                                        <a href="${url}" target="_blank">${row.titulo || ''}</a>
                                     </h3>
                                     <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
                                         <img loading="lazy" src="${image_url}" alt="">
@@ -1080,10 +1077,7 @@ var templateModules = {
             <div class="activities-gallery">
                 ${data.map(row => {
                     const url = page_globals.__WEB_ROOT_WEB__ + "/act/" + row.section_id;
-                    var image_url = "/assets/img/placeholder.png";
-                    if (row.identifying_image_data.length > 0) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__ + row.identifying_image_data[0].image;
-                    }
+                    var image_url = common.first_image_url(row.identifying_image_data);
                     var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
                     return `
@@ -1138,10 +1132,7 @@ var templateModules = {
                             <div class="activities-gallery">
                                 ${data[year].map(row => {
                                     const url = page_globals.__WEB_ROOT_WEB__ + "/act/" + row.section_id;
-                                    var image_url = "/assets/img/placeholder.png";
-                                    if (row.identifying_image_data.length > 0) {
-                                        image_url = __WEB_MEDIA_ENGINE_URL__ + row.identifying_image_data[0].image;
-                                    }
+                                    var image_url = common.first_image_url(row.identifying_image_data);
                                     var date = formatDateRange(row.time_frame, page_globals.WEB_CURRENT_LANG_CODE);
 
                                     return `
@@ -1622,17 +1613,14 @@ var templateModules = {
                 var content = htmlTemplate(`
                     ${data[type].results.map(function(row){
                         const url = page_globals.__WEB_ROOT_WEB__ + '/' + row.tpl + '/' + row.section_id;
-                        var image_url = '/assets/img/placeholder.png';
-                        if (row.imagenes_identificativas.length > 0) {
-                            image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
-                        }
+                        var image_url = common.first_image_url(row.imagenes_identificativas);
                         return `
                         <li class="${row.tpl}">
                             <a href="${url}" target="_blank">
                                 <figure>
                                     <img loading="lazy" src="${image_url}" alt="">
                                     ${(row.titulo)?`
-                                    <figcaption>${row.titulo}</figcaption>
+                                    <figcaption>${row.titulo || ''}</figcaption>
                                     `:''}
                                 </figure>
                             </a>
@@ -1716,7 +1704,7 @@ var templateModules = {
                     <div class="swiper-slide">
                         <div class="is-flex is-flex-direction-column full-link gap-2">
                             <h3 class="is-size-6">
-                                <a href="${url}" target="_blank">${row.titulo}</a>
+                                <a href="${url}" target="_blank">${row.titulo || ''}</a>
                             </h3>
                             <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
                                 <img loading="lazy" src="${image_url}" alt="">
@@ -1778,7 +1766,7 @@ var templateModules = {
                             <div class="swiper-slide">
                                 <div class="is-flex is-flex-direction-column full-link gap-2">
                                     <h3 class="is-size-6">
-                                        <a href="${url}" target="_blank">${row.titulo}</a>
+                                        <a href="${url}" target="_blank">${row.titulo || ''}</a>
                                     </h3>
                                     <div class="pubs-list__pict is-flex is-flex-direction-column is-justify-content-center is-align-items-center flex-order mb-4">
                                         <img loading="lazy" src="${image_url}" alt="">

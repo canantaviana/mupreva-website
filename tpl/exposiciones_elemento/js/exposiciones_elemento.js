@@ -468,7 +468,8 @@ var item = {
     },
 
     renderImages: function (row) {
-        const images = row.identifying_image_data;
+        // only images with a file: Dédalo can return image records whose 'image' is null (no file uploaded)
+        const images = common.images_with_file(row.identifying_image_data);
         if (images.length === 1) {
             const image = images[0];
             const imageFileName = image.image.split("/").pop();

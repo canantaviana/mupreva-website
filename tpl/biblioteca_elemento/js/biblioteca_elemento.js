@@ -331,14 +331,14 @@ ${
                     "/pub/" +
                     value.section_id;
                 var image_url = '/assets/img/placeholder.png';
-                if (value.pdf !== null) {
+                if (value.pdf) {
                     image_url = __WEB_MEDIA_ENGINE_URL__+imgPdf(value.pdf);
                 }
                 return `<li class="mb-3">
                 <div class="columns is-mobile is-flex-direction-row-reverse">
                     <div class="column">
                         ${value.autor?value.autor:''}<br>
-                        <a href="${url}"><span class="has-text-weight-semibold">${value.titulo}</span></a><br>
+                        <a href="${url}"><span class="has-text-weight-semibold">${value.titulo || ''}</span></a><br>
                         ${
                             value.num_paginas
                                 ? `
@@ -349,13 +349,13 @@ ${
                     </div>
                     <div class="column is-narrow">
                         <div class="columns is-mobile is-variable is-1">
-                            <div class="column is-narrow">
+                            ${value.pdf ? `<div class="column is-narrow">
                                 <button type="button" class="button button--icon js-download-pdf" data-download-url="${
                                     __WEB_MEDIA_ENGINE_URL__ + value.pdf
-                                }" data-download-filename="${value.pdf ? value.pdf.split('/').pop() : ''}">
+                                }" data-download-filename="${value.pdf.split('/').pop()}">
                                     <img src="/assets/img/ico-descarregar.svg" alt="${tstring.download}" width="30" height="30">
                                 </button>
-                            </div>
+                            </div>` : ''}
                             <div class="column is-narrow">
                                 <a target="_blank" href="${url}">
                                     <img src="/assets/img/ico-lupa-2.svg" alt="${tstring.item_show_online}" width="30" height="30">

@@ -1422,6 +1422,31 @@ var common = {
         return output;
     },
 
+    /**
+     * IMAGES_WITH_FILE
+     * Resolved image records that have a file. Dédalo can return image records whose 'image' is null
+     * (no file uploaded) and image fields can be null, so never use image.image without this filter
+     * @param array|null images - resolved image portal (like row.imagenes_identificativas)
+     * @return array
+     */
+    images_with_file: function(images) {
+        return (Array.isArray(images) ? images : []).filter(function (image) {
+            return image && typeof image.image === "string" && image.image.length > 0;
+        });
+    },
+
+    /**
+     * FIRST_IMAGE_URL
+     * Media URL of the first image record that has a file, else the placeholder
+     * @param array|null images - resolved image portal (like row.imagenes_identificativas)
+     * @param string placeholder
+     * @return string
+     */
+    first_image_url: function(images, placeholder = '/assets/img/placeholder.png') {
+        const first = common.images_with_file(images)[0];
+        return first ? common.get_media_engine_url(first.image) : placeholder;
+    },
+
     parseJsonArray: function(raw) {
         try {
             const parsed = JSON.parse(raw ?? '[]');
@@ -1553,11 +1578,18 @@ function formatDateRange(dateRange, iso3) {
         };
         const locale = iso3ToLocale[iso3.toLowerCase()] || 'en-US'; // Anglès per defecte
         const [start, end] = dateRange.split(",").map(date => new Date(date.trim()));
+        if (!start || isNaN(start.getTime())) {
+            return null;
+        }
 
         const options = { day: 'numeric', month: 'long', year: 'numeric' };
         const formatter = new Intl.DateTimeFormat(locale, options);
 
         const startText = formatter.format(start);
+        // single date (no end): Intl formats an undefined date as today, so show only the start
+        if (!end || isNaN(end.getTime())) {
+            return startText;
+        }
         const endText = formatter.format(end);
 
         // Si l'inici i el final són el mateix dia, només es mostra una data

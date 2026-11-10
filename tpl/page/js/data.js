@@ -603,13 +603,10 @@ page.parse_timeline_data_catalog = function (rows) {
         const row = Object.assign({}, rows[i]);
 
         if (row.periodo_data) {
-            var periodos = JSON.parse(row.periodo_data);
+            var periodos = common.parseJsonArray(row.periodo_data);
             for (var group_date of periodos) {
                 if (group_date) {
-                    var image_url = '/assets/img/placeholder.png';
-                    if (row.imagenes_identificativas.length > 0) {
-                        image_url = __WEB_MEDIA_ENGINE_URL__+row.imagenes_identificativas[0].image;
-                    }
+                    var image_url = common.first_image_url(row.imagenes_identificativas);
 
                     const item_data = {
                         section_id: row.section_id,
@@ -665,10 +662,7 @@ page.parse_timeline_data_activity = function (rows) {
             var group_date = row.date_start_year;
 
             if (group_date) {
-                var image_url = '/assets/img/placeholder.png';
-                if (row.identifying_image_data.length > 0) {
-                    image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image_data[0].image;
-                }
+                var image_url = common.first_image_url(row.identifying_image_data);
 
                 const item_data = {
                     section_id: row.section_id,

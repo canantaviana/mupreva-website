@@ -1466,6 +1466,7 @@ var catalog = {
      */
     resolve_production_places: function (rows) {
         const place_prefix = "tchi1_"; // section_tipo of places (immovables)
+        rows = Array.isArray(rows) ? rows : []; // API error: rows is false
 
         // place section_ids of each row that needs them
         const ids_by_row = new Map();
@@ -1811,12 +1812,7 @@ var catalog = {
             row.tpl +
             "/" +
             row.section_id;
-        var image_url = "/assets/img/placeholder.png";
-        if (row.imagenes_identificativas.length > 0) {
-            image_url =
-                __WEB_MEDIA_ENGINE_URL__ +
-                row.imagenes_identificativas[0].image;
-        }
+        var image_url = common.first_image_url(row.imagenes_identificativas);
         const place = page.place_label(row);
         return htmlTemplate(`
         <li class="${row.tpl}">

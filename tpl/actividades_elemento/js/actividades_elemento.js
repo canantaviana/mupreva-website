@@ -407,7 +407,8 @@ var item = {
     },
 
     renderImages: function (row) {
-        const images = row.identifying_image_data;
+        // only images with a file: Dédalo can return image records whose 'image' is null (no file uploaded)
+        const images = common.images_with_file(row.identifying_image_data);
         if (images.length === 1) {
             const image = images[0];
             const imageFileName = image.image.split("/").pop();
@@ -894,11 +895,7 @@ var item = {
             tpl +
             "/" +
             row.section_id;
-        var image_url = "/assets/img/placeholder.png";
-        if (row.identifying_image_data.length > 0) {
-            image_url =
-                __WEB_MEDIA_ENGINE_URL__ + row.identifying_image_data[0].image;
-        }
+        var image_url = common.first_image_url(row.identifying_image_data);
         var date = null;
         if (row.time_frame) {
             var date = formatDateRange(

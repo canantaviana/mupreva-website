@@ -422,10 +422,7 @@ var biblio = {
         const parser = new DOMParser();
         const url = '/juegos/'+row.section_id;
 
-        var image_url = '/assets/img/placeholder.png';
-        if (row.identifying_image_data.length > 0) {
-            image_url = __WEB_MEDIA_ENGINE_URL__+row.identifying_image_data[0].image;
-        }
+        var image_url = common.first_image_url(row.identifying_image_data);
         const content = parser.parseFromString(`
             <li class="${row.tpl}">
                 <div class="card is-flex is-flex-direction-column full-link">
