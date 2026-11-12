@@ -1224,6 +1224,7 @@ var catalog = {
                     ? __WEB_MEDIA_ENGINE_URL__ + images[0].image
                     : null;
             })
+            .then((image_url) => image_url || self.load_descendants_relations_image(site_id))
             .catch((error) => {
                 console.warn("load_related_image: not loaded for site", site_id, error);
                 return null;
@@ -1233,6 +1234,30 @@ var catalog = {
 
         return request;
     }, //end load_related_image
+
+    /**
+     * LOAD_DESCENDANTS_RELATIONS_IMAGE
+     * Image from the relations of the site's sub-sites
+     */
+    load_descendants_relations_image: function (site_id) {
+        const self = this;
+
+        return page
+            .get_records({
+                table: "immovables",
+                ar_fields: ["section_id", "relations"],
+                sql_filter: `relations IS NOT NULL AND parents LIKE '%"${site_id}"%'`,
+                parse: (result) => result,
+            })
+            .then((rows) => {
+                const merged = (Array.isArray(rows) ? rows : []).flatMap(function (row) {
+                    return common.parseJsonArray(row.relations);
+                });
+                return merged.length > 0
+                    ? self.resolve_relations_fallback_image(JSON.stringify(merged))
+                    : null;
+            });
+    }, //end load_descendants_relations_image
 
     /**
      * LIST_ROW_BUILDER
