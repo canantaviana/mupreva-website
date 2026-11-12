@@ -9,7 +9,10 @@ define('__WEB_BASE_PATH__', dirname(dirname(dirname(__FILE__))));
 
 
 // dedalo 4 private conf file
-$environment = 'prod'; // pre , prod
+$environment = 'dev'; // dev , pre , prod
+if (!in_array($environment, ['dev', 'pre', 'prod'], true)) {
+    die('Invalid $environment in config.php: ' . $environment);
+}
 
 
 
@@ -19,9 +22,11 @@ define('WEB_ENTITY_LABEL', 'Museu de Prehistòria de València');
 
 define(
     'WEB_DB',
-    ($environment ==='prod')
-    ? 'web_tangible_heritage'
-    : 'web_tangible_heritage'
+    [
+        'dev'  => 'web_tangible_heritage',
+        'pre'  => 'web_tangible_heritage',
+        'prod' => 'web_tangible_heritage',
+    ][$environment]
 );
 
 // site config
@@ -29,17 +34,21 @@ define(
 // __web_base_url__ . absolute url base to target web. Used to build absolute calls to elements
 define(
     '__WEB_BASE_URL__',
-    ($environment === 'prod')
-        ? 'https://map.museum'
-        : 'https://web2024.mupreva.antaviana.net'
+    [
+        'dev'  => 'https://web2024.mupreva.antaviana.net',
+        'pre'  => 'https://pre.map.museum',
+        'prod' => 'https://map.museum',
+    ][$environment]
 );
 
 // media base url
 define(
     '__WEB_MEDIA_BASE_URL__',
-    ($environment === 'prod')
-        ? 'https://map.museum'
-        : 'https://web2024.mupreva.antaviana.net'
+    [
+        'dev'  => 'https://web2024.mupreva.antaviana.net',
+        'pre'  => 'https://pre.map.museum',
+        'prod' => 'https://map.museum',
+    ][$environment]
 );
 
 // __WEB_ROOT_WEB__
@@ -59,9 +68,31 @@ define('__WEB_HOME_URL__',    __WEB_ROOT_WEB__);
 
 define(
     '__WEB_MEDIA_ENGINE_URL__',
-    ($environment === 'prod')
-        ? 'https://dedalo.map.museum'
-        : 'https://pre-dedalo.mupreva.org'
+    [
+        //'dev'  => 'https://pre-dedalo.mupreva.org',
+        'dev' => 'https://dedalo.map.museum',
+        //'pre'  => 'https://pre-dedalo.mupreva.org',
+        'pre' => 'https://dedalo.map.museum',
+        'prod' => 'https://dedalo.map.museum',
+    ][$environment]
+);
+
+// matomo (analytics). Tracker base url (protocol-relative, trailing slash) and site id
+define(
+    'MATOMO_URL',
+    [
+        'dev'  => '//pre-matomo.dival.es/',
+        'pre'  => '//pre-matomo.dival.es/',
+        'prod' => '//matomo.dival.es/',
+    ][$environment]
+);
+define(
+    'MATOMO_SITE_ID',
+    [
+        'dev'  => '1',
+        'pre'  => '1',
+        'prod' => '1', // TODO: confirmar siteId de producció
+    ][$environment]
 );
 
 // version
@@ -71,14 +102,28 @@ include(__WEB_TEMPLATE_PATH__ . '/version.inc');
 // api config
 
 // json_trigger_url data source url
-define('JSON_TRIGGER_URL', ($environment === 'prod') //quart
-    ? 'https://dedalo.map.museum/dedalo6/publication/server_api/v1/json/'
-    : 'https://pre-dedalo.mupreva.org/dedalo6-pre/publication/server_api/v1/json/');
+define(
+    'JSON_TRIGGER_URL',
+    [
+        //'dev'  => 'https://pre-dedalo.map.museum/dedalo6-pre/publication/server_api/v1/json/',
+        'dev'  => 'https://dedalo.map.museum/dedalo6/publication/server_api/v1/json/',
+        //'pre'  => 'https://pre-dedalo.map.museum/dedalo6-pre/publication/server_api/v1/json/',
+        'pre'  => 'https://dedalo.map.museum/dedalo6/publication/server_api/v1/json/',
+        'prod' => 'https://dedalo.map.museum/dedalo6/publication/server_api/v1/json/',
+    ][$environment]
+);
 
 // dedalo_edit_url. Dédalo back-office record page, linked from detail pages when logged in to Dédalo
-define('DEDALO_EDIT_URL', ($environment === 'prod')
-    ? 'https://dedalo.map.museum/dedalo6/core/page/'
-    : 'https://pre-dedalo.mupreva.org/dedalo6-pre/core/page/');
+define(
+    'DEDALO_EDIT_URL',
+    [
+        //'dev'  => 'https://pre-dedalo.mupreva.org/dedalo6-pre/core/page/',
+        'dev'  => 'https://dedalo.map.museum/dedalo6/core/page/',
+        //'pre'  => 'https://pre-dedalo.mupreva.org/dedalo6-pre/core/page/',
+        'pre'  => 'https://dedalo.map.museum/dedalo6/core/page/',
+        'prod' => 'https://dedalo.map.museum/dedalo6/core/page/',
+    ][$environment]
+);
 
 
 // api_cache. File cache for json_web_data responses (read-only content API,
