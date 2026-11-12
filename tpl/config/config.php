@@ -143,8 +143,16 @@ include(__WEB_BASE_PATH__ . '/' . WEB_APP_DIR . '/api/class.json_web_data.php');
 
 // api_web_user_code
 # Verification user code (must be identical in config of client and server)
-//define('API_WEB_USER_CODE', 'lsi8wM5s$4KueñwkoPwgs'); //mupreva
-define('API_WEB_USER_CODE', 'lsi8wM5s$4KueñwkoPwgs'); //quart
+define(
+    'API_WEB_USER_CODE',
+    [
+        //'dev'  => 'dd5YDtaMUdFWYm4wtKVs5BQy0RMbwoYy',
+        'dev'  => 'lsi8wM5s$4KueñwkoPwgs',
+        //'pre'  => 'dd5YDtaMUdFWYm4wtKVs5BQy0RMbwoYy',
+        'pre'  => 'lsi8wM5s$4KueñwkoPwgs',
+        'prod' => 'lsi8wM5s$4KueñwkoPwgs',
+    ][$environment]
+);
 
 // common core functions
 include(__WEB_BASE_PATH__ . '/' . WEB_APP_DIR . '/common/class.page.php');
