@@ -295,7 +295,8 @@ var thesaurus = {
                             el.with_relations = false
                             return el
                         })
-                        const raw_tree_data = [...with_relations, ...without_relations];
+                        const raw_tree_data = [...with_relations, ...without_relations]
+                            .sort((a, b) => (a.norder ?? 0) - (b.norder ?? 0));
 
                         //const raw_tree_data = JSON.parse(JSON.stringify(response.result))
 
