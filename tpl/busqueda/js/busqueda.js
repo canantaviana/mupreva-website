@@ -364,8 +364,13 @@ var search = {
             if(self.last_keywords !== self.keywords) {
                 api.getGlobalSearchTypes(self.keywords)
                     .then((res) => {
-                        const types = res.map(item => item.ref_section_tipo);
-                        self.search_types = types || [];
+                        const found = res.map(item => item.ref_section_tipo);
+                        const order = ['tch1', 'tch100', 'tch300', 'tchi1', 'rsc205', 'activity1', 'exhibition1'];
+                        const types = [
+                            ...order.filter(t => found.includes(t)),
+                            ...found.filter(t => !order.includes(t))
+                        ];
+                        self.search_types = types;
                         self.ref_section_tipo_selected = types[0] || null;
                     })
                     .catch((err) => {
