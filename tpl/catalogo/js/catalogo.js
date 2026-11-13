@@ -182,15 +182,6 @@ var catalog = {
             self.catalog_config.ar_tables = params.get('filter').split(',');
         }
 
-        // limit (read cookie 'catalog_config' for possible previous values)
-        const limit =
-            self.catalog_config.pagination &&
-            self.catalog_config.pagination.limit
-                ? self.catalog_config.pagination.limit
-                : self.view_mode === "timeline" || self.view_mode === "map"
-                ? 0
-                : 18;
-
         // q case
         if (q && q.length > 0) {
             self.view_mode = "list";
@@ -201,6 +192,15 @@ var catalog = {
                 "documents_catalog",
             ];
         }
+
+        // limit (read cookie 'catalog_config' for possible previous values)
+        const limit =
+            self.view_mode === "timeline" || self.view_mode === "map"
+                ? 0
+                : self.catalog_config.pagination &&
+                  self.catalog_config.pagination.limit
+                ? self.catalog_config.pagination.limit
+                : 18;
 
         // offset
         const offset = 0;
@@ -910,6 +910,10 @@ var catalog = {
             });
 
             const limit = currentForm.querySelector("#input_limit");
+            const saved_limit = self.catalog_config.pagination && self.catalog_config.pagination.limit;
+            if (saved_limit && limit.querySelector(`option[value="${saved_limit}"]`)) {
+                limit.value = String(saved_limit);
+            }
             limit.addEventListener("change", function () {
                 self.pagination.limit = this.value;
                 self.set_config({
@@ -1064,12 +1068,11 @@ var catalog = {
             // set_view_mode event. Triggered when catalog instance property 'view_mode' changes its value across self.proxy
             event_manager.subscribe("set_view_mode", set_view_mode);
             function set_view_mode(mode) {
-                if (mode === "list") {
-                    input_limit_container.classList.remove("hide");
-                } else {
-                    input_limit_container.classList.add("hide");
-                }
+                const is_list = mode === "list";
+                input_limit_container.classList.toggle("is-flex", is_list);
+                input_limit_container.style.display = is_list ? "" : "none";
             }
+            set_view_mode(self.view_mode);
 
             resolve(self.form.node);
         });
@@ -1141,13 +1144,15 @@ var catalog = {
         const self = this;
         self.map_legend.innerHTML = '';
 
-        self.didSearchSomething = !!(self.form && typeof self.form.has_active_filters === 'function' && self.form.has_active_filters());
+        self.didSearchSomething = !!(self.form && typeof self.form.has_active_filters === 'function' && self.form.has_active_filters()) || self.dates_narrowed();
 
         return new Promise(function (resolve) {
             // options
             options = typeof options !== "undefined" ? options : {};
 
-            const order = options.order || "section_id ASC";
+            const order = options.order || (self.view_mode === "timeline"
+                ? "datacion_ini asc, datacion_fin asc"
+                : "section_id ASC");
             const limit = options.limit || self.pagination.limit;
             const offset = options.offset || self.pagination.offset;
 
@@ -1247,6 +1252,18 @@ var catalog = {
     }, //end form_submit
 
     /**
+     * DATES_NARROWED
+     * True when the user has moved the date range away from the slider bounds
+     * @return bool
+     */
+    dates_narrowed: function () {
+        const d = this.form_dates_range;
+        const slider = document.getElementById("date-slider-left");
+        if (!slider || d.min === null || d.max === null) return false;
+        return d.min > Number(slider.min) || d.max < Number(slider.max);
+    }, //end dates_narrowed
+
+    /**
      * SEARCH_ROWS
      * Call to API and load JSON data results of search
      */
@@ -1287,7 +1304,7 @@ var catalog = {
         let dates_filter = null;
         const d = self.form_dates_range;
 
-        if(d.min && d.max) {
+        if (self.dates_narrowed()) {
             const ini_in_range = `(datacion_ini >= ${d.min} AND datacion_ini <= ${d.max})`;
             const fin_in_range = `(datacion_fin >= ${d.min} AND datacion_fin <= ${d.max})`;
             const both_contain_range = `(datacion_ini <= ${d.min} AND datacion_fin >= ${d.max})`;
@@ -1296,7 +1313,7 @@ var catalog = {
 
         const filters = [];
         if (parsed_filter) filters.push(`(${parsed_filter})`);
-        if (dates_filter && (parsed_filter && !parsed_filter.includes("section_id"))) filters.push(dates_filter);
+        if (dates_filter && !(parsed_filter && parsed_filter.includes("section_id"))) filters.push(dates_filter);
 
         let sql_filter = filters.join(' AND ');
 
