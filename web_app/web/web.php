@@ -42,7 +42,7 @@ include($site_safe_path);
 // img-src allows any https source because of the map tile providers (OSM, maptiler, arcgis...)
 $csp = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
+    "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://pre-matomo.dival.es https://matomo.dival.es",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
